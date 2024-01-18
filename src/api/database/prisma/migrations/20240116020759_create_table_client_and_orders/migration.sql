@@ -1,0 +1,16 @@
+-- CreateTable
+CREATE TABLE "Client" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT NOT NULL,
+    "phone" TEXT
+);
+
+-- CreateTable
+CREATE TABLE "Order" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "dateTime" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "address" TEXT NOT NULL,
+    "food" TEXT NOT NULL,
+    "clientId" INTEGER,
+    CONSTRAINT "Order_clientId_fkey" FOREIGN KEY ("clientId") REFERENCES "Client" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+);
