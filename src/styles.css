@@ -24,5 +24,11 @@
 }
 
 * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
   outline: none !important;
+  -webkit-user-select: none; /* Safari */
+  user-select: none; /* Standard syntax */
+  cursor: default !important;
 }
