@@ -3,7 +3,6 @@ import { ROUTES } from "./constants";
 import { Clients } from "./screens/Clients";
 import { Home } from "./screens/Home";
 
-
 function App() {
   const router = createBrowserRouter([
     {
