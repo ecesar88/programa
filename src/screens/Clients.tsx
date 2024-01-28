@@ -1,8 +1,11 @@
-import { Button, Spinner } from "@blueprintjs/core";
+import { Button } from "@blueprintjs/core";
 import axios from "axios";
 import { CSSProperties, useState } from "react";
+import { Header } from "../components/Header";
+import { ScreenMenu } from "../components/ScreenMenu";
+import { Cell, Column, Table2 } from "@blueprintjs/table";
 
-export const Client = () => {
+export const Clients = () => {
   const [nome, setNome] = useState("");
   const [phone, setPhone] = useState("");
 
@@ -23,15 +26,21 @@ export const Client = () => {
     container: {
       display: "flex",
       flexDirection: "column",
-      gap: "1rem",
+      gap: "0.5rem",
     },
   };
 
+  const dollarCellRenderer = (rowIndex: number) => (
+    <Cell>{`$${(rowIndex * 10).toFixed(2)}`}</Cell>
+  );
+  const euroCellRenderer = (rowIndex: number) => (
+    <Cell>{`€${(rowIndex * 10 * 0.85).toFixed(2)}`}</Cell>
+  );
+
   return (
     <div style={styles.container}>
-      <h1>Welcome to Tauri!</h1>
-
-      <Spinner intent="primary" />
+      <Header title="CLIENTES" />
+      <ScreenMenu />
 
       <input
         type="text"
@@ -50,6 +59,11 @@ export const Client = () => {
           setPhone(evt.target.value);
         }}
       />
+
+      <Table2 numRows={10}>
+        <Column name="Dollars" cellRenderer={dollarCellRenderer} />
+        <Column name="Euros" cellRenderer={euroCellRenderer} />
+      </Table2>
 
       <Button
         intent="success"

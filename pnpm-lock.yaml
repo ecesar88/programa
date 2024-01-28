@@ -11,6 +11,9 @@ dependencies:
   '@blueprintjs/icons':
     specifier: ^5.7.0
     version: 5.7.0(@types/react@18.2.15)(react-dom@18.2.0)(react@18.2.0)
+  '@blueprintjs/table':
+    specifier: ^5.0.23
+    version: 5.0.23(@types/react@18.2.15)(react-dom@18.2.0)(react@18.2.0)
   '@prisma/client':
     specifier: 5.8.1
     version: 5.8.1(prisma@5.8.0)
@@ -352,6 +355,30 @@ packages:
       tslib: 2.6.2
     dev: false
 
+  /@blueprintjs/core@5.8.2(@types/react@18.2.15)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-reeCUMT7exH2zxA4T6aAfgK9YARE9nUkRKwZK9XgZ/sTzojB75SuaUehrTYz4hQ6HrWbWtUzhhpK4ooI8OIWJA==}
+    hasBin: true
+    peerDependencies:
+      '@types/react': ^16.14.41 || 17 || 18
+      react: ^16.8 || 17 || 18
+      react-dom: ^16.8 || 17 || 18
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@blueprintjs/colors': 5.0.9
+      '@blueprintjs/icons': 5.7.0(@types/react@18.2.15)(react-dom@18.2.0)(react@18.2.0)
+      '@popperjs/core': 2.11.8
+      '@types/react': 18.2.15
+      classnames: 2.5.1
+      normalize.css: 8.0.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      react-popper: 2.3.0(@popperjs/core@2.11.8)(react-dom@18.2.0)(react@18.2.0)
+      react-transition-group: 4.4.5(react-dom@18.2.0)(react@18.2.0)
+      tslib: 2.6.2
+    dev: false
+
   /@blueprintjs/icons@5.7.0(@types/react@18.2.15)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-rRTDhdbDjY6WWCoZtgbD2UNPwpvjGGhieJcrvP/RcKaJKxRP4BeE9ejFq+5NWtBuVfVOraIiYF7fx6xc0wd/ww==}
     peerDependencies:
@@ -367,6 +394,25 @@ packages:
       classnames: 2.5.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+      tslib: 2.6.2
+    dev: false
+
+  /@blueprintjs/table@5.0.23(@types/react@18.2.15)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-r3c+AzLfAzTVY77Wtecw1MSV8euFuZJqZ/cV/nY/iNFj9T1SIcCWGy9V9EDngBAXwpa0uLzz5b07N8fnQ4uuMw==}
+    peerDependencies:
+      '@types/react': ^16.14.41 || 17 || 18
+      react: ^16.8 || 17 || 18
+      react-dom: ^16.8 || 17 || 18
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@blueprintjs/core': 5.8.2(@types/react@18.2.15)(react-dom@18.2.0)(react@18.2.0)
+      '@types/react': 18.2.15
+      classnames: 2.5.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      react-innertext: 1.1.5(@types/react@18.2.15)(react@18.2.0)
       tslib: 2.6.2
     dev: false
 
@@ -2010,6 +2056,16 @@ packages:
 
   /react-fast-compare@3.2.2:
     resolution: {integrity: sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==}
+    dev: false
+
+  /react-innertext@1.1.5(@types/react@18.2.15)(react@18.2.0):
+    resolution: {integrity: sha512-PWAqdqhxhHIv80dT9znP2KvS+hfkbRovFp4zFYHFFlOoQLRiawIic81gKb3U1wEyJZgMwgs3JoLtwryASRWP3Q==}
+    peerDependencies:
+      '@types/react': '>=0.0.0 <=99'
+      react: '>=0.0.0 <=99'
+    dependencies:
+      '@types/react': 18.2.15
+      react: 18.2.0
     dev: false
 
   /react-is@16.13.1:

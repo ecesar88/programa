@@ -1,6 +1,6 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { ROUTES } from "./constants";
-import { Client } from "./screens/Client";
+import { Clients } from "./screens/Clients";
 import { Home } from "./screens/Home";
 
 function App() {
@@ -8,10 +8,12 @@ function App() {
     {
       path: ROUTES.HOME,
       element: <Home />,
-    },
-    {
-      path: ROUTES.CLIENTS,
-      element: <Client />,
+      children: [
+        {
+          path: ROUTES.CLIENTS,
+          element: <Clients />,
+        },
+      ],
     },
   ]);
 

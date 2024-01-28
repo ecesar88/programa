@@ -1,7 +1,17 @@
 import { ButtonGroup, Button } from "@blueprintjs/core";
 import { createStyleMap } from "../utils";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { ROUTES } from "../constants";
+import { useMemo } from "react";
 
 export const Home = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const isCurrentScreenSelected = (route: ROUTES, selectedScreen: string) => {
+    return selectedScreen.includes(route);
+  };
+
   const styles = createStyleMap({
     container: {
       display: "flex",
@@ -21,7 +31,7 @@ export const Home = () => {
       justifyContent: "center",
       height: "60px",
       backgroundColor: "red",
-      color: "white"
+      color: "white",
     },
     content: {
       width: "100%",
@@ -36,13 +46,35 @@ export const Home = () => {
 
         <div style={styles.menuButtonsContainer}>
           <ButtonGroup vertical fill large>
-            <Button icon="database">Clientes</Button>
-            <Button icon="function">Pedidos</Button>
+            <Button
+              icon="person"
+              intent={
+                isCurrentScreenSelected(ROUTES.CLIENTS, location.pathname)
+                  ? "primary"
+                  : "none"
+              }
+              onClick={() => {
+                navigate(ROUTES.CLIENTS);
+              }}
+            >
+              Clientes
+            </Button>
+
+            <Button
+              icon="annotation"
+              onClick={() => {
+                navigate(ROUTES.HOME);
+              }}
+            >
+              Pedidos
+            </Button>
           </ButtonGroup>
         </div>
       </div>
 
-      <div style={styles.content}>CONTEUDO</div>
+      <div style={styles.content}>
+        <Outlet />
+      </div>
     </div>
   );
 };
