@@ -1,7 +1,14 @@
 import { Button } from "@blueprintjs/core";
 import { createStyleMap } from "../utils";
+import { SCREEN_MODE } from "../constants";
+import { useState } from "react";
 
 export const ScreenMenu = () => {
+  const [screenMode, setScreenMode] = useState<SCREEN_MODE>(SCREEN_MODE.VIEW);
+
+  const itemToDelete = null;
+  const itemToEdit = null;
+
   const styles = createStyleMap({
     container: {
       backgroundColor: "#fff",
@@ -20,8 +27,11 @@ export const ScreenMenu = () => {
         icon="plus"
         fill
         intent="success"
+        disabled={
+          screenMode === SCREEN_MODE.EDIT || screenMode === SCREEN_MODE.NEW
+        }
         onClick={() => {
-          console.log("abc");
+          setScreenMode(SCREEN_MODE.NEW);
         }}
       >
         Novo
@@ -31,8 +41,13 @@ export const ScreenMenu = () => {
         icon="edit"
         fill
         intent="primary"
+        disabled={
+          screenMode === SCREEN_MODE.EDIT ||
+          screenMode === SCREEN_MODE.NEW ||
+          !itemToEdit
+        }
         onClick={() => {
-          alert("abc");
+          setScreenMode(SCREEN_MODE.EDIT);
         }}
       >
         Editar
@@ -42,8 +57,9 @@ export const ScreenMenu = () => {
         icon="floppy-disk"
         fill
         intent="warning"
+        disabled={screenMode === SCREEN_MODE.VIEW}
         onClick={() => {
-          alert("abc");
+          setScreenMode(SCREEN_MODE.VIEW);
         }}
       >
         Salvar
@@ -53,6 +69,7 @@ export const ScreenMenu = () => {
         fill
         icon="trash"
         intent="danger"
+        disabled={screenMode !== SCREEN_MODE.VIEW || !itemToDelete}
         onClick={() => {
           alert("abc");
         }}

@@ -2,7 +2,6 @@ import { ButtonGroup, Button } from "@blueprintjs/core";
 import { createStyleMap } from "../utils";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "../constants";
-import { useMemo } from "react";
 
 export const Home = () => {
   const navigate = useNavigate();
@@ -16,6 +15,8 @@ export const Home = () => {
     container: {
       display: "flex",
       height: "100vh",
+      // TODO - Fix max-width when overflowing on the horizontal axis
+      // maxWidth: "100vw"
     },
     sideBar: {
       display: "flex",

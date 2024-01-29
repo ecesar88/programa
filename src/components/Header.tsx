@@ -1,4 +1,5 @@
 import { createStyleMap } from "../utils";
+import { Colors } from "@blueprintjs/core";
 
 interface HeaderProps {
   title: string;
@@ -9,7 +10,7 @@ export const Header = (props: HeaderProps) => {
     container: {
       display: "flex",
       paddingBottom: "6px",
-      borderBottom: "2px solid #738091",
+      borderBottom: `2px solid ${Colors.GRAY2}`,
     },
   });
 
