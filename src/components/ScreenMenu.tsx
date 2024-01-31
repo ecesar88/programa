@@ -3,7 +3,15 @@ import { createStyleMap } from "../utils";
 import { SCREEN_MODE } from "../constants";
 import { useState } from "react";
 
-export const ScreenMenu = () => {
+export interface ScreenMenuProps {
+  actions?: {
+    onNewClick?: () => void;
+    onEditClick?: () => void;
+    onSaveClick?: () => void;
+  };
+}
+
+export const ScreenMenu = (props: ScreenMenuProps) => {
   const [screenMode, setScreenMode] = useState<SCREEN_MODE>(SCREEN_MODE.VIEW);
 
   const itemToDelete = null;
@@ -31,7 +39,10 @@ export const ScreenMenu = () => {
           screenMode === SCREEN_MODE.EDIT || screenMode === SCREEN_MODE.NEW
         }
         onClick={() => {
-          setScreenMode(SCREEN_MODE.NEW);
+          setScreenMode(() => {
+            props?.actions?.onNewClick?.();
+            return SCREEN_MODE.NEW;
+          });
         }}
       >
         Novo
@@ -47,7 +58,10 @@ export const ScreenMenu = () => {
           !itemToEdit
         }
         onClick={() => {
-          setScreenMode(SCREEN_MODE.EDIT);
+          setScreenMode(() => {
+            props?.actions?.onEditClick?.();
+            return SCREEN_MODE.EDIT;
+          });
         }}
       >
         Editar
@@ -59,7 +73,10 @@ export const ScreenMenu = () => {
         intent="warning"
         disabled={screenMode === SCREEN_MODE.VIEW}
         onClick={() => {
-          setScreenMode(SCREEN_MODE.VIEW);
+          setScreenMode(() => {
+            props?.actions?.onSaveClick?.();
+            return SCREEN_MODE.VIEW;
+          });
         }}
       >
         Salvar

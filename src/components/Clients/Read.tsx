@@ -1,23 +1,22 @@
-import { Cell, Column, Table2 } from "@blueprintjs/table";
 import { Client } from "@prisma/client";
+import { CustomTable, Table, TableHeader } from "../Table";
 
-interface ReadProps {
-  clients: Client[];
-}
+export const Read = ({ clients }: any) => {
+  const tableHeader: TableHeader<Client>[] = [
+    {
+      render: (row) => row?.name,
+      label: "Nome",
+    },
+    {
+      render: (row) => row?.phone,
+      label: "Telefone",
+    },
+  ];
 
-export const Read = (props: ReadProps) => {
-  const dollarCellRenderer = () => (
-    <Cell>teste</Cell>
-  );
+  const tableData: Table<Client> = {
+    header: tableHeader,
+    content: clients,
+  };
 
-  const euroCellRenderer = () => (
-    <Cell>teste 2</Cell>
-  );
-
-  return (
-    <Table2 numRows={props.clients.length}>
-      <Column name="Nome" cellRenderer={dollarCellRenderer} />
-      <Column name="Telefone" cellRenderer={euroCellRenderer} />
-    </Table2>
-  );
+  return <CustomTable content={tableData.content} header={tableData.header} />;
 };
