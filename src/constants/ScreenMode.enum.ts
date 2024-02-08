@@ -1,5 +1,5 @@
 export enum SCREEN_MODE {
-  NEW,
-  EDIT,
-  VIEW,
+  NEW = "NEW",
+  EDIT = "EDIT",
+  VIEW = "VIEW",
 }

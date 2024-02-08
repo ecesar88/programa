@@ -1,22 +1,20 @@
 import { Client } from "@prisma/client";
-import { CustomTable, Table, TableHeader } from "../Table";
+import { CustomTable, Table2Props } from "../Table";
 
-export const Read = ({ clients }: any) => {
-  const tableHeader: TableHeader<Client>[] = [
-    {
-      render: (row) => row?.name,
-      label: "Nome",
-    },
-    {
-      render: (row) => row?.phone,
-      label: "Telefone",
-    },
-  ];
-
-  const tableData: Table<Client> = {
-    header: tableHeader,
-    content: clients,
+export const Read = ({ clients }: { clients: Client[] }) => {
+  const table2Data: Table2Props<Client> = {
+    header: [
+      {
+        title: "Nome",
+        keyName: "name",
+      },
+      {
+        title: "Telefone",
+        keyName: "phone",
+      },
+    ],
+    data: clients,
   };
 
-  return <CustomTable content={tableData.content} header={tableData.header} />;
+  return <CustomTable data={table2Data} />;
 };

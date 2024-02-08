@@ -1,9 +1,12 @@
 import { Button } from "@blueprintjs/core";
-import { createStyleMap } from "../utils";
 import { SCREEN_MODE } from "../constants";
-import { useState } from "react";
+import { createStyleMap } from "../utils";
 
 export interface ScreenMenuProps {
+  screenMode: {
+    screenMode: SCREEN_MODE;
+    setScreenMode: React.Dispatch<React.SetStateAction<SCREEN_MODE>>;
+  };
   actions?: {
     onNewClick?: () => void;
     onEditClick?: () => void;
@@ -12,7 +15,9 @@ export interface ScreenMenuProps {
 }
 
 export const ScreenMenu = (props: ScreenMenuProps) => {
-  const [screenMode, setScreenMode] = useState<SCREEN_MODE>(SCREEN_MODE.VIEW);
+  const {
+    screenMode: { screenMode, setScreenMode },
+  } = props;
 
   const itemToDelete = null;
   const itemToEdit = null;
@@ -22,7 +27,7 @@ export const ScreenMenu = (props: ScreenMenuProps) => {
       backgroundColor: "#fff",
       border: "1px solid #D3D8DE",
       borderRadius: "4px",
-      padding: "2px",
+      padding: "4px",
       display: "flex",
       justifyContent: "space-between",
       gap: "1rem",
@@ -52,6 +57,8 @@ export const ScreenMenu = (props: ScreenMenuProps) => {
         icon="edit"
         fill
         intent="primary"
+        form="edit-form"
+        type="submit"
         disabled={
           screenMode === SCREEN_MODE.EDIT ||
           screenMode === SCREEN_MODE.NEW ||
@@ -71,6 +78,8 @@ export const ScreenMenu = (props: ScreenMenuProps) => {
         icon="floppy-disk"
         fill
         intent="warning"
+        form="create-form"
+        type="submit"
         disabled={screenMode === SCREEN_MODE.VIEW}
         onClick={() => {
           setScreenMode(() => {

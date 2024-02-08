@@ -1,7 +1,8 @@
-import { ButtonGroup, Button } from "@blueprintjs/core";
-import { createStyleMap } from "../utils";
+import { Button, ButtonGroup } from "@blueprintjs/core";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "../constants";
+import { ScreenLocalContextProvider } from "../context/ScreenLocalContext";
+import { createStyleMap } from "../utils";
 
 export const Home = () => {
   const navigate = useNavigate();
@@ -74,7 +75,9 @@ export const Home = () => {
       </div>
 
       <div style={styles.content}>
-        <Outlet />
+        <ScreenLocalContextProvider>
+          <Outlet />
+        </ScreenLocalContextProvider>
       </div>
     </div>
   );

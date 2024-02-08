@@ -1,65 +1,57 @@
-import { CSSProperties } from "react";
+import { HotkeysProvider } from "@blueprintjs/core";
+import { Cell, Column, ColumnHeaderCell, Table2 } from "@blueprintjs/table";
 
-export interface TableHeader<T> {
-  render?: (rowData: T) => string | React.ReactNode;
-  label?: string;
-
-  cellStyle?: CSSProperties;
-  headerStyle?: CSSProperties;
-
-  headerChildren?: React.ReactNode;
+export interface Table2HeaderType<T extends Record<string, any>> {
+  title: string;
+  keyName: keyof T;
+  render?: (rowData: T) => React.ReactNode;
 }
 
-export interface Table<T> {
-  header: TableHeader<T>[];
-  content: T[];
+export interface Table2Props<T extends Record<string, any>> {
+  header: Table2HeaderType<T>[];
+  data: T[];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const CustomTable = <T extends Record<string, any>>(
-  props: Table<T>
-) => {
-  const { header, content } = props;
-
-  const defaultCellStyle: CSSProperties = {
-    display: "flex",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    gap: "6px",
-  };
+export const CustomTable = <T extends Record<string, any>>({
+  data,
+}: {
+  data: Table2Props<T>;
+}) => {
+  const { data: tableData, header: tableHeaders } = data;
 
   return (
-    <table>
-      <thead>
-        <tr>
-          {header.map((header, hIdx) => (
-            <th key={hIdx}>
-              <div style={header?.headerStyle ?? defaultCellStyle}>
-                {header?.headerChildren ?? null}
-                <p>{header?.label?.toUpperCase()}</p>
-              </div>
-            </th>
-          ))}
-        </tr>
-      </thead>
-
-      <tbody>
-        {content?.map((data, dataIndex) => {
+    <HotkeysProvider>
+      <Table2 numRows={tableData?.length} enableGhostCells>
+        {tableHeaders?.map((header) => {
           return (
-            <tr key={dataIndex}>
-              {header?.map((headerItem, hIdx) => {
+            <Column
+              key={header.title}
+              cellRenderer={(idx) => {
+                const columnData = tableData[idx];
+                const rowData = columnData[header.keyName];
+
+                let renderable;
+
+                if (header?.render) {
+                  renderable = header?.render(columnData);
+                }
+
                 return (
-                  <td key={hIdx}>
-                    <div style={headerItem?.cellStyle ?? defaultCellStyle}>
-                      {headerItem?.render?.(data)}
-                    </div>
-                  </td>
+                  <Cell tooltip={rowData}>
+                    {(() => {
+                      if (renderable) return renderable;
+                      return tableData[idx][header.keyName];
+                    })()}
+                  </Cell>
                 );
-              })}
-            </tr>
+              }}
+              columnHeaderCellRenderer={() => (
+                <ColumnHeaderCell name={header.title} />
+              )}
+            />
           );
         })}
-      </tbody>
-    </table>
+      </Table2>
+    </HotkeysProvider>
   );
 };

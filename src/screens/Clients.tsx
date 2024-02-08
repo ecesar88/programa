@@ -1,71 +1,74 @@
 import { Spinner } from "@blueprintjs/core";
 import { Client } from "@prisma/client";
-import axios from "axios";
-import { CSSProperties, useState } from "react";
+import { useContext } from "react";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { useQuery } from "react-query";
-import { Read } from "../components/Clients/Read";
-import { Header } from "../components/Header";
-import { ScreenMenu, ScreenMenuProps } from "../components/ScreenMenu";
-import { SCREEN_MODE } from "../constants";
 import { Create } from "../components/Clients/Create";
+import { Read } from "../components/Clients/Read";
+import DataHeader from "../components/DataHeader";
+import { ScreenMenuProps } from "../components/ScreenMenu";
+import { SCREEN_MODE } from "../constants";
+import { ScreenLocalContext } from "../context/ScreenLocalContext";
+import { getClients } from "../queries/client";
+import { createStyleMap } from "../utils";
 
 export const Clients = () => {
-  const [screenMode, setScreenMode] = useState<SCREEN_MODE>(SCREEN_MODE.VIEW);
-
-  const getClients = async () => {
-    try {
-      const clients = await axios.get<Client[]>(
-        "http://localhost:3001/clients"
-      );
-
-      return clients;
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const {
+    screenMode: { screenMode, setScreenMode },
+  } = useContext(ScreenLocalContext);
 
   const { isLoading, data } = useQuery("clients", getClients, {
     onError: (err) => {},
   });
 
-  const styles: Record<string, CSSProperties> = {
+  const styles = createStyleMap({
     container: {
       display: "flex",
       flexDirection: "column",
       gap: "0.5rem",
     },
+  });
+
+  const onSave: SubmitHandler<Client> = (data) => {
+    console.log("data >> ", data);
   };
+
+  const methods = useForm<Client>();
 
   const actions: ScreenMenuProps["actions"] = {
     onNewClick: () => {
-      setScreenMode(SCREEN_MODE.NEW);
+      console.log(screenMode);
     },
     onEditClick: () => {
-      setScreenMode(SCREEN_MODE.EDIT);
+      console.log(screenMode);
     },
     onSaveClick: () => {
-      setScreenMode(SCREEN_MODE.VIEW);
+      methods.handleSubmit(onSave)();
+      methods.reset();
     },
   };
 
   return (
     <div style={styles.container}>
-      <Header title="CLIENTES" />
-      <ScreenMenu actions={actions} />
+      <DataHeader
+        title="CLIENTES"
+        actions={actions}
+        screenMode={{ screenMode, setScreenMode }}
+      />
 
-      {(() => {
-        if (isLoading) {
-          return <Spinner size={110} intent="primary" />;
-        }
-
-        if (screenMode === SCREEN_MODE.NEW) {
-          return <Create />;
-        }
-
-        if (screenMode === SCREEN_MODE.VIEW) {
-          return <Read clients={data?.data as Client[]} />;
-        }
-      })()}
+      {isLoading ? (
+        <Spinner size={110} intent="primary" />
+      ) : screenMode === SCREEN_MODE.VIEW ? (
+        <Read clients={data?.data as Client[]} />
+      ) : (
+        <FormProvider {...methods}>
+          {screenMode === SCREEN_MODE.NEW ? (
+            <Create />
+          ) : screenMode === SCREEN_MODE.EDIT ? (
+            <>edit</>
+          ) : null}
+        </FormProvider>
+      )}
     </div>
   );
 };
