@@ -5,6 +5,10 @@ export const Read = ({ clients }: { clients: Client[] }) => {
   const table2Data: Table2Props<Client> = {
     header: [
       {
+        title: "Id",
+        keyName: "id",
+      },
+      {
         title: "Nome",
         keyName: "name",
       },

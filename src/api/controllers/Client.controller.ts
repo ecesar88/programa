@@ -6,8 +6,16 @@ import { clientSchema } from "../schema/Client.schema";
 
 class ClientControllerKls {
   getClients = async (_req: Request, res: Response) => {
+    // const QTDE_DADOS_PARA_MOSTRAR = 20
+
     try {
-      const clients = await db.client.findMany();
+      const clients = await db.client.findMany({
+        // skip: QTDE_DADOS_PARA_MOSTRAR * NUMERO_DA_PAGINA,
+        // take: QTDE_DADOS_PARA_MOSTRAR,
+        orderBy: {
+          id: "desc",
+        },
+      });
 
       return res.status(HttpStatusCode.OK).send(clients);
     } catch (error) {

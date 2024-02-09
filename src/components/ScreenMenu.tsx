@@ -9,8 +9,8 @@ export interface ScreenMenuProps {
   };
   actions?: {
     onNewClick?: () => void;
-    onEditClick?: () => void;
-    onSaveClick?: () => void;
+    onEditClick?: (changeScreenBack: () => void) => void;
+    onSaveClick?: (changeScreenBack: () => void) => void;
   };
 }
 
@@ -64,11 +64,14 @@ export const ScreenMenu = (props: ScreenMenuProps) => {
           screenMode === SCREEN_MODE.NEW ||
           !itemToEdit
         }
-        onClick={() => {
-          setScreenMode(() => {
-            props?.actions?.onEditClick?.();
-            return SCREEN_MODE.EDIT;
-          });
+        onClick={(e) => {
+          e.preventDefault();
+
+          const changeScreenBack = () => {
+            setScreenMode(SCREEN_MODE.EDIT);
+          };
+
+          props?.actions?.onEditClick?.(changeScreenBack);
         }}
       >
         Editar
@@ -81,11 +84,14 @@ export const ScreenMenu = (props: ScreenMenuProps) => {
         form="create-form"
         type="submit"
         disabled={screenMode === SCREEN_MODE.VIEW}
-        onClick={() => {
-          setScreenMode(() => {
-            props?.actions?.onSaveClick?.();
-            return SCREEN_MODE.VIEW;
-          });
+        onClick={(e) => {
+          e.preventDefault();
+
+          const changeScreenBack = () => {
+            setScreenMode(SCREEN_MODE.VIEW);
+          };
+
+          props?.actions?.onSaveClick?.(changeScreenBack);
         }}
       >
         Salvar
