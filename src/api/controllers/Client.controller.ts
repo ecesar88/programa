@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 import { Request, Response } from "express";
 import { HttpStatusCode } from "../../constants";
 import { db } from "../database/prismaClient";
-import { clientSchema } from "../schema/Client.schema";
+import { CreateClientResolver } from "../../resolvers/user.resolver";
 
 class ClientControllerKls {
   getClients = async (_req: Request, res: Response) => {
@@ -32,7 +32,7 @@ class ClientControllerKls {
     const clientData: Prisma.ClientCreateInput = req.body;
 
     try {
-      clientSchema.parse(clientData);
+      CreateClientResolver.parse(clientData);
 
       const client = await db.client.create({
         data: clientData,

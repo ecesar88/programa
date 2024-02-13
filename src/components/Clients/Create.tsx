@@ -18,7 +18,6 @@ export const Create = () => {
   } = useFormContext();
 
   console.log("Erros: ", errors);
-  // TODO - BOTÃO CANCELAR
 
   return (
     <form id="create-form" style={styles.container}>
@@ -30,8 +29,8 @@ export const Create = () => {
         <Input
           placeholder="Nome"
           fill
+          error={Boolean(errors?.["name"]?.message?.toString())}
           {...register("name")}
-          intent={errors?.["name"]?.message?.toString() ? "danger" : "none"}
         />
         <InputError errorMessage={errors?.["name"]?.message?.toString()} />
       </FormGroup>
@@ -40,8 +39,9 @@ export const Create = () => {
         <Input
           placeholder="Telefone"
           fill
+          error={Boolean(errors?.["name"]?.message?.toString())}
           {...register("phone")}
-          intent={errors?.["phone"]?.message?.toString() ? "danger" : "none"}
+          // TODO: Add input mask
         />
         <InputError errorMessage={errors?.["phone"]?.message?.toString()} />
       </FormGroup>

@@ -1,7 +1,13 @@
 import { Client } from "@prisma/client";
 import { CustomTable, Table2Props } from "../Table";
 
-export const Read = ({ clients }: { clients: Client[] }) => {
+export const Read = ({
+  clients,
+  onRowSelect,
+}: {
+  clients: Client[];
+  onRowSelect?: (data?: Client) => void;
+}) => {
   const table2Data: Table2Props<Client> = {
     header: [
       {
@@ -18,6 +24,9 @@ export const Read = ({ clients }: { clients: Client[] }) => {
       },
     ],
     data: clients,
+    onRowClick: (data) => {
+      onRowSelect?.(data);
+    },
   };
 
   return <CustomTable data={table2Data} />;
