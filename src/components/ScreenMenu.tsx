@@ -1,6 +1,8 @@
 import { Button, Icon } from "@blueprintjs/core";
 import { SCREEN_MODE } from "../constants";
 import { createStyleMap } from "../utils";
+import { useContext, useEffect } from "react";
+import { ScreenLocalContext } from "../context/ScreenLocalContext";
 
 export interface ScreenMenuProps {
   screenMode: {
@@ -21,8 +23,17 @@ export const ScreenMenu = (props: ScreenMenuProps) => {
     screenMode: { screenMode, setScreenMode },
   } = props;
 
-  const itemToDelete = null;
-  const itemToEdit = null;
+  const {
+    selectedRow: { selectedRow, setSelectedRow },
+  } = useContext(ScreenLocalContext);
+
+  const selectedItem =
+    selectedRow !== undefined && Object.values(selectedRow)?.length;
+
+  // Reset selected row item when changing screen
+  useEffect(() => {
+    setSelectedRow(undefined as any);
+  }, [screenMode]);
 
   const styles = createStyleMap({
     container: {
@@ -65,7 +76,7 @@ export const ScreenMenu = (props: ScreenMenuProps) => {
         disabled={
           screenMode === SCREEN_MODE.EDIT ||
           screenMode === SCREEN_MODE.NEW ||
-          !itemToEdit
+          !selectedItem
         }
         onClick={(e) => {
           e.preventDefault();
@@ -104,8 +115,7 @@ export const ScreenMenu = (props: ScreenMenuProps) => {
         fill
         icon="trash"
         intent="danger"
-        // disabled={screenMode !== SCREEN_MODE.VIEW || !itemToDelete}
-        disabled={false}
+        disabled={screenMode !== SCREEN_MODE.VIEW || !selectedItem}
         onClick={() => {
           props?.actions?.onDeleteClick?.();
         }}

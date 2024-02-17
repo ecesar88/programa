@@ -1,4 +1,4 @@
-import { Spinner } from "@blueprintjs/core";
+import { Spinner, ToastProps } from "@blueprintjs/core";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Client } from "@prisma/client";
 import { useContext, useEffect, useState } from "react";
@@ -10,30 +10,76 @@ import DataHeader from "../components/DataHeader";
 import { ScreenMenuProps } from "../components/ScreenMenu";
 import { SCREEN_MODE } from "../constants";
 import { ScreenLocalContext } from "../context/ScreenLocalContext";
-import { createClient, getClients } from "../queries/client";
+import { createClient, deleteClient, getClients } from "../queries/client";
 import { CreateClientResolver } from "../resolvers/user.resolver";
 import { createStyleMap } from "../utils";
+import { AppToaster } from "../config/toast";
+import DeleteAlertModal from "../components/AlertModal";
 
 type ClientWithoutId = Omit<Client, "id">;
 
 export const Clients = () => {
   const {
     screenMode: { screenMode, setScreenMode },
+    selectedRow: { selectedRow, setSelectedRow },
   } = useContext(ScreenLocalContext);
 
-  const [selectedRow, setSetselectedRow] = useState<Client>();
+  const showToast = async (props: ToastProps) => {
+    (await AppToaster).show(props);
+  };
 
-  const { isLoading, data } = useQuery("clients", getClients, {
-    onError: (err) => {},
-  });
+  // TODO - refactor opening logic, encapsulate the logic on the component itself
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  // FIXME - tabela não recarrega ao criar novo cliente
-  const { mutateAsync } = useMutation("createClient", createClient, {
-    // onMutate: (data) => {},
-    onError: (err) => {
-      alert(JSON.stringify(err));
+  const { isLoading, data, refetch } = useQuery("clients", getClients, {
+    onError: () => {
+      showToast({
+        message: "Erro ao obter os clientes",
+        intent: "danger",
+      });
     },
   });
+
+  const { mutateAsync: createClientMutation } = useMutation(
+    "createClient",
+    createClient,
+    {
+      onSuccess: () => {
+        refetch();
+        showToast({
+          message: "Cliente criado com sucesso!",
+          intent: "success",
+        });
+      },
+      onError: () => {
+        showToast({
+          message: "Erro ao criar o cliente",
+          intent: "danger",
+        });
+      },
+    }
+  );
+
+  // FIXME - fix selectedRow still being kept after deleting
+  const { mutateAsync: deleteClientMutation } = useMutation(
+    "deleteClient",
+    deleteClient,
+    {
+      onSuccess: () => {
+        refetch();
+        showToast({
+          message: "Cliente deletado!",
+          intent: "success",
+        });
+      },
+      onError: () => {
+        showToast({
+          message: "Erro ao deletar o cliente",
+          intent: "danger",
+        });
+      },
+    }
+  );
 
   const createForm = useForm<ClientWithoutId>({
     resolver: zodResolver(CreateClientResolver),
@@ -50,6 +96,13 @@ export const Clients = () => {
   // resolver: zodResolver(CreateUserResolver),
   // });
 
+  const handleDeleteActionButton = async () => {
+    // setSelectedRow(undefined as any);
+    // FIXME - fix typing
+    await deleteClientMutation(selectedRow?.id);
+    setIsDeleteModalOpen(false);
+  };
+
   const actions: ScreenMenuProps["actions"] = {
     onNewClick: (changeScreen) => {
       console.log(screenMode);
@@ -61,7 +114,7 @@ export const Clients = () => {
     },
     onSaveClick: (changeScreen) => {
       const onSave: SubmitHandler<ClientWithoutId> = async (data) => {
-        await mutateAsync(data);
+        await createClientMutation(data);
         createForm.reset();
 
         changeScreen();
@@ -69,9 +122,8 @@ export const Clients = () => {
 
       createForm.handleSubmit(onSave)();
     },
-
     onDeleteClick: () => {
-      console.log("Deletar o item :" + JSON.stringify(selectedRow));
+      setIsDeleteModalOpen(true);
     },
     onCancelClick: (changeScreen) => {
       createForm.reset();
@@ -88,31 +140,53 @@ export const Clients = () => {
   });
 
   return (
-    <div style={styles.container}>
-      <DataHeader
-        title="CLIENTES"
-        actions={actions}
-        screenMode={{ screenMode, setScreenMode }}
-      />
-
-      {isLoading ? (
-        <Spinner size={110} intent="primary" />
-      ) : screenMode === SCREEN_MODE.VIEW ? (
-        <Read
-          clients={data?.data as Client[]}
-          onRowSelect={(data) => {
-            setSetselectedRow(data);
-          }}
+    <>
+      <div style={styles.container}>
+        <DataHeader
+          title="CLIENTES"
+          actions={actions}
+          screenMode={{ screenMode, setScreenMode }}
         />
-      ) : (
-        <FormProvider {...createForm}>
-          {screenMode === SCREEN_MODE.NEW ? (
-            <Create />
-          ) : screenMode === SCREEN_MODE.EDIT ? (
-            <>edit</>
-          ) : null}
-        </FormProvider>
-      )}
-    </div>
+
+        {isLoading ? (
+          <Spinner size={110} intent="primary" />
+        ) : screenMode === SCREEN_MODE.VIEW ? (
+          <Read
+            clients={data?.data as Client[]}
+            onRowSelect={(data) => {
+              setSelectedRow(data as any);
+            }}
+          />
+        ) : (
+          <FormProvider {...createForm}>
+            {screenMode === SCREEN_MODE.NEW ? (
+              <Create />
+            ) : screenMode === SCREEN_MODE.EDIT ? (
+              <>edit</>
+            ) : null}
+          </FormProvider>
+        )}
+      </div>
+
+      <DeleteAlertModal
+        isOpen={isDeleteModalOpen}
+        confirmButtonText="Deletar"
+        cancelButtonText="Cancelar"
+        icon="trash"
+        intent="danger"
+        actions={{
+          onCancel: () => {
+            setIsDeleteModalOpen(false);
+          },
+          onConfirm: () => {
+            handleDeleteActionButton();
+          },
+        }}
+      >
+        <p>
+          Deletar o cliente <b>{selectedRow?.name as any}</b> ?
+        </p>
+      </DeleteAlertModal>
+    </>
   );
 };

@@ -1,14 +1,15 @@
 import { useState, createContext } from "react";
 import { SCREEN_MODE } from "../constants";
 
+// TODO - fix types
 interface ScreenLocalContextType<T extends {} = {}> {
   screenMode: {
     screenMode: SCREEN_MODE;
     setScreenMode: React.Dispatch<React.SetStateAction<SCREEN_MODE>>;
   };
-  formData: {
-    formData: {};
-    setFormData: React.Dispatch<React.SetStateAction<{}>>;
+  selectedRow: {
+    selectedRow: T;
+    setSelectedRow: React.Dispatch<React.SetStateAction<T>>;
   };
 }
 
@@ -20,7 +21,7 @@ function ScreenLocalContextProvider({
   children: React.ReactNode;
 }) {
   const [screenMode, setScreenMode] = useState(SCREEN_MODE.VIEW);
-  const [formData, setFormData] = useState({});
+  const [selectedRow, setSelectedRow] = useState<any>({});
 
   return (
     <ScreenLocalContext.Provider
@@ -29,9 +30,9 @@ function ScreenLocalContextProvider({
           screenMode,
           setScreenMode,
         },
-        formData: {
-          formData,
-          setFormData,
+        selectedRow: {
+          selectedRow,
+          setSelectedRow,
         },
       }}
     >

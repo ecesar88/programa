@@ -1,8 +1,10 @@
 import { Prisma } from "@prisma/client";
 import { Request, Response } from "express";
+import { z } from "zod";
 import { HttpStatusCode } from "../../constants";
-import { db } from "../database/prismaClient";
 import { CreateClientResolver } from "../../resolvers/user.resolver";
+import { db } from "../database/prismaClient";
+import { LOG_LEVEL, logger } from "../../utils";
 
 class ClientControllerKls {
   getClients = async (_req: Request, res: Response) => {
@@ -19,7 +21,11 @@ class ClientControllerKls {
 
       return res.status(HttpStatusCode.OK).send(clients);
     } catch (error) {
-      console.error("Não foi possivel obter os clientes. Erro: ", error);
+      logger({
+        level: LOG_LEVEL.ERROR,
+        message: "Não foi possivel obter os clientes.",
+        object: String(error),
+      });
 
       return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
         message: "Não foi possivel obter os clientes.",
@@ -32,18 +38,55 @@ class ClientControllerKls {
     const clientData: Prisma.ClientCreateInput = req.body;
 
     try {
+      logger({
+        level: LOG_LEVEL.INFO,
+        message: "Criando novo cliente com dados:",
+        object: JSON.stringify(clientData, null, 2),
+      });
+
       CreateClientResolver.parse(clientData);
 
       const client = await db.client.create({
         data: clientData,
       });
 
-      return res.status(HttpStatusCode.OK).send(client);
+      return res.status(HttpStatusCode.CREATED).send(client);
     } catch (error) {
-      console.error("Não foi possivel criar o cliente. Erro: ", error);
+      logger({
+        level: LOG_LEVEL.ERROR,
+        message: "Não foi possivel criar o cliente.",
+        object: JSON.stringify(error, null, 2),
+      });
 
       return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
         message: "Não foi possivel criar o cliente.",
+        error: error,
+      });
+    }
+  };
+
+  deleteClient = async (req: Request, res: Response) => {
+    const idAsString = req.params.clientId;
+
+    try {
+      const clientId = z.number().parse(parseInt(idAsString));
+
+      const client = await db.client.delete({
+        where: {
+          id: clientId,
+        },
+      });
+
+      return res.status(HttpStatusCode.OK).send(client);
+    } catch (error) {
+      logger({
+        level: LOG_LEVEL.ERROR,
+        message: "Não foi possivel deletar o cliente.",
+        object: JSON.stringify(error, null, 2),
+      });
+
+      return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
+        message: "Não foi possivel deletar o cliente.",
         error: error,
       });
     }

@@ -9,6 +9,7 @@ export const getClients = async () => {
     return clients;
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
 
@@ -21,5 +22,19 @@ export const createClient = async (
     return client;
   } catch (error) {
     console.error(error);
+    throw error;
+  }
+};
+
+export const deleteClient = async (clientId: number) => {
+  try {
+    const client = await server.delete<Client>(
+      `${ENDPOINTS.clients}/${clientId}`
+    );
+
+    return client;
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 };

@@ -50,6 +50,9 @@ dependencies:
   morgan:
     specifier: ^1.10.0
     version: 1.10.0
+  node-color-log:
+    specifier: ^11.0.2
+    version: 11.0.2
   prisma:
     specifier: ^5.8.0
     version: 5.8.0
@@ -1979,6 +1982,10 @@ packages:
     dependencies:
       lower-case: 2.0.2
       tslib: 2.6.2
+    dev: false
+
+  /node-color-log@11.0.2:
+    resolution: {integrity: sha512-+gD5pQpVpEkEA3He9STku4VL1EO9SaOW3HElumCd3xWorulnfr2053NCSVwPCXrkwI5ihPYucQxSCSOuS1q+Eg==}
     dev: false
 
   /node-releases@2.0.14:

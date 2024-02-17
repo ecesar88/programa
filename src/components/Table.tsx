@@ -43,9 +43,6 @@ export const CustomTable = <T extends Record<string, any>>({
         }}
         enableGhostCells
         selectionModes={SelectionModes.ROWS_AND_CELLS}
-        onFocusedCell={(focusedCell) => {
-          console.log("focusedCell > ", focusedCell);
-        }}
       >
         {tableHeaders?.map((header) => {
           return (
