@@ -26,6 +26,25 @@ export const createClient = async (
   }
 };
 
+export const editClient = async (params: {
+  clientId: number;
+  clientData: Prisma.ClientCreateWithoutOrdersInput;
+}) => {
+  const { clientId, clientData } = params;
+
+  try {
+    const client = await server.put<Client>(
+      `${ENDPOINTS.clients}/${clientId}`,
+      clientData
+    );
+
+    return client;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 export const deleteClient = async (clientId: number) => {
   try {
     const client = await server.delete<Client>(

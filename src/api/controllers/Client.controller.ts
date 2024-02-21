@@ -91,6 +91,43 @@ class ClientControllerKls {
       });
     }
   };
+
+  editClient = async (req: Request, res: Response) => {
+    const clientData: Prisma.ClientCreateInput = req.body;
+    const idAsString = req.params.clientId;
+
+    try {
+      const clientId = z.number().parse(parseInt(idAsString));
+
+      logger({
+        level: LOG_LEVEL.INFO,
+        message: `Editando cliente com id ${clientId} com dados:`,
+        object: JSON.stringify(clientData, null, 2),
+      });
+
+      CreateClientResolver.parse(clientData);
+
+      const client = await db.client.update({
+        where: {
+          id: clientId,
+        },
+        data: clientData,
+      });
+
+      return res.status(HttpStatusCode.OK).send(client);
+    } catch (error) {
+      logger({
+        level: LOG_LEVEL.ERROR,
+        message: "Não foi possivel editar o cliente.",
+        object: JSON.stringify(error, null, 2),
+      });
+
+      return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
+        message: "Não foi possivel editar o cliente.",
+        error: error,
+      });
+    }
+  };
 }
 
 export const ClientController = new ClientControllerKls();

@@ -1,10 +1,18 @@
 import { FormGroup } from "@blueprintjs/core";
+import { useContext, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
+import { SCREEN_MODE } from "../../constants";
+import { ScreenLocalContext } from "../../context/ScreenLocalContext";
 import { createStyleMap } from "../../utils";
 import { Input } from "../Input";
 import InputError from "../InputError";
 
-export const Create = () => {
+export const CreateOrEdit = () => {
+  const {
+    screenMode: { screenMode },
+    selectedRow: { selectedRow },
+  } = useContext(ScreenLocalContext);
+
   const styles = createStyleMap({
     container: {
       display: "flex",
@@ -14,10 +22,20 @@ export const Create = () => {
 
   const {
     register,
+    reset,
     formState: { errors },
   } = useFormContext();
 
-  console.log("Erros: ", errors);
+  useEffect(() => {
+    const isScreenInEditModeAndHasData =
+      screenMode === SCREEN_MODE.EDIT &&
+      selectedRow !== undefined &&
+      Object.values(selectedRow).length;
+
+    if (isScreenInEditModeAndHasData) {
+      reset(selectedRow);
+    }
+  }, [selectedRow]);
 
   return (
     <form id="create-form" style={styles.container}>

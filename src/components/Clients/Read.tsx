@@ -1,5 +1,7 @@
 import { Client } from "@prisma/client";
 import { CustomTable, Table2Props } from "../Table";
+import { useContext } from "react";
+import { ScreenLocalContext } from "../../context/ScreenLocalContext";
 
 export const Read = ({
   clients,
@@ -8,6 +10,10 @@ export const Read = ({
   clients: Client[];
   onRowSelect?: (data?: Client) => void;
 }) => {
+  const {
+    selectedRow: { selectedRow },
+  } = useContext(ScreenLocalContext);
+
   const table2Data: Table2Props<Client> = {
     header: [
       {
@@ -27,6 +33,7 @@ export const Read = ({
     onRowClick: (data) => {
       onRowSelect?.(data);
     },
+    selectedRow: selectedRow as Client,
   };
 
   return <CustomTable data={table2Data} />;

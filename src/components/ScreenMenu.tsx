@@ -32,7 +32,11 @@ export const ScreenMenu = (props: ScreenMenuProps) => {
 
   // Reset selected row item when changing screen
   useEffect(() => {
-    setSelectedRow(undefined as any);
+    if (screenMode === SCREEN_MODE.EDIT) {
+      return;
+    }
+
+    setSelectedRow({});
   }, [screenMode]);
 
   const styles = createStyleMap({

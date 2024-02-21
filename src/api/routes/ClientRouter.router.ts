@@ -8,6 +8,7 @@ router
   .get(ClientController.getClients)
   .post(ClientController.createClient);
 
+router.put("/clients/:clientId", ClientController.editClient);
 router.delete("/clients/:clientId", ClientController.deleteClient);
 
 export { router as default };

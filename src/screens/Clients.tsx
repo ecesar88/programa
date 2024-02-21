@@ -1,16 +1,21 @@
 import { Spinner, ToastProps } from "@blueprintjs/core";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Client } from "@prisma/client";
+import { Client, Prisma } from "@prisma/client";
 import { useContext, useEffect, useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { useMutation, useQuery } from "react-query";
-import { Create } from "../components/Clients/Create";
+import { CreateOrEdit } from "../components/Clients/CreateOrEdit";
 import { Read } from "../components/Clients/Read";
 import DataHeader from "../components/DataHeader";
 import { ScreenMenuProps } from "../components/ScreenMenu";
 import { SCREEN_MODE } from "../constants";
 import { ScreenLocalContext } from "../context/ScreenLocalContext";
-import { createClient, deleteClient, getClients } from "../queries/client";
+import {
+  createClient,
+  deleteClient,
+  editClient,
+  getClients,
+} from "../queries/client";
 import { CreateClientResolver } from "../resolvers/user.resolver";
 import { createStyleMap } from "../utils";
 import { AppToaster } from "../config/toast";
@@ -40,10 +45,8 @@ export const Clients = () => {
     },
   });
 
-  const { mutateAsync: createClientMutation } = useMutation(
-    "createClient",
-    createClient,
-    {
+  const { mutateAsync: createClientMutation, isSuccess: createdSuccessfully } =
+    useMutation("createClient", createClient, {
       onSuccess: () => {
         refetch();
         showToast({
@@ -57,10 +60,8 @@ export const Clients = () => {
           intent: "danger",
         });
       },
-    }
-  );
+    });
 
-  // FIXME - fix selectedRow still being kept after deleting
   const { mutateAsync: deleteClientMutation } = useMutation(
     "deleteClient",
     deleteClient,
@@ -81,52 +82,79 @@ export const Clients = () => {
     }
   );
 
-  const createForm = useForm<ClientWithoutId>({
+  const { mutateAsync: editClientMutation, isSuccess: editedSuccessfully } =
+    useMutation("editClient", editClient, {
+      onSuccess: () => {
+        refetch();
+        showToast({
+          message: "Cliente editado com sucesso!",
+          intent: "success",
+        });
+      },
+      onError: () => {
+        showToast({
+          message: "Erro ao editar o cliente",
+          intent: "danger",
+        });
+      },
+    });
+
+  const form = useForm<ClientWithoutId>({
     resolver: zodResolver(CreateClientResolver),
   });
 
   useEffect(() => {
     return () => {
       setScreenMode(SCREEN_MODE.VIEW);
-      createForm.reset();
+      form.reset();
     };
   }, []);
 
-  // const editForm = useForm<Client>({
-  // resolver: zodResolver(CreateUserResolver),
-  // });
-
   const handleDeleteActionButton = async () => {
-    // setSelectedRow(undefined as any);
-    // FIXME - fix typing
-    await deleteClientMutation(selectedRow?.id);
+    await deleteClientMutation((selectedRow as Client)?.id);
+    setSelectedRow({});
     setIsDeleteModalOpen(false);
   };
 
   const actions: ScreenMenuProps["actions"] = {
     onNewClick: (changeScreen) => {
-      console.log(screenMode);
       changeScreen();
     },
     onEditClick: (changeScreen) => {
       changeScreen();
-      console.log(screenMode);
     },
     onSaveClick: (changeScreen) => {
-      const onSave: SubmitHandler<ClientWithoutId> = async (data) => {
+      const onCreate: SubmitHandler<ClientWithoutId> = async (data) => {
         await createClientMutation(data);
-        createForm.reset();
 
-        changeScreen();
+        if (createdSuccessfully) {
+          form.reset();
+          changeScreen();
+        }
       };
 
-      createForm.handleSubmit(onSave)();
+      const onEdit: SubmitHandler<ClientWithoutId> = async (data) => {
+        const { id } = selectedRow as Client;
+
+        await editClientMutation({
+          clientId: id,
+          clientData: data,
+        });
+
+        if (editedSuccessfully) {
+          form.reset();
+          changeScreen();
+        }
+      };
+
+      form.handleSubmit(screenMode === SCREEN_MODE.NEW ? onCreate : onEdit)();
     },
     onDeleteClick: () => {
       setIsDeleteModalOpen(true);
     },
     onCancelClick: (changeScreen) => {
-      createForm.reset();
+      form.reset();
+      setSelectedRow({});
       changeScreen();
     },
   };
@@ -148,24 +176,20 @@ export const Clients = () => {
           screenMode={{ screenMode, setScreenMode }}
         />
 
-        {isLoading ? (
-          <Spinner size={110} intent="primary" />
-        ) : screenMode === SCREEN_MODE.VIEW ? (
-          <Read
-            clients={data?.data as Client[]}
-            onRowSelect={(data) => {
-              setSelectedRow(data as any);
-            }}
-          />
-        ) : (
-          <FormProvider {...createForm}>
-            {screenMode === SCREEN_MODE.NEW ? (
-              <Create />
-            ) : screenMode === SCREEN_MODE.EDIT ? (
-              <>edit</>
-            ) : null}
-          </FormProvider>
-        )}
+        <FormProvider {...form}>
+          {isLoading ? (
+            <Spinner size={110} intent="primary" />
+          ) : screenMode === SCREEN_MODE.VIEW ? (
+            <Read
+              clients={data?.data as Client[]}
+              onRowSelect={(data) => {
+                setSelectedRow(data as Client);
+              }}
+            />
+          ) : (
+            <CreateOrEdit />
+          )}
+        </FormProvider>
       </div>
 
       <DeleteAlertModal
@@ -176,6 +200,7 @@ export const Clients = () => {
         intent="danger"
         actions={{
           onCancel: () => {
+            setSelectedRow({});
             setIsDeleteModalOpen(false);
           },
           onConfirm: () => {
@@ -184,7 +209,7 @@ export const Clients = () => {
         }}
       >
         <p>
-          Deletar o cliente <b>{selectedRow?.name as any}</b> ?
+          Deletar o cliente <b>{(selectedRow as Client)?.name}</b> ?
         </p>
       </DeleteAlertModal>
     </>

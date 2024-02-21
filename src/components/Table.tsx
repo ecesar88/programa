@@ -17,6 +17,7 @@ export interface Table2Props<T extends Record<string, any>> {
   header: Table2HeaderType<T>[];
   data: T[];
   onRowClick?: (data?: T) => void;
+  selectedRow?: T;
 }
 
 export const CustomTable = <T extends Record<string, any>>({
@@ -24,7 +25,12 @@ export const CustomTable = <T extends Record<string, any>>({
 }: {
   data: Table2Props<T>;
 }) => {
-  const { data: tableData, header: tableHeaders, onRowClick } = data;
+  const {
+    data: tableData,
+    header: tableHeaders,
+    onRowClick,
+    selectedRow,
+  } = data;
 
   return (
     <HotkeysProvider>
@@ -36,6 +42,14 @@ export const CustomTable = <T extends Record<string, any>>({
           const index = e.rows?.[0];
           const rowData = tableData[index!] ?? undefined;
           onRowClick?.(rowData);
+
+          // if (
+          //   selectedRow === undefined ||
+          //   (selectedRow !== undefined && !Object.values(selectedRow).length)
+          // )
+          //   return {
+          //     rows: undefined,
+          //   };
 
           return {
             rows: e.rows,
