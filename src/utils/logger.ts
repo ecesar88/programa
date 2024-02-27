@@ -15,42 +15,37 @@ export const logger = ({
   message: string;
   object?: string;
 }) => {
-  const errorLog = (message: string) =>
-    nodeColorLog.color("white").bgColor("red").bold().log(message);
+  const errorLog = (message: string) => nodeColorLog.error(message);
+  const warnLog = (message: string) => nodeColorLog.warn(message);
+  const infoLog = (message: string) => nodeColorLog.info(message);
 
-  const warnLog = (message: string) =>
-    nodeColorLog.color("black").bgColor("yellow").bold().log(message);
-
-  const infoLog = (message: string) =>
-    nodeColorLog.color("white").bgColor("green").bold().log(message);
-
-  const errorPrefix = " [ ERROR ] => ";
-  const warnPrefix = " [ WARN ] => ";
-  const infoPrefix = " [ INFO ] => ";
+  const logPrefix = " => ";
 
   switch (level) {
     case LOG_LEVEL.ERROR: {
-      errorLog(`\n\n${errorPrefix} ${message}`);
+      errorLog(`${logPrefix} ${message}`);
 
       if (object) {
-        nodeColorLog.log(`Error: \n${object}\n\n`);
+        nodeColorLog.log(`Error: ${object}`);
       }
 
       break;
     }
+
     case LOG_LEVEL.WARN: {
-      warnLog(`${warnPrefix} ${message}`);
+      warnLog(`${logPrefix} ${message}`);
       if (object) {
-        nodeColorLog.log(`Object: \n${object}\n\n`);
+        nodeColorLog.log(`${object}`);
       }
 
       break;
     }
+
     case LOG_LEVEL.INFO: {
-      infoLog(`${infoPrefix} ${message}`);
+      infoLog(`${logPrefix} ${message}`);
 
       if (object) {
-        nodeColorLog.log(`Object: \n${object}\n\n`);
+        nodeColorLog.log(`${object}`);
       }
 
       break;

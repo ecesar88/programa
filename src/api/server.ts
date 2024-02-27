@@ -1,14 +1,16 @@
-import express from "express";
-import dotenv from "dotenv";
-import { ClientRouter } from "./routes";
 import cors from "cors";
-import morgan from "morgan";
+import dotenv from "dotenv";
+import express from "express";
+import helmet from "helmet";
+import { LOG_LEVEL, logger, parseEnv } from "../utils";
+import { errorHandlerMiddleware, loggerMiddleware } from "./middleware";
+import { ClientRouter } from "./routes";
 
 dotenv.config();
 
 const app = express();
 
-app.use(morgan("dev"))
+app.use(helmet());
 
 app.use(express.json());
 app.use(
@@ -17,7 +19,7 @@ app.use(
   })
 );
 
-const PORT = 3001;
+app.use(loggerMiddleware);
 
 app.get("/info", (_req, res) => {
   res.send("Version 0.0.1");
@@ -25,6 +27,17 @@ app.get("/info", (_req, res) => {
 
 app.use(ClientRouter);
 
-app.listen(PORT, "127.0.0.1", () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
+app.use(errorHandlerMiddleware);
+
+const SERVER_PORT = parseEnv<number>("SERVER_PORT", process.env.SERVER_PORT)!;
+const SERVER_HOSTNAME = parseEnv<string>(
+  "SERVER_HOSTNAME",
+  process.env.SERVER_HOSTNAME
+)!;
+
+app.listen(SERVER_PORT, SERVER_HOSTNAME, () => {
+  logger({
+    level: LOG_LEVEL.INFO,
+    message: `Servidor rodando na porta ${SERVER_PORT}\n`,
+  });
 });

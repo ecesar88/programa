@@ -103,6 +103,7 @@ export const Clients = () => {
     resolver: zodResolver(CreateClientResolver),
   });
 
+  // Reset SCREEN_MODE and form when changing screens
   useEffect(() => {
     return () => {
       setScreenMode(SCREEN_MODE.VIEW);
