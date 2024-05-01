@@ -3,3 +3,8 @@ export enum SCREEN_MODE {
   EDIT = 'EDIT',
   VIEW = 'VIEW'
 }
+
+export enum OverlayMode {
+  NEW = 'NEW',
+  EDIT = 'EDIT'
+}

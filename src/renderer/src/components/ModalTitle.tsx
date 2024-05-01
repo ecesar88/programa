@@ -1,0 +1,9 @@
+const ModalTitle = ({ title }: { title: string }): React.ReactNode => {
+  return (
+    <div className="text-2xl font-bold pb-2">
+      <h2>{title}</h2>
+    </div>
+  )
+}
+
+export default ModalTitle
