@@ -1,7 +1,9 @@
 import { Spinner, ToastProps } from '@blueprintjs/core'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Client } from '@prisma/client'
-import { useContext, useEffect, useState } from 'react'
+import { Client, Order } from '@prisma/client'
+import { OverlayMode } from '@renderer/constants/enums'
+import { OverlayData } from '@renderer/types'
+import { useCallback, useEffect, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { useMutation, useQuery } from 'react-query'
 import DeleteAlertModal from '../components/AlertModal'
@@ -9,25 +11,31 @@ import DataHeader from '../components/DataHeader'
 import { Read } from '../components/Orders/Read'
 import { ScreenMenuProps } from '../components/ScreenMenu'
 import { AppToaster } from '../config/toast'
-import { SCREEN_MODE } from '../constants'
-import { ScreenLocalContext } from '../context/ScreenLocalContext'
+import { useSelectedRowContext } from '../context/SelectedRowContext'
 import { createClient, deleteClient, editClient, getClients } from '../queries/client'
 import { CreateClientResolver } from '../resolvers/user.resolver'
 
 type ClientWithoutId = Omit<Client, 'id'>
 
-export const Orders = () => {
-  const {
-    screenMode: { screenMode, setScreenMode },
-    selectedRow: { selectedRow, setSelectedRow }
-  } = useContext(ScreenLocalContext)
+export const Orders = (): React.ReactNode => {
+  const { selectedRow, setSelectedRow } = useSelectedRowContext<Order>()
 
-  const showToast = async (props: ToastProps) => {
+  const showToast = async (props: ToastProps): Promise<void> => {
     ;(await AppToaster).show(props)
   }
 
-  // TODO - refactor opening logic, encapsulate the logic on the component itself
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [overlayData, setOverlayData] = useState<OverlayData>({ isOpen: false, mode: null })
+
+  const openModalOverlay = useCallback(
+    (mode: OverlayMode) => setOverlayData({ isOpen: true, mode }),
+    [setOverlayData]
+  )
+
+  const closeModalOverlay = useCallback(() => {
+    setOverlayData({ isOpen: false, mode: null })
+    return false
+  }, [setOverlayData])
 
   const { isLoading, data, refetch } = useQuery('clients', getClients, {
     onError: () => {
@@ -101,31 +109,30 @@ export const Orders = () => {
   // Reset SCREEN_MODE and form when changing screens
   useEffect(() => {
     return () => {
-      setScreenMode(SCREEN_MODE.VIEW)
       form.reset()
     }
   }, [])
 
-  const handleDeleteActionButton = async () => {
+  const handleDeleteActionButton = async (): Promise<void> => {
     await deleteClientMutation((selectedRow as Client)?.id)
     setSelectedRow({})
     setIsDeleteModalOpen(false)
   }
 
   const actions: ScreenMenuProps['actions'] = {
-    onNewClick: (changeScreen) => {
-      changeScreen()
+    onNewClick: () => {
+      openModalOverlay(OverlayMode.NEW)
     },
-    onEditClick: (changeScreen) => {
-      changeScreen()
+    onEditClick: () => {
+      openModalOverlay(OverlayMode.EDIT)
     },
-    onSaveClick: (changeScreen) => {
+    onSaveClick: () => {
       const onCreate: SubmitHandler<ClientWithoutId> = async (data) => {
         await createClientMutation(data)
 
         if (createdSuccessfully) {
           form.reset()
-          changeScreen()
+          closeModalOverlay()
         }
       }
 
@@ -139,22 +146,21 @@ export const Orders = () => {
 
         if (editedSuccessfully) {
           form.reset()
-          changeScreen()
+          closeModalOverlay()
         }
       }
 
-      form.handleSubmit(screenMode === SCREEN_MODE.NEW ? onCreate : onEdit)()
+      form.handleSubmit(overlayData.mode === OverlayMode.NEW ? onCreate : onEdit)()
     },
     onDeleteClick: () => {
       setIsDeleteModalOpen(true)
     },
-    onCancelClick: (changeScreen) => {
+    onCancelClick: () => {
       form.reset()
       setSelectedRow({})
-      changeScreen()
+      closeModalOverlay()
     }
   }
-
   return (
     <>
       <div>

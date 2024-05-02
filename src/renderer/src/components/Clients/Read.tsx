@@ -1,40 +1,49 @@
 import { Client } from '@prisma/client'
-import { CustomTable, Table2Props } from '../Table'
-import { useContext } from 'react'
-import { ScreenLocalContext } from '../../context/ScreenLocalContext'
+import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
+import { useSelectedRowContext } from '../../context/SelectedRowContext'
+import { CustomTable } from '../Table'
 
 export const Read = ({
   clients,
-  onRowSelect
+  onRowClick
 }: {
   clients: Client[]
-  onRowSelect?: (data?: Client) => void
-}) => {
-  const {
-    selectedRow: { selectedRow }
-  } = useContext(ScreenLocalContext)
+  onRowClick?: (data: Client, index: number) => void
+}): React.ReactNode => {
+  const { selectedRow } = useSelectedRowContext<Client>()
 
-  const table2Data: Table2Props<Client> = {
-    header: [
-      {
-        title: 'Id',
-        keyName: 'id'
-      },
-      {
-        title: 'Nome',
-        keyName: 'name'
-      },
-      {
-        title: 'Telefone',
-        keyName: 'phone'
-      }
-    ],
-    data: clients,
-    onRowClick: (data) => {
-      onRowSelect?.(data)
-    },
-    selectedRow: selectedRow as Client
-  }
+  const columnHelper = createColumnHelper<Client>()
 
-  return <CustomTable data={table2Data} />
+  const columns = [
+    columnHelper.accessor('id', {
+      id: 'id',
+      cell: (info) => info.getValue(),
+      header: () => <>Id</>,
+      maxSize: 80,
+      minSize: 80
+    }),
+    columnHelper.accessor('name', {
+      id: 'name',
+      cell: (info) => info.getValue(),
+      header: () => <>Nome</>,
+      maxSize: 256,
+      minSize: 256
+    }),
+    columnHelper.accessor('phone', {
+      id: 'phone',
+      cell: (info) => info.getValue(),
+      header: () => <>Telefone</>,
+      maxSize: 256,
+      minSize: 256
+    })
+  ]
+
+  return (
+    <CustomTable
+      data={clients}
+      columns={columns as ColumnDef<Client>[]}
+      selectedRow={selectedRow}
+      onRowClick={onRowClick}
+    />
+  )
 }
