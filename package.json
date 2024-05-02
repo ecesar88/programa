@@ -22,7 +22,8 @@
     "server": "tsx watch ./src/renderer/src/api/server.ts"
   },
   "prisma": {
-    "schema": "src/renderer/src/api/database/prisma/schema.prisma"
+    "schema": "src/renderer/src/api/database/prisma/schema.prisma",
+    "seed": "tsx src/renderer/src/api/seeds/index.ts"
   },
   "dependencies": {
     "@blueprintjs/core": "^5.10.2",

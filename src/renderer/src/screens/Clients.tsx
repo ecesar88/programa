@@ -62,6 +62,7 @@ export const Clients = (): JSX.Element => {
 
       form.reset()
       closeModalOverlay()
+      resetSelectedRow()
     },
     onError: () => {
       showToast({
@@ -78,6 +79,8 @@ export const Clients = (): JSX.Element => {
         message: 'Cliente deletado!',
         intent: 'success'
       })
+
+      resetSelectedRow()
     },
     onError: () => {
       showToast({
@@ -96,6 +99,7 @@ export const Clients = (): JSX.Element => {
       })
 
       form.reset()
+      resetSelectedRow()
       closeModalOverlay()
     },
     onError: () => {

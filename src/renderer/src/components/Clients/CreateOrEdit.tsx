@@ -26,10 +26,9 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
   } = useFormContext()
 
   useEffect(() => {
-    const isScreenInEditModeAndHasData =
-      selectedRow?.data !== undefined && Object.values(selectedRow?.data).length
+    const rowHasData = selectedRow?.data !== undefined && Object.values(selectedRow?.data).length
 
-    if (isScreenInEditModeAndHasData) {
+    if (rowHasData) {
       reset(selectedRow?.data)
     }
   }, [selectedRow])

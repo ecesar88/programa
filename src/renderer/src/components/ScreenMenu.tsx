@@ -12,7 +12,9 @@ export interface ScreenMenuProps {
 }
 
 export const ScreenMenu = (props: ScreenMenuProps): React.ReactNode => {
-  const { selectedRow } = useSelectedRowContext()
+  const { selectedRow, setSelectedRow } = useSelectedRowContext()
+
+  const clearSelectedRow = (): void => setSelectedRow({})
 
   const selectedItem = selectedRow !== undefined && Object.values(selectedRow)?.length
 
@@ -24,6 +26,7 @@ export const ScreenMenu = (props: ScreenMenuProps): React.ReactNode => {
         intent="success"
         className="max-w-[150px]"
         onClick={() => {
+          clearSelectedRow()
           props?.actions?.onNewClick?.()
         }}
       >
