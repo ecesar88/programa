@@ -118,7 +118,8 @@ export const Clients = (): JSX.Element => {
   }, [])
 
   const handleDeleteActionButton = async (): Promise<void> => {
-    await deleteClientMutation((selectedRow as Client)?.id)
+    await deleteClientMutation(selectedRow.data?.id as number)
+
     resetSelectedRow()
     closeAlertModal()
   }
