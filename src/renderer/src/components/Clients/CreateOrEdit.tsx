@@ -36,7 +36,9 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
 
   return (
     <div className="p-5 bg-white h-[200px] w-[800px] rounded flex flex-col gap-1 justify-between">
-      <ModalTitle title="Novo cliente" />
+      <ModalTitle
+        title={props.overlayMode === OverlayMode.NEW ? 'Novo cliente' : 'Editar cliente'}
+      />
 
       <form id="create-form" className="w-full h-full">
         <div className="flex gap-4 w-full">
