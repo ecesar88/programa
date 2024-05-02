@@ -1,5 +1,5 @@
 import { Client } from '@prisma/client'
-import { createColumnHelper } from '@tanstack/react-table'
+import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { useContext } from 'react'
 import { SelectedRowContext, SelectedRowContextType } from '../../context/SelectedRowContext'
 import { CustomTable } from '../Table'
@@ -39,34 +39,10 @@ export const Read = ({
     })
   ]
 
-  // const columns: ColumnDef<Client>[] = [
-  //   {
-  //     id: 'id',
-  //     cell: (info) => info.getValue(),
-  //     header: () => <>Id</>,
-  //     maxSize: 80,
-  //     minSize: 80
-  //   },
-  //   {
-  //     id: 'name',
-  //     cell: (info) => info.getValue(),
-  //     header: () => <>Nome</>,
-  //     maxSize: 256,
-  //     minSize: 256
-  //   },
-  //   {
-  //     id: 'phone',
-  //     cell: (info) => info.getValue(),
-  //     header: () => <>Telefone</>,
-  //     maxSize: 256,
-  //     minSize: 256
-  //   }
-  // ]
-
   return (
     <CustomTable
       data={clients}
-      columns={columns}
+      columns={columns as ColumnDef<Client>[]}
       selectedRow={selectedRow}
       onRowClick={onRowClick}
     />

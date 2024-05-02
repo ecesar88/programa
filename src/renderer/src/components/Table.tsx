@@ -11,7 +11,7 @@ export interface Table2HeaderType<T extends object> {
 
 export interface TableProps<T extends object> {
   columns: ColumnDef<T>[]
-  // columns: AccessorFnColumnDef<T>[] | AccessorKeyColumnDef<T>[]
+  // columns: ColumnHelper<T>
   data: T[]
   selectedRow?: RowMetadata<T>
   onRowClick?: (data: T, index: number) => void
