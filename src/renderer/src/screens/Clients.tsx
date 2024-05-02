@@ -2,7 +2,8 @@ import { Dialog, DialogBody, Spinner, ToastProps } from '@blueprintjs/core'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Client } from '@prisma/client'
 import { OverlayMode } from '@renderer/constants/enums'
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { OverlayData } from '@renderer/types'
+import { useCallback, useEffect, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { useMutation, useQuery } from 'react-query'
 import DeleteAlertModal from '../components/AlertModal'
@@ -11,21 +12,14 @@ import { Read } from '../components/Clients/Read'
 import DataHeader from '../components/DataHeader'
 import { ScreenMenuProps } from '../components/ScreenMenu'
 import { AppToaster } from '../config/toast'
-import { ScreenLocalContext } from '../context/ScreenLocalContext'
+import { useSelectedRowContext } from '../context/SelectedRowContext'
 import { createClient, deleteClient, editClient, getClients } from '../queries/client'
 import { CreateClientResolver } from '../resolvers/user.resolver'
 
 type ClientWithoutId = Omit<Client, 'id'>
 
-type OverlayData = {
-  isOpen: boolean
-  mode: OverlayMode | null
-}
-
 export const Clients = (): JSX.Element => {
-  const {
-    selectedRow: { selectedRow, setSelectedRow }
-  } = useContext(ScreenLocalContext)
+  const { selectedRow, setSelectedRow } = useSelectedRowContext<Client>()
 
   const showToast = async (props: ToastProps): Promise<void> => {
     ;(await AppToaster).show(props)
@@ -33,6 +27,11 @@ export const Clients = (): JSX.Element => {
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [overlayData, setOverlayData] = useState<OverlayData>({ isOpen: false, mode: null })
+
+  const openAlertModal = (): void => setIsDeleteModalOpen(true)
+  const closeAlertModal = (): void => setIsDeleteModalOpen(false)
+
+  const resetSelectedRow = (): void => setSelectedRow({})
 
   const openModalOverlay = useCallback(
     (mode: OverlayMode) => setOverlayData({ isOpen: true, mode }),
@@ -53,25 +52,24 @@ export const Clients = (): JSX.Element => {
     }
   })
 
-  const { mutateAsync: createClientMutation, isSuccess: createdSuccessfully } = useMutation(
-    'createClient',
-    createClient,
-    {
-      onSuccess: () => {
-        refetch()
-        showToast({
-          message: 'Cliente criado com sucesso!',
-          intent: 'success'
-        })
-      },
-      onError: () => {
-        showToast({
-          message: 'Erro ao criar o cliente',
-          intent: 'danger'
-        })
-      }
+  const { mutateAsync: createClientMutation } = useMutation('createClient', createClient, {
+    onSuccess: () => {
+      refetch()
+      showToast({
+        message: 'Cliente criado com sucesso!',
+        intent: 'success'
+      })
+
+      form.reset()
+      closeModalOverlay()
+    },
+    onError: () => {
+      showToast({
+        message: 'Erro ao criar o cliente',
+        intent: 'danger'
+      })
     }
-  )
+  })
 
   const { mutateAsync: deleteClientMutation } = useMutation('deleteClient', deleteClient, {
     onSuccess: () => {
@@ -89,31 +87,30 @@ export const Clients = (): JSX.Element => {
     }
   })
 
-  const { mutateAsync: editClientMutation, isSuccess: editedSuccessfully } = useMutation(
-    'editClient',
-    editClient,
-    {
-      onSuccess: () => {
-        refetch()
-        showToast({
-          message: 'Cliente editado com sucesso!',
-          intent: 'success'
-        })
-      },
-      onError: () => {
-        showToast({
-          message: 'Erro ao editar o cliente',
-          intent: 'danger'
-        })
-      }
+  const { mutateAsync: editClientMutation } = useMutation('editClient', editClient, {
+    onSuccess: () => {
+      refetch()
+      showToast({
+        message: 'Cliente editado com sucesso!',
+        intent: 'success'
+      })
+
+      form.reset()
+      closeModalOverlay()
+    },
+    onError: () => {
+      showToast({
+        message: 'Erro ao editar o cliente',
+        intent: 'danger'
+      })
     }
-  )
+  })
 
   const form = useForm<ClientWithoutId>({
     resolver: zodResolver(CreateClientResolver)
   })
 
-  // Reset SCREEN_MODE and form when changing screens
+  // Reset form when changing screens
   useEffect(() => {
     return () => {
       form.reset()
@@ -122,8 +119,8 @@ export const Clients = (): JSX.Element => {
 
   const handleDeleteActionButton = async (): Promise<void> => {
     await deleteClientMutation((selectedRow as Client)?.id)
-    setSelectedRow({})
-    setIsDeleteModalOpen(false)
+    resetSelectedRow()
+    closeAlertModal()
   }
 
   const actions: ScreenMenuProps['actions'] = {
@@ -136,11 +133,6 @@ export const Clients = (): JSX.Element => {
     onSaveClick: () => {
       const onCreate: SubmitHandler<ClientWithoutId> = async (data) => {
         await createClientMutation(data)
-
-        if (createdSuccessfully) {
-          form.reset()
-          closeModalOverlay()
-        }
       }
 
       const onEdit: SubmitHandler<ClientWithoutId> = async (data) => {
@@ -150,21 +142,16 @@ export const Clients = (): JSX.Element => {
           clientId: id,
           clientData: data
         })
-
-        if (editedSuccessfully) {
-          form.reset()
-          closeModalOverlay()
-        }
       }
 
       form.handleSubmit(overlayData.mode === OverlayMode.NEW ? onCreate : onEdit)()
     },
     onDeleteClick: () => {
-      setIsDeleteModalOpen(true)
+      openAlertModal()
     },
     onCancelClick: () => {
       form.reset()
-      setSelectedRow({})
+      resetSelectedRow()
       closeModalOverlay()
     }
   }
@@ -185,8 +172,11 @@ export const Clients = (): JSX.Element => {
           ) : (
             <Read
               clients={data?.data as Client[]}
-              onRowSelect={(data) => {
-                setSelectedRow(data as Client)
+              onRowClick={(data, index) => {
+                setSelectedRow({
+                  meta: { index },
+                  data
+                })
               }}
             />
           )}
@@ -194,8 +184,8 @@ export const Clients = (): JSX.Element => {
 
         <Dialog
           isOpen={overlayData.isOpen}
-          usePortal={true}
           onClose={closeModalOverlay}
+          usePortal={true}
           canEscapeKeyClose={true}
           canOutsideClickClose={false}
           className="w-fit h-fit"
@@ -217,8 +207,8 @@ export const Clients = (): JSX.Element => {
           intent="danger"
           actions={{
             onCancel: () => {
-              setSelectedRow({})
-              setIsDeleteModalOpen(false)
+              resetSelectedRow()
+              closeAlertModal()
             },
             onConfirm: () => {
               handleDeleteActionButton()

@@ -1,8 +1,9 @@
 import { Button, FormGroup } from '@blueprintjs/core'
+import { Client } from '@prisma/client'
 import { OverlayMode } from '@renderer/constants/enums'
 import { useContext, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
-import { ScreenLocalContext } from '../../context/ScreenLocalContext'
+import { SelectedRowContext, SelectedRowContextType } from '../../context/SelectedRowContext'
 import { Input } from '../Input'
 import InputError from '../InputError'
 import ModalTitle from '../ModalTitle'
@@ -16,10 +17,7 @@ type CreateOrEditProps = {
 export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => {
   if (!props.overlayMode) return null
 
-  const {
-    // screenMode: { screenMode, setScreenMode },
-    selectedRow: { selectedRow }
-  } = useContext(ScreenLocalContext)
+  const { selectedRow } = useContext<SelectedRowContextType<Client>>(SelectedRowContext)
 
   const {
     register,
@@ -29,7 +27,6 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
 
   useEffect(() => {
     const isScreenInEditModeAndHasData =
-      // screenMode === SCREEN_MODE.EDIT &&
       selectedRow !== undefined && Object.values(selectedRow).length
 
     if (isScreenInEditModeAndHasData) {
@@ -76,11 +73,6 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
           intent="none"
           icon="disable"
           onClick={() => {
-            // const changeScreen = (): void => {
-            //   setScreenMode(SCREEN_MODE.VIEW)
-            // }
-
-            // props?.onCancel?.(changeScreen)
             props?.onCancel?.()
           }}
         >
@@ -96,11 +88,6 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
           onClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
             e.preventDefault()
 
-            // const changeScreen = (): void => {
-            //   setScreenMode(SCREEN_MODE.VIEW)
-            // }
-
-            // props?.onSave?.(changeScreen)
             props?.onSave?.()
           }}
         >

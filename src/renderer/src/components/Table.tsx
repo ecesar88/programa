@@ -1,64 +1,28 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Client } from '@prisma/client'
-
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  useReactTable
-} from '@tanstack/react-table'
-import { cn } from '../utils'
+import { RowMetadata } from '@renderer/context/SelectedRowContext'
+import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import React from 'react'
+import { cn } from '../utils'
 
-export interface Table2HeaderType<T extends Record<string, any>> {
+export interface Table2HeaderType<T extends object> {
   title: string
   keyName: keyof T
   render?: (rowData: T) => React.ReactNode
 }
 
-export interface Table2Props<T extends Record<string, any>> {
-  header: Table2HeaderType<T>[]
+export interface TableProps<T extends object> {
+  columns: ColumnDef<T>[]
+  // columns: AccessorFnColumnDef<T>[] | AccessorKeyColumnDef<T>[]
   data: T[]
-  onRowClick?: (data?: T) => void
-  selectedRow?: T
+  selectedRow?: RowMetadata<T>
+  onRowClick?: (data: T, index: number) => void
 }
 
-export const CustomTable = <T extends Record<string, any>>({
-  data
-}: {
-  data: Table2Props<T>
-}): React.ReactNode => {
-  const { data: tableData, header: tableHeaders, onRowClick, selectedRow } = data
-
-  const columnHelper = createColumnHelper<Client>()
-
-  const columns = [
-    columnHelper.accessor('id', {
-      id: 'id',
-      cell: (info) => info.getValue(),
-      header: () => <>Id</>,
-      maxSize: 80,
-      minSize: 80
-    }),
-    columnHelper.accessor('name', {
-      id: 'name',
-      cell: (info) => info.getValue(),
-      header: () => <>Nome</>,
-      maxSize: 256,
-      minSize: 256
-    }),
-    columnHelper.accessor('phone', {
-      id: 'phone',
-      cell: (info) => info.getValue(),
-      header: () => <>Telefone</>,
-      maxSize: 256,
-      minSize: 256
-    })
-  ]
+export const CustomTable = <T extends object>(props: TableProps<T>): React.ReactNode => {
+  const { data: tableData, columns: tableHeaders, selectedRow, onRowClick } = props
 
   const table = useReactTable({
-    data: tableData as any,
-    columns,
+    data: tableData,
+    columns: tableHeaders,
     getCoreRowModel: getCoreRowModel()
   })
 
@@ -96,38 +60,43 @@ export const CustomTable = <T extends Record<string, any>>({
         </thead>
 
         <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr
-              key={row.id}
-              className={cn(
-                'hover:outline',
-                'hover:outline-2',
-                'hover:outline-gray3',
-                'font-normal',
-                'last:border-r-0',
-                'first:border-l-0',
-                {
-                  ['outline-blue3 outline-2 outline hover:outline-2 hover:outline-blue1 hover:outline z-10']:
-                    Object.values(selectedRow ?? {})?.length
-                }
-              )}
-            >
-              {row.getVisibleCells().map((cell) => (
-                <td
-                  key={cell.id}
-                  className="border border-lightGray2 px-4 py-0 bg-white text-left"
-                  {...{
-                    onClick: () => onRowClick?.(row.original as T),
-                    style: {
-                      width: cell.column.getSize()
-                    }
-                  }}
-                >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
+          {table.getRowModel().rows.map((row, idx) => {
+            return (
+              <tr
+                key={row.id}
+                className={cn(
+                  'hover:outline',
+                  'hover:outline-2',
+                  'hover:outline-gray3',
+                  'font-normal',
+                  'last:border-r-0',
+                  'first:border-l-0',
+                  {
+                    ['outline-blue3 outline-2 outline hover:outline-2 hover:outline-blue1 hover:outline z-10']:
+                      selectedRow &&
+                      Object.values(selectedRow)?.length &&
+                      selectedRow?.meta?.index === parseInt(row.id)
+                    // (selectedRow as T & { id: string | number }).id === row.original.id
+                  }
+                )}
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <td
+                    key={cell.id}
+                    className="border border-lightGray2 px-4 py-0 bg-white text-left"
+                    {...{
+                      onClick: () => onRowClick?.(row.original as T, idx),
+                      style: {
+                        width: cell.column.getSize()
+                      }
+                    }}
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            )
+          })}
         </tbody>
 
         <tfoot>

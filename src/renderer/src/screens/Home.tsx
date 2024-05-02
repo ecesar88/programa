@@ -1,8 +1,8 @@
 import { Button, ButtonGroup } from '@blueprintjs/core'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { ROUTES } from '../constants'
-import { ScreenLocalContextProvider } from '../context/ScreenLocalContext'
 import SystemTime from '@renderer/components/SystemTime'
+import { SelectedRowContextProvider } from '@renderer/context/SelectedRowContext'
 
 export const Home = (): React.ReactNode => {
   const navigate = useNavigate()
@@ -47,9 +47,9 @@ export const Home = (): React.ReactNode => {
       </div>
 
       <div className="w-full p-2">
-        <ScreenLocalContextProvider>
+        <SelectedRowContextProvider>
           <Outlet />
-        </ScreenLocalContextProvider>
+        </SelectedRowContextProvider>
       </div>
 
       <div className="absolute right-0 mt-3 mr-3">
