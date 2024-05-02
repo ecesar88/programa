@@ -1,7 +1,9 @@
 import { Spinner, ToastProps } from '@blueprintjs/core'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Client } from '@prisma/client'
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { Client, Order } from '@prisma/client'
+import { OverlayMode } from '@renderer/constants/enums'
+import { OverlayData } from '@renderer/types'
+import { useCallback, useEffect, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { useMutation, useQuery } from 'react-query'
 import DeleteAlertModal from '../components/AlertModal'
@@ -9,18 +11,14 @@ import DataHeader from '../components/DataHeader'
 import { Read } from '../components/Orders/Read'
 import { ScreenMenuProps } from '../components/ScreenMenu'
 import { AppToaster } from '../config/toast'
-import { SelectedRowContext } from '../context/SelectedRowContext'
+import { useSelectedRowContext } from '../context/SelectedRowContext'
 import { createClient, deleteClient, editClient, getClients } from '../queries/client'
 import { CreateClientResolver } from '../resolvers/user.resolver'
-import { OverlayMode } from '@renderer/constants/enums'
-import { OverlayData } from '@renderer/types'
 
 type ClientWithoutId = Omit<Client, 'id'>
 
 export const Orders = (): React.ReactNode => {
-  const {
-    selectedRow: { selectedRow, setSelectedRow }
-  } = useContext(SelectedRowContext)
+  const { selectedRow, setSelectedRow } = useSelectedRowContext<Order>()
 
   const showToast = async (props: ToastProps): Promise<void> => {
     ;(await AppToaster).show(props)

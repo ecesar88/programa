@@ -1,7 +1,6 @@
 import { Client } from '@prisma/client'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
-import { useContext } from 'react'
-import { SelectedRowContext, SelectedRowContextType } from '../../context/SelectedRowContext'
+import { useSelectedRowContext } from '../../context/SelectedRowContext'
 import { CustomTable } from '../Table'
 
 export const Read = ({
@@ -11,7 +10,7 @@ export const Read = ({
   clients: Client[]
   onRowClick?: (data: Client, index: number) => void
 }): React.ReactNode => {
-  const { selectedRow } = useContext<SelectedRowContextType<Client>>(SelectedRowContext)
+  const { selectedRow } = useSelectedRowContext<Client>()
 
   const columnHelper = createColumnHelper<Client>()
 

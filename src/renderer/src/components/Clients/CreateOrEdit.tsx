@@ -1,9 +1,9 @@
 import { Button, FormGroup } from '@blueprintjs/core'
 import { Client } from '@prisma/client'
 import { OverlayMode } from '@renderer/constants/enums'
-import { useContext, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
-import { SelectedRowContext, SelectedRowContextType } from '../../context/SelectedRowContext'
+import { useSelectedRowContext } from '../../context/SelectedRowContext'
 import { Input } from '../Input'
 import InputError from '../InputError'
 import ModalTitle from '../ModalTitle'
@@ -17,7 +17,7 @@ type CreateOrEditProps = {
 export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => {
   if (!props.overlayMode) return null
 
-  const { selectedRow } = useContext<SelectedRowContextType<Client>>(SelectedRowContext)
+  const { selectedRow } = useSelectedRowContext<Client>()
 
   const {
     register,
