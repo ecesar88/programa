@@ -27,10 +27,10 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
 
   useEffect(() => {
     const isScreenInEditModeAndHasData =
-      selectedRow !== undefined && Object.values(selectedRow).length
+      selectedRow?.data !== undefined && Object.values(selectedRow?.data).length
 
     if (isScreenInEditModeAndHasData) {
-      reset(selectedRow)
+      reset(selectedRow?.data)
     }
   }, [selectedRow])
 

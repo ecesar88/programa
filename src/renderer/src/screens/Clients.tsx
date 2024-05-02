@@ -137,7 +137,7 @@ export const Clients = (): JSX.Element => {
       }
 
       const onEdit: SubmitHandler<ClientWithoutId> = async (data) => {
-        const { id } = selectedRow as Client
+        const { id } = selectedRow.data as Client
 
         await editClientMutation({
           clientId: id,

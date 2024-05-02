@@ -16,3 +16,5 @@ export const Input = React.forwardRef<
     />
   )
 })
+
+Input.displayName = 'Blueprint_Input'
