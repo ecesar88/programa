@@ -3,6 +3,7 @@
 import { BlueprintProvider } from '@blueprintjs/core'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { DevTools } from 'jotai-devtools'
 import { queryClientAtom } from 'jotai-tanstack-query'
 import { Provider as JotaiProvider } from 'jotai/react'
 import { useHydrateAtoms } from 'jotai/react/utils'
@@ -27,6 +28,7 @@ function App(): JSX.Element {
       <BlueprintProvider>
         <QueryClientProvider client={queryClient}>
           <JotaiProvider>
+            <DevTools />
             {/*
       This Provider initialisation step is needed so that we reference the same
       queryClient in both atomWithQuery and other parts of the app. Without this,

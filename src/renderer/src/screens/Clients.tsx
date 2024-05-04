@@ -2,6 +2,7 @@ import { Dialog, DialogBody, Spinner } from '@blueprintjs/core'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Client } from '@prisma/client'
 import { OverlayMode } from '@renderer/constants/enums'
+import { useOnKeyDown } from '@renderer/hooks'
 import { useAtom } from 'jotai'
 import { atomWithMutation, atomWithQuery } from 'jotai-tanstack-query'
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
@@ -16,7 +17,6 @@ import { ScreenMenuProps } from '../components/ScreenMenu'
 import { useSelectedRowContext } from '../context/SelectedRowContext'
 import { createClient, deleteClient, editClient, getClients } from '../queries/client'
 import { CreateClientResolver } from '../resolvers/user.resolver'
-import { useOnKeyDown } from '@renderer/hooks'
 
 type ClientWithoutId = Omit<Client, 'id'>
 
@@ -26,7 +26,6 @@ export const Clients = memo(function ClientsComponent(): React.ReactNode {
   const { selectedRow, setSelectedRow } = useSelectedRowContext<Client>()
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  // const [overlayData, setOverlayData] = useState<OverlayData>({ isOpen: false, mode: null })
   const [isOverlayOpen, setIsOverlayOpen] = useState(false)
   const [overlayMode, setOverlayMode] = useState<OverlayMode | null>(null)
 
@@ -70,6 +69,7 @@ export const Clients = memo(function ClientsComponent(): React.ReactNode {
       }
     }))
 
+    clientsAtom.debugLabel = 'getClients'
     return { clientsAtom }
   }, [])
 
@@ -121,6 +121,10 @@ export const Clients = memo(function ClientsComponent(): React.ReactNode {
         errorMessage: 'Erro ao editar o cliente'
       }
     }))
+
+    createClientAtom.debugLabel = 'createClientAtom'
+    deleteClientAtom.debugLabel = 'deleteClientAtom'
+    editClientAtom.debugLabel = 'editClientAtom'
 
     return { createClientAtom, deleteClientAtom, editClientAtom }
   }, [])
