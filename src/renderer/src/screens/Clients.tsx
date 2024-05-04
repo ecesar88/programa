@@ -207,7 +207,7 @@ export const Clients = memo(function ClientsComponent(): React.ReactNode {
   return (
     <>
       <FormProvider {...form}>
-        <div ref={parent} className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2">
           <DataHeader
             title="CLIENTES"
             menuProps={{
