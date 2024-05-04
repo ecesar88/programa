@@ -6,6 +6,8 @@ export interface RowMetadata<T extends object> {
 }
 
 export interface SelectedRowContextType<T extends object> {
+  // selectedRow: RowMetadata<T>
+  // setSelectedRow: (data: T | Record<never, never>) => void
   selectedRow: RowMetadata<T>
   setSelectedRow: React.Dispatch<React.SetStateAction<RowMetadata<T>>>
 }
@@ -19,9 +21,18 @@ const SelectedRowContextProvider = <T extends object>({
   children: React.ReactNode
 }): React.ReactNode => {
   const [selectedRow, setSelectedRow] = useState<RowMetadata<T>>({})
+  // const selectedRow = useRef<RowMetadata<T>>({})
+
+  // const setSelectedRow = (data: RowMetadata<T>): void => {
+  //   selectedRow.current = data
+  // }
 
   return (
     <SelectedRowContext.Provider
+      // value={{
+      //   selectedRow: selectedRow.current,
+      //   setSelectedRow
+      // }}
       value={{
         selectedRow,
         setSelectedRow
