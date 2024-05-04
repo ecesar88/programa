@@ -16,6 +16,7 @@ import { ScreenMenuProps } from '../components/ScreenMenu'
 import { useSelectedRowContext } from '../context/SelectedRowContext'
 import { createClient, deleteClient, editClient, getClients } from '../queries/client'
 import { CreateClientResolver } from '../resolvers/user.resolver'
+import { useOnKeyDown } from '@renderer/hooks'
 
 type ClientWithoutId = Omit<Client, 'id'>
 
@@ -37,6 +38,10 @@ export const Clients = memo(function ClientsComponent(): React.ReactNode {
   const closeAlertModal = (): void => setIsDeleteModalOpen(false)
 
   const clearSelectedRow = (): void => setSelectedRow({})
+
+  useOnKeyDown('Escape', () => {
+    clearSelectedRow()
+  })
 
   const openModalOverlay = useCallback(
     (mode: OverlayMode) => {
@@ -187,22 +192,6 @@ export const Clients = memo(function ClientsComponent(): React.ReactNode {
       closeModalOverlay()
     }
   }
-
-  useEffect(() => {
-    const onEscClearSelectedRow = (evt: KeyboardEvent): void => {
-      if (evt.key !== 'Escape') {
-        return
-      }
-
-      clearSelectedRow()
-    }
-
-    window.addEventListener('keydown', onEscClearSelectedRow)
-
-    return () => {
-      window.removeEventListener('keydown', onEscClearSelectedRow)
-    }
-  }, [])
 
   return (
     <>
