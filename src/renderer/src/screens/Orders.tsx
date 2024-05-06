@@ -14,7 +14,7 @@ import DataHeader from '../components/DataHeader'
 import { ScreenMenuProps } from '../components/ScreenMenu'
 import { useSelectedRowContext } from '../context/SelectedRowContext'
 import { createClient, deleteClient, editClient, getClients } from '../queries/client'
-import { CreateClientResolver } from '../resolvers/user.resolver'
+import { CreateClientResolver } from '../resolvers/user'
 import { match } from 'ts-pattern'
 
 type OrderWithoutId = Omit<Client, 'id'>

@@ -15,6 +15,7 @@ model Client {
   name   String
   phone  String?
   orders Order[]
+  Food   Food[]
 }
 
 model Order {
@@ -22,6 +23,13 @@ model Order {
   dateTime DateTime @default(now())
   address  String
   food     String
+  Client   Client?  @relation(fields: [clientId], references: [id])
+  clientId Int?
+}
+
+model Food {
+  id       Int      @id @default(autoincrement())
+  dateTime DateTime @default(now())
   Client   Client?  @relation(fields: [clientId], references: [id])
   clientId Int?
 }

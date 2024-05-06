@@ -2,6 +2,8 @@ import { RowMetadata } from '@renderer/context/SelectedRowContext'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import React from 'react'
 import { cn } from '../utils'
+import { useAtomValue } from 'jotai'
+import { rowMetaDataFocusedAtom } from '@renderer/screens/Clients'
 
 export interface Table2HeaderType<T extends object> {
   title: string
@@ -25,6 +27,8 @@ export const CustomTable = <T extends object>(props: TableProps<T>): React.React
     columns: tableHeaders,
     getCoreRowModel: getCoreRowModel()
   })
+
+  const rowMetaData = useAtomValue(rowMetaDataFocusedAtom)
 
   return (
     <div className="w-full">
@@ -73,10 +77,7 @@ export const CustomTable = <T extends object>(props: TableProps<T>): React.React
                   'first:border-l-0',
                   {
                     ['outline-blue3 outline-2 outline hover:outline-2 hover:outline-blue1 hover:outline z-10']:
-                      selectedRow &&
-                      Object.values(selectedRow)?.length &&
-                      selectedRow?.meta?.index === parseInt(row.id)
-                    // (selectedRow as T & { id: string | number }).id === row.original.id
+                      rowMetaData === parseInt(row.id)
                   }
                 )}
               >

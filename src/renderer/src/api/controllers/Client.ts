@@ -3,7 +3,7 @@ import { Prisma } from '@prisma/client'
 import { NextFunction, Request, Response } from 'express'
 import { z } from 'zod'
 import { HttpStatusCode, QYT_PER_PAGE } from '../../constants'
-import { CreateClientResolver } from '../../resolvers/user.resolver'
+import { CreateClientResolver } from '../../resolvers/user'
 import { LOG_LEVEL, logger } from '../../utils'
 import { db } from '../database/prismaClient'
 

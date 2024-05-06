@@ -4,7 +4,7 @@ import express from 'express'
 import helmet from 'helmet'
 import { LOG_LEVEL, logger, parseEnv } from '../utils'
 import { errorHandlerMiddleware, loggerMiddleware } from './middleware'
-import { ClientRouter } from './routes'
+import { ClientRouter, OrderRouter } from './routes'
 
 dotenv.config()
 
@@ -26,6 +26,7 @@ app.get('/info', (_req, res) => {
 })
 
 app.use(ClientRouter)
+app.use(OrderRouter)
 
 app.use(errorHandlerMiddleware)
 

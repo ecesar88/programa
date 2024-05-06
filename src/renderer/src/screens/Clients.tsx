@@ -6,7 +6,7 @@ import { useOnKeyDown } from '@renderer/hooks'
 import { useAtom } from 'jotai'
 import { focusAtom } from 'jotai-optics'
 import { atomWithMutation, atomWithQuery } from 'jotai-tanstack-query'
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { Id, toast } from 'react-toastify'
 import { match } from 'ts-pattern'
@@ -15,25 +15,27 @@ import { CreateOrEditModal } from '../components/Clients/CreateOrEdit'
 import { Read } from '../components/Clients/Read'
 import DataHeader from '../components/DataHeader'
 import { ScreenMenuProps } from '../components/ScreenMenu'
-import { getSelectedRowAtom, useSelectedRowContext } from '../context/SelectedRowContext'
+import { getSelectedRowAtom } from '../context/SelectedRowContext'
 import { createClient, deleteClient, editClient, getClients } from '../queries/client'
-import { CreateClientResolver } from '../resolvers/user.resolver'
+import { CreateClientResolver } from '../resolvers/user'
 
 type ClientWithoutId = Omit<Client, 'id'>
 
-const selectedRowAtom = getSelectedRowAtom<Client | Record<never, never>>()
+export const selectedRowAtom = getSelectedRowAtom<Client | Record<never, never>>()
 
 const rowDataFocusedAtom = focusAtom(selectedRowAtom, (optic) => optic.prop('data'))
 rowDataFocusedAtom.debugLabel
 
-const rowMetaDataFocusedAtom = focusAtom(selectedRowAtom, (optic) =>
+export const rowMetaDataFocusedAtom = focusAtom(selectedRowAtom, (optic) =>
   optic.prop('meta').prop('index')
 )
 
-export const Clients = memo(function ClientsComponent(): React.ReactNode {
+export const Clients = (): React.ReactNode => {
   const successToast = (message: string): Id => toast(message, { type: 'success' })
 
-  const { selectedRow, setSelectedRow } = useSelectedRowContext<Client>()
+  const [atomData] = useAtom(selectedRowAtom)
+  const [rowData, setRowData] = useAtom(rowDataFocusedAtom)
+  const [rowMetaData, setRowMetaData] = useAtom(rowMetaDataFocusedAtom)
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [isOverlayOpen, setIsOverlayOpen] = useState(false)
@@ -46,7 +48,7 @@ export const Clients = memo(function ClientsComponent(): React.ReactNode {
   const openAlertModal = (): void => setIsDeleteModalOpen(true)
   const closeAlertModal = (): void => setIsDeleteModalOpen(false)
 
-  const clearSelectedRow = (): void => setSelectedRow({} as any)
+  const clearSelectedRow = (): void => setRowData({})
 
   useOnKeyDown('Escape', () => {
     clearSelectedRow()
@@ -169,7 +171,7 @@ export const Clients = memo(function ClientsComponent(): React.ReactNode {
   // }, [selectedRow.data, overlayMode])
 
   const handleDeleteActionButton = (): void => {
-    deleteClientMutation(selectedRow.data?.id as number)
+    deleteClientMutation((rowData as Client)?.id as number)
 
     clearSelectedRow()
     closeAlertModal()
@@ -188,7 +190,7 @@ export const Clients = memo(function ClientsComponent(): React.ReactNode {
       }
 
       const onEdit: SubmitHandler<ClientWithoutId> = (data) => {
-        const { id } = selectedRow.data as Client
+        const { id } = rowData as Client
 
         editClientMutation({
           clientId: id,
@@ -206,10 +208,6 @@ export const Clients = memo(function ClientsComponent(): React.ReactNode {
       closeModalOverlay()
     }
   }
-
-  const [atomData] = useAtom(selectedRowAtom)
-  const [rowData, setRowData] = useAtom(rowDataFocusedAtom)
-  const [rowMetaData, setRowMetaData] = useAtom(rowMetaDataFocusedAtom)
 
   return (
     <>
@@ -229,11 +227,8 @@ export const Clients = memo(function ClientsComponent(): React.ReactNode {
                 <Read
                   clients={data?.data as Client[]}
                   onRowClick={(data, index) => {
-                    // Replace with Jotai
-                    setSelectedRow({
-                      meta: { index },
-                      data
-                    })
+                    setRowData(data)
+                    setRowMetaData(index)
                   }}
                 />
 
@@ -300,10 +295,10 @@ export const Clients = memo(function ClientsComponent(): React.ReactNode {
           }}
         >
           <p>
-            Deletar o cliente <b>{selectedRow?.data?.name}</b> ?
+            Deletar o cliente <b>{(rowData as Client)?.name}</b> ?
           </p>
         </DeleteAlertModal>
       </FormProvider>
     </>
   )
-})
+}

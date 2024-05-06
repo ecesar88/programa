@@ -1,13 +1,11 @@
 import { Button, FormGroup } from '@blueprintjs/core'
-import { Client } from '@prisma/client'
+import { FORM_ID } from '@renderer/constants'
 import { OverlayMode } from '@renderer/constants/enums'
 import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
-import { useSelectedRowContext } from '../../context/SelectedRowContext'
 import { Input } from '../Input'
 import InputError from '../InputError'
 import ModalTitle from '../ModalTitle'
-import { FORM_ID } from '@renderer/constants'
 
 type CreateOrEditProps = {
   onSave?: () => void
@@ -18,17 +16,15 @@ type CreateOrEditProps = {
 export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => {
   if (!props.overlayMode) return null
 
-  const { selectedRow, setSelectedRow } = useSelectedRowContext<Client>()
-
   const {
     register,
     reset,
     formState: { errors }
   } = useFormContext()
 
-  useEffect(() => {
-    console.log(props.overlayMode)
-    console.log('selectedRow.data >> ', selectedRow)
+  // useEffect(() => {
+  //   console.log(props.overlayMode)
+    // console.log('selectedRow.data >> ', selectedRow)
 
     // const rowHasData = selectedRow?.data && Object.values(selectedRow?.data).length > 0
 
@@ -50,20 +46,20 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     //   }
     // }
 
-    if (props.overlayMode === null) return
+  //   if (props.overlayMode === null) return
 
-    if (
-      selectedRow !== null &&
-      selectedRow !== undefined &&
-      props.overlayMode === OverlayMode.EDIT
-    ) {
-      reset(selectedRow.data)
-    }
+  //   if (
+  //     selectedRow !== null &&
+  //     selectedRow !== undefined &&
+  //     props.overlayMode === OverlayMode.EDIT
+  //   ) {
+  //     reset(selectedRow.data)
+  //   }
 
-    return () => {
-      reset({})
-    }
-  }, [selectedRow?.data, props.overlayMode])
+  //   return () => {
+  //     reset({})
+  //   }
+  // }, [selectedRow?.data, props.overlayMode])
 
   return (
     <div className="p-5 bg-white h-[200px] w-[800px] rounded flex flex-col gap-1 justify-between">
@@ -78,7 +74,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
         form={FORM_ID}
         type="submit"
         onClick={() => {
-          console.log('selectedRow >>> ', selectedRow)
+          console.log('selectedRow >>> ', {})
         }}
       >
         Logar selectedRow

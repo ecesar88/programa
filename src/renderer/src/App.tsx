@@ -18,6 +18,7 @@ const HydrateAtoms = ({ children }): React.ReactNode => {
   useHydrateAtoms([[queryClientAtom, queryClient]])
   return children
 }
+
 function App(): JSX.Element {
   // const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
 

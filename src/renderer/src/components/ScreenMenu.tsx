@@ -15,7 +15,7 @@ export interface ScreenMenuProps {
 export const ScreenMenu = (props: ScreenMenuProps): React.ReactNode => {
   const { selectedRow, setSelectedRow } = useSelectedRowContext()
 
-  const clearSelectedRow = (): void => setSelectedRow({})
+  const clearSelectedRow = (): void => setSelectedRow({} as any)
 
   const selectedItem =
     selectedRow?.data !== undefined && Object.values(selectedRow?.data)?.length > 0

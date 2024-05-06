@@ -39,36 +39,11 @@ export const useSelectedRowContext = <T extends object>(): SelectedRowContextTyp
   useContext(SelectedRowContext) as SelectedRowContextType<T>
 
 export const rowMetadata = atom<RowMetadata<{}>['meta']>({ index: null })
-rowMetadata.debugLabel = "rowMetadataAtom"
-
 export const rowData = atom<RowMetadata<any | {}>['data']>({})
-rowData.debugLabel = "rowDataAtom"
 
-// export const selectedRowAtom = atomFamily(
-//   <T extends Record<never, never>>(data: RowMetadata<T>) =>
-//     atom(
-//       (get) => ({
-//         meta: get(rowMetadata),
-//         data: get(rowData)
-//       }),
-//       (_get, set, newRowData: RowMetadata<T>) => {
-//         set(rowData, newRowData.data)
-//         set(rowMetadata, newRowData.meta)
-//       }
-//     ),
-//   deepEqual
-// )
+rowMetadata.debugLabel = 'rowMetadataAtom'
+rowData.debugLabel = 'rowDataAtom'
 
-// export const selectedRowAtom2 = atom(
-//   (get) => ({
-//     meta: get(rowMetadata),
-//     data: get(rowData)
-//   }),
-//   (_get, set, newRowData: RowMetadata) => {
-//     set(rowData, newRowData.data)
-//     set(rowMetadata, newRowData.meta)
-//   }
-// )
 
 export const getSelectedRowAtom = <T,>() => {
   const selectedRowAtom = atom<RowMetadata<T>, [RowMetadata<T>], void>(
