@@ -3,7 +3,6 @@
   "references": [{ "path": "./tsconfig.node.json" }, { "path": "./tsconfig.web.json" }],
    "compilerOptions": {
     "strictNullChecks": true,
-    "strict": true
+    "strict": true,
    }
-
 }

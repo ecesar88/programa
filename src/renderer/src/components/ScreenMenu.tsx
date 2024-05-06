@@ -64,17 +64,6 @@ export const ScreenMenu = (props: ScreenMenuProps): React.ReactNode => {
       >
         Excluir
       </Button>
-
-      <Button
-        icon="edit"
-        fill
-        intent="primary"
-        onClick={() => {
-          console.log('selectedRow >>> ', selectedRow)
-        }}
-      >
-        Logar selectedRow
-      </Button>
     </div>
   )
 }
