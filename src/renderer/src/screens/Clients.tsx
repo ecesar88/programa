@@ -8,7 +8,7 @@ import {
   rowMetaDataFocusedAtom,
   selectedRowAtom
 } from '@renderer/store/clientStore'
-import { useAtom, useSetAtom } from 'jotai'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { atomWithMutation, atomWithQuery } from 'jotai-tanstack-query'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
@@ -27,10 +27,12 @@ type ClientWithoutId = Omit<Client, 'id'>
 export const Clients = (): React.ReactNode => {
   const successToast = (message: string): Id => toast(message, { type: 'success' })
 
-  const [rowData, setRowData] = useAtom(rowDataFocusedAtom)
-  const setSelectedRow = useSetAtom(selectedRowAtom)
+  const rowData = useAtomValue(rowDataFocusedAtom)
+  const setRowData = useSetAtom(rowDataFocusedAtom)
+
   const setRowMetaData = useSetAtom(rowMetaDataFocusedAtom)
 
+  const setSelectedRow = useSetAtom(selectedRowAtom)
   const clearSelectedRow = () => setSelectedRow({ data: {}, meta: { index: null } })
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
