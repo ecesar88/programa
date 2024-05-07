@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { OrderController } from '../controllers/Order'
+import { OrderController } from '../controllers/order'
 
 const router = Router()
 const PREFIX = '/orders'

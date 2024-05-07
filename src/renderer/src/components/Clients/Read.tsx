@@ -1,7 +1,6 @@
 import { Client } from '@prisma/client'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
-import { useSelectedRowContext } from '../../context/SelectedRowContext'
-import { CustomTable } from '../Table'
+import { Table } from '../Table'
 
 export const Read = ({
   clients,
@@ -10,8 +9,6 @@ export const Read = ({
   clients: Client[]
   onRowClick?: (data: Client, index: number) => void
 }): React.ReactNode => {
-  const { selectedRow } = useSelectedRowContext<Client>()
-
   const columnHelper = createColumnHelper<Client>()
 
   const columns = [
@@ -38,12 +35,5 @@ export const Read = ({
     })
   ]
 
-  return (
-    <CustomTable
-      data={clients}
-      columns={columns as ColumnDef<Client>[]}
-      selectedRow={selectedRow}
-      onRowClick={onRowClick}
-    />
-  )
+  return <Table data={clients} columns={columns as ColumnDef<Client>[]} onRowClick={onRowClick} />
 }

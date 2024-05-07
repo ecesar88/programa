@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { ClientController } from '../controllers/Client'
+import { ClientController } from '../controllers/client'
 
 const router = Router()
 const PREFIX = '/clients'

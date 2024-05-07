@@ -1,6 +1,7 @@
 import { Button, FormGroup } from '@blueprintjs/core'
-import { FORM_ID } from '@renderer/constants'
 import { OverlayMode } from '@renderer/constants/enums'
+import { rowDataFocusedAtom } from '@renderer/store/clientStore'
+import { useAtomValue } from 'jotai'
 import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { Input } from '../Input'
@@ -22,63 +23,27 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     formState: { errors }
   } = useFormContext()
 
-  // useEffect(() => {
-  //   console.log(props.overlayMode)
-    // console.log('selectedRow.data >> ', selectedRow)
+  const selectedRow = useAtomValue(rowDataFocusedAtom)
 
-    // const rowHasData = selectedRow?.data && Object.values(selectedRow?.data).length > 0
+  useEffect(() => {
+    const rowHasData = Object.values(selectedRow)?.length > 0
 
-    // if (props.overlayMode === OverlayMode.EDIT && rowHasData) {
-    //   console.log('PREENCHA')
-    //   reset(selectedRow.data)
-    // } else if (props.overlayMode === OverlayMode.NEW && rowHasData) {
-    //   console.log('NÃO PREENCHA')
-    //   reset()
-    // }
+    if (props.overlayMode === OverlayMode.EDIT && rowHasData) {
+      reset(selectedRow)
+    } else if (props.overlayMode === OverlayMode.NEW && rowHasData) {
+      reset()
+    }
 
-    // if (rowHasData) {
-    //   console.log('rowHasData? >', rowHasData)
-    //   if (props.overlayMode === OverlayMode.EDIT) {
-    //     reset(selectedRow?.data)
-    //   } else {
-    //     console.log('aAAAAAAAAAAAAA')
-    //     reset({})
-    //   }
-    // }
-
-  //   if (props.overlayMode === null) return
-
-  //   if (
-  //     selectedRow !== null &&
-  //     selectedRow !== undefined &&
-  //     props.overlayMode === OverlayMode.EDIT
-  //   ) {
-  //     reset(selectedRow.data)
-  //   }
-
-  //   return () => {
-  //     reset({})
-  //   }
-  // }, [selectedRow?.data, props.overlayMode])
+    return () => {
+      reset({})
+    }
+  }, [selectedRow, props.overlayMode])
 
   return (
     <div className="p-5 bg-white h-[200px] w-[800px] rounded flex flex-col gap-1 justify-between">
       <ModalTitle
         title={props.overlayMode === OverlayMode.NEW ? 'Novo cliente' : 'Editar cliente'}
       />
-
-      <Button
-        icon="edit"
-        fill
-        intent="primary"
-        form={FORM_ID}
-        type="submit"
-        onClick={() => {
-          console.log('selectedRow >>> ', {})
-        }}
-      >
-        Logar selectedRow
-      </Button>
 
       <form id="create-form" className="w-full h-full">
         <div className="flex gap-4 w-full">

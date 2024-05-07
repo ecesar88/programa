@@ -1,4 +1,4 @@
-import ClientRouter from './ClientRouter'
-import OrderRouter from './OrderRouter'
+import ClientRouter from './clientRouter'
+import OrderRouter from './orderRouter'
 
 export { ClientRouter, OrderRouter }

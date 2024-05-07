@@ -1,4 +1,4 @@
-import HttpStatusCode from './HttpStatusCode.enum'
+import HttpStatusCode from './httpStatusCode'
 import { ROUTES } from './routes'
 import * as ENUMS from './enums'
 import ENDPOINTS from './endpoints'

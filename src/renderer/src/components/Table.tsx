@@ -1,9 +1,8 @@
-import { RowMetadata } from '@renderer/context/SelectedRowContext'
+import { rowMetaDataFocusedAtom, selectedRowAtom } from '@renderer/store/clientStore'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
-import React from 'react'
+import { useAtomValue, useSetAtom } from 'jotai'
+import React, { useEffect } from 'react'
 import { cn } from '../utils'
-import { useAtomValue } from 'jotai'
-import { rowMetaDataFocusedAtom } from '@renderer/screens/Clients'
 
 export interface Table2HeaderType<T extends object> {
   title: string
@@ -15,12 +14,20 @@ export interface TableProps<T extends object> {
   columns: ColumnDef<T>[]
   // columns: ColumnHelper<T>
   data: T[]
-  selectedRow?: RowMetadata<T>
   onRowClick?: (data: T, index: number) => void
 }
 
-export const CustomTable = <T extends object>(props: TableProps<T>): React.ReactNode => {
-  const { data: tableData, columns: tableHeaders, selectedRow, onRowClick } = props
+export const Table = <T extends object>(props: TableProps<T>): React.ReactNode => {
+  const { data: tableData, columns: tableHeaders, onRowClick } = props
+
+  const setSelectedRow = useSetAtom(selectedRowAtom)
+
+  // Clear selected row when the table is umounted
+  useEffect(() => {
+    return () => {
+      setSelectedRow({ data: {}, meta: { index: null } })
+    }
+  }, [])
 
   const table = useReactTable({
     data: tableData,

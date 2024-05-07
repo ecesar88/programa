@@ -1,10 +1,14 @@
-import { Button, Dialog, DialogBody, Spinner } from '@blueprintjs/core'
+import { Dialog, DialogBody, Spinner } from '@blueprintjs/core'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Client } from '@prisma/client'
 import { OverlayMode } from '@renderer/constants/enums'
 import { useOnKeyDown } from '@renderer/hooks'
-import { useAtom } from 'jotai'
-import { focusAtom } from 'jotai-optics'
+import {
+  rowDataFocusedAtom,
+  rowMetaDataFocusedAtom,
+  selectedRowAtom
+} from '@renderer/store/clientStore'
+import { useAtom, useSetAtom } from 'jotai'
 import { atomWithMutation, atomWithQuery } from 'jotai-tanstack-query'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
@@ -15,27 +19,19 @@ import { CreateOrEditModal } from '../components/Clients/CreateOrEdit'
 import { Read } from '../components/Clients/Read'
 import DataHeader from '../components/DataHeader'
 import { ScreenMenuProps } from '../components/ScreenMenu'
-import { getSelectedRowAtom } from '../context/SelectedRowContext'
 import { createClient, deleteClient, editClient, getClients } from '../queries/client'
 import { CreateClientResolver } from '../resolvers/user'
 
 type ClientWithoutId = Omit<Client, 'id'>
 
-export const selectedRowAtom = getSelectedRowAtom<Client | Record<never, never>>()
-
-const rowDataFocusedAtom = focusAtom(selectedRowAtom, (optic) => optic.prop('data'))
-rowDataFocusedAtom.debugLabel
-
-export const rowMetaDataFocusedAtom = focusAtom(selectedRowAtom, (optic) =>
-  optic.prop('meta').prop('index')
-)
-
 export const Clients = (): React.ReactNode => {
   const successToast = (message: string): Id => toast(message, { type: 'success' })
 
-  const [atomData] = useAtom(selectedRowAtom)
   const [rowData, setRowData] = useAtom(rowDataFocusedAtom)
-  const [rowMetaData, setRowMetaData] = useAtom(rowMetaDataFocusedAtom)
+  const setSelectedRow = useSetAtom(selectedRowAtom)
+  const setRowMetaData = useSetAtom(rowMetaDataFocusedAtom)
+
+  const clearSelectedRow = () => setSelectedRow({ data: {}, meta: { index: null } })
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [isOverlayOpen, setIsOverlayOpen] = useState(false)
@@ -47,8 +43,6 @@ export const Clients = (): React.ReactNode => {
 
   const openAlertModal = (): void => setIsDeleteModalOpen(true)
   const closeAlertModal = (): void => setIsDeleteModalOpen(false)
-
-  const clearSelectedRow = (): void => setRowData({})
 
   useOnKeyDown('Escape', () => {
     clearSelectedRow()
@@ -150,26 +144,6 @@ export const Clients = (): React.ReactNode => {
     defaultValues: {}
   })
 
-  // useEffect(() => {
-  //   if (overlayMode === null) return
-
-  //   if (
-  //     selectedRow !== null &&
-  //     selectedRow !== undefined &&
-  //     // Object.values(selectedRow?.data as Record<never, never>)?.length > 0 &&
-  //     overlayMode === OverlayMode.EDIT
-  //   ) {
-  //     form.reset(selectedRow.data)
-  //   } else if (overlayMode === OverlayMode.NEW) {
-  //     form.reset({})
-  //   }
-
-  //   // Reset form when changing screens
-  //   return () => {
-  //     form.reset()
-  //   }
-  // }, [selectedRow.data, overlayMode])
-
   const handleDeleteActionButton = (): void => {
     deleteClientMutation((rowData as Client)?.id as number)
 
@@ -231,32 +205,6 @@ export const Clients = (): React.ReactNode => {
                     setRowMetaData(index)
                   }}
                 />
-
-                <div className="flex gap-5 max-w-[500px] w-full bg-[red]">
-                  <Button
-                    fill
-                    intent="success"
-                    onClick={() => {
-                      console.log('atomData >>> ', atomData)
-
-                      console.log('rowData >>> ', rowData)
-                      console.log('rowMetaData >>> ', rowMetaData)
-                    }}
-                  >
-                    Log
-                  </Button>
-
-                  <Button
-                    fill
-                    intent="primary"
-                    onClick={() => {
-                      setRowData({ id: 1123123 })
-                      setRowMetaData(0)
-                    }}
-                  >
-                    Set
-                  </Button>
-                </div>
               </div>
             ))}
         </div>
@@ -286,7 +234,6 @@ export const Clients = (): React.ReactNode => {
           intent="danger"
           actions={{
             onCancel: () => {
-              clearSelectedRow()
               closeAlertModal()
             },
             onConfirm: () => {
