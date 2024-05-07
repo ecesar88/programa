@@ -1,130 +1,179 @@
-import { Dialog, DialogBody, Spinner, ToastProps } from '@blueprintjs/core'
+import { Button, Dialog, DialogBody, Spinner } from '@blueprintjs/core'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Client } from '@prisma/client'
 import { OverlayMode } from '@renderer/constants/enums'
-import { OverlayData } from '@renderer/types'
-import { useCallback, useEffect, useState } from 'react'
+import { useOnKeyDown } from '@renderer/hooks'
+import { useAtom } from 'jotai'
+import { focusAtom } from 'jotai-optics'
+import { atomWithMutation, atomWithQuery } from 'jotai-tanstack-query'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
-import { useMutation, useQuery } from 'react-query'
+import { Id, toast } from 'react-toastify'
+import { match } from 'ts-pattern'
 import DeleteAlertModal from '../components/AlertModal'
 import { CreateOrEditModal } from '../components/Clients/CreateOrEdit'
 import { Read } from '../components/Clients/Read'
 import DataHeader from '../components/DataHeader'
 import { ScreenMenuProps } from '../components/ScreenMenu'
-import { AppToaster } from '../config/toast'
-import { useSelectedRowContext } from '../context/SelectedRowContext'
+import { getSelectedRowAtom } from '../context/SelectedRowContext'
 import { createClient, deleteClient, editClient, getClients } from '../queries/client'
-import { CreateClientResolver } from '../resolvers/user.resolver'
+import { CreateClientResolver } from '../resolvers/user'
 
 type ClientWithoutId = Omit<Client, 'id'>
 
-export const Clients = (): JSX.Element => {
-  const { selectedRow, setSelectedRow } = useSelectedRowContext<Client>()
+export const selectedRowAtom = getSelectedRowAtom<Client | Record<never, never>>()
 
-  const showToast = async (props: ToastProps): Promise<void> => {
-    ;(await AppToaster).show(props)
-  }
+const rowDataFocusedAtom = focusAtom(selectedRowAtom, (optic) => optic.prop('data'))
+rowDataFocusedAtom.debugLabel
+
+export const rowMetaDataFocusedAtom = focusAtom(selectedRowAtom, (optic) =>
+  optic.prop('meta').prop('index')
+)
+
+export const Clients = (): React.ReactNode => {
+  const successToast = (message: string): Id => toast(message, { type: 'success' })
+
+  const [atomData] = useAtom(selectedRowAtom)
+  const [rowData, setRowData] = useAtom(rowDataFocusedAtom)
+  const [rowMetaData, setRowMetaData] = useAtom(rowMetaDataFocusedAtom)
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  const [overlayData, setOverlayData] = useState<OverlayData>({ isOpen: false, mode: null })
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false)
+  const [overlayMode, setOverlayMode] = useState<OverlayMode | null>(null)
+
+  useEffect(() => {
+    if (!isOverlayOpen) setOverlayMode(null)
+  }, [isOverlayOpen])
 
   const openAlertModal = (): void => setIsDeleteModalOpen(true)
   const closeAlertModal = (): void => setIsDeleteModalOpen(false)
 
-  const resetSelectedRow = (): void => setSelectedRow({})
+  const clearSelectedRow = (): void => setRowData({})
+
+  useOnKeyDown('Escape', () => {
+    clearSelectedRow()
+  })
 
   const openModalOverlay = useCallback(
-    (mode: OverlayMode) => setOverlayData({ isOpen: true, mode }),
-    [setOverlayData]
+    (mode: OverlayMode) => {
+      console.log({ mode })
+
+      setIsOverlayOpen(true)
+      return setOverlayMode(mode)
+    },
+    [overlayMode]
   )
 
   const closeModalOverlay = useCallback(() => {
-    setOverlayData({ isOpen: false, mode: null })
+    // setOverlayData({ isOpen: false, mode: null })
+    setIsOverlayOpen(false)
+    setOverlayMode(null)
+
     return false
-  }, [setOverlayData])
+  }, [overlayMode])
 
-  const { isLoading, data, refetch } = useQuery('clients', getClients, {
-    onError: () => {
-      showToast({
-        message: 'Erro ao obter os clientes',
-        intent: 'danger'
-      })
-    }
-  })
+  const queries = useMemo(() => {
+    const clientsAtom = atomWithQuery(() => ({
+      queryKey: ['clients'],
+      queryFn: getClients,
+      meta: {
+        errorMessage: 'Erro ao obter os clientes'
+      }
+    }))
 
-  const { mutateAsync: createClientMutation } = useMutation('createClient', createClient, {
-    onSuccess: () => {
-      refetch()
-      showToast({
-        message: 'Cliente criado com sucesso!',
-        intent: 'success'
-      })
-
-      form.reset()
-      closeModalOverlay()
-      resetSelectedRow()
-    },
-    onError: () => {
-      showToast({
-        message: 'Erro ao criar o cliente',
-        intent: 'danger'
-      })
-    }
-  })
-
-  const { mutateAsync: deleteClientMutation } = useMutation('deleteClient', deleteClient, {
-    onSuccess: () => {
-      refetch()
-      showToast({
-        message: 'Cliente deletado!',
-        intent: 'success'
-      })
-
-      resetSelectedRow()
-    },
-    onError: () => {
-      showToast({
-        message: 'Erro ao deletar o cliente',
-        intent: 'danger'
-      })
-    }
-  })
-
-  const { mutateAsync: editClientMutation } = useMutation('editClient', editClient, {
-    onSuccess: () => {
-      refetch()
-      showToast({
-        message: 'Cliente editado com sucesso!',
-        intent: 'success'
-      })
-
-      form.reset()
-      resetSelectedRow()
-      closeModalOverlay()
-    },
-    onError: () => {
-      showToast({
-        message: 'Erro ao editar o cliente',
-        intent: 'danger'
-      })
-    }
-  })
-
-  const form = useForm<ClientWithoutId>({
-    resolver: zodResolver(CreateClientResolver)
-  })
-
-  // Reset form when changing screens
-  useEffect(() => {
-    return () => {
-      form.reset()
-    }
+    clientsAtom.debugLabel = 'getClients'
+    return { clientsAtom }
   }, [])
 
-  const handleDeleteActionButton = async (): Promise<void> => {
-    await deleteClientMutation(selectedRow.data?.id as number)
+  const [{ isLoading, data, refetch }] = useAtom(queries.clientsAtom)
 
-    resetSelectedRow()
+  const mutations = useMemo(() => {
+    const createClientAtom = atomWithMutation(() => ({
+      mutationKey: ['createClient'],
+      mutationFn: createClient,
+      onSuccess: (): void => {
+        refetch()
+
+        successToast('Cliente criado com sucesso!')
+        closeModalOverlay()
+        clearSelectedRow()
+        form.reset()
+      },
+      meta: {
+        errorMessage: 'Erro ao criar o cliente'
+      }
+    }))
+
+    const deleteClientAtom = atomWithMutation(() => ({
+      mutationKey: ['deleteClient'],
+      mutationFn: deleteClient,
+      onSuccess: (): void => {
+        refetch()
+
+        successToast('Cliente deletado com sucesso!')
+        clearSelectedRow()
+      },
+      meta: {
+        errorMessage: 'Erro ao deletar o cliente'
+      }
+    }))
+
+    const editClientAtom = atomWithMutation(() => ({
+      mutationKey: ['editClient'],
+      mutationFn: editClient,
+      onSuccess: (): void => {
+        refetch()
+
+        successToast('Cliente editado com sucesso!')
+        clearSelectedRow()
+        closeModalOverlay()
+        form.reset()
+      },
+      meta: {
+        errorMessage: 'Erro ao editar o cliente'
+      }
+    }))
+
+    createClientAtom.debugLabel = 'createClientAtom'
+    deleteClientAtom.debugLabel = 'deleteClientAtom'
+    editClientAtom.debugLabel = 'editClientAtom'
+
+    return { createClientAtom, deleteClientAtom, editClientAtom }
+  }, [])
+
+  const [{ mutate: createClientMutation }] = useAtom(mutations.createClientAtom)
+  const [{ mutate: deleteClientMutation }] = useAtom(mutations.deleteClientAtom)
+  const [{ mutate: editClientMutation }] = useAtom(mutations.editClientAtom)
+
+  const form = useForm<ClientWithoutId>({
+    resolver: zodResolver(CreateClientResolver),
+    defaultValues: {}
+  })
+
+  // useEffect(() => {
+  //   if (overlayMode === null) return
+
+  //   if (
+  //     selectedRow !== null &&
+  //     selectedRow !== undefined &&
+  //     // Object.values(selectedRow?.data as Record<never, never>)?.length > 0 &&
+  //     overlayMode === OverlayMode.EDIT
+  //   ) {
+  //     form.reset(selectedRow.data)
+  //   } else if (overlayMode === OverlayMode.NEW) {
+  //     form.reset({})
+  //   }
+
+  //   // Reset form when changing screens
+  //   return () => {
+  //     form.reset()
+  //   }
+  // }, [selectedRow.data, overlayMode])
+
+  const handleDeleteActionButton = (): void => {
+    deleteClientMutation((rowData as Client)?.id as number)
+
+    clearSelectedRow()
     closeAlertModal()
   }
 
@@ -136,27 +185,26 @@ export const Clients = (): JSX.Element => {
       openModalOverlay(OverlayMode.EDIT)
     },
     onSaveClick: () => {
-      const onCreate: SubmitHandler<ClientWithoutId> = async (data) => {
-        await createClientMutation(data)
+      const onCreate: SubmitHandler<ClientWithoutId> = (data) => {
+        createClientMutation(data)
       }
 
-      const onEdit: SubmitHandler<ClientWithoutId> = async (data) => {
-        const { id } = selectedRow.data as Client
+      const onEdit: SubmitHandler<ClientWithoutId> = (data) => {
+        const { id } = rowData as Client
 
-        await editClientMutation({
+        editClientMutation({
           clientId: id,
           clientData: data
         })
       }
 
-      form.handleSubmit(overlayData.mode === OverlayMode.NEW ? onCreate : onEdit)()
+      form.handleSubmit(overlayMode === OverlayMode.NEW ? onCreate : onEdit)()
     },
     onDeleteClick: () => {
       openAlertModal()
     },
     onCancelClick: () => {
       form.reset()
-      resetSelectedRow()
       closeModalOverlay()
     }
   }
@@ -172,23 +220,49 @@ export const Clients = (): JSX.Element => {
             }}
           />
 
-          {isLoading ? (
-            <Spinner size={110} intent="primary" />
-          ) : (
-            <Read
-              clients={data?.data as Client[]}
-              onRowClick={(data, index) => {
-                setSelectedRow({
-                  meta: { index },
-                  data
-                })
-              }}
-            />
-          )}
+          {match(isLoading)
+            .with(true, () => <Spinner size={110} intent="primary" />)
+            .otherwise(() => (
+              <div className="flex flex-col gap-5">
+                <Read
+                  clients={data?.data as Client[]}
+                  onRowClick={(data, index) => {
+                    setRowData(data)
+                    setRowMetaData(index)
+                  }}
+                />
+
+                <div className="flex gap-5 max-w-[500px] w-full bg-[red]">
+                  <Button
+                    fill
+                    intent="success"
+                    onClick={() => {
+                      console.log('atomData >>> ', atomData)
+
+                      console.log('rowData >>> ', rowData)
+                      console.log('rowMetaData >>> ', rowMetaData)
+                    }}
+                  >
+                    Log
+                  </Button>
+
+                  <Button
+                    fill
+                    intent="primary"
+                    onClick={() => {
+                      setRowData({ id: 1123123 })
+                      setRowMetaData(0)
+                    }}
+                  >
+                    Set
+                  </Button>
+                </div>
+              </div>
+            ))}
         </div>
 
         <Dialog
-          isOpen={overlayData.isOpen}
+          isOpen={isOverlayOpen}
           onClose={closeModalOverlay}
           usePortal={true}
           canEscapeKeyClose={true}
@@ -199,7 +273,7 @@ export const Clients = (): JSX.Element => {
             <CreateOrEditModal
               onSave={actions?.onSaveClick}
               onCancel={actions?.onCancelClick}
-              overlayMode={overlayData.mode}
+              overlayMode={overlayMode}
             />
           </DialogBody>
         </Dialog>
@@ -212,7 +286,7 @@ export const Clients = (): JSX.Element => {
           intent="danger"
           actions={{
             onCancel: () => {
-              resetSelectedRow()
+              clearSelectedRow()
               closeAlertModal()
             },
             onConfirm: () => {
@@ -221,7 +295,7 @@ export const Clients = (): JSX.Element => {
           }}
         >
           <p>
-            Deletar o cliente <b>{(selectedRow as Client)?.name}</b> ?
+            Deletar o cliente <b>{(rowData as Client)?.name}</b> ?
           </p>
         </DeleteAlertModal>
       </FormProvider>

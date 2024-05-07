@@ -1,7 +1,7 @@
-import express from 'express'
-import { ClientController } from '../controllers/Client.controller'
+import { Router } from 'express'
+import { ClientController } from '../controllers/Client'
 
-const router = express.Router()
+const router = Router()
 const PREFIX = '/clients'
 
 router.route(PREFIX).get(ClientController.getClients).post(ClientController.createClient)

@@ -1,4 +1,5 @@
 import { Button } from '@blueprintjs/core'
+import { FORM_ID } from '@renderer/constants'
 import { useSelectedRowContext } from '@renderer/context/SelectedRowContext'
 
 export interface ScreenMenuProps {
@@ -14,9 +15,10 @@ export interface ScreenMenuProps {
 export const ScreenMenu = (props: ScreenMenuProps): React.ReactNode => {
   const { selectedRow, setSelectedRow } = useSelectedRowContext()
 
-  const clearSelectedRow = (): void => setSelectedRow({})
+  const clearSelectedRow = (): void => setSelectedRow({} as any)
 
-  const selectedItem = selectedRow !== undefined && Object.values(selectedRow)?.length
+  const selectedItem =
+    selectedRow?.data !== undefined && Object.values(selectedRow?.data)?.length > 0
 
   return (
     <div className="bg-white p-1 flex justify-start gap-2 border border-lightgray border-solid rounded">
@@ -26,7 +28,6 @@ export const ScreenMenu = (props: ScreenMenuProps): React.ReactNode => {
         intent="success"
         className="max-w-[150px]"
         onClick={() => {
-          clearSelectedRow()
           props?.actions?.onNewClick?.()
         }}
       >
@@ -37,11 +38,11 @@ export const ScreenMenu = (props: ScreenMenuProps): React.ReactNode => {
         icon="edit"
         fill
         intent="primary"
-        form="edit-form"
+        form={FORM_ID}
         type="submit"
         disabled={!selectedItem}
         className="max-w-[150px]"
-        onClick={(e) => {
+        onClick={(e: { preventDefault: () => void }) => {
           e.preventDefault()
 
           props?.actions?.onEditClick?.()
@@ -57,6 +58,7 @@ export const ScreenMenu = (props: ScreenMenuProps): React.ReactNode => {
         disabled={!selectedItem}
         className="max-w-[150px]"
         onClick={() => {
+          clearSelectedRow()
           props?.actions?.onDeleteClick?.()
         }}
       >

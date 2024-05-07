@@ -5,8 +5,9 @@ import OrderCard from './OrderCard'
 import { PiCookingPotFill, PiCookingPotBold } from 'react-icons/pi'
 import { MdDeliveryDining } from 'react-icons/md'
 import { FaCheckCircle } from 'react-icons/fa'
+import React from 'react'
 
-const OrderTitle = ({ title }: { title: string }) => {
+const OrderTitle = ({ title }: { title: string }): React.ReactNode => {
   return (
     <div className="flex justify-center text-lg font-bold">
       <h3>{title}</h3>
@@ -20,7 +21,7 @@ interface OrderColumnProps {
   children?: React.ReactNode
 }
 
-const OrderColumn = (props: OrderColumnProps) => {
+const OrderColumn = (props: OrderColumnProps): React.ReactNode => {
   return (
     <div className="flex flex-col items-center justify-start w-full bg-lightGray4 p-4 px-4 rounded-lg">
       <div className="flex items-center justify-between gap-2">
@@ -88,14 +89,14 @@ const categoriasDePedido = [
   }
 ]
 
-type OrderStatus = 'to_prepare' | 'preparing' | 'delivering' | 'delivered'
+// type OrderStatus = 'to_prepare' | 'preparing' | 'delivering' | 'delivered'
 
-export const Read = () => {
+export const Read = (): React.ReactNode => {
   return (
     <div className="flex flex-row w-full gap-4 mb-10">
       <div className="flex w-full gap-4 justify-between">
-        {categoriasDePedido.map((categoria) => (
-          <>
+        {categoriasDePedido.map((categoria, idx) => (
+          <React.Fragment key={idx}>
             <OrderColumn title={categoria.title} icon={categoria.icon} key={Math.random()}>
               {categoria.orders.map((pedido) => (
                 <OrderCard
@@ -126,7 +127,7 @@ export const Read = () => {
                 </div>
               )}
             </OrderColumn>
-          </>
+          </React.Fragment>
         ))}
       </div>
     </div>
