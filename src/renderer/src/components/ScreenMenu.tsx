@@ -1,6 +1,6 @@
 import { Button } from '@blueprintjs/core'
 import { FORM_ID } from '@renderer/constants'
-import { rowDataFocusedAtom, selectedRowAtom } from '@renderer/store/clientStore'
+import { rowDataFocusedAtom, selectedRowAtom } from '@renderer/store'
 import { useAtomValue, useSetAtom } from 'jotai'
 
 export interface ScreenMenuProps {
@@ -13,6 +13,7 @@ export interface ScreenMenuProps {
   }
 }
 
+
 export const ScreenMenu = (props: ScreenMenuProps): React.ReactNode => {
   const selectedRow = useAtomValue(rowDataFocusedAtom)
   const setSelectedRow = useSetAtom(selectedRowAtom)
@@ -22,7 +23,7 @@ export const ScreenMenu = (props: ScreenMenuProps): React.ReactNode => {
   const selectedItem = selectedRow !== undefined && Object.values(selectedRow)?.length > 0
 
   return (
-    <div className="bg-white p-1 flex justify-start gap-2 border border-lightgray border-solid rounded">
+    <div className="p-1 flex justify-start gap-2 border border-lightgray border-solid rounded bg-lightGray5">
       <Button
         icon="plus"
         fill

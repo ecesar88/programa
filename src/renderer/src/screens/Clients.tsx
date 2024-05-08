@@ -3,11 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Client } from '@prisma/client'
 import { OverlayMode } from '@renderer/constants/enums'
 import { useOnKeyDown } from '@renderer/hooks'
-import {
-  rowDataFocusedAtom,
-  rowMetaDataFocusedAtom,
-  selectedRowAtom
-} from '@renderer/store/clientStore'
+import { rowDataFocusedAtom, rowMetaDataFocusedAtom, selectedRowAtom } from '@renderer/store'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { atomWithMutation, atomWithQuery } from 'jotai-tanstack-query'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
