@@ -2,7 +2,7 @@ import { Button, ButtonGroup } from '@blueprintjs/core'
 import { ROUTES } from '@renderer/constants'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-const Menu = () => {
+export const Menu = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -40,5 +40,3 @@ const Menu = () => {
     </div>
   )
 }
-
-export default Menu

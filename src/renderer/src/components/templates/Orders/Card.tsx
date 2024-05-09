@@ -1,4 +1,4 @@
-import { cn } from '../utils'
+import { cn } from '@renderer/utils'
 
 interface CardProps {
   className?: string
@@ -11,7 +11,7 @@ interface CardProps {
   }
 }
 
-const Card = (props: CardProps) => {
+export const Card = (props: CardProps) => {
   return (
     <div
       className={cn(
@@ -25,5 +25,3 @@ const Card = (props: CardProps) => {
     </div>
   )
 }
-
-export default Card

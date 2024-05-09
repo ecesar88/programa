@@ -1,5 +1,5 @@
-import DataHeader from '@renderer/components/DataHeader'
-import { Read } from '@renderer/components/Orders/Read'
+import { DataHeader } from '@renderer/components'
+import { Read } from '@renderer/components/templates/Orders'
 
 export const Orders = () => {
   return (

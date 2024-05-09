@@ -1,12 +1,10 @@
 import { Button, FormGroup } from '@blueprintjs/core'
+import { Input, ModalTitle, InputError } from '@renderer/components'
 import { OverlayMode } from '@renderer/constants/enums'
 import { rowDataFocusedAtom } from '@renderer/store/clientStore'
 import { useAtomValue } from 'jotai'
 import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
-import { Input } from '../Input'
-import InputError from '../InputError'
-import ModalTitle from '../ModalTitle'
 
 type CreateOrEditProps = {
   onSave?: () => void
@@ -15,8 +13,6 @@ type CreateOrEditProps = {
 }
 
 export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => {
-  if (!props.overlayMode) return null
-
   const {
     register,
     reset,
@@ -38,6 +34,8 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
       reset({})
     }
   }, [selectedRow, props.overlayMode])
+
+  if (!props.overlayMode) return null
 
   return (
     <div className="p-5 bg-white h-[200px] w-[800px] rounded flex flex-col gap-1 justify-between">

@@ -1,11 +1,11 @@
 import { Button, Colors } from '@blueprintjs/core'
 import { faker } from '@faker-js/faker'
-import { cn } from '../../utils'
-import OrderCard from './OrderCard'
-import { PiCookingPotFill, PiCookingPotBold } from 'react-icons/pi'
-import { MdDeliveryDining } from 'react-icons/md'
-import { FaCheckCircle } from 'react-icons/fa'
+import { cn } from '@renderer/utils'
 import React from 'react'
+import { FaCheckCircle } from 'react-icons/fa'
+import { MdDeliveryDining } from 'react-icons/md'
+import { PiCookingPotBold, PiCookingPotFill } from 'react-icons/pi'
+import { OrderCard } from './OrderCard'
 
 const OrderTitle = ({ title }: { title: string }): React.ReactNode => {
   return (

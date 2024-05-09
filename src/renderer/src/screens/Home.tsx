@@ -1,5 +1,4 @@
-import Menu from '@renderer/components/Menu'
-import SystemTime from '@renderer/components/SystemTime'
+import { Menu, SystemTime } from '@renderer/components'
 import { Outlet } from 'react-router-dom'
 
 export const Home = (): React.ReactNode => {

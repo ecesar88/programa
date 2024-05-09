@@ -3,7 +3,6 @@ import React from 'react'
 
 interface AlertModalProps {
   isOpen?: boolean
-  isError?: boolean
   isLoading?: boolean
   icon?: AlertProps['icon']
   intent?: AlertProps['intent']
@@ -16,7 +15,7 @@ interface AlertModalProps {
   }
 }
 
-const AlertModal = (props: AlertModalProps): React.ReactNode => {
+export const AlertModal = (props: AlertModalProps): React.ReactNode => {
   return (
     <Alert
       cancelButtonText={props.cancelButtonText}
@@ -32,5 +31,3 @@ const AlertModal = (props: AlertModalProps): React.ReactNode => {
     </Alert>
   )
 }
-
-export default AlertModal

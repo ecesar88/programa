@@ -1,7 +1,7 @@
 import { Client } from '@prisma/client'
+import { Table } from '@renderer/components/organisms'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { useMemo } from 'react'
-import { Table } from '../Table/Table'
 
 const columnHelper = createColumnHelper<Client>()
 
