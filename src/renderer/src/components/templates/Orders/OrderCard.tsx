@@ -1,4 +1,4 @@
-import Card from '../Card'
+import { Card } from './Card'
 
 interface OrderCardProps {
   order: {
@@ -12,12 +12,10 @@ interface OrderCardProps {
   onClick?: () => {}
 }
 
-const OrderCard = (props: OrderCardProps) => {
+export const OrderCard = (props: OrderCardProps) => {
   return (
     <div onClick={props.onClick}>
       <Card order={props.order} className={props.className} />
     </div>
   )
 }
-
-export default OrderCard

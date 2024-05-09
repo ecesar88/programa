@@ -9,7 +9,7 @@ interface DataHeaderProps {
   }
 }
 
-const DataHeader = (props: DataHeaderProps): React.ReactNode => {
+export const DataHeader = (props: DataHeaderProps): React.ReactNode => {
   return (
     <div className="flex flex-col w-full gap-2 pb-4 relative">
       <Header title={props.title} />
@@ -21,5 +21,3 @@ const DataHeader = (props: DataHeaderProps): React.ReactNode => {
     </div>
   )
 }
-
-export default DataHeader

@@ -7,13 +7,10 @@ export const Input = React.forwardRef<
     error?: boolean
   }
 >((props, ref) => {
+  const intent = props?.error ? 'danger' : 'none'
+
   return (
-    <InputGroup
-      fill
-      inputRef={ref}
-      intent={props?.intent ? props.intent : props?.error ? 'danger' : 'none'}
-      {...props}
-    />
+    <InputGroup fill inputRef={ref} intent={props?.intent ? props.intent : intent} {...props} />
   )
 })
 

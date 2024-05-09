@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { FaClock, FaCalendarAlt } from 'react-icons/fa'
 
-const SystemTime = (): React.ReactNode => {
+export const SystemTime = (): React.ReactNode => {
   const [value, setValue] = useState(new Date())
   const [locale] = useState(Intl.DateTimeFormat().resolvedOptions().locale)
 
@@ -32,5 +32,3 @@ const SystemTime = (): React.ReactNode => {
     </div>
   )
 }
-
-export default SystemTime

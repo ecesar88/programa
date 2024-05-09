@@ -2,7 +2,7 @@ import { rowMetaDataFocusedAtom, selectedRowAtom } from '@renderer/store'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useAtomValue, useSetAtom } from 'jotai'
 import React, { useEffect, useMemo } from 'react'
-import { cn } from '../../utils'
+import { cn } from '../../../utils'
 import { Pagination } from './Pagination'
 import { SearchBar } from './SearchBar'
 
@@ -17,10 +17,11 @@ export interface TableProps<T extends object> {
   // columns: ColumnHelper<T>
   data: T[]
   onRowClick?: (data: T, index: number) => void
+  tableTitle?: string
 }
 
 export const Table = <T extends object>(props: TableProps<T>): React.ReactNode => {
-  const { data: tableData, columns: tableColumns, onRowClick } = props
+  const { data: tableData, columns: tableColumns, onRowClick, tableTitle } = props
 
   const setSelectedRow = useSetAtom(selectedRowAtom)
 
@@ -44,7 +45,15 @@ export const Table = <T extends object>(props: TableProps<T>): React.ReactNode =
 
   return (
     <div className="w-full max-w-[calc(100%)]">
-      <SearchBar />
+      <div className="mb-3">
+        <SearchBar />
+      </div>
+
+      {tableTitle ? (
+        <div className="flex items-center justify-between rounded-t border border-b-0 border-lightGray2 bg-lightGray5">
+          {tableTitle}
+        </div>
+      ) : null}
 
       <table className="border-spacing-0 border border-lightGray2 border-b-0 w-full">
         <thead className="bg-lightGray5">
@@ -101,7 +110,7 @@ export const Table = <T extends object>(props: TableProps<T>): React.ReactNode =
                   'last:border-r-0',
                   'first:border-l-0',
                   {
-                    ['outline-blue3 outline-2 outline hover:outline-2 hover:outline-blue1 hover:outline z-10']:
+                    ['outline-blue4 outline-2 outline hover:outline-2 hover:outline-blue1 hover:outline z-10']:
                       rowMetaData === parseInt(row.id)
                   }
                 )}

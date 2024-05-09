@@ -1,6 +1,8 @@
 import { Dialog, DialogBody, Spinner } from '@blueprintjs/core'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Client } from '@prisma/client'
+import { AlertModal, DataHeader } from '@renderer/components'
+import { CreateOrEditModal, Read } from '@renderer/components/templates/Clients'
 import { OverlayMode } from '@renderer/constants/enums'
 import { useOnKeyDown } from '@renderer/hooks'
 import { rowDataFocusedAtom, rowMetaDataFocusedAtom, selectedRowAtom } from '@renderer/store'
@@ -10,11 +12,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { Id, toast } from 'react-toastify'
 import { match } from 'ts-pattern'
-import DeleteAlertModal from '../components/AlertModal'
-import { CreateOrEditModal } from '../components/Clients/CreateOrEdit'
-import { Read } from '../components/Clients/Read'
-import DataHeader from '../components/DataHeader'
-import { ScreenMenuProps } from '../components/ScreenMenu'
+import { ScreenMenuProps } from '../components/molecules/ScreenMenu'
 import { createClient, deleteClient, editClient, getClients } from '../queries/client'
 import { CreateClientResolver } from '../resolvers/user'
 
@@ -23,7 +21,7 @@ type ClientWithoutId = Omit<Client, 'id'>
 export const Clients = (): React.ReactNode => {
   const successToast = (message: string): Id => toast(message, { type: 'success' })
 
-  const rowData = useAtomValue(rowDataFocusedAtom)
+  const rowData = useAtomValue(rowDataFocusedAtom) as Client
   const setRowData = useSetAtom(rowDataFocusedAtom)
 
   const setRowMetaData = useSetAtom(rowMetaDataFocusedAtom)
@@ -143,7 +141,7 @@ export const Clients = (): React.ReactNode => {
   })
 
   const handleDeleteActionButton = (): void => {
-    deleteClientMutation((rowData as Client)?.id as number)
+    deleteClientMutation(rowData?.id)
 
     clearSelectedRow()
     closeAlertModal()
@@ -162,7 +160,7 @@ export const Clients = (): React.ReactNode => {
       }
 
       const onEdit: SubmitHandler<ClientWithoutId> = (data) => {
-        const { id } = rowData as Client
+        const { id } = rowData
 
         editClientMutation({
           clientId: id,
@@ -182,68 +180,66 @@ export const Clients = (): React.ReactNode => {
   }
 
   return (
-    <>
-      <FormProvider {...form}>
-        <div className="flex flex-col gap-2">
-          <DataHeader
-            title="CLIENTES"
-            menuProps={{
-              actions
-            }}
-          />
-
-          {match(isLoading)
-            .with(true, () => <Spinner size={110} intent="primary" />)
-            .otherwise(() => (
-              <div className="flex flex-col gap-5">
-                <Read
-                  clients={data?.data as Client[]}
-                  onRowClick={(data, index) => {
-                    setRowData(data)
-                    setRowMetaData(index)
-                  }}
-                />
-              </div>
-            ))}
-        </div>
-
-        <Dialog
-          isOpen={isOverlayOpen}
-          onClose={closeModalOverlay}
-          usePortal={true}
-          canEscapeKeyClose={true}
-          canOutsideClickClose={false}
-          className="w-fit h-fit"
-        >
-          <DialogBody className="p-0">
-            <CreateOrEditModal
-              onSave={actions?.onSaveClick}
-              onCancel={actions?.onCancelClick}
-              overlayMode={overlayMode}
-            />
-          </DialogBody>
-        </Dialog>
-
-        <DeleteAlertModal
-          isOpen={isDeleteModalOpen}
-          confirmButtonText="Deletar"
-          cancelButtonText="Cancelar"
-          icon="trash"
-          intent="danger"
-          actions={{
-            onCancel: () => {
-              closeAlertModal()
-            },
-            onConfirm: () => {
-              handleDeleteActionButton()
-            }
+    <FormProvider {...form}>
+      <div className="flex flex-col gap-2">
+        <DataHeader
+          title="CLIENTES"
+          menuProps={{
+            actions
           }}
-        >
-          <p>
-            Deletar o cliente <b>{(rowData as Client)?.name}</b> ?
-          </p>
-        </DeleteAlertModal>
-      </FormProvider>
-    </>
+        />
+
+        {match(isLoading)
+          .with(true, () => <Spinner size={110} intent="primary" />)
+          .otherwise(() => (
+            <div className="flex flex-col gap-5">
+              <Read
+                clients={data?.data as Client[]}
+                onRowClick={(data, index) => {
+                  setRowData(data)
+                  setRowMetaData(index)
+                }}
+              />
+            </div>
+          ))}
+      </div>
+
+      <Dialog
+        isOpen={isOverlayOpen}
+        onClose={closeModalOverlay}
+        usePortal={true}
+        canEscapeKeyClose={true}
+        canOutsideClickClose={false}
+        className="w-fit h-fit"
+      >
+        <DialogBody className="p-0">
+          <CreateOrEditModal
+            onSave={actions?.onSaveClick}
+            onCancel={actions?.onCancelClick}
+            overlayMode={overlayMode}
+          />
+        </DialogBody>
+      </Dialog>
+
+      <AlertModal
+        isOpen={isDeleteModalOpen}
+        confirmButtonText="Deletar"
+        cancelButtonText="Cancelar"
+        icon="trash"
+        intent="danger"
+        actions={{
+          onCancel: () => {
+            closeAlertModal()
+          },
+          onConfirm: () => {
+            handleDeleteActionButton()
+          }
+        }}
+      >
+        <p>
+          Deletar o cliente <b>{rowData?.name}</b> ?
+        </p>
+      </AlertModal>
+    </FormProvider>
   )
 }
