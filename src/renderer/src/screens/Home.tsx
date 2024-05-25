@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom'
 
 export const Home = (): React.ReactNode => {
   return (
-    <div className="flex h-[100vh] bg-white">
+    <div className="flex h-[100vh] bg-white overflow-y-hidden">
       <Menu />
 
       <div id={HOME_CONTAINER_ID} className="w-full p-2">

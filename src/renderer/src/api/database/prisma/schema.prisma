@@ -19,12 +19,21 @@ model Client {
 }
 
 model Order {
+  id           Int                @id @default(autoincrement())
+  dateTime     DateTime           @default(now())
+  address      String
+  food         String
+  observations OrderObservation[]
+  Client       Client?            @relation(fields: [clientId], references: [id])
+  clientId     Int?
+}
+
+model OrderObservation {
   id       Int      @id @default(autoincrement())
+  content  String
   dateTime DateTime @default(now())
-  address  String
-  food     String
-  Client   Client?  @relation(fields: [clientId], references: [id])
-  clientId Int?
+  Order    Order?   @relation(fields: [orderId], references: [id])
+  orderId  Int?
 }
 
 model Food {

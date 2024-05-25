@@ -39,5 +39,9 @@ export const Read = ({
     []
   )
 
-  return <Table data={clients} columns={columns as ColumnDef<Client>[]} onRowClick={onRowClick} />
+  return (
+    <div className='h-full'>
+      <Table data={clients} columns={columns as ColumnDef<Client>[]} onRowClick={onRowClick} />
+    </div>
+  )
 }

@@ -8,7 +8,7 @@ import { LOG_LEVEL, logger } from '../../utils'
 import { db } from '../database/prismaClient'
 
 class ClientControllerKls {
-  getClients = async (req: Request, res: Response, next: NextFunction) => {
+  get = async (req: Request, res: Response, next: NextFunction) => {
     const PAGE_NUMBER = parseInt(req.query.pageNumber as string)
 
     try {
@@ -30,7 +30,7 @@ class ClientControllerKls {
     }
   }
 
-  createClient = async (req: Request, res: Response, next: NextFunction) => {
+  create = async (req: Request, res: Response, next: NextFunction) => {
     const clientData: Prisma.ClientCreateInput = req.body
 
     try {
@@ -52,7 +52,7 @@ class ClientControllerKls {
     }
   }
 
-  deleteClient = async (req: Request, res: Response, next: NextFunction) => {
+  delete = async (req: Request, res: Response, next: NextFunction) => {
     const idAsString = req.params.clientId
 
     try {
@@ -70,7 +70,7 @@ class ClientControllerKls {
     }
   }
 
-  editClient = async (req: Request, res: Response, next: NextFunction) => {
+  edit = async (req: Request, res: Response, next: NextFunction) => {
     const clientData: Prisma.ClientCreateInput = req.body
     const idAsString = req.params.clientId
 

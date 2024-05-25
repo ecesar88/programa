@@ -101,9 +101,12 @@ export const Pagination = (props: PaginationProps) => {
 
         <div className="flex flex-row gap-5 justify-center items-center">
           <div className="flex items-center gap-5">
-            {pages.map((page) => {
+            <div className="font-bold flex items-center min-w-[60px] justify-center text-gray1 opacity-80">
+              {selectedPageIndex + 1}/{TOTAL_PAGES_LENGTH}
+            </div>
+            {/* {pages.map((page) => {
               return <Page key={page} pageIndex={page} isSelected={page === selectedPageIndex} />
-            })}
+            })} */}
             {/* <Page pageIndex={FIRST_PAGE} />
             {}
             {selectedPageIndex === FIRST_PAGE ? null : <>...</>}
@@ -152,10 +155,6 @@ export const Pagination = (props: PaginationProps) => {
             }}
           />
         </ButtonGroup>
-
-        <div className="font-bold flex items-center min-w-[60px] justify-center text-gray1 opacity-80">
-          {selectedPageIndex + 1}/{TOTAL_PAGES_LENGTH}
-        </div>
       </div>
     </div>
   )

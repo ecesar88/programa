@@ -53,8 +53,6 @@ export const Clients = (): React.ReactNode => {
 
   const openModalOverlay = useCallback(
     (mode: OverlayMode) => {
-      console.log({ mode })
-
       setIsOverlayOpen(true)
       return setOverlayMode(mode)
     },
@@ -203,7 +201,7 @@ export const Clients = (): React.ReactNode => {
         {match(isLoading)
           .with(true, () => <Loading />)
           .otherwise(() => (
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-5 overflow-y-auto">
               <Read
                 clients={data?.data as Client[]}
                 onRowClick={(data, index) => {

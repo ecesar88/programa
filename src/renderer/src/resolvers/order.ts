@@ -7,3 +7,11 @@ export const CreateOrderResolver = z
     food: z.string()
   })
   .required()
+
+
+export const CreateOrderObservation = z
+  .object({
+    food: z.string()
+  })
+  .required()
+

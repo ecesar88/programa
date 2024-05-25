@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Prisma } from '@prisma/client'
-import { CreateOrderResolver } from '../../resolvers/order'
 import { NextFunction, Request, Response } from 'express'
 import { z } from 'zod'
 import { HttpStatusCode, QYT_PER_PAGE } from '../../constants'
+import { CreateOrderResolver } from '../../resolvers/order'
 import { LOG_LEVEL, logger } from '../../utils'
 import { db } from '../database/prismaClient'
 
-class OrderControllerKls {
-  get = async (req: Request, res: Response, next: NextFunction) => {
+class OrderObservationControllerKls {
+  getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const clients = await db.order.findMany({
+      const clients = await db.orderObservation.findMany({
         take: QYT_PER_PAGE,
         orderBy: {
           id: 'desc'
@@ -24,7 +24,7 @@ class OrderControllerKls {
   }
 
   create = async (req: Request, res: Response, next: NextFunction) => {
-    const orderData: Prisma.OrderCreateInput = req.body
+    const orderData: Prisma.OrderObservationCreateInput = req.body
 
     try {
       logger({
@@ -33,9 +33,9 @@ class OrderControllerKls {
         object: JSON.stringify(orderData, null, 2)
       })
 
-      CreateOrderResolver.parse(orderData)
+      // CreateOrderResolver.parse(orderData)
 
-      const order = await db.order.create({
+      const order = await db.orderObservation.create({
         data: orderData
       })
 
@@ -51,7 +51,7 @@ class OrderControllerKls {
     try {
       const orderId = z.number().parse(parseInt(idAsString))
 
-      const order = await db.order.delete({
+      const order = await db.orderObservation.delete({
         where: {
           id: orderId
         }
@@ -78,7 +78,7 @@ class OrderControllerKls {
 
       CreateOrderResolver.parse(orderData)
 
-      const order = await db.order.update({
+      const order = await db.orderObservation.update({
         where: {
           id: orderId
         },
@@ -92,4 +92,4 @@ class OrderControllerKls {
   }
 }
 
-export const OrderController = new OrderControllerKls()
+export const OrderObservationController = new OrderObservationControllerKls()

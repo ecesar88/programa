@@ -1,11 +1,18 @@
-import { Button, Colors } from '@blueprintjs/core'
+import { Button, Colors, Dialog, DialogBody } from '@blueprintjs/core'
 import { faker } from '@faker-js/faker'
 import { cn } from '@renderer/utils'
-import React from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { FaCheckCircle } from 'react-icons/fa'
 import { MdDeliveryDining } from 'react-icons/md'
 import { PiCookingPotBold, PiCookingPotFill } from 'react-icons/pi'
-import { OrderCard } from './OrderCard'
+import { OrderCard } from './components/OrderCard'
+import { OverlayMode } from '@renderer/constants/enums'
+import { CreateOrEditModal } from './CreateOrEdit'
+import { ScreenMenuProps } from '@renderer/components/molecules'
+import { FormProvider, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { CreateOrderResolver } from '@renderer/resolvers/order'
+import { Order } from '@prisma/client'
 
 const OrderTitle = ({ title }: { title: string }): React.ReactNode => {
   return (
@@ -90,46 +97,112 @@ const categoriasDePedido = [
 ]
 
 // type OrderStatus = 'to_prepare' | 'preparing' | 'delivering' | 'delivered'
+type OrderWithoutId = Omit<Order, 'id'>
 
 export const Read = (): React.ReactNode => {
-  return (
-    <div className="flex flex-row w-full gap-4 mb-10">
-      <div className="flex w-full gap-4 justify-between">
-        {categoriasDePedido.map((categoria, idx) => (
-          <React.Fragment key={idx}>
-            <OrderColumn title={categoria.title} icon={categoria.icon} key={Math.random()}>
-              {categoria.orders.map((pedido) => (
-                <OrderCard
-                  key={Math.random()}
-                  order={pedido}
-                  className={cn('[&>*]:!cursor-pointer !cursor-pointer hover:scale-[1.015]', {
-                    'bg-gray2 hover:bg-gray1': categoria.status === 'to_prepare',
-                    'bg-cerulean2 hover:bg-cerulean1': categoria.status === 'preparing',
-                    'bg-gold4 hover:bg-gold3 text-black': categoria.status === 'delivering',
-                    'bg-forest2 hover:bg-forest1': categoria.status === 'delivered'
-                  })}
-                />
-              ))}
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false)
+  const [overlayMode, setOverlayMode] = useState<OverlayMode | null>(null)
 
-              {categoria.status === 'to_prepare' && (
-                <div className="mt-3">
-                  <Button
-                    className="rounded"
-                    icon="plus"
-                    fill
-                    intent="success"
-                    onClick={() => {
-                      // Open new order modal
-                    }}
-                  >
-                    Novo
-                  </Button>
-                </div>
-              )}
-            </OrderColumn>
-          </React.Fragment>
-        ))}
+  // TODO: Implementar hook useOverlay
+  // const {open: {isOpen, setIsOpen}, mode: {mode, setMode}} = useOverlay()
+
+  const form = useForm<OrderWithoutId>({
+    resolver: zodResolver(CreateOrderResolver),
+    defaultValues: {}
+  })
+
+  const openModalOverlay = useCallback(
+    (mode: OverlayMode) => {
+      setIsOverlayOpen(true)
+      return setOverlayMode(mode)
+    },
+    [overlayMode]
+  )
+
+  const closeModalOverlay = useCallback(() => {
+    setIsOverlayOpen(false)
+    setOverlayMode(null)
+
+    return false
+  }, [overlayMode])
+
+  const actions: ScreenMenuProps['actions'] = {
+    onSaveClick: () => {
+      // const onCreate: SubmitHandler<ClientWithoutId> = (data) => {
+      //   createClientMutation(data)
+      // }
+      // const onEdit: SubmitHandler<ClientWithoutId> = (data) => {
+      //   const { id } = rowData
+      //   editClientMutation({
+      //     clientId: id,
+      //     clientData: data
+      //   })
+      // }
+      // form.handleSubmit(overlayMode === OverlayMode.NEW ? onCreate : onEdit)()
+    },
+    onCancelClick: () => {
+      form.reset()
+      closeModalOverlay()
+    }
+  }
+
+  return (
+    <FormProvider {...form}>
+      <div className="flex flex-row w-full gap-4 mb-10">
+        <div className="flex w-full gap-4 justify-between">
+          {categoriasDePedido.map((categoria, idx) => (
+            <React.Fragment key={idx}>
+              <OrderColumn title={categoria.title} icon={categoria.icon} key={Math.random()}>
+                {categoria.orders.map((pedido) => (
+                  <OrderCard
+                    key={Math.random()}
+                    order={pedido}
+                    className={cn('[&>*]:!cursor-pointer !cursor-pointer hover:scale-[1.015]', {
+                      'bg-gray2 hover:bg-gray1': categoria.status === 'to_prepare',
+                      'bg-cerulean2 hover:bg-cerulean1': categoria.status === 'preparing',
+                      'bg-gold4 hover:bg-gold3 text-black': categoria.status === 'delivering',
+                      'bg-forest2 hover:bg-forest1': categoria.status === 'delivered'
+                    })}
+                  />
+                ))}
+
+                {categoria.status === 'to_prepare' && (
+                  <div className="mt-3">
+                    <Button
+                      className="rounded"
+                      icon="plus"
+                      fill
+                      intent="success"
+                      onClick={() => {
+                        openModalOverlay(OverlayMode.NEW)
+                      }}
+                    >
+                      Novo
+                    </Button>
+                  </div>
+                )}
+              </OrderColumn>
+            </React.Fragment>
+          ))}
+        </div>
       </div>
-    </div>
+
+      <Dialog
+        isOpen={isOverlayOpen}
+        onClose={closeModalOverlay}
+        usePortal={true}
+        canEscapeKeyClose={true}
+        canOutsideClickClose={false}
+        className="w-fit h-fit"
+      >
+        <DialogBody className="p-0">
+          <CreateOrEditModal
+            onSave={actions?.onSaveClick}
+            onCancel={actions?.onCancelClick}
+            overlayMode={overlayMode}
+          />
+        </DialogBody>
+      </Dialog>
+    </FormProvider>
   )
 }
