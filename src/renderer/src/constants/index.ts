@@ -6,5 +6,6 @@ import * as REGEX from './regex'
 
 export const QYT_PER_PAGE = 20
 export const FORM_ID = 'main-form'
+export const HOME_CONTAINER_ID = 'home-container'
 
 export { HttpStatusCode, ROUTES, ENUMS, ENDPOINTS, REGEX }

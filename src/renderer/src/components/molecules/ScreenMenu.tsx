@@ -1,6 +1,6 @@
 import { Button } from '@blueprintjs/core'
 import { FORM_ID } from '@renderer/constants'
-import { rowDataFocusedAtom, selectedRowAtom } from '@renderer/store'
+import { isLoadingAtom, rowDataFocusedAtom, selectedRowAtom } from '@renderer/store'
 import { useAtomValue, useSetAtom } from 'jotai'
 
 export interface ScreenMenuProps {
@@ -13,7 +13,6 @@ export interface ScreenMenuProps {
   }
 }
 
-
 export const ScreenMenu = (props: ScreenMenuProps): React.ReactNode => {
   const selectedRow = useAtomValue(rowDataFocusedAtom)
   const setSelectedRow = useSetAtom(selectedRowAtom)
@@ -22,6 +21,8 @@ export const ScreenMenu = (props: ScreenMenuProps): React.ReactNode => {
 
   const selectedItem = selectedRow !== undefined && Object.values(selectedRow)?.length > 0
 
+  const isLoading = useAtomValue(isLoadingAtom)
+
   return (
     <div className="p-1 flex justify-start gap-2 border border-lightgray border-solid rounded bg-lightGray5">
       <Button
@@ -29,6 +30,7 @@ export const ScreenMenu = (props: ScreenMenuProps): React.ReactNode => {
         fill
         intent="success"
         className="max-w-[150px]"
+        disabled={isLoading}
         onClick={() => {
           props?.actions?.onNewClick?.()
         }}
@@ -42,7 +44,7 @@ export const ScreenMenu = (props: ScreenMenuProps): React.ReactNode => {
         intent="primary"
         form={FORM_ID}
         type="submit"
-        disabled={!selectedItem}
+        disabled={!selectedItem || isLoading}
         className="max-w-[150px]"
         onClick={(e: { preventDefault: () => void }) => {
           e.preventDefault()
@@ -57,7 +59,7 @@ export const ScreenMenu = (props: ScreenMenuProps): React.ReactNode => {
         fill
         icon="trash"
         intent="danger"
-        disabled={!selectedItem}
+        disabled={!selectedItem || isLoading}
         className="max-w-[150px]"
         onClick={() => {
           clearSelectedRow()

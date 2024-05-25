@@ -1,4 +1,5 @@
 import { MutationCache, QueryCache, QueryClientConfig } from '@tanstack/query-core'
+import { toast } from 'react-toastify'
 
 export type ReactQueryMetaErrorMessage = {
   errorMessage: string
@@ -18,5 +19,9 @@ export const queryClientConfig: QueryClientConfig = {
     }
   },
   mutationCache: new MutationCache(),
-  queryCache: new QueryCache()
+  queryCache: new QueryCache({
+    onError: () => {
+      toast('Erro interno, tente novamente mais tarde.', { type: 'error' })
+    }
+  })
 }

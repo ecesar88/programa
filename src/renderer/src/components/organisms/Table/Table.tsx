@@ -32,7 +32,7 @@ export const Table = <T extends object>(props: TableProps<T>): React.ReactNode =
     }
   }, [])
 
-  const memoizedTableData = useMemo(() => tableData, [])
+  const memoizedTableData = useMemo(() => tableData ?? [], [])
   const memoizedTableColumns = useMemo(() => tableColumns, [])
 
   const table = useReactTable({

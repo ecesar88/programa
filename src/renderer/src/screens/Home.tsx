@@ -1,4 +1,5 @@
 import { Menu, SystemTime } from '@renderer/components'
+import { HOME_CONTAINER_ID } from '@renderer/constants'
 import { Outlet } from 'react-router-dom'
 
 export const Home = (): React.ReactNode => {
@@ -6,7 +7,7 @@ export const Home = (): React.ReactNode => {
     <div className="flex h-[100vh] bg-white">
       <Menu />
 
-      <div className="w-full p-2">
+      <div id={HOME_CONTAINER_ID} className="w-full p-2">
         <Outlet />
       </div>
 

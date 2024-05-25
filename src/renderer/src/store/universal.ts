@@ -1,5 +1,11 @@
-import { atom } from 'jotai'
+import { atom, createStore } from 'jotai'
 
+export const store = createStore()
+
+/*
+ *  Selected Row atom:
+ *  The row data that is selected when the user clicks on the row on a table
+ */
 export interface RowMetadata<T = Record<never, never>> {
   meta: { index: number | null }
   data: T
@@ -27,3 +33,10 @@ export const getSelectedRowAtom = <T>() => {
 
 rowMetadata.debugLabel = 'rowMetadataAtom'
 rowData.debugLabel = 'rowDataAtom'
+
+/*
+ *  isLoading atom:
+ *  Primarily used to disable the ScreenMenu component buttons' when the screen is on
+ *  a loading state.
+ */
+export const isLoadingAtom = atom(false)

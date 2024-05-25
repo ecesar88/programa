@@ -5,9 +5,17 @@ import { ENDPOINTS } from '../constants'
 
 export const getClients = async (): Promise<AxiosResponse<Client[]>> => {
   try {
-    const clients = await server.get<Client[]>(ENDPOINTS.clients)
+    // const clients = await server.get<Client[]>(ENDPOINTS.clients)
 
-    return clients
+    // return clients
+
+    const promise = server.get<Client[]>(ENDPOINTS.clients)
+
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(promise)
+      }, 2500)
+    })
   } catch (error) {
     console.error(error)
     throw error

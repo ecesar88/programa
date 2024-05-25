@@ -5,7 +5,6 @@ interface DataHeaderProps {
   title: string
   menuProps?: {
     actions: ScreenMenuProps['actions']
-    // screenMode: ScreenMenuProps['screenMode']
   }
 }
 
@@ -14,10 +13,7 @@ export const DataHeader = (props: DataHeaderProps): React.ReactNode => {
     <div className="flex flex-col w-full gap-2 pb-4 relative">
       <Header title={props.title} />
 
-      {props.menuProps !== undefined ? (
-        <ScreenMenu actions={props.menuProps.actions} />
-      ) : // <ScreenMenu actions={props.menuProps.actions} screenMode={props.menuProps.screenMode} />
-      null}
+      {props.menuProps !== undefined ? <ScreenMenu actions={props.menuProps.actions} /> : null}
     </div>
   )
 }

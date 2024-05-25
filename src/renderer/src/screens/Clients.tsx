@@ -1,11 +1,16 @@
-import { Dialog, DialogBody, Spinner } from '@blueprintjs/core'
+import { Dialog, DialogBody } from '@blueprintjs/core'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Client } from '@prisma/client'
-import { AlertModal, DataHeader } from '@renderer/components'
+import { AlertModal, DataHeader, Loading } from '@renderer/components'
 import { CreateOrEditModal, Read } from '@renderer/components/templates/Clients'
 import { OverlayMode } from '@renderer/constants/enums'
 import { useOnKeyDown } from '@renderer/hooks'
-import { rowDataFocusedAtom, rowMetaDataFocusedAtom, selectedRowAtom } from '@renderer/store'
+import {
+  isLoadingAtom,
+  rowDataFocusedAtom,
+  rowMetaDataFocusedAtom,
+  selectedRowAtom
+} from '@renderer/store'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { atomWithMutation, atomWithQuery } from 'jotai-tanstack-query'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
@@ -27,6 +32,8 @@ export const Clients = (): React.ReactNode => {
   const setRowMetaData = useSetAtom(rowMetaDataFocusedAtom)
 
   const setSelectedRow = useSetAtom(selectedRowAtom)
+  const setIsLoadingAtom = useSetAtom(isLoadingAtom)
+
   const clearSelectedRow = () => setSelectedRow({ data: {}, meta: { index: null } })
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -55,7 +62,6 @@ export const Clients = (): React.ReactNode => {
   )
 
   const closeModalOverlay = useCallback(() => {
-    // setOverlayData({ isOpen: false, mode: null })
     setIsOverlayOpen(false)
     setOverlayMode(null)
 
@@ -76,6 +82,11 @@ export const Clients = (): React.ReactNode => {
   }, [])
 
   const [{ isLoading, data, refetch }] = useAtom(queries.clientsAtom)
+
+  // Disable the buttons on ScreenMenu while loading the get request
+  useEffect(() => {
+    setIsLoadingAtom(isLoading)
+  }, [isLoading])
 
   const mutations = useMemo(() => {
     const createClientAtom = atomWithMutation(() => ({
@@ -181,7 +192,7 @@ export const Clients = (): React.ReactNode => {
 
   return (
     <FormProvider {...form}>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 h-full">
         <DataHeader
           title="CLIENTES"
           menuProps={{
@@ -190,7 +201,7 @@ export const Clients = (): React.ReactNode => {
         />
 
         {match(isLoading)
-          .with(true, () => <Spinner size={110} intent="primary" />)
+          .with(true, () => <Loading />)
           .otherwise(() => (
             <div className="flex flex-col gap-5">
               <Read

@@ -10,7 +10,6 @@ import { db } from '../database/prismaClient'
 class ClientControllerKls {
   getClients = async (req: Request, res: Response, next: NextFunction) => {
     const PAGE_NUMBER = parseInt(req.query.pageNumber as string)
-    console.log(req.query)
 
     try {
       const clients = await db.client.findMany({
