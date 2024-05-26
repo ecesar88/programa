@@ -76,8 +76,8 @@ export const Pagination = (props: PaginationProps) => {
   }
 
   return (
-    <div className="flex bg-lightGray5 border border-lightGray2 border-t-0 rounded-b py-2 px-2 relative">
-      <div className="flex gap-3 w-full justify-start">
+    <div className="relative flex px-2 py-2 border border-t-0 rounded-b bg-lightGray5 border-lightGray2">
+      <div className="flex justify-start gap-3 rounded w-fit">
         <ButtonGroup>
           <Button
             icon={<LuArrowLeftToLine />}
@@ -97,45 +97,18 @@ export const Pagination = (props: PaginationProps) => {
               })
             }}
           />
-        </ButtonGroup>
 
-        <div className="flex flex-row gap-5 justify-center items-center">
-          <div className="flex items-center gap-5">
-            <div className="font-bold flex items-center min-w-[60px] justify-center text-gray1 opacity-80">
-              {selectedPageIndex + 1}/{TOTAL_PAGES_LENGTH}
-            </div>
-            {/* {pages.map((page) => {
-              return <Page key={page} pageIndex={page} isSelected={page === selectedPageIndex} />
-            })} */}
-            {/* <Page pageIndex={FIRST_PAGE} />
-            {}
-            {selectedPageIndex === FIRST_PAGE ? null : <>...</>}
-            {}
-            <Page pageIndex={selectedPageIndex - 1} />
-            {}
-            <div className="bg-[green]">
-              <Page pageIndex={selectedPageIndex} isSelected={selectedPageIndex !== LAST_PAGE} />
-            </div>
-            {}
-            {selectedPageIndex === LAST_PAGE - 1 || selectedPageIndex === LAST_PAGE ? null : (
-              <div className="bg-[yellow]">
-                <Page
-                  pageIndex={selectedPageIndex === LAST_PAGE ? LAST_PAGE : selectedPageIndex + 1}
-                />
+          <Button>
+            <div className="flex flex-row items-center justify-center gap-5">
+              <div className="flex items-center gap-5">
+                <div className="font-bold flex items-center min-w-[60px] justify-center">
+                  <div className="font-bold text-cerulean2">{selectedPageIndex + 1}&nbsp;</div>
+                  <div className="text-gray1 opacity-70">/&nbsp;{TOTAL_PAGES_LENGTH}</div>
+                </div>
               </div>
-            )}
-            {}
-            {selectedPageIndex === LAST_PAGE || selectedPageIndex === LAST_PAGE - 1 ? null : (
-              <>...</>
-            )}
-            {}
-            <div className="bg-[red]">
-              <Page pageIndex={LAST_PAGE} isSelected={selectedPageIndex === LAST_PAGE} />
-            </div> */}
-          </div>
-        </div>
+            </div>
+          </Button>
 
-        <ButtonGroup>
           <Button
             icon={<LuArrowRight />}
             intent="none"
