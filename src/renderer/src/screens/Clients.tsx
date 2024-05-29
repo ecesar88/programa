@@ -190,7 +190,7 @@ export const Clients = (): React.ReactNode => {
 
   return (
     <FormProvider {...form}>
-      <div className="flex flex-col gap-2 h-full">
+      <div className="flex flex-col h-full gap-2">
         <DataHeader
           title="CLIENTES"
           menuProps={{
