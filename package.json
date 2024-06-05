@@ -1,4 +1,5 @@
 {
+  "name": "@repo/programa-electron",
   "private": true,
   "scripts": {
     "build": "turbo run build",

@@ -1,18 +1,18 @@
 import { Button, Colors, Dialog, DialogBody } from '@blueprintjs/core'
 import { faker } from '@faker-js/faker'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Order } from '@prisma/client'
+import { ScreenMenuProps } from '@renderer/components/molecules'
+import { OverlayMode } from '@renderer/constants/enums'
 import { cn } from '@renderer/utils'
-import React, { useCallback, useMemo, useState } from 'react'
+// import { CreateOrderResolver } from '@repo/shared'
+import React, { useCallback, useState } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
 import { FaCheckCircle } from 'react-icons/fa'
 import { MdDeliveryDining } from 'react-icons/md'
 import { PiCookingPotBold, PiCookingPotFill } from 'react-icons/pi'
-import { OrderCard } from './components/OrderCard'
-import { OverlayMode } from '@renderer/constants/enums'
 import { CreateOrEditModal } from './CreateOrEdit'
-import { ScreenMenuProps } from '@renderer/components/molecules'
-import { FormProvider, useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Order } from '@prisma/client'
-import { CreateOrderResolver } from '@shared/resolvers'
+import { OrderCard } from './components/OrderCard'
 
 const OrderTitle = ({ title }: { title: string }): React.ReactNode => {
   return (
@@ -107,7 +107,8 @@ export const Read = (): React.ReactNode => {
   // const {open: {isOpen, setIsOpen}, mode: {mode, setMode}} = useOverlay()
 
   const form = useForm<OrderWithoutId>({
-    resolver: zodResolver(CreateOrderResolver),
+    // resolver: zodResolver(CreateOrderResolver),
+    // resolver: zodResolver(CreateOrderResolver),
     defaultValues: {}
   })
 

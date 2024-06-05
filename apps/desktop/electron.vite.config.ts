@@ -1,11 +1,10 @@
+import react from '@vitejs/plugin-react'
+import { defineConfig, externalizeDepsPlugin, swcPlugin } from 'electron-vite'
 import { resolve } from 'path'
-import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
-// import react from '@vitejs/plugin-react' // Babel
-import react from '.pnpm/@vitejs+plugin-react-swc@3.6.0_vite@5.0.12/node_modules/@vitejs/plugin-react-swc' // SWC
 
 export default defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin()]
+    plugins: [externalizeDepsPlugin(), swcPlugin()]
   },
   preload: {
     plugins: [externalizeDepsPlugin()]
@@ -13,7 +12,7 @@ export default defineConfig({
   renderer: {
     resolve: {
       alias: {
-        '@renderer': resolve('src/renderer/src')
+        '@renderer': resolve('src/renderer')
       }
     },
     plugins: [react()]

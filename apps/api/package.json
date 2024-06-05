@@ -1,11 +1,13 @@
 {
   "name": "@repo/api",
+  "private": true,
   "prisma": {
-    "schema": "src/renderer/src/api/database/prisma/schema.prisma",
-    "seed": "tsx src/renderer/src/api/seeds/index.ts"
+    "schema": "src/database/prisma/schema.prisma",
+    "seed": "pnpm ts-node-dev src/seeds/index.ts"
   },
   "scripts": {
-    "server": "ts-node-dev -r tsconfig-paths/register ./src/main/api/server.ts"
+    "dev": "pnpm ts-node-dev ./src/server.ts",
+    "typecheck": "tsc"
   },
   "dependencies": {
     "@decorators/di": "^3.1.0",
@@ -24,7 +26,8 @@
     "reflect-metadata": "^0.2.2",
     "ts-node-dev": "^2.0.0",
     "zod": "^3.23.5",
-    "zod-validation-error": "^3.2.0"
+    "zod-validation-error": "^3.2.0",
+    "@repo/shared": "workspace:*"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",

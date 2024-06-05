@@ -3,8 +3,7 @@ import { NextFunction, Request, Response } from 'express'
 import { z } from 'zod'
 import { db } from '../database/prismaClient'
 import { LOG_LEVEL, logger } from '../utils/logger'
-import { HttpStatusCode, QYT_PER_PAGE } from '@shared/constants'
-import { CreateClientResolver } from '@shared/resolvers'
+import { CreateClientResolver, HttpStatusCode, QYT_PER_PAGE } from '@repo/shared'
 
 class ClientControllerKls {
   // @ts-ignore

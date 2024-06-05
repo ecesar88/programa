@@ -1,5 +1,5 @@
 import { contextBridge } from 'electron'
-import { electronAPI } from '.pnpm/@electron-toolkit+preload@3.0.0_electron@28.2.0/node_modules/@electron-toolkit/preload'
+import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
 const api = {}

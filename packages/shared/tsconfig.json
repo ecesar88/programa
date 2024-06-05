@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "target": "ESNext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "resolveJsonModule": true,
+    "resolvePackageJsonExports": true,
+    "resolvePackageJsonImports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "baseUrl": ".",
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"],
+}

@@ -4,9 +4,8 @@ import { Prisma } from '@prisma/client'
 import { NextFunction, Request, Response } from 'express'
 import { z } from 'zod'
 import { db } from '../database/prismaClient'
-import { HttpStatusCode, QYT_PER_PAGE } from '@shared/constants'
 import { LOG_LEVEL, logger } from '../utils/logger'
-import { CreateOrderResolver } from '@shared/resolvers'
+import { CreateOrderResolver, HttpStatusCode, QYT_PER_PAGE } from '@repo/shared'
 
 class OrderControllerKls {
   // @ts-ignore

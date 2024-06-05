@@ -6,18 +6,19 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
 import helmet from 'helmet'
-import { IndexController } from './src/controllers/indexController'
+import { IndexController } from './controllers/indexController'
 import { errorHandlerMiddleware, loggerMiddleware } from './middleware'
 import { ClientRouter, OrderRouter } from './routes'
 import { PrismaService } from './services/prismaService'
-import { LOG_LEVEL, logger } from './src/utils/logger'
-import { parseEnv } from './src/utils/parseEnv'
+import { LOG_LEVEL, logger } from './utils/logger'
+import { parseEnv } from './utils/parseEnv'
 
 const app = express()
 
-export const PRISMA_SERVICE = new InjectionToken('PrismaService')
+export const PRISMA_SERVICE = new InjectionToken('PrismaService');
+
 ;(async function start() {
-  Container.provide([{ provide: PrismaService, useClass: PrismaService }])
+  Container.provide([{ provide: PRISMA_SERVICE, useClass: PrismaService }])
   // Container.provide([{ provide: 'PrismaService', useClass: PrismaService }])
   //
   // container.register('PrismaService', {

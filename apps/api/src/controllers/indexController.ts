@@ -1,20 +1,20 @@
 import { Container, Controller, Get, Params } from '@decorators/express'
 import { PrismaClient } from '@prisma/client'
 import 'reflect-metadata'
-import { PRISMA_SERVICE } from '../../server'
+import { PRISMA_SERVICE } from '../server'
 
 @Controller('/')
 export class IndexController {
   // constructor(@Optional() @Inject(PrismaService) private prisma: PrismaClient) {}
-  // constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: PrismaClient) {}
 
-  constructor() {
-    Container.get(PRISMA_SERVICE).then((client) => {
-      this.prisma = client as PrismaClient
-    })
-  }
+  // constructor() {
+  //   Container.get(PRISMA_SERVICE).then((client) => {
+  //     this.prisma = client as PrismaClient
+  //   })
+  // }
 
-  private prisma!: PrismaClient
+  // private prisma!: PrismaClient
 
   @Get('/test')
   async index(@Params() user: { name: string }) {

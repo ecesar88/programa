@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Injectable } from '@decorators/di'
 import { Prisma, PrismaClient } from '@prisma/client'
-import { HttpStatusCode, QYT_PER_PAGE } from '@shared/constants'
-import { CreateOrderResolver } from '@shared/resolvers'
 import { NextFunction, Request, Response } from 'express'
 import { z } from 'zod'
 import { db } from '../database/prismaClient'
 import { LOG_LEVEL, logger } from '../utils/logger'
+import { CreateOrderResolver, HttpStatusCode, QYT_PER_PAGE } from '@repo/shared'
 
 @Injectable()
 export default class OrderObservationControllerKls {

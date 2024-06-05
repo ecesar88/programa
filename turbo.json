@@ -1,12 +1,15 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalEnv": ["DISPLAY", "VITE_*"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [ "!.next/cache/**"]
+      "outputs": ["dist/**"],
+      "cache": false
     },
-    "check-types": {
-      "dependsOn": ["^check-types"]
+    "typecheck": {
+      "dependsOn": ["^check-types"],
+      "cache": false
     },
     "dev": {
       "persistent": true,

@@ -19,7 +19,7 @@ import { Id, toast } from 'react-toastify'
 import { match } from 'ts-pattern'
 import { ScreenMenuProps } from '../components/molecules/ScreenMenu'
 import { create, purge, edit, get } from '../queries/client'
-import { CreateClientResolver } from '../../shared/resolvers/client'
+import { CreateClientResolver } from '@repo/shared'
 
 type ClientWithoutId = Omit<Client, 'id'>
 

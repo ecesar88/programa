@@ -44,7 +44,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
       />
 
       <form id="create-form" className="w-full h-full">
-        <div className="flex gap-4 w-full">
+        <div className="flex w-full gap-4">
           <FormGroup
             style={{ width: '100%', height: '60px' }}
             label="Nome:"
