@@ -1,0 +1,11 @@
+{
+  "files": [],
+  "references": [{ "path": "./tsconfig.node.json" }, { "path": "./tsconfig.web.json" }],
+   "compilerOptions": {
+    "esModuleInterop": true,
+    "emitDecoratorMetadata":  true,
+    "experimentalDecorators": true,
+    "strictNullChecks": true,
+    "strict": true,
+   }
+}
