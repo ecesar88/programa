@@ -1,4 +1,4 @@
-import { HttpStatusCode } from '@repo/shared'
+import { HttpStatusCode } from '@repo/shared/constants'
 import { NextFunction, Request, Response } from 'express'
 import nodeColorLog from 'node-color-log'
 

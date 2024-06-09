@@ -9,12 +9,12 @@
   "compilerOptions": {
     "composite": true,
     "jsx": "react-jsx",
-    "target": "ESNext",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "target": "ES6",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "baseUrl": ".",
     "paths": {
       "@renderer/*": ["src/renderer/*"]
-    },
+    }
   }
 }

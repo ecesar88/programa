@@ -14,5 +14,14 @@ module.exports = {
       varsIgnorePattern: '^_',
       caughtErrorsIgnorePattern: '^_'
     }
-  ]
+  ],
+  overrides: [
+    {
+      files: ['*.config.js'],
+      env: {
+        node: true
+      }
+    }
+  ],
+  ignorePatterns: ['*.config.js']
 }

@@ -1,2 +1,7 @@
-export * from './resolvers/index'
-export * from './constants/index'
+import * as resolvers from "./resolvers";
+import * as constants from "./constants";
+
+export default {
+  resolvers,
+  constants,
+};

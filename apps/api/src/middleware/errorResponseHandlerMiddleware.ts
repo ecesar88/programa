@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express'
 import { ZodError } from 'zod'
 import { fromError } from 'zod-validation-error'
 import { LOG_LEVEL, logger } from '../utils/logger'
-import { HttpStatusCode } from '@repo/shared'
+import { HttpStatusCode} from '@repo/shared/constants'
 
 export function errorHandlerMiddleware(
   error: Error,

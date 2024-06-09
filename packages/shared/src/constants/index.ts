@@ -1,4 +1,6 @@
-export const QYT_PER_PAGE = 15
+const QTY_PER_PAGE = 15;
 
-export * from './httpStatusCode'
-export * from './regex'
+import { HttpStatusCode } from "./httpStatusCode";
+import * as Regex from "./regex";
+
+export { HttpStatusCode, Regex, QTY_PER_PAGE };

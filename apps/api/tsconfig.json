@@ -5,7 +5,7 @@
     "noImplicitThis": true,
     "noImplicitAny": true,
     "skipLibCheck": true,
-    "target": "ESNext",
+    "target": "ES6",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "resolveJsonModule": true,

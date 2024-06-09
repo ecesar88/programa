@@ -27,7 +27,6 @@
     "@electron-toolkit/preload": "^3.0.0",
     "@electron-toolkit/utils": "^3.0.0",
     "@hookform/resolvers": "^3.3.4",
-    "@repo/shared": "workspace:*",
     "@swc/core": "^1.5.24",
     "@tanstack/query-core": "^5.32.1",
     "@tanstack/react-query": "^5.32.1",
@@ -56,7 +55,8 @@
     "ts-pattern": "^5.1.1",
     "ts-results": "^3.3.0",
     "wonka": "^6.3.4",
-    "zod": "^3.23.5"
+    "zod": "^3.23.5",
+    "@repo/shared": "workspace:*"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^2.0.0",

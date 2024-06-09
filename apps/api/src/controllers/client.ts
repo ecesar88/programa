@@ -3,7 +3,8 @@ import { NextFunction, Request, Response } from 'express'
 import { z } from 'zod'
 import { db } from '../database/prismaClient'
 import { LOG_LEVEL, logger } from '../utils/logger'
-import { CreateClientResolver, HttpStatusCode, QYT_PER_PAGE } from '@repo/shared'
+import { HttpStatusCode, QTY_PER_PAGE } from '@repo/shared/constants'
+import { CreateClientResolver } from '@repo/shared/resolvers'
 
 class ClientControllerKls {
   // @ts-ignore
@@ -14,10 +15,10 @@ class ClientControllerKls {
       const clients = await db.client.findMany({
         ...(PAGE_NUMBER > 0
           ? {
-              skip: PAGE_NUMBER === 1 ? 0 : (PAGE_NUMBER - 1) * QYT_PER_PAGE
+              skip: PAGE_NUMBER === 1 ? 0 : (PAGE_NUMBER - 1) * QTY_PER_PAGE
             }
           : {}),
-        take: QYT_PER_PAGE,
+        take: QTY_PER_PAGE,
         orderBy: {
           id: 'desc'
         }
