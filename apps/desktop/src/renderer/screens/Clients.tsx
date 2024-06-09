@@ -5,21 +5,21 @@ import { AlertModal, DataHeader, Loading } from '@renderer/components'
 import { CreateOrEditModal, Read } from '@renderer/components/templates/Clients'
 import { OverlayMode } from '@renderer/constants/enums'
 import { useOnKeyDown } from '@renderer/hooks'
-import { create, edit, purge } from '@renderer/queries/client'
+import { create, edit, get, purge } from '@renderer/queries/client'
 import {
   isLoadingAtom,
   rowDataFocusedAtom,
   rowMetaDataFocusedAtom,
   selectedRowAtom
 } from '@renderer/store'
+import { CreateClientResolver } from '@repo/shared/resolvers'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { atomWithMutation, atomWithQuery } from 'jotai-tanstack-query'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { FormProvider, SubmitHandler, get, useForm } from 'react-hook-form'
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { Id, toast } from 'react-toastify'
 import { match } from 'ts-pattern'
 import { ScreenMenuProps } from '../components/molecules/ScreenMenu'
-import { CreateClientResolver } from '@repo/shared/resolvers'
 
 type ClientWithoutId = Omit<Client, 'id'>
 
