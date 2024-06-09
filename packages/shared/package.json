@@ -1,0 +1,28 @@
+{
+  "name": "@repo/shared",
+  "main": "dist/index.js",
+  "tyypes": "dist/index.d.ts",
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc"
+  },
+  "exports": {
+    "./resolvers": {
+      "types": "./src/resolvers/index.ts",
+      "default": "./dist/resolvers/index.js",
+      "require": "./dist/resolvers/index.js"
+    },
+    "./constants": {
+      "types": "./src/constants/index.ts",
+      "default": "./dist/constants/index.js",
+      "require": "./dist/resolvers/index.js"
+    }
+  },
+  "dependencies": {
+    "ts-node-dev": "^2.0.0",
+    "zod": "^3.23.5"
+  },
+  "devDependencies": {
+    "typescript": "latest"
+  }
+}
