@@ -20,6 +20,9 @@ importers:
       '@decorators/express':
         specifier: ^3.0.0
         version: 3.0.0(@decorators/di@3.1.0)(express@4.19.2)
+      '@decorators/server':
+        specifier: 1.0.0-beta.18
+        version: 1.0.0-beta.18(@decorators/di@3.1.0)(body-parser@1.20.2)(class-transformer@0.5.1)(class-validator@0.14.1)(express@4.19.2)(reflect-metadata@0.2.2)
       '@prisma/client':
         specifier: 5.13.0
         version: 5.13.0(prisma@5.13.0)
@@ -472,6 +475,48 @@ packages:
     peerDependencies:
       '@decorators/di': ^3.0.0
       express: ^4.16.3
+
+  '@decorators/server@1.0.0-beta.18':
+    resolution: {integrity: sha512-KM36l09um751H7mAXziffemO6HOdUXbdwQJOVmwmzS9BlqYh7PCWB3kCnH7U9SQ6ZSOAwm4n/Z33sTDQuFlp3Q==}
+    peerDependencies:
+      '@decorators/di': ^3.1.0
+      '@fastify/cookie': ^9.0.4
+      '@fastify/static': ^6.10.2
+      body-parser: ^1.20.2
+      class-transformer: ^0.5.1
+      class-validator: ^0.14.0
+      express: ^4.18.2
+      fastify: ^4.21.0
+      koa: ^2.14.2
+      koa-bodyparser: ^4.4.1
+      koa-mount: ^4.0.0
+      koa-router: ^2.14.2
+      koa-static: ^5.0.0
+      reflect-metadata: ^0.1.13
+      socket.io: ^4.7.2
+    peerDependenciesMeta:
+      '@fastify/cookie':
+        optional: true
+      '@fastify/static':
+        optional: true
+      body-parser:
+        optional: true
+      express:
+        optional: true
+      fastify:
+        optional: true
+      koa:
+        optional: true
+      koa-bodyparser:
+        optional: true
+      koa-mount:
+        optional: true
+      koa-router:
+        optional: true
+      koa-static:
+        optional: true
+      socket.io:
+        optional: true
 
   '@develar/schema-utils@2.6.5':
     resolution: {integrity: sha512-0cp4PsWQ/9avqTVMCtZ+GirikIA36ikvjtHweU4/j8yLtgObI0+JUPhYFScgwlteveGB1rt3Cm8UhN04XayDig==}
@@ -1168,6 +1213,9 @@ packages:
   '@types/strip-json-comments@0.0.30':
     resolution: {integrity: sha512-7NQmHra/JILCd1QqpSzl8+mJRc8ZHz3uDm8YV1Ks9IhK0epEiTw8aIErbvH9PI+6XbqhyIQy3462nEsn7UVzjQ==}
 
+  '@types/validator@13.11.10':
+    resolution: {integrity: sha512-e2PNXoXLr6Z+dbfx5zSh9TRlXJrELycxiaXznp4S5+D2M3b9bqJEitNHA5923jhnB2zzFiZHa2f0SI1HoIahpg==}
+
   '@types/verror@1.10.10':
     resolution: {integrity: sha512-l4MM0Jppn18hb9xmM6wwD1uTdShpf9Pn80aXTStnK1C94gtPvJcV2FrDmbOQUAQfJ1cKZHktkQUDwEqaAKXMMg==}
 
@@ -1528,6 +1576,12 @@ packages:
   ci-info@3.9.0:
     resolution: {integrity: sha512-NIxF55hv4nSqQswkAeiOi1r83xy8JldOFDTWiug55KBu9Jnblncd2U6ViHmYgHf01TPZS77NJBhBMKdWj9HQMQ==}
     engines: {node: '>=8'}
+
+  class-transformer@0.5.1:
+    resolution: {integrity: sha512-SQa1Ws6hUbfC98vKGxZH3KFY0Y1lm5Zm0SY8XX9zbK7FJCyVEac3ATW0RIpwzW+oOfmHE5PMPufDG9hCfoEOMw==}
+
+  class-validator@0.14.1:
+    resolution: {integrity: sha512-2VEG9JICxIqTpoK1eMzZqaV+u/EiwEJkMGzTrZf6sU/fwsnOITVgYJ8yojSy6CaXtO9V0Cc6ZQZ8h8m4UBuLwQ==}
 
   class-variance-authority@0.7.0:
     resolution: {integrity: sha512-jFI8IQw4hczaL4ALINxqLEXQbWcNjoSkloa4IaufXCJr6QawJyw7tuRysRsrE8w2p/4gGaxKIt/hX3qz/IbD1A==}
@@ -2506,6 +2560,9 @@ packages:
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
+
+  libphonenumber-js@1.11.3:
+    resolution: {integrity: sha512-RU0CTsLCu2v6VEzdP+W6UU2n5+jEpMDRkGxUeBgsAJgre3vKgm17eApISH9OQY4G0jZYJVIc8qXmz6CJFueAFg==}
 
   lie@3.1.1:
     resolution: {integrity: sha512-RiNhHysUjhrDQntfYSfY4MU24coXXdEOgw9WGcKHNeEwffDYbF//u87M1EWaMGzuFoSbqW0C9C6lEEhDOAswfw==}
@@ -3663,6 +3720,10 @@ packages:
   v8-compile-cache-lib@3.0.1:
     resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}
 
+  validator@13.12.0:
+    resolution: {integrity: sha512-c1Q0mCiPlgdTVVVIJIrBuxNicYE+t/7oKeI9MWLj3fh/uq2Pxh/3eeWbVZ4OcGW1TUf53At0njHw5SMdA3tmMg==}
+    engines: {node: '>= 0.10'}
+
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
@@ -3999,6 +4060,16 @@ snapshots:
   '@decorators/express@3.0.0(@decorators/di@3.1.0)(express@4.19.2)':
     dependencies:
       '@decorators/di': 3.1.0
+      express: 4.19.2
+
+  '@decorators/server@1.0.0-beta.18(@decorators/di@3.1.0)(body-parser@1.20.2)(class-transformer@0.5.1)(class-validator@0.14.1)(express@4.19.2)(reflect-metadata@0.2.2)':
+    dependencies:
+      '@decorators/di': 3.1.0
+      class-transformer: 0.5.1
+      class-validator: 0.14.1
+      reflect-metadata: 0.2.2
+    optionalDependencies:
+      body-parser: 1.20.2
       express: 4.19.2
 
   '@develar/schema-utils@2.6.5':
@@ -4644,6 +4715,8 @@ snapshots:
 
   '@types/strip-json-comments@0.0.30': {}
 
+  '@types/validator@13.11.10': {}
+
   '@types/verror@1.10.10':
     optional: true
 
@@ -5137,6 +5210,14 @@ snapshots:
   chromium-pickle-js@0.2.0: {}
 
   ci-info@3.9.0: {}
+
+  class-transformer@0.5.1: {}
+
+  class-validator@0.14.1:
+    dependencies:
+      '@types/validator': 13.11.10
+      libphonenumber-js: 1.11.3
+      validator: 13.12.0
 
   class-variance-authority@0.7.0:
     dependencies:
@@ -6313,6 +6394,8 @@ snapshots:
     dependencies:
       prelude-ls: 1.2.1
       type-check: 0.4.0
+
+  libphonenumber-js@1.11.3: {}
 
   lie@3.1.1:
     dependencies:
@@ -7539,6 +7622,8 @@ snapshots:
   utils-merge@1.0.1: {}
 
   v8-compile-cache-lib@3.0.1: {}
+
+  validator@13.12.0: {}
 
   vary@1.1.2: {}
 

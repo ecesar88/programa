@@ -1,35 +1,18 @@
-import { Container, Controller, Get, Params } from '@decorators/express'
-import { PrismaClient } from '@prisma/client'
-import 'reflect-metadata'
-import { PRISMA_SERVICE } from '../server'
+import { Controller, Get, Params } from "@decorators/express";
+import { PrismaService } from "../services/prismaService";
 
-@Controller('/')
+@Controller("/")
 export class IndexController {
-  // constructor(@Optional() @Inject(PrismaService) private prisma: PrismaClient) {}
-  constructor(private prisma: PrismaClient) {}
+  public constructor(private prisma: PrismaService) {}
 
-  // constructor() {
-  //   Container.get(PRISMA_SERVICE).then((client) => {
-  //     this.prisma = client as PrismaClient
-  //   })
-  // }
-
-  // private prisma!: PrismaClient
-
-  @Get('/test')
+  @Get("/test")
   async index(@Params() user: { name: string }) {
-    console.log(user)
-    console.log('this.prisma >> ', this.prisma)
-
     try {
-      console.log('TRY >>>>>>>> ', this.prisma)
-      const clients = await this.prisma.client.findMany({})
-      // const clients = await injectedPrisma.client.findMany({})
-      // console.log('clients >> \n\n', clients)
-      return clients
+      const clients = await this.prisma.client.findMany({});
+      return clients;
     } catch (error) {
-      console.log('error >>> \n', error)
-      return
+      console.log("error >>> \n", error);
+      return;
     }
   }
 }

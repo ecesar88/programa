@@ -1,15 +1,21 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
+import { Controller, Get } from "@decorators/express";
 import { Prisma } from "@prisma/client";
 import { HttpStatusCode, QTY_PER_PAGE } from "@repo/shared/constants";
 import { CreateOrderResolver } from "@repo/shared/resolvers";
-import { NextFunction, Request, Response } from "express";
 import { z } from "zod";
 import { db } from "../database/prismaClient";
 import { LOG_LEVEL, logger } from "../utils/logger";
+import { PrismaService } from "src/services/prismaService";
+import { type NextFunction, type Response, type Request } from "express";
 
-class OrderControllerKls {
-  get = async (req: Request, res: Response, next: NextFunction) => {
+@Controller("/order")
+export class OrderController {
+  public constructor(private prisma: PrismaService) {}
+
+  @Get("/")
+  async getOrders(req: Request, res: Response, next: NextFunction) {
     try {
       const clients = await db.order.findMany({
         take: QTY_PER_PAGE,
@@ -24,7 +30,6 @@ class OrderControllerKls {
     }
   };
 
-  // @ts-ignore
   create = async (req: Request, res: Response, next: NextFunction) => {
     const orderData: Prisma.OrderCreateInput = req.body;
 
@@ -47,7 +52,6 @@ class OrderControllerKls {
     }
   };
 
-  // @ts-ignore
   delete = async (req: Request, res: Response, next: NextFunction) => {
     const idAsString = req.params.orderId;
 
@@ -66,7 +70,6 @@ class OrderControllerKls {
     }
   };
 
-  // @ts-ignore
   edit = async (req: Request, res: Response, next: NextFunction) => {
     const orderData: Prisma.OrderCreateInput = req.body;
     const idAsString = req.params.clientId;
@@ -95,5 +98,3 @@ class OrderControllerKls {
     }
   };
 }
-
-export const OrderController = new OrderControllerKls();

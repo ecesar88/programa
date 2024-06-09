@@ -1,14 +1,11 @@
-// import { Injectable } from '@decorators/di'
-import { Injectable } from '@decorators/di'
-import { PrismaClient } from '@prisma/client'
+import { Injectable } from "@decorators/di";
+import { PrismaClient } from "@prisma/client";
+import { LOG_LEVEL, logger } from "../utils/logger";
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class PrismaService extends PrismaClient {
   constructor() {
-    console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
-    super({ log: ['query', 'error', 'info', 'warn'] })
-    // super.$connect()
+    super({ log: ["query", "error", "info", "warn"] });
+    logger({ level: LOG_LEVEL.INFO, message: "Prisma: Connected" });
   }
 }
