@@ -1,105 +1,146 @@
-import { Prisma } from '@prisma/client'
-import { NextFunction, Request, Response } from 'express'
-import { z } from 'zod'
-import { db } from '../database/prismaClient'
-import { LOG_LEVEL, logger } from '../utils/logger'
-import { HttpStatusCode, QTY_PER_PAGE } from '@repo/shared/constants'
-import { CreateClientResolver } from '@repo/shared/resolvers'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Next,
+  Params,
+  Post,
+  Put,
+  Query,
+  Status,
+} from "@decorators/express";
+import { Prisma } from "@prisma/client";
+import { HttpStatusCode, QTY_PER_PAGE } from "@repo/shared/constants";
+import { CreateClientResolver } from "@repo/shared/resolvers";
+import type { NextFunction } from "express";
+import { PrismaService } from "../services/prismaService";
+import { z } from "zod";
+import { LOG_LEVEL, logger } from "../utils/logger";
 
-class ClientControllerKls {
-  // @ts-ignore
-  get = async (req: Request, res: Response, next: NextFunction) => {
-    const PAGE_NUMBER = parseInt(req.query.pageNumber as string)
+@Controller("/clients")
+export class ClientController {
+  public constructor(private prisma: PrismaService) {}
+
+  @Status(HttpStatusCode.OK)
+  @Get("/")
+  async get(@Next() next: NextFunction, @Query() pageNumber: string) {
+    const PAGE_NUMBER = parseInt(pageNumber as string);
 
     try {
-      const clients = await db.client.findMany({
+      const clients = await this.prisma.client.findMany({
         ...(PAGE_NUMBER > 0
           ? {
-              skip: PAGE_NUMBER === 1 ? 0 : (PAGE_NUMBER - 1) * QTY_PER_PAGE
+              skip: PAGE_NUMBER === 1 ? 0 : (PAGE_NUMBER - 1) * QTY_PER_PAGE,
             }
           : {}),
         take: QTY_PER_PAGE,
         orderBy: {
-          id: 'desc'
-        }
-      })
+          id: "desc",
+        },
+      });
 
-      return res.status(HttpStatusCode.OK).send(clients)
+      return clients;
     } catch (error) {
-      next(error)
+      next();
     }
   }
 
-  // @ts-ignore
-  create = async (req: Request, res: Response, next: NextFunction) => {
-    const clientData: Prisma.ClientCreateInput = req.body
+  @Status(HttpStatusCode.OK)
+  @Get("/:clientId")
+  async getOne(
+    @Next() next: NextFunction,
+    @Params("clientId") clientId: string
+  ) {
+    console.log(">>>>>>>>>>>>> ", clientId);
+    try {
+      const clients = await this.prisma.client.findFirstOrThrow({
+        where: {
+          id: +clientId,
+        },
+      });
 
+      return clients;
+    } catch (error) {
+      next();
+    }
+  }
+
+  @Status(HttpStatusCode.CREATED)
+  @Post("/")
+  async create(
+    @Next() next: NextFunction,
+    @Body() clientData: Prisma.ClientCreateInput
+  ) {
     try {
       logger({
         level: LOG_LEVEL.INFO,
-        message: 'Criando novo cliente com dados:',
-        object: JSON.stringify(clientData, null, 2)
-      })
+        message: "Criando novo cliente com dados:",
+        object: JSON.stringify(clientData, null, 2),
+      });
 
-      CreateClientResolver.parse(clientData)
+      CreateClientResolver.parse(clientData);
 
-      const client = await db.client.create({
-        data: clientData
-      })
+      const client = await this.prisma.client.create({
+        data: clientData,
+      });
 
-      return res.status(HttpStatusCode.CREATED).send(client)
+      return client;
     } catch (error) {
-      next(error)
+      next();
     }
   }
 
-  // @ts-ignore
-  delete = async (req: Request, res: Response, next: NextFunction) => {
-    const idAsString = req.params.clientId
+  @Status(HttpStatusCode.OK)
+  @Delete("/:clientId")
+  async delete(@Next() next: NextFunction, @Params() clientId: string) {
+    const idAsString = String(clientId);
 
     try {
-      const clientId = z.number().parse(parseInt(idAsString))
+      const clientId = z.number().parse(parseInt(idAsString));
 
-      const client = await db.client.delete({
+      const client = await this.prisma.client.delete({
         where: {
-          id: clientId
-        }
-      })
+          id: clientId,
+        },
+      });
 
-      return res.status(HttpStatusCode.OK).send(client)
+      return client;
     } catch (error) {
-      next(error)
+      next();
     }
   }
 
-  // @ts-ignore
-  edit = async (req: Request, res: Response, next: NextFunction) => {
-    const clientData: Prisma.ClientCreateInput = req.body
-    const idAsString = req.params.clientId
-
+  @Status(HttpStatusCode.OK)
+  @Put("/:clientId")
+  async edit(
+    @Next() next: NextFunction,
+    @Body() clientData: Prisma.ClientCreateInput,
+    @Params() clientId: string
+  ) {
     try {
-      const clientId = z.number().parse(parseInt(idAsString))
+      // (function validateClientId() {
+      //   return z.number().parse(clientId);
+      // })();
 
       logger({
         level: LOG_LEVEL.INFO,
         message: `Editando cliente com id ${clientId} com dados:`,
-        object: JSON.stringify(clientData, null, 2)
-      })
+        object: JSON.stringify(clientData, null, 2),
+      });
 
-      CreateClientResolver.parse(clientData)
+      CreateClientResolver.parse(clientData);
 
-      const client = await db.client.update({
+      const client = await this.prisma.client.update({
         where: {
-          id: clientId
+          id: +clientId,
         },
-        data: clientData
-      })
+        data: clientData,
+      });
 
-      return res.status(HttpStatusCode.OK).send(client)
+      return client;
     } catch (error) {
-      next(error)
+      next();
     }
   }
 }
-
-export const ClientController = new ClientControllerKls()

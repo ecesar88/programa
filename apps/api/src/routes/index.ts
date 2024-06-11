@@ -1,3 +1,1 @@
-import ClientRouter from './clientRouter'
-
-export { ClientRouter }
+export default {};

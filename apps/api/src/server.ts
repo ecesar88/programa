@@ -4,13 +4,13 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import helmet from "helmet";
+import { ClientController } from "./controllers/client";
 import { IndexController } from "./controllers/indexController";
+import { OrderController } from "./controllers/order";
 import { errorHandlerMiddleware, loggerMiddleware } from "./middleware";
-import { ClientRouter } from "./routes";
 import { PrismaService } from "./services/prismaService";
 import { LOG_LEVEL, logger } from "./utils/logger";
 import { parseEnv } from "./utils/parseEnv";
-import { OrderController } from "./controllers/order";
 // import { Module } from "@decorators/server";
 
 const app = express();
@@ -35,8 +35,6 @@ export const PRISMA_SERVICE = new InjectionToken("PrismaService");
     res.send("Version 0.0.1");
   });
 
-  app.use(ClientRouter);
-
   app.use(errorHandlerMiddleware);
 
   const SERVER_PORT = parseEnv<number>("SERVER_PORT", process.env.SERVER_PORT);
@@ -52,7 +50,11 @@ export const PRISMA_SERVICE = new InjectionToken("PrismaService");
     },
   ]);
 
-  await attachControllers(app, [IndexController, OrderController]);
+  await attachControllers(app, [
+    IndexController,
+    ClientController,
+    OrderController,
+  ]);
 
   app.listen(SERVER_PORT, SERVER_HOSTNAME, () => {
     logger({
