@@ -4,6 +4,7 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "prisma:migrate": "cd apps/api && pnpm prisma migrate dev",
     "lint": "turbo run lint"
   },
   "devDependencies": {
