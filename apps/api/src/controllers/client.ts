@@ -52,7 +52,6 @@ export class ClientController {
     @Next() next: NextFunction,
     @Params("clientId") clientId: string
   ) {
-    console.log(">>>>>>>>>>>>> ", clientId);
     try {
       const clients = await this.prisma.client.findFirstOrThrow({
         where: {
