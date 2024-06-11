@@ -6,11 +6,12 @@ import express from "express";
 import helmet from "helmet";
 import { IndexController } from "./controllers/indexController";
 import { errorHandlerMiddleware, loggerMiddleware } from "./middleware";
-import { ClientRouter, OrderRouter } from "./routes";
+import { ClientRouter } from "./routes";
 import { PrismaService } from "./services/prismaService";
 import { LOG_LEVEL, logger } from "./utils/logger";
 import { parseEnv } from "./utils/parseEnv";
-import { Module } from '@decorators/server';
+import { OrderController } from "./controllers/order";
+// import { Module } from "@decorators/server";
 
 const app = express();
 
@@ -35,7 +36,6 @@ export const PRISMA_SERVICE = new InjectionToken("PrismaService");
   });
 
   app.use(ClientRouter);
-  app.use(OrderRouter);
 
   app.use(errorHandlerMiddleware);
 
@@ -52,7 +52,7 @@ export const PRISMA_SERVICE = new InjectionToken("PrismaService");
     },
   ]);
 
-  await attachControllers(app, [IndexController]);
+  await attachControllers(app, [IndexController, OrderController]);
 
   app.listen(SERVER_PORT, SERVER_HOSTNAME, () => {
     logger({

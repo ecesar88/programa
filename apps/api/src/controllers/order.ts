@@ -5,9 +5,8 @@ import { Prisma } from "@prisma/client";
 import { HttpStatusCode, QTY_PER_PAGE } from "@repo/shared/constants";
 import { CreateOrderResolver } from "@repo/shared/resolvers";
 import { z } from "zod";
-import { db } from "../database/prismaClient";
 import { LOG_LEVEL, logger } from "../utils/logger";
-import { PrismaService } from "src/services/prismaService";
+import { PrismaService } from "../services/prismaService";
 import { type NextFunction, type Response, type Request } from "express";
 
 @Controller("/order")
@@ -17,7 +16,7 @@ export class OrderController {
   @Get("/")
   async getOrders(req: Request, res: Response, next: NextFunction) {
     try {
-      const clients = await db.order.findMany({
+      const clients = await this.prisma.order.findMany({
         take: QTY_PER_PAGE,
         orderBy: {
           id: "desc",
@@ -42,7 +41,7 @@ export class OrderController {
 
       CreateOrderResolver.parse(orderData);
 
-      const order = await db.order.create({
+      const order = await this.prisma.order.create({
         data: orderData,
       });
 
@@ -58,7 +57,7 @@ export class OrderController {
     try {
       const orderId = z.number().parse(parseInt(idAsString));
 
-      const order = await db.order.delete({
+      const order = await this.prisma.order.delete({
         where: {
           id: orderId,
         },
@@ -85,7 +84,7 @@ export class OrderController {
 
       CreateOrderResolver.parse(orderData);
 
-      const order = await db.order.update({
+      const order = await this.prisma.order.update({
         where: {
           id: orderId,
         },
