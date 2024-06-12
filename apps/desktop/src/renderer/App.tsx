@@ -11,6 +11,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { Bounce, ToastContainer } from 'react-toastify'
 import { queryClientConfig } from './config/queryClientConfig'
 import { routes } from './routes'
+import { ErrorBoundary } from './components/templates/ErrorBoundary'
 
 const queryClient = new QueryClient(queryClientConfig)
 
@@ -26,37 +27,39 @@ function App(): JSX.Element {
 
   return (
     <>
-      <BlueprintProvider>
-        <QueryClientProvider client={queryClient}>
-          <JotaiProvider>
-            <DevTools />
-            {/*
+      <ErrorBoundary>
+        <BlueprintProvider>
+          <QueryClientProvider client={queryClient}>
+            <JotaiProvider>
+              <DevTools />
+              {/*
       This Provider initialisation step is needed so that we reference the same
       queryClient in both atomWithQuery and other parts of the app. Without this,
       our useQueryClient() hook will return a different QueryClient object
         */}
-            <HydrateAtoms>
-              <RouterProvider router={router} />
-            </HydrateAtoms>
-          </JotaiProvider>
+              <HydrateAtoms>
+                <RouterProvider router={router} />
+              </HydrateAtoms>
+            </JotaiProvider>
 
-          <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
-      </BlueprintProvider>
+            <ReactQueryDevtools initialIsOpen={false} />
+          </QueryClientProvider>
+        </BlueprintProvider>
 
-      <ToastContainer
-        position="bottom-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        transition={Bounce}
-      />
+        <ToastContainer
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+          transition={Bounce}
+        />
+      </ErrorBoundary>
     </>
   )
 }

@@ -1,9 +1,9 @@
 import { Client, Prisma } from '@prisma/client'
+import { Endpoints } from '@renderer/constants/endpoints'
 import { AxiosResponse } from 'axios'
 import server from '../config/axiosInstance'
-import { Endpoints } from '@renderer/constants/endpoints'
 
-export const get = async (): Promise<AxiosResponse<Client[]>> => {
+export const get = async (): Promise<AxiosResponse<Client[]> | undefined> => {
   try {
     // const clients = await server.get<Client[]>(ENDPOINTS.clients)
 
@@ -18,46 +18,40 @@ export const get = async (): Promise<AxiosResponse<Client[]>> => {
     })
   } catch (error) {
     console.error(error)
-    throw error
+    return
   }
 }
 
 export const create = async (
   clientData: Prisma.ClientCreateWithoutOrdersInput
-): Promise<AxiosResponse<Client>> => {
+): Promise<AxiosResponse<Client> | undefined> => {
   try {
-    const client = await server.post<Client>(Endpoints.clients.base, clientData)
-
-    return client
+   return server.post<Client>(Endpoints.clients.base, clientData)
   } catch (error) {
     console.error(error)
-    throw error
+    return
   }
 }
 
 export const edit = async (params: {
   clientId: number
   clientData: Prisma.ClientCreateWithoutOrdersInput
-}): Promise<AxiosResponse<Client>> => {
+}): Promise<AxiosResponse<Client> | undefined> => {
   const { clientId, clientData } = params
 
   try {
-    const client = await server.put<Client>(Endpoints.clients.single(clientId), clientData)
-
-    return client
+    return server.put<Client>(Endpoints.clients.single(clientId), clientData)
   } catch (error) {
     console.error(error)
-    throw error
+    return
   }
 }
 
-export const purge = async (clientId: number): Promise<AxiosResponse<Client>> => {
+export const purge = async (clientId: number): Promise<AxiosResponse<Client> | undefined> => {
   try {
-    const client = await server.delete<Client>(Endpoints.clients.single(clientId))
-
-    return client
+    return server.delete<Client>(Endpoints.clients.single(clientId))
   } catch (error) {
     console.error(error)
-    throw error
+    return
   }
 }

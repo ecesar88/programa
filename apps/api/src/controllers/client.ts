@@ -14,8 +14,8 @@ import { Prisma } from "@prisma/client";
 import { HttpStatusCode, QTY_PER_PAGE } from "@repo/shared/constants";
 import { CreateClientResolver } from "@repo/shared/resolvers";
 import type { NextFunction } from "express";
-import { PrismaService } from "../services/prismaService";
 import { z } from "zod";
+import { PrismaService } from "../services/prismaService";
 import { LOG_LEVEL, logger } from "../utils/logger";
 
 @Controller("/clients")
@@ -28,7 +28,7 @@ export class ClientController {
     const PAGE_NUMBER = parseInt(pageNumber as string);
 
     try {
-      const clients = await this.prisma.client.findMany({
+      return this.prisma.client.findMany({
         ...(PAGE_NUMBER > 0
           ? {
               skip: PAGE_NUMBER === 1 ? 0 : (PAGE_NUMBER - 1) * QTY_PER_PAGE,
@@ -39,8 +39,6 @@ export class ClientController {
           id: "desc",
         },
       });
-
-      return clients;
     } catch (error) {
       next();
     }
