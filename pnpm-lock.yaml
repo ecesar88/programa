@@ -65,6 +65,9 @@ importers:
       ts-node-dev:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@18.19.9)(typescript@5.4.5)
+      ts-pattern:
+        specifier: ^5.1.1
+        version: 5.1.2
       zod:
         specifier: ^3.23.5
         version: 3.23.5
@@ -4920,6 +4923,7 @@ packages:
       chalk: 3.0.0
       diff-match-patch: 1.0.5
     dev: false
+    bundledDependencies: []
 
   /jsonfile@4.0.0:
     resolution: {integrity: sha512-m6F1R3z8jjlf2imQHS2Qez5sjKWQzbuuhuJ/FKYFRZvPE3PuHcSMVZzfsLhGVOkfd20obL5SWEBew5ShlquNxg==}
