@@ -1,12 +1,11 @@
 import { Controller, Get } from "@decorators/express";
-import { ResponseInterceptor } from "../interceptors";
-import { ApplyOnAllRoutes } from "../interceptors/ApplyOnAllRoutes";
+import { ResponseInterceptor } from "../middleware";
 
 const formatResponse = (response: any) => {
   return { ...response, date: new Date().toISOString() };
 };
 
-@ApplyOnAllRoutes()
+// @ApplyOnAllRoutes()
 @Controller("/info")
 export class InfoController {
   @ResponseInterceptor((res) => formatResponse(res))

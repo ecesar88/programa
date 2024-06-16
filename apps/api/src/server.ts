@@ -11,11 +11,10 @@ import helmet from "helmet";
 import { ClientController } from "./controllers/client";
 import { InfoController } from "./controllers/infoController";
 import { OrderController } from "./controllers/order";
-import { loggerMiddleware } from "./middleware";
-import { ErrorHandlerMiddleware } from "./middleware/ErrorHandlerMiddleware";
 import { PrismaService } from "./services/prismaService";
 import { LOG_LEVEL, logger } from "./utils/logger";
 import { parseEnv } from "./utils/parseEnv";
+import { ErrorHandlerMiddleware, LoggerMiddleware } from "./middleware";
 // import { Module } from "@decorators/server";
 
 const app = express();
@@ -34,7 +33,7 @@ export const PRISMA_SERVICE = new InjectionToken("PrismaService");
     })
   );
 
-  app.use(loggerMiddleware);
+  // app.use(LoggerMiddleware);
   // app.use(errorHandlerMiddleware);
 
   const SERVER_PORT = parseEnv<number>("SERVER_PORT", process.env.SERVER_PORT);

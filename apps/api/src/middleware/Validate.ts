@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { ZodRawShape, z } from "zod";
 import { fromError } from "zod-validation-error";
 
-export function DtoValidationInterceptor<T extends ZodRawShape>(
+export function ValidateWith<T extends ZodRawShape>(
   zodSchema: z.ZodObject<T>
 ) {
   return function (

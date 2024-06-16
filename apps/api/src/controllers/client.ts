@@ -15,6 +15,7 @@ import { HttpStatusCode, QTY_PER_PAGE } from "@repo/shared/constants";
 import { CreateClientResolver } from "@repo/shared/resolvers";
 import type { NextFunction } from "express";
 import { z } from "zod";
+import { ValidateWith } from "../middleware";
 import { PrismaService } from "../services/prismaService";
 import { LOG_LEVEL, logger } from "../utils/logger";
 
@@ -64,6 +65,7 @@ export class ClientController {
   }
 
   @Status(HttpStatusCode.CREATED)
+  @ValidateWith(CreateClientResolver)
   @Post("/")
   async create(
     @Next() next: NextFunction,
@@ -75,8 +77,6 @@ export class ClientController {
         message: "Criando novo cliente com dados:",
         object: JSON.stringify(clientData, null, 2),
       });
-
-      CreateClientResolver.parse(clientData);
 
       const client = await this.prisma.client.create({
         data: clientData,
