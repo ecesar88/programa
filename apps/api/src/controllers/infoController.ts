@@ -1,14 +1,13 @@
 import { Controller, Get } from "@decorators/express";
-import { ResponseInterceptor } from "../middleware";
+import { ClassResponseInterceptor } from "../interceptors";
 
 const formatResponse = (response: any) => {
   return { ...response, date: new Date().toISOString() };
 };
 
-// @ApplyOnAllRoutes()
+@ClassResponseInterceptor((res) => formatResponse(res))
 @Controller("/info")
 export class InfoController {
-  @ResponseInterceptor((res) => formatResponse(res))
   @Get("/")
   get() {
     return {
@@ -16,8 +15,10 @@ export class InfoController {
     };
   }
 
+  @Get("/abc")
   get2() {
-    console.log("a");
-    return "b";
+    return {
+      version: "0.2",
+    };
   }
 }
