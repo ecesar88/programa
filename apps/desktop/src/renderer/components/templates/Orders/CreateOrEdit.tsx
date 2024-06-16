@@ -51,21 +51,20 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
             labelInfo="(obrigatório)"
           >
             <Input
-              placeholder="Nome"
+              placeholder="Endereço"
               fill
-              error={Boolean(errors?.['name']?.message?.toString())}
-              {...register('name')}
+              error={Boolean(errors?.['address']?.message?.toString())}
+              {...register('address')}
             />
-            <InputError errorMessage={errors?.['name']?.message?.toString()} />
+            <InputError errorMessage={errors?.['address']?.message?.toString()} />
           </FormGroup>
 
           <FormGroup style={{ width: '100%', height: '60px' }} label="Telefone:">
             <Input
-              placeholder="Telefone"
+              placeholder="Observações"
               fill
-              error={Boolean(errors?.['name']?.message?.toString())}
-              {...register('phone')}
-              // TODO: Add input mask
+              error={Boolean(errors?.['observations']?.message?.toString())}
+              {...register('observations')}
             />
             <InputError errorMessage={errors?.['phone']?.message?.toString()} />
           </FormGroup>

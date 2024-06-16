@@ -90,7 +90,10 @@ export class ClientController {
 
   @Status(HttpStatusCode.OK)
   @Delete("/:clientId")
-  async delete(@Next() next: NextFunction, @Params() clientId: string) {
+  async delete(
+    @Next() next: NextFunction,
+    @Params("clientId") clientId: string
+  ) {
     const idAsString = String(clientId);
 
     try {

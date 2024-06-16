@@ -4,8 +4,9 @@ import { NextFunction, Request, Response } from "express";
 import { ZodError } from "zod";
 import { fromError } from "zod-validation-error";
 import { LOG_LEVEL, logger } from "../utils/logger";
+import { ErrorMiddleware } from "@decorators/express";
 
-export class ErrorHandlerMiddleware {
+export class ErrorHandlerMiddleware implements ErrorMiddleware {
   public use(error: Error, _req: Request, res: Response, next: NextFunction) {
     if (error instanceof ZodError) {
       const formattedError = fromError(error);
