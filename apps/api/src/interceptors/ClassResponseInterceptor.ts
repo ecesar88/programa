@@ -1,6 +1,6 @@
 function wrapWithInterceptor(
-  target: any,
-  key: string,
+  _target: any,
+  _key: string,
   descriptor: PropertyDescriptor,
   formatResponse: (res: any) => any
 ) {
@@ -8,16 +8,7 @@ function wrapWithInterceptor(
 
   descriptor.value = async function (...args: any[]) {
     const result = await originalMethod.apply(this, args);
-
-    const modifiedResult = formatResponse(result);
-    // Modify the response body
-    // const modifiedResult = {
-    //   ...result,
-    //  intercepted: true, // Example modification
-    //  timestamp: new Date().toISOString(),
-    // };
-
-    return modifiedResult;
+    return formatResponse(result);
   };
 
   return descriptor;
@@ -36,6 +27,7 @@ export function ClassResponseInterceptor(intercept: (res: any) => any) {
         target.prototype,
         methodName
       );
+
       if (descriptor) {
         wrapWithInterceptor(
           target.prototype,

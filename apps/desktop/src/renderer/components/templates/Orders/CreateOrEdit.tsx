@@ -39,9 +39,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
 
   return (
     <div className="p-5 bg-white h-[200px] w-[800px] rounded flex flex-col gap-1 justify-between">
-      <ModalTitle
-        title={props.overlayMode === OverlayMode.NEW ? 'Novo Pedido' : 'Editar Pedido'}
-      />
+      <ModalTitle title={props.overlayMode === OverlayMode.NEW ? 'Novo Pedido' : 'Editar Pedido'} />
 
       <form id="create-form" className="w-full h-full">
         <div className="flex w-full gap-4">
@@ -53,7 +51,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
             <Input
               placeholder="Endereço"
               fill
-              error={Boolean(errors?.['address']?.message?.toString())}
+              error={(errors?.['address']?.message?.toString() ?? 'false') as unknown as boolean}
               {...register('address')}
             />
             <InputError errorMessage={errors?.['address']?.message?.toString()} />
@@ -63,7 +61,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
             <Input
               placeholder="Observações"
               fill
-              error={Boolean(errors?.['observations']?.message?.toString())}
+              error={(errors?.['observations']?.message?.toString() ?? 'false') as unknown as boolean}
               {...register('observations')}
             />
             <InputError errorMessage={errors?.['phone']?.message?.toString()} />

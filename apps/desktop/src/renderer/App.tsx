@@ -9,9 +9,9 @@ import { Provider as JotaiProvider } from 'jotai/react'
 import { useHydrateAtoms } from 'jotai/react/utils'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { Bounce, ToastContainer } from 'react-toastify'
+import { ErrorBoundary } from './components/templates/ErrorBoundary'
 import { queryClientConfig } from './config/queryClientConfig'
 import { routes } from './routes'
-import { ErrorBoundary } from './components/templates/ErrorBoundary'
 
 const queryClient = new QueryClient(queryClientConfig)
 
@@ -21,9 +21,17 @@ const HydrateAtoms = ({ children }): React.ReactNode => {
 }
 
 function App(): JSX.Element {
+  // Electron IPC, not handling this at the moment
   // const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
 
-  const router = createBrowserRouter(routes)
+  const router = createBrowserRouter(routes, {
+    future: {
+      v7_fetcherPersist: true,
+      v7_normalizeFormMethod: true,
+      v7_partialHydration: true,
+      v7_relativeSplatPath: true
+    }
+  })
 
   return (
     <>
@@ -38,7 +46,7 @@ function App(): JSX.Element {
       our useQueryClient() hook will return a different QueryClient object
         */}
               <HydrateAtoms>
-                <RouterProvider router={router} />
+                <RouterProvider router={router} future={{ v7_startTransition: true }} />
               </HydrateAtoms>
             </JotaiProvider>
 
