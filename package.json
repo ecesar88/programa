@@ -4,6 +4,8 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "dev:ui": "cd apps/desktop && pnpm run dev",
+    "dev:api": "cd apps/api && pnpm run dev",
     "prisma:migrate": "cd apps/api && pnpm prisma migrate dev",
     "lint": "turbo run lint"
   },
