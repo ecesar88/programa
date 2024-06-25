@@ -26,7 +26,6 @@ export class ClientController {
   @Status(HttpStatusCode.OK)
   @Get("/")
   async get(@Next() next: NextFunction, @Query() pageNumber: string) {
-    throw new Error("testee")
     const PAGE_NUMBER = parseInt(pageNumber as string);
 
     try {
