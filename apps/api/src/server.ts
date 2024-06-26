@@ -9,7 +9,7 @@ import dotenv from "dotenv";
 import express from "express";
 import helmet from "helmet";
 import { ClientController } from "./controllers/client";
-import { InfoController } from "./controllers/infoController";
+import { InfoController } from "./controllers/info";
 import { OrderController } from "./controllers/order";
 import { ErrorHandlerMiddleware, LoggerMiddleware } from "./middleware";
 import { PrismaService } from "./services/prismaService";
