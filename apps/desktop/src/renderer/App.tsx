@@ -9,7 +9,7 @@ import { Provider as JotaiProvider } from 'jotai/react'
 import { useHydrateAtoms } from 'jotai/react/utils'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { Bounce, ToastContainer } from 'react-toastify'
-import { ErrorBoundary } from './components/templates/ErrorBoundary'
+import { ErrorBoundary } from './components/templates/not_working_ErrorBoundary'
 import { queryClientConfig } from './config/queryClientConfig'
 import { routes } from './routes'
 
