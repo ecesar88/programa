@@ -54,7 +54,7 @@ export const PRISMA_SERVICE = new InjectionToken('PrismaService')
     },
     {
       provide: PrismaService,
-      useClass: PrismaService
+      useClass: PrismaService,
     }
   ])
 

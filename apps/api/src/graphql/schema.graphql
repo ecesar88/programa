@@ -9,9 +9,12 @@ type Client {
 }
 
 type Mutation {
-  createClient(body: String!, title: String!): Client!
+  create(body: String!, title: String!): Client!
+  delete(body: String!, title: String!): Client!
+  update(body: String!, title: String!): Client!
 }
 
 type Query {
+  client: [Client]!
   clients: [Client]!
 }

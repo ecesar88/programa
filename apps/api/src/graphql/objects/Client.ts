@@ -1,4 +1,5 @@
 import { extendType, nonNull, objectType, stringArg } from 'nexus'
+import ClientResolver from '../resolvers/ClientResolver'
 
 export const Client = objectType({
   name: 'Client',
@@ -12,33 +13,64 @@ export const Client = objectType({
   }
 })
 
-export const ClientQuery = extendType({
+export const GetAllQuery = extendType({
   type: 'Query',
   definition(t) {
     t.nonNull.list.field('clients', {
       type: 'Client',
-      async resolve(_root, _args, ctx) {
-        const clients = await ctx.prisma.client.findMany()
-        return clients
-      }
+      resolve: ClientResolver.queryAll
     })
   }
 })
 
-export const ClientMutation = extendType({
+export const GetQuery = extendType({
+  type: 'Query',
+  definition(t) {
+    t.nonNull.list.field('client', {
+      type: 'Client',
+      resolve: ClientResolver.queryAll
+    })
+  }
+})
+
+export const CreateMutation = extendType({
   type: 'Mutation',
   definition(t) {
-    t.nonNull.field('createClient', {
+    t.nonNull.field('create', {
       type: 'Client',
       args: {
         title: nonNull(stringArg()),
         body: nonNull(stringArg())
       },
-      resolve(_root, args, _ctx) {
-        console.log(args)
-        // ctx.prisma.client.create({ data: { name } })
-        return {}
-      }
+      resolve: ClientResolver.create
+    })
+  }
+})
+
+export const UpdateMutation = extendType({
+  type: 'Mutation',
+  definition(t) {
+    t.nonNull.field('update', {
+      type: 'Client',
+      args: {
+        title: nonNull(stringArg()),
+        body: nonNull(stringArg())
+      },
+      resolve: ClientResolver.create
+    })
+  }
+})
+
+export const DeleteMutation = extendType({
+  type: 'Mutation',
+  definition(t) {
+    t.nonNull.field('delete', {
+      type: 'Client',
+      args: {
+        title: nonNull(stringArg()),
+        body: nonNull(stringArg())
+      },
+      resolve: ClientResolver.create
     })
   }
 })

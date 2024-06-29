@@ -54,9 +54,12 @@ export interface NexusGenFieldTypes {
     phone: string | null; // String
   }
   Mutation: { // field return type
-    createClient: NexusGenRootTypes['Client']; // Client!
+    create: NexusGenRootTypes['Client']; // Client!
+    delete: NexusGenRootTypes['Client']; // Client!
+    update: NexusGenRootTypes['Client']; // Client!
   }
   Query: { // field return type
+    client: Array<NexusGenRootTypes['Client'] | null>; // [Client]!
     clients: Array<NexusGenRootTypes['Client'] | null>; // [Client]!
   }
 }
@@ -68,16 +71,27 @@ export interface NexusGenFieldTypeNames {
     phone: 'String'
   }
   Mutation: { // field return type name
-    createClient: 'Client'
+    create: 'Client'
+    delete: 'Client'
+    update: 'Client'
   }
   Query: { // field return type name
+    client: 'Client'
     clients: 'Client'
   }
 }
 
 export interface NexusGenArgTypes {
   Mutation: {
-    createClient: { // args
+    create: { // args
+      body: string; // String!
+      title: string; // String!
+    }
+    delete: { // args
+      body: string; // String!
+      title: string; // String!
+    }
+    update: { // args
       body: string; // String!
       title: string; // String!
     }
