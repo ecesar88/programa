@@ -1,4 +1,4 @@
-import { extendType, nonNull, objectType, stringArg } from 'nexus'
+import { extendType, intArg, nonNull, objectType, stringArg } from 'nexus'
 import ClientResolver from '../resolvers/ClientResolver'
 
 export const Client = objectType({
@@ -7,9 +7,9 @@ export const Client = objectType({
     t.int('id')
     t.string('name')
     t.string('phone')
-    // t.list.field('orders', {
-    //   type: ''
-    // })
+    t.list.field('orders', {
+      type: 'Order'
+    })
   }
 })
 
@@ -26,9 +26,12 @@ export const GetAllQuery = extendType({
 export const GetQuery = extendType({
   type: 'Query',
   definition(t) {
-    t.nonNull.list.field('client', {
+    t.nonNull.field('client', {
       type: 'Client',
-      resolve: ClientResolver.queryAll
+      args: {
+        id: nonNull(intArg({ description: 'ID of the user' }))
+      },
+      resolve: ClientResolver.queryOne
     })
   }
 })

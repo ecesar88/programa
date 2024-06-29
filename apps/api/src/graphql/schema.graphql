@@ -5,6 +5,7 @@
 type Client {
   id: Int
   name: String
+  orders: [Order]
   phone: String
 }
 
@@ -14,7 +15,17 @@ type Mutation {
   update(body: String!, title: String!): Client!
 }
 
+type Order {
+  address: String
+  dateTime: String
+  food: String
+  id: Int
+}
+
 type Query {
-  client: [Client]!
+  client(
+    """ID of the user"""
+    id: Int!
+  ): Client!
   clients: [Client]!
 }

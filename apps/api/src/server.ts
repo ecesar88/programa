@@ -13,8 +13,9 @@ import { ErrorHandlerMiddleware, HTTPLoggerMiddleware } from './middleware'
 import { PrismaService } from './services/prismaService'
 import { LOG_LEVEL, logger } from './utils/logger'
 import { parseEnv } from './utils/parseEnv'
-import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
+// import { renderGraphiQL } from '@graphql-yoga/render-graphiql' // Not working?
 import { context } from './graphql/context'
+import { express as voyagerMiddleware } from 'graphql-voyager/middleware'
 
 dotenv.config()
 
@@ -24,9 +25,10 @@ const SERVER_HOSTNAME = parseEnv<string>('SERVER_HOSTNAME', process.env.SERVER_H
 const helmetOptions: HelmetOptions = {
   contentSecurityPolicy: {
     directives: {
-      'style-src': ["'self'", 'unpkg.com'],
-      'script-src': ["'self'", 'unpkg.com', "'unsafe-inline'"],
-      'img-src': ["'self'", 'raw.githubusercontent.com']
+      'style-src-elem': ["'self'", 'unpkg.com', "'unsafe-inline'", "cdn.jsdelivr.net/npm/graphql-voyager@2.0.0/dist/voyager.css"],
+      'script-src': ["'self'", 'unpkg.com', "'unsafe-inline'", "'unsafe-eval'", 'cdn.jsdelivr.net/npm/graphql-voyager@2.0.0/dist/voyager.standalone.js'],
+      'img-src': ["'self'", 'raw.githubusercontent.com'],
+      'worker-src': ["*", "blob:"]
     }
   }
 }
@@ -35,11 +37,13 @@ export const PRISMA_SERVICE = new InjectionToken('PrismaService')
 ;(async function start() {
   const express = createExpress()
   const yoga = createYoga({
-    renderGraphiQL,
+    // renderGraphiQL,
     logging: 'debug',
     schema: schema,
     context
   })
+
+  express.get('/voyager', voyagerMiddleware({ endpointUrl: '/graphql' }))
 
   express.use(helmet(helmetOptions))
   express.use(createExpress.json())
@@ -54,7 +58,7 @@ export const PRISMA_SERVICE = new InjectionToken('PrismaService')
     },
     {
       provide: PrismaService,
-      useClass: PrismaService,
+      useClass: PrismaService
     }
   ])
 

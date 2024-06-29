@@ -1,5 +1,5 @@
 import { QTY_PER_PAGE } from '@repo/shared/constants'
-import { GenericFieldResolver } from './resolverType'
+import { GenericFieldResolver } from './utils'
 
 export default {
   async queryAll(_root, _args, ctx) {
@@ -23,10 +23,21 @@ export default {
     }
   },
 
-  // async queryOne(_root, _args, ctx) {
-  //   try {
-  //   } catch (e) {}
-  // },
+  async queryOne(_root, args, ctx) {
+    if (!args.id) {
+      throw new Error('ID is mandatory')
+    }
+
+    try {
+      return ctx.prisma.client.findFirstOrThrow({
+        where: {
+          id: args.id
+        }
+      })
+    } catch (e) {
+      throw new Error('Err')
+    }
+  },
 
   async create(_root, _args, ctx) {
     return {}

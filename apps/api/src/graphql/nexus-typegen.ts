@@ -31,9 +31,16 @@ export interface NexusGenObjects {
   Client: { // root type
     id?: number | null; // Int
     name?: string | null; // String
+    orders?: Array<NexusGenRootTypes['Order'] | null> | null; // [Order]
     phone?: string | null; // String
   }
   Mutation: {};
+  Order: { // root type
+    address?: string | null; // String
+    dateTime?: string | null; // String
+    food?: string | null; // String
+    id?: number | null; // Int
+  }
   Query: {};
 }
 
@@ -51,6 +58,7 @@ export interface NexusGenFieldTypes {
   Client: { // field return type
     id: number | null; // Int
     name: string | null; // String
+    orders: Array<NexusGenRootTypes['Order'] | null> | null; // [Order]
     phone: string | null; // String
   }
   Mutation: { // field return type
@@ -58,8 +66,14 @@ export interface NexusGenFieldTypes {
     delete: NexusGenRootTypes['Client']; // Client!
     update: NexusGenRootTypes['Client']; // Client!
   }
+  Order: { // field return type
+    address: string | null; // String
+    dateTime: string | null; // String
+    food: string | null; // String
+    id: number | null; // Int
+  }
   Query: { // field return type
-    client: Array<NexusGenRootTypes['Client'] | null>; // [Client]!
+    client: NexusGenRootTypes['Client']; // Client!
     clients: Array<NexusGenRootTypes['Client'] | null>; // [Client]!
   }
 }
@@ -68,12 +82,19 @@ export interface NexusGenFieldTypeNames {
   Client: { // field return type name
     id: 'Int'
     name: 'String'
+    orders: 'Order'
     phone: 'String'
   }
   Mutation: { // field return type name
     create: 'Client'
     delete: 'Client'
     update: 'Client'
+  }
+  Order: { // field return type name
+    address: 'String'
+    dateTime: 'String'
+    food: 'String'
+    id: 'Int'
   }
   Query: { // field return type name
     client: 'Client'
@@ -94,6 +115,11 @@ export interface NexusGenArgTypes {
     update: { // args
       body: string; // String!
       title: string; // String!
+    }
+  }
+  Query: {
+    client: { // args
+      id: number; // Int!
     }
   }
 }
