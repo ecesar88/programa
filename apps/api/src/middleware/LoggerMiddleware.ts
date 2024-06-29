@@ -2,7 +2,7 @@ import { HttpStatusCode } from "@repo/shared/constants";
 import { NextFunction, Request, Response } from "express";
 import nodeColorLog from "node-color-log";
 
-export function LoggerMiddleware(
+export function HTTPLoggerMiddleware(
   req: Request,
   res: Response,
   next: NextFunction

@@ -1,24 +1,21 @@
-import { Controller, Get } from "@decorators/express";
-import { ClassResponseInterceptor } from "../interceptors";
+import { Controller, Get } from '@decorators/express'
+import { ClassResponseInterceptor } from '../interceptors'
+import { InterceptResponse } from '../utils/responseInterceptor'
 
-const formatResponse = (response: any) => {
-  return { ...response, date: new Date().toISOString() };
-};
-
-@ClassResponseInterceptor((res) => formatResponse(res))
-@Controller("/info")
+@ClassResponseInterceptor(InterceptResponse)
+@Controller('/info')
 export class InfoController {
-  @Get("/")
+  @Get('/')
   get() {
     return {
-      version: "0.1",
-    };
+      version: '0.1'
+    }
   }
 
-  @Get("/abc")
+  @Get('/abc')
   get2() {
     return {
-      version: "0.2",
-    };
+      version: '0.2'
+    }
   }
 }

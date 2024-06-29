@@ -1,3 +1,5 @@
-import { ClassResponseInterceptor } from "./ClassResponseInterceptor";
+import { ClassResponseInterceptor } from './ClassResponseInterceptor'
+import { ResponseInterceptor } from './ResponseInterceptor'
+import { ValidateWith } from './ValidateWith'
 
-export { ClassResponseInterceptor };
+export { ClassResponseInterceptor, ResponseInterceptor, ValidateWith }

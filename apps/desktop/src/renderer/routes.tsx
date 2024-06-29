@@ -4,7 +4,7 @@ import { ROUTES } from './constants'
 import { Clients } from './screens/Clients'
 import { Home } from './screens/Home'
 import { Orders } from './screens/Orders'
-import { Menu } from './screens/Menu'
+import { Menu as MenuScreen } from './screens/Menu'
 
 export const routes: RouteObject[] = [
   {
@@ -21,7 +21,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: ROUTES.MENU,
-        element: <Menu />
+        element: <MenuScreen />
       }
     ]
   }

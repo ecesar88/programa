@@ -1,11 +1,11 @@
 import { ErrorHandlerMiddleware } from "./ErrorHandler";
-import { LoggerMiddleware } from "./LoggerMiddleware";
-import { ResponseInterceptor } from "./ResponseInterceptor";
-import { ValidateWith } from "./Validate";
+import { HTTPLoggerMiddleware } from "./LoggerMiddleware";
+import { ResponseInterceptor } from "../interceptors/ResponseInterceptor";
+import { ValidateWith } from "../interceptors/ValidateWith";
 
 export {
   ErrorHandlerMiddleware,
-  LoggerMiddleware,
+  HTTPLoggerMiddleware,
   ResponseInterceptor,
   ValidateWith,
 };
