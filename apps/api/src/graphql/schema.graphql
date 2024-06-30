@@ -10,14 +10,7 @@ type Client {
 }
 
 type Mutation {
-  createClient(
-    email: String!
-
-    """ID of the user"""
-    id: Int!
-    name: String!
-    phone: String!
-  ): Client!
+  createClient(email: String!, name: String!, phone: String!): Client!
   deleteClient(id: Int!): Client!
   updateClient: Client!
 }

@@ -1,3 +1,4 @@
+import { Regex } from '@repo/shared/constants'
 import nodeColorLog from 'node-color-log'
 
 export enum LOG_TYPE {
@@ -102,7 +103,7 @@ export const gqlLogger = (_eventName: string, args1: any) => {
   const parseParams = (): boolean | Record<string, unknown> => {
     const body = args.document.definitions[0].loc.source.body as string
 
-    console.log(body)
+    // console.log(body)
 
     const openingParenthesis = body.split('').findIndex((str) => str === '(') + 1
     const closingParenthesis = body.split('').findIndex((str) => str === ')')
@@ -113,15 +114,29 @@ export const gqlLogger = (_eventName: string, args1: any) => {
 
     const params = `${body.slice(openingParenthesis, closingParenthesis)}`
 
-    // Remove whitespace before or after commas, this way it makes things easier for us
-    const paramsWithRemovedWhitespace = params.replace(/\s?,\s?/gi, ',')
-    const paramsParsedToJSONString = paramsWithRemovedWhitespace
+    let parsedParams: string
+
+    // Check if there are commas, otherwise newlines (\n)
+    if (params.includes(',')) {
+      parsedParams = params.replace(/\s?,\s?/gi, ',')
+    } else {
+      // Remove whitespace before or after commas
+      parsedParams = params.replace(/\n/gi, ',')
+    }
+
+    const checkForCharacters = new RegExp(/(\w|\d)+/)
+    const paramsParsedToJSONString = parsedParams
       .split(',')
       .map((token) => {
+        if (!checkForCharacters.test(token)) {
+          return null
+        }
+
         const [key, value] = token.split(':')
 
-        return `"${key}":${value}`
+        return `"${key.replace(/\s/g, '')}":${value}`
       })
+      .filter((tkn) => tkn !== null)
       .join(',')
 
     const paramsJSON = JSON.parse(`{${paramsParsedToJSONString}}`)

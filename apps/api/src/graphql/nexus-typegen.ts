@@ -106,7 +106,6 @@ export interface NexusGenArgTypes {
   Mutation: {
     createClient: { // args
       email: string; // String!
-      id: number; // Int!
       name: string; // String!
       phone: string; // String!
     }
