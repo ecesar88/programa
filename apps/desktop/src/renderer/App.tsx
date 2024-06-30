@@ -1,5 +1,6 @@
 // import Versions from './components/Versions'
 // import electronLogo from './assets/electron.svg'
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 import { BlueprintProvider } from '@blueprintjs/core'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
@@ -19,6 +20,11 @@ const HydrateAtoms = ({ children }): React.ReactNode => {
   useHydrateAtoms([[queryClientAtom, queryClient]])
   return children
 }
+
+const apolloClient = new ApolloClient({
+  uri: 'http://localhost:3001/graphql',
+  cache: new InMemoryCache()
+})
 
 function App(): JSX.Element {
   // Electron IPC, not handling this at the moment
@@ -40,13 +46,17 @@ function App(): JSX.Element {
           <QueryClientProvider client={queryClient}>
             <JotaiProvider>
               <DevTools />
+
               {/*
-      This Provider initialisation step is needed so that we reference the same
-      queryClient in both atomWithQuery and other parts of the app. Without this,
-      our useQueryClient() hook will return a different QueryClient object
+              // Jotai React Query
+              This Provider initialisation step is needed so that we reference the same
+              queryClient in both atomWithQuery and other parts of the app. Without this,
+              our useQueryClient() hook will return a different QueryClient object
         */}
               <HydrateAtoms>
-                <RouterProvider router={router} future={{ v7_startTransition: true }} />
+                <ApolloProvider client={apolloClient}>
+                  <RouterProvider router={router} future={{ v7_startTransition: true }} />
+                </ApolloProvider>
               </HydrateAtoms>
             </JotaiProvider>
 
