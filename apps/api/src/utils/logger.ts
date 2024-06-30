@@ -141,7 +141,8 @@ export const gqlLogger = (_eventName: string, args1: any) => {
     .append(ip)
     .reset()
     .append('\n Params: ')
-    .append(parseParams())
+    .append(JSON.stringify(parseParams(), null, 2))
+    .append('\n')
     .log()
 
   // if (params.object) {
