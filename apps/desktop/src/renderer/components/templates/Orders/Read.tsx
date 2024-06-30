@@ -40,7 +40,7 @@ const OrderColumn = (props: OrderColumnProps): React.ReactNode => {
         <OrderTitle title={props.title} />
       </div>
 
-      <div className="flex flex-col w-full h-full gap-2 mt-4 overflow-y-scroll pl-4 pr-4">
+      <div className="flex flex-col w-full h-full gap-2 mt-4 overflow-y-auto pl-4 pr-4">
         {props.children}
       </div>
 
