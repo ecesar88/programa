@@ -99,10 +99,14 @@ export const gqlLogger = (_eventName: string, args1: any) => {
 
   // Convert params to JSON, but first we need to add quotation
   // marks (") to the keys, otherwise parsing fails
-  const parseParams = () => {
+  const parseParams = (): boolean | Record<string, unknown> => {
     const body = args.document.definitions[0].loc.source.body as string
     const openingParenthesis = body.split('').findIndex((str) => str === '(') + 1
     const closingParenthesis = body.split('').findIndex((str) => str === ')')
+
+    if (openingParenthesis === -1 || closingParenthesis === -1) {
+      return false
+    }
 
     const params = `${body.slice(openingParenthesis, closingParenthesis)}`
 
@@ -125,25 +129,34 @@ export const gqlLogger = (_eventName: string, args1: any) => {
   const separator = ' :: '
   const logPrefix = '=> '
 
-  nodeColorLog
-    .color('yellow')
-    .append(dateString)
-    .reset()
-    .append(separator)
-    .color('magenta')
-    .append(`[GQL] ${logPrefix}`)
-    .reset()
-    .color('yellow')
-    .append(`${operation.split('')[0].toUpperCase()}${operation.slice(1)}: '${queryName}'`)
-    .reset()
-    .append(' from ')
-    .color('yellow')
-    .append(ip)
-    .reset()
-    .append('\n Params: ')
-    .append(JSON.stringify(parseParams(), null, 2))
-    .append('\n')
-    .log()
+  const logToConsole = () =>
+    nodeColorLog
+      .color('yellow')
+      .append(dateString)
+      .reset()
+      .append(separator)
+      .color('magenta')
+      .append(`[GQL] ${logPrefix}`)
+      .reset()
+      .color('yellow')
+      .append(`${operation.split('')[0].toUpperCase()}${operation.slice(1)}: '${queryName}'`)
+      .reset()
+      .append(' from ')
+      .color('yellow')
+      .append(ip)
+      .reset()
+
+  const params = parseParams()
+
+  if (params === false) {
+    logToConsole().append('\n').log()
+  } else {
+    logToConsole()
+      .append('\n Params: ')
+      .append(JSON.stringify(parseParams(), null, 2))
+      .append('\n')
+      .log()
+  }
 
   // if (params.object) {
   //   nodeColorLog.log(`${params.object}`)
