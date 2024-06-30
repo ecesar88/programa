@@ -92,8 +92,8 @@ export const gqlLogger = (_eventName: string, args1: any) => {
 
   const { args } = args1
 
-  const operation = args.document.definitions[0].operation
-  const queryName = args.document.definitions[0].name.value
+  const operation = args?.document?.definitions?.[0]?.operation
+  const queryName = args?.document?.definitions?.[0]?.name?.value ?? 'unknown'
 
   const ip = args.contextValue.req.ip
 
@@ -101,6 +101,7 @@ export const gqlLogger = (_eventName: string, args1: any) => {
   // marks (") to the keys, otherwise parsing fails
   const parseParams = (): boolean | Record<string, unknown> => {
     const body = args.document.definitions[0].loc.source.body as string
+
     const openingParenthesis = body.split('').findIndex((str) => str === '(') + 1
     const closingParenthesis = body.split('').findIndex((str) => str === ')')
 
