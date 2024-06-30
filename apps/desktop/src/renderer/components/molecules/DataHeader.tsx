@@ -1,3 +1,4 @@
+import { DATA_HEADER_ID } from '@renderer/constants'
 import { Header } from './Header'
 import { ScreenMenu, ScreenMenuProps } from './ScreenMenu'
 
@@ -10,7 +11,7 @@ interface DataHeaderProps {
 
 export const DataHeader = (props: DataHeaderProps): React.ReactNode => {
   return (
-    <div className="flex flex-col w-full gap-2 pb-4 relative">
+    <div id={DATA_HEADER_ID} className="flex flex-col w-full gap-2 pb-4 relative">
       <Header title={props.title} />
 
       {props.menuProps !== undefined ? <ScreenMenu actions={props.menuProps.actions} /> : null}

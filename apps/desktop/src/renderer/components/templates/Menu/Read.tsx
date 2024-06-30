@@ -86,6 +86,60 @@ export const Read = (): React.ReactNode => {
       category: 'proteina'
     },
     {
+      name: 'Feijoada',
+      ingredients: 'Arroz, torresmo, couve, farofa e salada de tomate, alface e laranja.',
+      price: 99.99,
+      category: 'proteina'
+    },
+    {
+      name: 'Feijoada',
+      ingredients: 'Arroz, torresmo, couve, farofa e salada de tomate, alface e laranja.',
+      price: 99.99,
+      category: 'proteina'
+    },
+    {
+      name: 'Feijoada',
+      ingredients: 'Arroz, torresmo, couve, farofa e salada de tomate, alface e laranja.',
+      price: 99.99,
+      category: 'proteina'
+    },
+    {
+      name: 'Feijoada',
+      ingredients: 'Arroz, torresmo, couve, farofa e salada de tomate, alface e laranja.',
+      price: 99.99,
+      category: 'proteina'
+    },
+    {
+      name: 'Feijoada',
+      ingredients: 'Arroz, torresmo, couve, farofa e salada de tomate, alface e laranja.',
+      price: 99.99,
+      category: 'proteina'
+    },
+    {
+      name: 'Feijoada',
+      ingredients: 'Arroz, torresmo, couve, farofa e salada de tomate, alface e laranja.',
+      price: 99.99,
+      category: 'proteina'
+    },
+    {
+      name: 'Feijoada',
+      ingredients: 'Arroz, torresmo, couve, farofa e salada de tomate, alface e laranja.',
+      price: 99.99,
+      category: 'proteina'
+    },
+    {
+      name: 'Feijoada',
+      ingredients: 'Arroz, torresmo, couve, farofa e salada de tomate, alface e laranja.',
+      price: 99.99,
+      category: 'proteina'
+    },
+    {
+      name: 'Feijoada',
+      ingredients: 'Arroz, torresmo, couve, farofa e salada de tomate, alface e laranja.',
+      price: 99.99,
+      category: 'proteina'
+    },
+    {
       name: 'Picadinho',
       ingredients: 'Arroz, feijão, macarrão, farofa, batata palha e salada',
       price: 99.99,
@@ -154,10 +208,10 @@ export const Read = (): React.ReactNode => {
   ]
 
   return (
-    <div className="flex flex-col gap-4 h-full justify-start">
+    <div className="flex flex-col gap-4 h-full">
       {/* Categorias */}
 
-      <div className="flex flex-row gap-6 py-2 px-4 bg-lightGray4 rounded-md">
+      <div className="flex flex-row flex-grow-0 flex-shrink-0 h-[75px] gap-6 py-2 px-4 bg-lightGray4 rounded-md">
         <div className="flex flex-col items-center gap-2">
           <div>
             <TbMeat size={28} />
@@ -180,7 +234,7 @@ export const Read = (): React.ReactNode => {
         </div>
       </div>
 
-      <div className="flex flex-col w-full max-h-[67%] overflow-y-scroll">
+      <div className="flex flex-col flex-grow overflow-y-auto">
         {pratos.map((prato, idx, arr) => (
           <div
             key={idx}
@@ -206,7 +260,7 @@ export const Read = (): React.ReactNode => {
         ))}
       </div>
 
-      <div className="flex justify-between">
+      <div className="flex justify-between flex-grow-0 flex-shrink-0 h-[35px]">
         <div>
           <Button
             icon={'plus'}

@@ -7,7 +7,7 @@ export const Home = (): React.ReactNode => {
     <div className="flex h-[100vh] bg-white overflow-y-hidden">
       <Menu />
 
-      <div id={HOME_CONTAINER_ID} className="w-full p-2">
+      <div id={HOME_CONTAINER_ID} className="w-full p-4">
         <Outlet />
       </div>
 
