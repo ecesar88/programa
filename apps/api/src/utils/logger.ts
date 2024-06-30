@@ -136,7 +136,7 @@ export const gqlLogger = (_eventName: string, args1: any) => {
 
         return `"${key.replace(/\s/g, '')}":${value}`
       })
-      .filter((tkn) => tkn !== null)
+      .filter((tkn) => tkn !== null) // Remove empty tokens
       .join(',')
 
     const paramsJSON = JSON.parse(`{${paramsParsedToJSONString}}`)
