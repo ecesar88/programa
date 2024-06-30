@@ -120,6 +120,7 @@ export interface NexusGenArgTypes {
   Query: {
     client: { // args
       id: number; // Int!
+      teste?: string | null; // String
     }
   }
 }

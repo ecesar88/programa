@@ -18,7 +18,7 @@ import { z } from 'zod'
 import { ClassResponseInterceptor } from '../interceptors'
 import { ValidateWith } from '../middleware'
 import { PrismaService } from '../services/prismaService'
-import { LOG_LEVEL, logger } from '../utils/logger'
+import { LOG_TYPE, logger } from '../utils/logger'
 import { InterceptResponse } from '../utils/responseInterceptor'
 
 @ClassResponseInterceptor(InterceptResponse)
@@ -70,7 +70,7 @@ export class ClientController {
   async create(@Next() next: NextFunction, @Body() clientData: Prisma.ClientCreateInput) {
     try {
       logger({
-        level: LOG_LEVEL.INFO,
+        level: LOG_TYPE.INFO,
         message: 'Criando novo cliente com dados:',
         object: JSON.stringify(clientData, null, 2)
       })
@@ -118,7 +118,7 @@ export class ClientController {
       // })();
 
       logger({
-        level: LOG_LEVEL.INFO,
+        level: LOG_TYPE.INFO,
         message: `Editando cliente com id ${clientId} com dados:`,
         object: JSON.stringify(clientData, null, 2)
       })

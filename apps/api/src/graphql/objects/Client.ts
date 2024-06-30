@@ -29,7 +29,8 @@ export const GetQuery = extendType({
     t.nonNull.field('client', {
       type: 'Client',
       args: {
-        id: nonNull(intArg({ description: 'ID of the user' }))
+        id: nonNull(intArg({ description: 'ID of the user' })),
+        teste: stringArg()
       },
       resolve: ClientResolver.queryOne
     })

@@ -4,7 +4,7 @@ import { Prisma, PrismaClient } from '@prisma/client'
 import { NextFunction, Request, Response } from 'express'
 import { z } from 'zod'
 import { db } from '../database/prismaClient'
-import { LOG_LEVEL, logger } from '../utils/logger'
+import { LOG_TYPE, logger } from '../utils/logger'
 import { CreateOrderResolver, HttpStatusCode, QYT_PER_PAGE } from '@repo/shared'
 
 @Injectable()
@@ -44,7 +44,7 @@ export default class OrderObservationControllerKls {
 
     try {
       logger({
-        level: LOG_LEVEL.INFO,
+        level: LOG_TYPE.INFO,
         message: 'Criando novo cliente com dados:',
         object: JSON.stringify(orderData, null, 2)
       })
@@ -87,7 +87,7 @@ export default class OrderObservationControllerKls {
       const orderId = z.number().parse(parseInt(idAsString))
 
       logger({
-        level: LOG_LEVEL.INFO,
+        level: LOG_TYPE.INFO,
         message: `Editando pedido com id ${orderId} com dados:`,
         object: JSON.stringify(orderData, null, 2)
       })

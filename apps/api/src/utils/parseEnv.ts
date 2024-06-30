@@ -1,4 +1,4 @@
-import { LOG_LEVEL, logger } from "./logger";
+import { LOG_TYPE, logger } from "./logger";
 
 export const parseEnv = <T extends string | number>(
   name: string,
@@ -6,7 +6,7 @@ export const parseEnv = <T extends string | number>(
 ): T => {
   if (!env) {
     logger({
-      level: LOG_LEVEL.ERROR,
+      level: LOG_TYPE.ERROR,
       message: `env ${name} is not defined or does not exist`,
     });
 

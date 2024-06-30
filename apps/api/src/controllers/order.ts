@@ -14,7 +14,7 @@ import { HttpStatusCode, QTY_PER_PAGE } from "@repo/shared/constants";
 import { CreateOrderResolver } from "@repo/shared/resolvers";
 import { type NextFunction } from "express";
 import { PrismaService } from "../services/prismaService";
-import { LOG_LEVEL, logger } from "../utils/logger";
+import { LOG_TYPE, logger } from "../utils/logger";
 
 @Controller("/order")
 export class OrderController {
@@ -45,7 +45,7 @@ export class OrderController {
   ) {
     try {
       logger({
-        level: LOG_LEVEL.INFO,
+        level: LOG_TYPE.INFO,
         message: "Criando novo cliente com dados:",
         object: JSON.stringify(orderData, null, 2),
       });
@@ -91,7 +91,7 @@ export class OrderController {
       // const orderId = z.number().parse(parseInt(idAsString));
 
       logger({
-        level: LOG_LEVEL.INFO,
+        level: LOG_TYPE.INFO,
         message: `Editando pedido com id ${orderId} com dados:`,
         object: JSON.stringify(orderData, null, 2),
       });

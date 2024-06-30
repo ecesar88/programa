@@ -26,6 +26,7 @@ type Query {
   client(
     """ID of the user"""
     id: Int!
+    teste: String
   ): Client!
   clients: [Client]!
 }
