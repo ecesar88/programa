@@ -157,8 +157,4 @@ export const gqlLogger = (_eventName: string, args1: any) => {
       .append('\n')
       .log()
   }
-
-  // if (params.object) {
-  //   nodeColorLog.log(`${params.object}`)
-  // }
 }
