@@ -14,7 +14,7 @@ interface OrderCardProps {
 
 export const OrderCard = (props: OrderCardProps) => {
   return (
-    <div onClick={props.onClick}>
+    <div id="order-card" onClick={props.onClick}>
       <Card order={props.order} className={props.className} />
     </div>
   )

@@ -1,6 +1,5 @@
 import { Button, Colors, Dialog, DialogBody } from '@blueprintjs/core'
 import { faker } from '@faker-js/faker'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { Order } from '@prisma/client'
 import { ScreenMenuProps } from '@renderer/components/molecules'
 import { OverlayMode } from '@renderer/constants/enums'
@@ -24,19 +23,40 @@ const OrderTitle = ({ title }: { title: string }): React.ReactNode => {
 
 interface OrderColumnProps {
   title: string
+  onClickNewButton: () => void
+  status?: string
   icon?: React.ReactNode
   children?: React.ReactNode
 }
 
 const OrderColumn = (props: OrderColumnProps): React.ReactNode => {
   return (
-    <div className="flex flex-col items-center justify-start w-full p-4 px-4 rounded-lg bg-lightGray4">
-      <div className="flex items-center justify-between gap-2">
+    <div
+      id="order-column"
+      className="flex flex-col items-center justify-start w-full h-full rounded-lg bg-lightGray4"
+    >
+      <div className="flex items-center justify-between gap-2 px-4 pt-4 pb-2">
         {props.icon ?? null}
         <OrderTitle title={props.title} />
       </div>
 
-      <div className="flex flex-col w-full gap-2 mt-4">{props.children}</div>
+      <div className="flex flex-col w-full h-full gap-2 mt-4 overflow-y-scroll pl-4 pr-4">
+        {props.children}
+      </div>
+
+      {props.status === 'to_prepare' && (
+        <div className="w-full py-3 px-4">
+          <Button
+            className="rounded"
+            icon="plus"
+            fill
+            intent="success"
+            onClick={props.onClickNewButton}
+          >
+            Novo
+          </Button>
+        </div>
+      )}
     </div>
   )
 }
@@ -149,11 +169,17 @@ export const Read = (): React.ReactNode => {
 
   return (
     <FormProvider {...form}>
-      <div className="flex flex-row w-full gap-4 mb-10">
-        <div className="flex justify-between w-full gap-4">
+      <div className="flex flex-row w-full h-full gap-4">
+        <div className="flex justify-between w-full h-full gap-4">
           {categoriasDePedido.map((categoria, idx) => (
             <React.Fragment key={idx}>
-              <OrderColumn title={categoria.title} icon={categoria.icon} key={Math.random()}>
+              <OrderColumn
+                title={categoria.title}
+                icon={categoria.icon}
+                key={Math.random()}
+                status={categoria.status}
+                onClickNewButton={() => alert('Criar novo pedido')}
+              >
                 {categoria.orders.map((pedido) => (
                   <OrderCard
                     key={Math.random()}
@@ -166,22 +192,6 @@ export const Read = (): React.ReactNode => {
                     })}
                   />
                 ))}
-
-                {categoria.status === 'to_prepare' && (
-                  <div className="mt-3">
-                    <Button
-                      className="rounded"
-                      icon="plus"
-                      fill
-                      intent="success"
-                      onClick={() => {
-                        openModalOverlay(OverlayMode.NEW)
-                      }}
-                    >
-                      Novo
-                    </Button>
-                  </div>
-                )}
               </OrderColumn>
             </React.Fragment>
           ))}
