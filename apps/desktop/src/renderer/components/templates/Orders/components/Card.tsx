@@ -1,4 +1,6 @@
+import { Button } from '@blueprintjs/core'
 import { cn } from '@renderer/utils'
+import { FaTrashAlt } from 'react-icons/fa'
 
 interface CardProps {
   className?: string
@@ -15,13 +17,25 @@ export const Card = (props: CardProps) => {
   return (
     <div
       className={cn(
-        `text-white w-full h-full min-h-[40px] rounded shadow-md flex flex-row justify-between p-2 items-center transition-all bg-gray1`,
+        `group text-white w-full h-full min-h-[40px] rounded shadow-md flex flex-row justify-between p-2 items-center transition-all bg-gray1 overflow-clip`,
         props.className
       )}
     >
       <div className="">Pedido #{props.order.number}</div>
 
-      <div>{props.order.name}</div>
+      <div className='flex items-center gap-2'>
+        <div>{props.order.name}</div>
+
+        <div className="transition-all relative left-96 group-hover:left-0">
+          <Button
+            className="rounded"
+            icon={<FaTrashAlt className="text-white" />}
+            fill
+            intent="danger"
+            onClick={() => {}}
+          />
+        </div>
+      </div>
     </div>
   )
 }

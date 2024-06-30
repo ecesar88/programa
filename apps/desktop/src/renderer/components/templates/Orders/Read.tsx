@@ -176,7 +176,6 @@ export const Read = (): React.ReactNode => {
               <OrderColumn
                 title={categoria.title}
                 icon={categoria.icon}
-                key={Math.random()}
                 status={categoria.status}
                 onClickNewButton={() => openModalOverlay(OverlayMode.NEW)}
               >
