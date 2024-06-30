@@ -154,7 +154,7 @@ export const Read = (): React.ReactNode => {
   ]
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 h-full justify-start">
       {/* Categorias */}
 
       <div className="flex flex-row gap-6 py-2 px-4 bg-lightGray4 rounded-md">
@@ -180,32 +180,30 @@ export const Read = (): React.ReactNode => {
         </div>
       </div>
 
-      <div className="flex flex-row">
-        <div className="flex flex-col w-full">
-          {pratos.map((prato, idx, arr) => (
-            <div
-              key={idx}
-              className={cn('flex flex-row px-4 py-2 justify-between', {
-                'bg-lightGray5': idx % 2 === 0,
-                'bg-lightGray4': idx % 2 !== 0,
-                'rounded-t-md': idx === 0,
-                'rounded-b-md': idx === arr.length - 1
-              })}
-            >
-              <div className="flex flex-col">
-                <div>
-                  <b>{prato.name}</b>
-                </div>
-
-                <div>{prato.ingredients}</div>
-              </div>
-
+      <div className="flex flex-col w-full max-h-[67%] overflow-y-scroll">
+        {pratos.map((prato, idx, arr) => (
+          <div
+            key={idx}
+            className={cn('flex flex-row px-4 py-2 justify-between', {
+              'bg-lightGray5': idx % 2 === 0,
+              'bg-lightGray4': idx % 2 !== 0,
+              'rounded-t-md': idx === 0,
+              'rounded-b-md': idx === arr.length - 1
+            })}
+          >
+            <div className="flex flex-col">
               <div>
-                <b>R$ {prato.price}</b>
+                <b>{prato.name}</b>
               </div>
+
+              <div>{prato.ingredients}</div>
             </div>
-          ))}
-        </div>
+
+            <div>
+              <b>R$ {prato.price}</b>
+            </div>
+          </div>
+        ))}
       </div>
 
       <div className="flex justify-between">
