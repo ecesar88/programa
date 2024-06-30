@@ -178,7 +178,7 @@ export const Read = (): React.ReactNode => {
                 icon={categoria.icon}
                 key={Math.random()}
                 status={categoria.status}
-                onClickNewButton={() => alert('Criar novo pedido')}
+                onClickNewButton={() => openModalOverlay(OverlayMode.NEW)}
               >
                 {categoria.orders.map((pedido) => (
                   <OrderCard
