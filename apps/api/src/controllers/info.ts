@@ -1,6 +1,6 @@
 import { Controller, Get } from '@decorators/express'
 import { ClassResponseInterceptor } from '../interceptors'
-import { InterceptResponse } from '../utils/responseInterceptor'
+import { InterceptResponse } from '../utils/interceptResponse'
 
 @ClassResponseInterceptor(InterceptResponse)
 @Controller('/info')

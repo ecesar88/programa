@@ -1,4 +1,4 @@
-import { objectType } from 'nexus'
+import { extendType, objectType } from 'nexus'
 
 export const Order = objectType({
   name: 'Order',
@@ -9,3 +9,14 @@ export const Order = objectType({
     t.string('food')
   }
 })
+
+
+// export const GetAllQuery = extendType({
+//   type: 'Query',
+//   definition(t) {
+//     t.nonNull.list.field('orders', {
+//       type: 'Order',
+//       resolve:
+//     })
+//   },
+// })

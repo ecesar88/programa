@@ -1,6 +1,8 @@
 import { extendType, intArg, nonNull, objectType, stringArg } from 'nexus'
 import ClientResolver from '../resolvers/ClientResolver'
 
+const OpSuffix = 'Client'
+
 export const Client = objectType({
   name: 'Client',
   definition(t) {
@@ -16,8 +18,11 @@ export const Client = objectType({
 export const GetAllQuery = extendType({
   type: 'Query',
   definition(t) {
-    t.nonNull.list.field('clients', {
+    t.nonNull.list.field(`queryAll${OpSuffix}`, {
       type: 'Client',
+      args: {
+        page: intArg({ default: 1, description: 'The page number' })
+      },
       resolve: ClientResolver.queryAll
     })
   }
@@ -26,7 +31,7 @@ export const GetAllQuery = extendType({
 export const GetQuery = extendType({
   type: 'Query',
   definition(t) {
-    t.nonNull.field('client', {
+    t.nonNull.field(`queryOne${OpSuffix}`, {
       type: 'Client',
       args: {
         id: nonNull(intArg({ description: 'ID of the user' }))
@@ -39,11 +44,13 @@ export const GetQuery = extendType({
 export const CreateMutation = extendType({
   type: 'Mutation',
   definition(t) {
-    t.nonNull.field('create', {
+    t.nonNull.field(`create${OpSuffix}`, {
       type: 'Client',
       args: {
-        title: nonNull(stringArg()),
-        body: nonNull(stringArg())
+        id: nonNull(intArg({ description: 'ID of the user' })),
+        name: nonNull(stringArg()),
+        email: nonNull(stringArg()),
+        phone: nonNull(stringArg())
       },
       resolve: ClientResolver.create
     })
@@ -53,13 +60,13 @@ export const CreateMutation = extendType({
 export const UpdateMutation = extendType({
   type: 'Mutation',
   definition(t) {
-    t.nonNull.field('update', {
+    t.nonNull.field(`update${OpSuffix}`, {
       type: 'Client',
-      args: {
+      /* args: {
         title: nonNull(stringArg()),
         body: nonNull(stringArg())
-      },
-      resolve: ClientResolver.create
+      } */
+      resolve: ClientResolver.update
     })
   }
 })
@@ -67,13 +74,12 @@ export const UpdateMutation = extendType({
 export const DeleteMutation = extendType({
   type: 'Mutation',
   definition(t) {
-    t.nonNull.field('delete', {
+    t.nonNull.field(`delete${OpSuffix}`, {
       type: 'Client',
       args: {
-        title: nonNull(stringArg()),
-        body: nonNull(stringArg())
+        id: nonNull(intArg()),
       },
-      resolve: ClientResolver.create
+      resolve: ClientResolver.delete
     })
   }
 })

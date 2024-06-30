@@ -10,9 +10,16 @@ type Client {
 }
 
 type Mutation {
-  create(body: String!, title: String!): Client!
-  delete(body: String!, title: String!): Client!
-  update(body: String!, title: String!): Client!
+  createClient(
+    email: String!
+
+    """ID of the user"""
+    id: Int!
+    name: String!
+    phone: String!
+  ): Client!
+  deleteClient(id: Int!): Client!
+  updateClient: Client!
 }
 
 type Order {
@@ -23,9 +30,12 @@ type Order {
 }
 
 type Query {
-  client(
+  queryAllClient(
+    """The page number"""
+    page: Int = 1
+  ): [Client]!
+  queryOneClient(
     """ID of the user"""
     id: Int!
   ): Client!
-  clients: [Client]!
 }

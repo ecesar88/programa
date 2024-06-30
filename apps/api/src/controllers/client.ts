@@ -19,7 +19,7 @@ import { ClassResponseInterceptor } from '../interceptors'
 import { ValidateWith } from '../middleware'
 import { PrismaService } from '../services/prismaService'
 import { LOG_TYPE, logger } from '../utils/logger'
-import { InterceptResponse } from '../utils/responseInterceptor'
+import { InterceptResponse } from '../utils/interceptResponse'
 
 @ClassResponseInterceptor(InterceptResponse)
 @Controller('/clients')

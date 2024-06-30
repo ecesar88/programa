@@ -62,9 +62,9 @@ export interface NexusGenFieldTypes {
     phone: string | null; // String
   }
   Mutation: { // field return type
-    create: NexusGenRootTypes['Client']; // Client!
-    delete: NexusGenRootTypes['Client']; // Client!
-    update: NexusGenRootTypes['Client']; // Client!
+    createClient: NexusGenRootTypes['Client']; // Client!
+    deleteClient: NexusGenRootTypes['Client']; // Client!
+    updateClient: NexusGenRootTypes['Client']; // Client!
   }
   Order: { // field return type
     address: string | null; // String
@@ -73,8 +73,8 @@ export interface NexusGenFieldTypes {
     id: number | null; // Int
   }
   Query: { // field return type
-    client: NexusGenRootTypes['Client']; // Client!
-    clients: Array<NexusGenRootTypes['Client'] | null>; // [Client]!
+    queryAllClient: Array<NexusGenRootTypes['Client'] | null>; // [Client]!
+    queryOneClient: NexusGenRootTypes['Client']; // Client!
   }
 }
 
@@ -86,9 +86,9 @@ export interface NexusGenFieldTypeNames {
     phone: 'String'
   }
   Mutation: { // field return type name
-    create: 'Client'
-    delete: 'Client'
-    update: 'Client'
+    createClient: 'Client'
+    deleteClient: 'Client'
+    updateClient: 'Client'
   }
   Order: { // field return type name
     address: 'String'
@@ -97,28 +97,28 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
   }
   Query: { // field return type name
-    client: 'Client'
-    clients: 'Client'
+    queryAllClient: 'Client'
+    queryOneClient: 'Client'
   }
 }
 
 export interface NexusGenArgTypes {
   Mutation: {
-    create: { // args
-      body: string; // String!
-      title: string; // String!
+    createClient: { // args
+      email: string; // String!
+      id: number; // Int!
+      name: string; // String!
+      phone: string; // String!
     }
-    delete: { // args
-      body: string; // String!
-      title: string; // String!
-    }
-    update: { // args
-      body: string; // String!
-      title: string; // String!
+    deleteClient: { // args
+      id: number; // Int!
     }
   }
   Query: {
-    client: { // args
+    queryAllClient: { // args
+      page: number | null; // Int
+    }
+    queryOneClient: { // args
       id: number; // Int!
     }
   }

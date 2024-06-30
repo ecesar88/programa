@@ -102,6 +102,8 @@ export const gqlLogger = (_eventName: string, args1: any) => {
   const parseParams = (): boolean | Record<string, unknown> => {
     const body = args.document.definitions[0].loc.source.body as string
 
+    console.log(body)
+
     const openingParenthesis = body.split('').findIndex((str) => str === '(') + 1
     const closingParenthesis = body.split('').findIndex((str) => str === ')')
 

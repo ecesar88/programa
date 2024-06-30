@@ -1,30 +1,30 @@
-import { QTY_PER_PAGE } from '@repo/shared/constants'
+import { Prisma } from '@prisma/client'
+import { LOG_TYPE, logger } from '../../utils/logger'
+import { prismaPaginate } from '../../utils/prismaPaginate'
 import { GenericFieldResolver } from './utils'
 
 export default {
-  async queryAll(_root, _args, ctx) {
-    // const PAGE_NUMBER = parseInt(pageNumber as string)
-    const PAGE_NUMBER = 1
+  async queryAll(_root, args, ctx) {
+    const { page } = args as { page: number }
+
+    const PAGE_NUMBER = page
 
     try {
       return ctx.prisma.client.findMany({
-        ...(PAGE_NUMBER > 0
-          ? {
-              skip: PAGE_NUMBER === 1 ? 0 : (PAGE_NUMBER - 1) * QTY_PER_PAGE
-            }
-          : {}),
-        take: QTY_PER_PAGE,
+        ...prismaPaginate(PAGE_NUMBER),
         orderBy: {
           id: 'desc'
         }
       })
     } catch (e) {
-      throw new Error('Err')
+      throw new Error('Error fetching all clients')
     }
   },
 
   async queryOne(_root, args, ctx) {
-    if (!args.id) {
+    const { id } = args as { id: number }
+
+    if (!id) {
       throw new Error('ID is mandatory')
     }
 
@@ -35,23 +35,43 @@ export default {
         }
       })
     } catch (e) {
+      throw new Error('Error fetching the client')
+    }
+  },
+
+  async create(_root, args, ctx) {
+    const { id, name, phone, orders } = args as Partial<Prisma.ClientCreateInput> & { id: number }
+
+    try {
+      logger({
+        level: LOG_TYPE.GQL,
+        message: 'Creating new client with data:',
+        object: JSON.stringify(args, null, 2)
+      })
+
+      return await ctx.prisma.client.create({
+        data: {
+          id,
+          name: name as string,
+          phone
+        }
+      })
+    } catch (error) {
+      throw new Error('Error creating the client')
+    }
+  },
+
+  async update(_root, _args, ctx) {
+    return {}
+    try {
+    } catch (e) {
       throw new Error('Err')
     }
   },
 
-  async create(_root, _args, ctx) {
+  async delete(_root, _args, ctx) {
     return {}
+    try {
+    } catch (e) {}
   }
-
-  // async update(_root, _args, ctx) {
-  //   try {
-  //   } catch (e) {
-  //     throw new Error('Err')
-  //   }
-  // },
-
-  // async delete(_root, _args, ctx) {
-  //   try {
-  //   } catch (e) {}
-  // }
 } satisfies GenericFieldResolver<'Client'>
