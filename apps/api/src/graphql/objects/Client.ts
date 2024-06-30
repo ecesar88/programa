@@ -47,7 +47,6 @@ export const CreateMutation = extendType({
     t.nonNull.field(`create${OpSuffix}`, {
       type: 'Client',
       args: {
-        // id: nonNull(intArg({ description: 'ID of the user' })),
         name: nonNull(stringArg()),
         email: nonNull(stringArg()),
         phone: nonNull(stringArg())

@@ -40,7 +40,7 @@ export default {
   },
 
   async create(_root, args, ctx) {
-    const { id, name, phone, orders } = args as Partial<Prisma.ClientCreateInput> & { id: number }
+    const { name, phone, orders } = args as Partial<Prisma.ClientCreateInput>
 
     try {
       logger({
@@ -51,7 +51,6 @@ export default {
 
       return await ctx.prisma.client.create({
         data: {
-          id,
           name: name as string,
           phone
         }

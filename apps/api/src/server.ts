@@ -4,8 +4,9 @@ import { renderGraphiQL } from '@graphql-yoga/render-graphiql' // Not working?
 import cors from 'cors'
 import dotenv from 'dotenv'
 import createExpress from 'express'
-import { createYoga, envelop, useLogger } from 'graphql-yoga'
+import { createYoga, useLogger } from 'graphql-yoga'
 import helmet, { HelmetOptions } from 'helmet'
+import 'reflect-metadata'
 import { ClientController } from './controllers/client'
 import { InfoController } from './controllers/info'
 import { OrderController } from './controllers/order'
@@ -18,6 +19,7 @@ import { parseEnv } from './utils/parseEnv'
 
 // https://the-guild.dev/graphql/scalars
 // https://the-guild.dev/graphql/shield
+// https://the-guild.dev/graphql/modules/docs/di/introduction
 
 dotenv.config()
 

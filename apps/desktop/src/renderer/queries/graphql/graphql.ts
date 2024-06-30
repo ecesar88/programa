@@ -27,27 +27,21 @@ export type Client = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  create: Client;
-  delete: Client;
-  update: Client;
+  createClient: Client;
+  deleteClient: Client;
+  updateClient: Client;
 };
 
 
-export type MutationCreateArgs = {
-  body: Scalars['String']['input'];
-  title: Scalars['String']['input'];
+export type MutationCreateClientArgs = {
+  email: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  phone: Scalars['String']['input'];
 };
 
 
-export type MutationDeleteArgs = {
-  body: Scalars['String']['input'];
-  title: Scalars['String']['input'];
-};
-
-
-export type MutationUpdateArgs = {
-  body: Scalars['String']['input'];
-  title: Scalars['String']['input'];
+export type MutationDeleteClientArgs = {
+  id: Scalars['Int']['input'];
 };
 
 export type Order = {
@@ -60,24 +54,29 @@ export type Order = {
 
 export type Query = {
   __typename?: 'Query';
-  client: Client;
-  clients: Array<Maybe<Client>>;
+  queryAllClient: Array<Maybe<Client>>;
+  queryOneClient: Client;
 };
 
 
-export type QueryClientArgs = {
+export type QueryQueryAllClientArgs = {
+  page?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryQueryOneClientArgs = {
   id: Scalars['Int']['input'];
 };
 
 export type GetAllClientsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllClientsQuery = { __typename?: 'Query', clients: Array<{ __typename?: 'Client', id?: number | null, name?: string | null, phone?: string | null } | null> };
+export type GetAllClientsQuery = { __typename?: 'Query', queryAllClient: Array<{ __typename?: 'Client', id?: number | null, name?: string | null, phone?: string | null } | null> };
 
 
 export const GetAllClientsDocument = gql`
     query GetAllClients {
-  clients {
+  queryAllClient {
     id
     name
     phone
