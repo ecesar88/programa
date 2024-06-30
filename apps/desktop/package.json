@@ -18,7 +18,8 @@
     "build:unpack": "npm run build && electron-builder --dir",
     "build:win": "npm run build && electron-builder --win",
     "build:mac": "electron-vite build && electron-builder --mac",
-    "build:linux": "electron-vite build && electron-builder --linux"
+    "build:linux": "electron-vite build && electron-builder --linux",
+    "graphql-codegen": "gql-gen --config codegen.ts"
   },
   "dependencies": {
     "@apollo/client": "^3.10.8",
@@ -28,7 +29,7 @@
     "@electron-toolkit/preload": "^3.0.0",
     "@electron-toolkit/utils": "^3.0.0",
     "@faker-js/faker": "^8.4.1",
-    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-typed-document-node/core": "^3.2.0",
     "@hookform/resolvers": "^3.3.4",
     "@repo/shared": "workspace:*",
     "@swc/core": "^1.5.24",
@@ -68,6 +69,11 @@
     "@electron-toolkit/eslint-config-prettier": "^2.0.0",
     "@electron-toolkit/eslint-config-ts": "^1.0.1",
     "@electron-toolkit/tsconfig": "^1.0.1",
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/typescript": "^4.0.8",
+    "@graphql-codegen/typescript-operations": "^4.2.2",
+    "@graphql-codegen/typescript-react-apollo": "^4.3.0",
+    "@parcel/watcher": "^2.4.1",
     "@tanstack/eslint-plugin-query": "^5.32.1",
     "@types/nprogress": "^0.2.3",
     "@types/react": "^18.2.48",
@@ -81,11 +87,19 @@
     "electron-vite": "^2.0.0",
     "eslint": "^8.56.0",
     "eslint-plugin-react": "^7.33.2",
+    "graphql-codegen-fragment-matcher": "0.18.2",
+    "graphql-codegen-typescript-client": "0.18.2",
+    "graphql-codegen-typescript-common": "0.18.2",
+    "graphql-codegen-typescript-graphql-files-modules": "0.18.2",
+    "graphql-codegen-typescript-react-apollo": "0.18.2",
+    "graphql-codegen-typescript-resolvers": "0.18.2",
+    "graphql-codegen-typescript-server": "0.18.2",
     "prettier": "^3.2.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "tailwindcss": "^3.4.3",
-    "typescript": "^5.3.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5",
     "vite": "^5.0.12"
   }
 }

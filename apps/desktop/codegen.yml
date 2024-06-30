@@ -1,0 +1,16 @@
+overwrite: true
+schema: "http://localhost:3001/graphql"
+documents: "**/*.graphql"
+generates:
+  ./src/renderer/queries/graphql/graphql.ts:
+    plugins:
+      - "typescript-common"
+      - "typescript-client"
+      - "typescript-server"
+      - "typescript-resolvers"
+      - "typescript-react-apollo"
+      - "typescript-graphql-files-modules"
+      - "fragment-matcher"
+  ./graphql.schema.json:
+    plugins:
+      - "introspection"

@@ -5,7 +5,6 @@ import { AlertModal, DataHeader, Loading } from '@renderer/components'
 import { CreateOrEditModal, Read } from '@renderer/components/templates/Clients'
 import { OverlayMode } from '@renderer/constants/enums'
 import { useOnKeyDown } from '@renderer/hooks'
-import { create, edit, get, purge } from '@renderer/queries/client'
 import {
   isLoadingAtom,
   rowDataFocusedAtom,
@@ -20,6 +19,7 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { Id, toast } from 'react-toastify'
 import { match } from 'ts-pattern'
 import { ScreenMenuProps } from '../components/molecules/ScreenMenu'
+import { create, edit, purge, get } from '@renderer/queries/rest/client'
 
 type ClientWithoutId = Omit<Client, 'id'>
 
@@ -203,7 +203,7 @@ export const Clients = (): React.ReactNode => {
           .otherwise(() => (
             <div className="flex flex-col gap-5 overflow-y-auto">
               <Read
-                clients={data?.data as Client[]}
+                clients={data?.data?.data as Client[]}
                 onRowClick={(data, index) => {
                   setRowData(data)
                   setRowMetaData(index)
