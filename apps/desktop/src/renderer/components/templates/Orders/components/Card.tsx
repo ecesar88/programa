@@ -23,10 +23,10 @@ export const Card = (props: CardProps) => {
     >
       <div className="">Pedido #{props.order.number}</div>
 
-      <div className='flex items-center gap-2'>
+      <div className='flex items-center gap-2 relative left-11 group-hover:left-0 transition-all'>
         <div>{props.order.name}</div>
 
-        <div className="transition-all relative left-96 group-hover:left-0">
+        <div>
           <Button
             className="rounded"
             icon={<FaTrashAlt className="text-white" />}
