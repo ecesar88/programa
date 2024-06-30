@@ -1,4 +1,4 @@
-import { DataHeader } from '@renderer/components'
+import { ContentScrollContainer, DataHeader } from '@renderer/components'
 import { Read } from '@renderer/components/templates/Menu'
 
 export const Menu = () => {
@@ -6,7 +6,9 @@ export const Menu = () => {
     <div className="flex flex-col gap-2 h-full">
       <DataHeader title="CARDÁPIO" />
 
-      <Read />
+      <ContentScrollContainer>
+        <Read />
+      </ContentScrollContainer>
     </div>
   )
 }
