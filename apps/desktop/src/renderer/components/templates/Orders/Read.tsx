@@ -183,7 +183,7 @@ export const Read = (): React.ReactNode => {
                   <OrderCard
                     key={Math.random()}
                     order={pedido}
-                    className={cn('[&>*]:!cursor-pointer !cursor-pointer hover:scale-[1.015]', {
+                    className={cn('hover:scale-[1.015]', {
                       'bg-gray2 hover:bg-gray1': categoria.status === 'to_prepare',
                       'bg-cerulean2 hover:bg-cerulean1': categoria.status === 'preparing',
                       'bg-gold4 hover:bg-gold3 text-black': categoria.status === 'delivering',

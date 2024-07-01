@@ -17,13 +17,13 @@ export const Card = (props: CardProps) => {
   return (
     <div
       className={cn(
-        `group text-white w-full h-full min-h-[40px] rounded shadow-md flex flex-row justify-between p-2 items-center transition-all bg-gray1 overflow-clip`,
+        `group text-white w-full h-full min-h-[40px] rounded shadow-md flex flex-row justify-between p-2 items-center transition-all bg-gray1 overflow-clip [&_*]:!cursor-pointer !cursor-pointer`,
         props.className
       )}
     >
-      <div className="">Pedido #{props.order.number}</div>
+      <div>Pedido #{props.order.number}</div>
 
-      <div className='flex items-center gap-2 relative left-11 group-hover:left-0 transition-all'>
+      <div className="flex items-center gap-2 relative left-11 group-hover:left-0 transition-all">
         <div>{props.order.name}</div>
 
         <div>
