@@ -14,8 +14,9 @@ import { context } from './graphql/context'
 import { schema } from './graphql/schema'
 import { ErrorHandlerMiddleware, HTTPLoggerMiddleware } from './middleware'
 import { PrismaService } from './services/prismaService'
-import { LOG_TYPE, gqlLogger, logger } from './utils/logger'
+import { LOG_TYPE, logger } from './utils/logger'
 import { parseEnv } from './utils/parseEnv'
+import { gqlLogger } from './utils/graphqlLogger'
 
 // https://the-guild.dev/graphql/scalars
 // https://the-guild.dev/graphql/shield
