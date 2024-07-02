@@ -1,7 +1,6 @@
 import nodeColorLog from 'node-color-log'
 
-const parseQueryNameWhenUnknown = (body: string) => {
-  // console.log(body.replace(/^#.*/gi, ''))
+const parseQueryName = (body: string) => {
   const sanitizedQueryDocumentString: string[] = []
   const lineIsACommentOrIsEmptyPattern = new RegExp(/(^#)|(^$)/)
 
@@ -21,9 +20,10 @@ export const gqlLogger = (eventName: string, args1: any) => {
   const { args } = args1
 
   const operation = args?.document?.definitions?.[0]?.operation
-  const queryName =
-    args?.document?.definitions?.[0]?.name?.value ??
-    parseQueryNameWhenUnknown(args?.document?.definitions?.[0]?.loc.source.body)
+  const queryOperationType = `${operation.split('')[0].toUpperCase()}${operation.slice(1)}`
+
+  const documentName = args?.document?.definitions?.[0]?.name?.value ?? 'Untitled query'
+  const queryName = parseQueryName(args?.document?.definitions?.[0]?.loc.source.body)
 
   const ip = args.contextValue.req.ip
 
@@ -84,11 +84,14 @@ export const gqlLogger = (eventName: string, args1: any) => {
       .append(separator)
       .color('magenta')
       .append(`[GQL] ${logPrefix}`)
-      .reset()
       .color('yellow')
-      .append(
-        `${eventName} - ${operation.split('')[0].toUpperCase()}${operation.slice(1)}: '${queryName}'`
-      )
+      .append(`${eventName} - ${queryOperationType}: `)
+      .color('green')
+      .append(`'${documentName}'`)
+      .color('yellow')
+      .append(' > ')
+      .color('green')
+      .append(`'${queryName}'`)
       .reset()
       .append(' from ')
       .color('yellow')
@@ -101,7 +104,7 @@ export const gqlLogger = (eventName: string, args1: any) => {
     logToConsole().append('\n').log()
   } else {
     logToConsole()
-      .append('\n Params: ')
+      .append('\nWith Params: ')
       .append(JSON.stringify(parseParams(), null, 2))
       .append('\n')
       .log()
