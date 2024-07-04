@@ -18,11 +18,6 @@ import { gqlLogger } from './utils/graphqlLogger'
 import { LOG_TYPE, logger } from './utils/logger'
 import { parseEnv } from './utils/parseEnv'
 
-dotenv.config()
-
-const SERVER_PORT = parseEnv<number>('SERVER_PORT', process.env.SERVER_PORT)
-const SERVER_HOSTNAME = parseEnv<string>('SERVER_HOSTNAME', process.env.SERVER_HOSTNAME)
-
 const helmetOptions: HelmetOptions = {
   contentSecurityPolicy: {
     directives: {
@@ -33,6 +28,11 @@ const helmetOptions: HelmetOptions = {
     }
   }
 }
+
+dotenv.config()
+
+const SERVER_PORT = parseEnv<number>('SERVER_PORT', process.env.SERVER_PORT)
+const SERVER_HOSTNAME = parseEnv<string>('SERVER_HOSTNAME', process.env.SERVER_HOSTNAME)
 
 ;(async function start() {
   const express = createExpress()
