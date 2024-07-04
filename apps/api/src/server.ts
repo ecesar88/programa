@@ -84,6 +84,7 @@ const SERVER_HOSTNAME = parseEnv<string>('SERVER_HOSTNAME', process.env.SERVER_H
         })
 
         nodeColorLog.color('yellow').log(data)
+
         nodeColorLog.color('yellow').log('Endpoints =>')
         console.log(endpoints)
       }

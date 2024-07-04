@@ -3,19 +3,13 @@ import { ClassResponseInterceptor } from '../interceptors'
 import { InterceptResponse } from '../utils/interceptResponse'
 
 @ClassResponseInterceptor(InterceptResponse)
-@Controller('/info')
+@Controller('/healhcheck')
 export class InfoController {
   @Get('/')
   get() {
     return {
-      version: '0.1'
-    }
-  }
-
-  @Get('/abc')
-  get2() {
-    return {
-      version: '0.2'
+      version: '0.1',
+      status: 'OK'
     }
   }
 }
