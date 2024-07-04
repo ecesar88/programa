@@ -14,7 +14,6 @@ import { OrderController } from './controllers/order'
 import { context } from './graphql/context'
 import { schema } from './graphql/schema'
 import { ErrorHandlerMiddleware, HTTPLoggerMiddleware } from './middleware'
-import { PrismaService } from './services/prismaService'
 import { gqlLogger } from './utils/graphqlLogger'
 import { LOG_TYPE, logger } from './utils/logger'
 import { parseEnv } from './utils/parseEnv'
@@ -60,10 +59,6 @@ const helmetOptions: HelmetOptions = {
     {
       provide: ERROR_MIDDLEWARE,
       useClass: ErrorHandlerMiddleware
-    },
-    {
-      provide: PrismaService,
-      useClass: PrismaService
     }
   ])
 

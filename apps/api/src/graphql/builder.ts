@@ -1,14 +1,9 @@
-import SchemaBuilder, { RootFieldBuilder } from '@pothos/core'
-import SimpleObjectsPlugin from '@pothos/plugin-simple-objects'
+import SchemaBuilder from '@pothos/core'
 import ErrorsPlugin from '@pothos/plugin-errors'
+import SimpleObjectsPlugin from '@pothos/plugin-simple-objects'
 import { DateTimeResolver } from 'graphql-scalars'
 import { Context } from './context'
 import { RecordNotFoundError } from './schema/errors/errors'
-import { writeFileSync } from 'fs'
-import path from 'path'
-import { printSchema } from 'graphql'
-
-console.log('RootFieldBuilder >> ', RootFieldBuilder)
 
 type SchemaType = {
   Scalars: {
@@ -29,9 +24,9 @@ type SchemaType = {
 }
 
 export const builder = new SchemaBuilder<SchemaType>({
-  plugins: [SimpleObjectsPlugin, ErrorsPlugin],
+  plugins: [ErrorsPlugin, SimpleObjectsPlugin],
   errorOptions: {
-    defaultTypes: [Error, RecordNotFoundError]
+    defaultTypes: [RecordNotFoundError]
   }
 })
 

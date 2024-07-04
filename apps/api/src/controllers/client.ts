@@ -11,34 +11,33 @@ import {
   Status
 } from '@decorators/express'
 import { Prisma } from '@prisma/client'
-import { HttpStatusCode, QTY_PER_PAGE } from '@repo/shared/constants'
+import { HttpStatusCode } from '@repo/shared/constants'
 import { CreateClientResolver } from '@repo/shared/resolvers'
 import type { NextFunction } from 'express'
+import { container } from 'tsyringe'
 import { z } from 'zod'
 import { ClassResponseInterceptor } from '../interceptors'
 import { ValidateWith } from '../middleware'
 import { PrismaService } from '../services/prismaService'
-import { LOG_TYPE, logger } from '../utils/logger'
 import { InterceptResponse } from '../utils/interceptResponse'
+import { LOG_TYPE, logger } from '../utils/logger'
+import { prismaPaginate } from '../utils/prismaPaginate'
 
 @ClassResponseInterceptor(InterceptResponse)
 @Controller('/clients')
 export class ClientController {
-  public constructor(private prisma: PrismaService) {}
+  private prisma!: PrismaService
+
+  constructor() {
+    this.prisma = container.resolve(PrismaService)
+  }
 
   @Status(HttpStatusCode.OK)
   @Get('/')
   async get(@Next() next: NextFunction, @Query() pageNumber: string) {
-    const PAGE_NUMBER = parseInt(pageNumber as string)
-
     try {
       return this.prisma.client.findMany({
-        ...(PAGE_NUMBER > 0
-          ? {
-              skip: PAGE_NUMBER === 1 ? 0 : (PAGE_NUMBER - 1) * QTY_PER_PAGE
-            }
-          : {}),
-        take: QTY_PER_PAGE,
+        ...prismaPaginate(parseInt(pageNumber)),
         orderBy: {
           id: 'desc'
         }

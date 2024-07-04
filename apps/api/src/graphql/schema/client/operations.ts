@@ -19,6 +19,9 @@ builder.queryField('getAllClients', (t) =>
 builder.queryField('getClientById', (t) =>
   t.field({
     type: ClientType,
+    // errors: {
+    //   types: [RecordNotFoundError]
+    // },
     args: {
       id: t.arg({
         type: 'Int',

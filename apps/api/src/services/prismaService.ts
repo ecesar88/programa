@@ -1,11 +1,11 @@
-import { Injectable } from "@decorators/di";
-import { PrismaClient } from "@prisma/client";
-import { LOG_TYPE, logger } from "../utils/logger";
+import { PrismaClient } from '@prisma/client'
+import { singleton } from 'tsyringe'
+import { LOG_TYPE, logger } from '../utils/logger'
 
-@Injectable()
+@singleton()
 export class PrismaService extends PrismaClient {
   constructor() {
-    super({ log: ["query", "error", "info", "warn"] });
-    logger({ level: LOG_TYPE.INFO, message: "Prisma: Connected" });
+    super({ log: ['query', 'error', 'info', 'warn'] })
+    logger({ level: LOG_TYPE.INFO, message: 'Prisma Service: Connected' })
   }
 }

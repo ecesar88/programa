@@ -1,10 +1,12 @@
 import { PrismaClient } from '@prisma/client'
 import { PrismaService } from '../../services/prismaService'
 
+import { container } from 'tsyringe'
+
 export interface Context {
   prisma: PrismaClient
 }
 
 export const context = {
-  prisma: new PrismaService()
+  prisma: container.resolve(PrismaService)
 }

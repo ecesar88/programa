@@ -24,7 +24,7 @@ type Mutation {
   updateClient(data: UserUpdateInput!, id: Int!): MutationUpdateClientResult!
 }
 
-union MutationUpdateClientResult = BaseError | MutationUpdateClientSuccess | RecordNotFoundError
+union MutationUpdateClientResult = MutationUpdateClientSuccess | RecordNotFoundError
 
 type MutationUpdateClientSuccess {
   data: Client!
