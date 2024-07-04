@@ -32,6 +32,15 @@ importers:
       '@graphql-yoga/render-graphiql':
         specifier: ^5.4.0
         version: 5.4.0(graphql-yoga@5.4.0)
+      '@pothos/core':
+        specifier: ^3.41.2
+        version: 3.41.2(graphql@16.9.0)
+      '@pothos/plugin-errors':
+        specifier: ^3.11.2
+        version: 3.11.2(@pothos/core@3.41.2)(graphql@16.9.0)
+      '@pothos/plugin-simple-objects':
+        specifier: ^3.7.1
+        version: 3.7.1(@pothos/core@3.41.2)(graphql@16.9.0)
       '@prisma/client':
         specifier: 5.13.0
         version: 5.13.0(prisma@5.13.0)
@@ -62,6 +71,9 @@ importers:
       graphql:
         specifier: ^16.9.0
         version: 16.9.0
+      graphql-query-to-json:
+        specifier: ^2.0.1
+        version: 2.0.1
       graphql-scalars:
         specifier: ^1.23.0
         version: 1.23.0(graphql@16.9.0)
@@ -74,9 +86,6 @@ importers:
       helmet:
         specifier: ^7.1.0
         version: 7.1.0
-      nexus:
-        specifier: ^1.3.0
-        version: 1.3.0(graphql@16.9.0)
       node-color-log:
         specifier: ^12.0.0
         version: 12.0.0
@@ -88,7 +97,7 @@ importers:
         version: 0.2.2
       ts-node-dev:
         specifier: ^2.0.0
-        version: 2.0.0(@types/node@18.19.9)(typescript@5.5.2)
+        version: 2.0.0(@types/node@18.19.9)(typescript@5.5.3)
       ts-pattern:
         specifier: ^5.1.1
         version: 5.1.2
@@ -378,14 +387,14 @@ importers:
     dependencies:
       ts-node-dev:
         specifier: ^2.0.0
-        version: 2.0.0(@types/node@18.19.34)(typescript@5.5.2)
+        version: 2.0.0(@types/node@18.19.34)(typescript@5.5.3)
       zod:
         specifier: ^3.23.5
         version: 3.23.5
     devDependencies:
       typescript:
         specifier: latest
-        version: 5.5.2
+        version: 5.5.3
 
 packages:
 
@@ -2991,6 +3000,34 @@ packages:
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
     dev: false
 
+  /@pothos/core@3.41.2(graphql@16.9.0):
+    resolution: {integrity: sha512-iR1gqd93IyD/snTW47HwKSsRCrvnJaYwjVNcUG8BztZPqMxyJKPAnjPHAgu1XB82KEdysrNqIUnXqnzZIs08QA==}
+    peerDependencies:
+      graphql: '>=15.1.0'
+    dependencies:
+      graphql: 16.9.0
+    dev: false
+
+  /@pothos/plugin-errors@3.11.2(@pothos/core@3.41.2)(graphql@16.9.0):
+    resolution: {integrity: sha512-7F4ErT2z+9ppV76yHbQ4FaLEQoZ+fT8zgcEIs4q8o7oFxkZOeGkXTiA519pYxmRE1Q4LDIQviR/3ifarRTTEPg==}
+    peerDependencies:
+      '@pothos/core': '*'
+      graphql: '>=15.1.0'
+    dependencies:
+      '@pothos/core': 3.41.2(graphql@16.9.0)
+      graphql: 16.9.0
+    dev: false
+
+  /@pothos/plugin-simple-objects@3.7.1(@pothos/core@3.41.2)(graphql@16.9.0):
+    resolution: {integrity: sha512-641qxavEa4GJGIYfZuhOdlUy6MjQ/z0gWS5x4pSU72GIJFPSyMAFjHI8O413TzmMf4SpDGWPq0S6UNNXcrGCBQ==}
+    peerDependencies:
+      '@pothos/core': '*'
+      graphql: '>=15.1.0'
+    dependencies:
+      '@pothos/core': 3.41.2(graphql@16.9.0)
+      graphql: 16.9.0
+    dev: false
+
   /@prisma/client@5.13.0(prisma@5.13.0):
     resolution: {integrity: sha512-uYdfpPncbZ/syJyiYBwGZS8Gt1PTNoErNYMuqHDa2r30rNSFtgTA/LXsSk55R7pdRTMi5pHkeP9B14K6nHmwkg==}
     engines: {node: '>=16.13'}
@@ -5008,7 +5045,7 @@ packages:
     resolution: {integrity: sha512-6boGVaglwblBgJqGyxm4+xCmEGcWgnWHSWHY5jad58awQhB6gftq0G8HbzU39YqCIYHMLAiL1yjwiZ36m/CL8w==}
     dependencies:
       glob: 10.4.1
-      typescript: 5.5.2
+      typescript: 5.5.3
     dev: true
 
   /constant-case@2.0.0:
@@ -6610,6 +6647,14 @@ packages:
       resolve-from: 4.0.0
     dev: true
 
+  /graphql-query-to-json@2.0.1:
+    resolution: {integrity: sha512-VeZuZ3MRli+ByxitL2vd0SQBYok3CANtL79KWfWAaZ9hz7HZW9bH7lvKtJIiCpIEAXpjT83QTu7orxfPweeX2Q==}
+    dependencies:
+      graphql: 14.7.0
+      json-to-graphql-query: 1.9.0
+      lodash.mapvalues: 4.6.0
+    dev: false
+
   /graphql-request@6.1.0(graphql@16.9.0):
     resolution: {integrity: sha512-p+XPfS4q7aIpKVcgmnZKhMNqhltk20hfXtkaIkTfjjmiKMJ5xrt5c743cL03y/K7y1rg3WrIC49xGiEQ4mxdNw==}
     peerDependencies:
@@ -6748,6 +6793,13 @@ packages:
       graphql: 16.9.0
       lru-cache: 10.2.2
       tslib: 2.6.3
+    dev: false
+
+  /graphql@14.7.0:
+    resolution: {integrity: sha512-l0xWZpoPKpppFzMfvVyFmp9vLN7w/ZZJPefUicMCepfJeQ8sMcztloGYY9DfjVPo6tIUDzU5Hw3MUbIjj9AVVA==}
+    engines: {node: '>= 6.x'}
+    dependencies:
+      iterall: 1.3.0
     dev: false
 
   /graphql@16.9.0:
@@ -7531,6 +7583,10 @@ packages:
     resolution: {integrity: sha512-ZClg6AaYvamvYEE82d3Iyd3vSSIjQ+odgjaTzRuO3s7toCdFKczob2i0zCh7JE8kWn17yvAWhUVxvqGwUalsRA==}
     requiresBuild: true
 
+  /json-to-graphql-query@1.9.0:
+    resolution: {integrity: sha512-SXZzxv5J7AQgdmJBkq94mIStjDxuWmecLhsNYTENm+Fzil1qyt6PiKDvq4cHjFJKXB6Qp4TedZxElyRHr7oPYw==}
+    dev: false
+
   /json-to-pretty-yaml@1.2.2:
     resolution: {integrity: sha512-rvm6hunfCcqegwYaG5T4yKJWxc9FXFgBVrcTZ4XfSVRwa5HA/Xs+vB/Eo9treYYHCeNM0nrSUr82V/M31Urc7A==}
     engines: {node: '>= 0.2.0'}
@@ -7706,6 +7762,10 @@ packages:
   /lodash.isplainobject@4.0.6:
     resolution: {integrity: sha512-oSXzaWypCMHkPC3NvBEaPHf0KsA5mvPrOPgQWDsbg8n7orZ290M0BmC/jgRZ4vcJ6DTAhjrsSYgdsW/F+MFOBA==}
     dev: true
+
+  /lodash.mapvalues@4.6.0:
+    resolution: {integrity: sha512-JPFqXFeZQ7BfS00H58kClY7SPVeHertPE0lNuCyZ26/XlN8TvakYD7b9bGyNmXbT/D3BbtPAAmq90gPWqLkxlQ==}
+    dev: false
 
   /lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
@@ -8020,16 +8080,6 @@ packages:
   /negotiator@0.6.3:
     resolution: {integrity: sha512-+EUsqGPLsM+j/zdChZjsnX51g4XrHFOIXwfnCVPGlQk/k5giakcKsuxCObBRu6DSm9opw/O6slWbJdghQM4bBg==}
     engines: {node: '>= 0.6'}
-    dev: false
-
-  /nexus@1.3.0(graphql@16.9.0):
-    resolution: {integrity: sha512-w/s19OiNOs0LrtP7pBmD9/FqJHvZLmCipVRt6v1PM8cRUYIbhEswyNKGHVoC4eHZGPSnD+bOf5A3+gnbt0A5/A==}
-    peerDependencies:
-      graphql: 15.x || 16.x
-    dependencies:
-      graphql: 16.9.0
-      iterall: 1.3.0
-      tslib: 2.6.3
     dev: false
 
   /no-case@2.3.2:
@@ -9940,7 +9990,7 @@ packages:
     resolution: {integrity: sha512-PGcnJoTBnVGy6yYNFxWVNkdcAuAMstvutN9MgDJIV6L0oG8fB+ZNNy1T+wJzah8RPGor1mZuPQkVfXNDpy9eHA==}
     dev: true
 
-  /ts-node-dev@2.0.0(@types/node@18.19.34)(typescript@5.5.2):
+  /ts-node-dev@2.0.0(@types/node@18.19.34)(typescript@5.5.3):
     resolution: {integrity: sha512-ywMrhCfH6M75yftYvrvNarLEY+SUXtUvU8/0Z6llrHQVBx12GiFk5sStF8UdfE/yfzk9IAq7O5EEbTQsxlBI8w==}
     engines: {node: '>=0.8.0'}
     hasBin: true
@@ -9959,16 +10009,16 @@ packages:
       rimraf: 2.7.1
       source-map-support: 0.5.21
       tree-kill: 1.2.2
-      ts-node: 10.9.2(@types/node@18.19.34)(typescript@5.5.2)
+      ts-node: 10.9.2(@types/node@18.19.34)(typescript@5.5.3)
       tsconfig: 7.0.0
-      typescript: 5.5.2
+      typescript: 5.5.3
     transitivePeerDependencies:
       - '@swc/core'
       - '@swc/wasm'
       - '@types/node'
     dev: false
 
-  /ts-node-dev@2.0.0(@types/node@18.19.9)(typescript@5.5.2):
+  /ts-node-dev@2.0.0(@types/node@18.19.9)(typescript@5.5.3):
     resolution: {integrity: sha512-ywMrhCfH6M75yftYvrvNarLEY+SUXtUvU8/0Z6llrHQVBx12GiFk5sStF8UdfE/yfzk9IAq7O5EEbTQsxlBI8w==}
     engines: {node: '>=0.8.0'}
     hasBin: true
@@ -9987,9 +10037,9 @@ packages:
       rimraf: 2.7.1
       source-map-support: 0.5.21
       tree-kill: 1.2.2
-      ts-node: 10.9.2(@types/node@18.19.9)(typescript@5.5.2)
+      ts-node: 10.9.2(@types/node@18.19.9)(typescript@5.5.3)
       tsconfig: 7.0.0
-      typescript: 5.5.2
+      typescript: 5.5.3
     transitivePeerDependencies:
       - '@swc/core'
       - '@swc/wasm'
@@ -10028,7 +10078,7 @@ packages:
       yn: 3.1.1
     dev: true
 
-  /ts-node@10.9.2(@types/node@18.19.34)(typescript@5.5.2):
+  /ts-node@10.9.2(@types/node@18.19.34)(typescript@5.5.3):
     resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
     hasBin: true
     peerDependencies:
@@ -10054,12 +10104,12 @@ packages:
       create-require: 1.1.1
       diff: 4.0.2
       make-error: 1.3.6
-      typescript: 5.5.2
+      typescript: 5.5.3
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     dev: false
 
-  /ts-node@10.9.2(@types/node@18.19.9)(typescript@5.5.2):
+  /ts-node@10.9.2(@types/node@18.19.9)(typescript@5.5.3):
     resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
     hasBin: true
     peerDependencies:
@@ -10085,7 +10135,7 @@ packages:
       create-require: 1.1.1
       diff: 4.0.2
       make-error: 1.3.6
-      typescript: 5.5.2
+      typescript: 5.5.3
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     dev: false
@@ -10280,8 +10330,8 @@ packages:
     hasBin: true
     dev: true
 
-  /typescript@5.5.2:
-    resolution: {integrity: sha512-NcRtPEOsPFFWjobJEtfihkLCZCXZt/os3zf8nTxjVH3RvTSxjrCamJpbExGvYOF+tFHc3pA65qpdwPbzjohhew==}
+  /typescript@5.5.3:
+    resolution: {integrity: sha512-/hreyEujaB0w76zKo6717l3L0o/qEUtRgdvUBvlkhoWeOVMjMuHNHk0BRBzikzuGDqNmPQbg5ifMEqsHLiIUcQ==}
     engines: {node: '>=14.17'}
     hasBin: true
 

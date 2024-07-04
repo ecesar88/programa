@@ -3,8 +3,7 @@ import nodeColorLog from 'node-color-log'
 export enum LOG_TYPE {
   ERROR,
   WARN,
-  INFO,
-  GQL
+  INFO
 }
 
 export const logger = ({
@@ -68,7 +67,7 @@ export const logger = ({
       warnLogger(message)
 
       if (object) {
-        nodeColorLog.log(`${object}`)
+        nodeColorLog.reset().log(`${object}`)
       }
 
       break
@@ -78,7 +77,7 @@ export const logger = ({
       infoLogger(message)
 
       if (object) {
-        nodeColorLog.log(`${object}`)
+        nodeColorLog.reset().log(`${object}`)
       }
 
       break

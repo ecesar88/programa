@@ -1,8 +1,8 @@
 import { QTY_PER_PAGE } from '@repo/shared/constants'
 
-export const prismaPaginate = (pageNumber: number) => {
+export const prismaPaginate = (pageNumber?: number | null) => {
   return {
-    ...(pageNumber > 0
+    ...(pageNumber && pageNumber > 0
       ? {
           skip: pageNumber === 1 ? 0 : (pageNumber - 1) * QTY_PER_PAGE
         }

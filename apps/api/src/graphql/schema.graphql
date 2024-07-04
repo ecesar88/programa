@@ -27,6 +27,8 @@ type Query {
     """The page number"""
     page: Int = 1
   ): [Client]!
+
+  """Find by id"""
   queryOneClient(
     """ID of the user"""
     id: Int!

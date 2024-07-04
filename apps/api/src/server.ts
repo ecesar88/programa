@@ -1,4 +1,3 @@
-import { InjectionToken } from '@decorators/di'
 import { Container, ERROR_MIDDLEWARE, attachControllers } from '@decorators/express'
 import { renderGraphiQL } from '@graphql-yoga/render-graphiql' // Not working?
 import cors from 'cors'
@@ -14,9 +13,9 @@ import { context } from './graphql/context'
 import { schema } from './graphql/schema'
 import { ErrorHandlerMiddleware, HTTPLoggerMiddleware } from './middleware'
 import { PrismaService } from './services/prismaService'
+import { gqlLogger } from './utils/graphqlLogger'
 import { LOG_TYPE, logger } from './utils/logger'
 import { parseEnv } from './utils/parseEnv'
-import { gqlLogger } from './utils/graphqlLogger'
 
 // https://the-guild.dev/graphql/scalars
 // https://the-guild.dev/graphql/shield
@@ -30,32 +29,20 @@ const SERVER_HOSTNAME = parseEnv<string>('SERVER_HOSTNAME', process.env.SERVER_H
 const helmetOptions: HelmetOptions = {
   contentSecurityPolicy: {
     directives: {
-      'style-src-elem': [
-        "'self'",
-        'unpkg.com',
-        "'unsafe-inline'",
-        'cdn.jsdelivr.net/npm/graphql-voyager@2.0.0/dist/voyager.css'
-      ],
-      'script-src': [
-        "'self'",
-        'unpkg.com',
-        "'unsafe-inline'",
-        "'unsafe-eval'",
-        'cdn.jsdelivr.net/npm/graphql-voyager@2.0.0/dist/voyager.standalone.js'
-      ],
+      'style-src-elem': ["'self'", 'unpkg.com', "'unsafe-inline'"],
+      'script-src': ["'self'", 'unpkg.com', "'unsafe-inline'", "'unsafe-eval'"],
       'img-src': ["'self'", 'raw.githubusercontent.com'],
       'worker-src': ['*', 'blob:']
     }
   }
 }
 
-export const PRISMA_SERVICE = new InjectionToken('PrismaService')
 ;(async function start() {
   const express = createExpress()
   const yoga = createYoga({
     renderGraphiQL,
     logging: 'debug',
-    schema: schema,
+    schema,
     context,
     plugins: [
       useLogger({

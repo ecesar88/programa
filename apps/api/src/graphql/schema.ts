@@ -1,15 +1,9 @@
-import { makeSchema } from 'nexus'
-import { join } from 'path'
-import * as types from './objects'
+import { builder } from './builder'
 
-export const schema = makeSchema({
-  types,
-  outputs: {
-    typegen: join(__dirname, 'nexus-typegen.ts'),
-    schema: join(__dirname, 'schema.graphql')
-  },
-  contextType: {
-    module: join(__dirname, 'context', 'index.ts'),
-    export: 'Context'
-  },
-})
+import './schema/errors/schemas'
+import './schema/errors/errors'
+
+import './schema/client/operations'
+import './schema/client/types'
+
+export const schema = builder.toSchema()
