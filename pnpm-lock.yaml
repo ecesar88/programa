@@ -68,6 +68,9 @@ importers:
       express:
         specifier: ^4.19.2
         version: 4.19.2
+      figlet:
+        specifier: ^1.7.0
+        version: 1.7.0
       graphql:
         specifier: ^16.9.0
         version: 16.9.0
@@ -111,6 +114,9 @@ importers:
       '@faker-js/faker':
         specifier: ^8.4.1
         version: 8.4.1
+      '@types/ascii-art':
+        specifier: ^1.4.3
+        version: 1.4.3
       '@types/babel__core':
         specifier: ^7.20.5
         version: 7.20.5
@@ -141,6 +147,9 @@ importers:
       '@types/express-serve-static-core':
         specifier: ^4.19.3
         version: 4.19.3
+      '@types/figlet':
+        specifier: ^1.5.8
+        version: 1.5.8
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
@@ -3419,6 +3428,10 @@ packages:
   /@tsconfig/node16@1.0.4:
     resolution: {integrity: sha512-vxhUy4J8lyeyinH7Azl1pdd43GJhZH/tP2weN8TntQblOY+A0XbT8DJk1/oCPuOOyg/Ja757rG0CgHcWC8OfMA==}
 
+  /@types/ascii-art@1.4.3:
+    resolution: {integrity: sha512-OnD4E236J6oI0aYdRRCWVsoGa05yJGJ716RITF8taLcBaEkSQlodhdQW1ODWjZmDzq+2dtSSgC6+5VmwmFgvkQ==}
+    dev: true
+
   /@types/babel__core@7.20.5:
     resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==}
     dependencies:
@@ -3512,6 +3525,10 @@ packages:
       '@types/express-serve-static-core': 4.19.3
       '@types/qs': 6.9.15
       '@types/serve-static': 1.15.7
+    dev: true
+
+  /@types/figlet@1.5.8:
+    resolution: {integrity: sha512-G22AUvy4Tl95XLE7jmUM8s8mKcoz+Hr+Xm9W90gJsppJq9f9tHvOGkrpn4gRX0q/cLtBdNkWtWCKDg2UDZoZvQ==}
     dev: true
 
   /@types/fs-extra@11.0.4:
@@ -6141,6 +6158,12 @@ packages:
   /fecha@4.2.3:
     resolution: {integrity: sha512-OP2IUU6HeYKJi3i0z4A19kHMQoLVs4Hc+DPqqxI2h/DPZHTm/vjsfC6P0b4jCMy14XizLBqvndQ+UilD7707Jw==}
     dev: true
+
+  /figlet@1.7.0:
+    resolution: {integrity: sha512-gO8l3wvqo0V7wEFLXPbkX83b7MVjRrk1oRLfYlZXol8nEpb/ON9pcKLI4qpBv5YtOTfrINtqb7b40iYY2FTWFg==}
+    engines: {node: '>= 0.4.0'}
+    hasBin: true
+    dev: false
 
   /figures@3.2.0:
     resolution: {integrity: sha512-yaduQFRKLXYOGgEn6AZau90j3ggSOyiqXU0F9JZfeXYhNa+Jk4X+s45A2zg5jns87GAFa34BBm2kXw4XpNcbdg==}

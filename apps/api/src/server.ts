@@ -3,8 +3,10 @@ import { renderGraphiQL } from '@graphql-yoga/render-graphiql' // Not working?
 import cors from 'cors'
 import dotenv from 'dotenv'
 import createExpress from 'express'
+import figlet from 'figlet'
 import { createYoga, useLogger } from 'graphql-yoga'
 import helmet, { HelmetOptions } from 'helmet'
+import nodeColorLog from 'node-color-log'
 import 'reflect-metadata'
 import { ClientController } from './controllers/client'
 import { InfoController } from './controllers/info'
@@ -16,10 +18,6 @@ import { PrismaService } from './services/prismaService'
 import { gqlLogger } from './utils/graphqlLogger'
 import { LOG_TYPE, logger } from './utils/logger'
 import { parseEnv } from './utils/parseEnv'
-
-// https://the-guild.dev/graphql/scalars
-// https://the-guild.dev/graphql/shield
-// https://the-guild.dev/graphql/modules/docs/di/introduction
 
 dotenv.config()
 
@@ -72,9 +70,20 @@ const helmetOptions: HelmetOptions = {
   await attachControllers(express, [InfoController, ClientController, OrderController])
 
   express.listen(SERVER_PORT, SERVER_HOSTNAME, () => {
-    logger({
-      level: LOG_TYPE.INFO,
-      message: `🚀 Server ready on ${SERVER_HOSTNAME}:${SERVER_PORT}`
-    })
+    figlet(
+      'Kitchen Manager',
+      {
+        width: 80,
+        whitespaceBreak: true
+      },
+      (_, data) => {
+        logger({
+          level: LOG_TYPE.INFO,
+          message: `🚀 Server ready on ${SERVER_HOSTNAME}:${SERVER_PORT}`
+        })
+
+        nodeColorLog.color('yellow').log(data)
+      }
+    )
   })
 })().catch(console.error)
