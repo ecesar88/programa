@@ -80,6 +80,7 @@ export const gqlLogger = (eventName: EventName, args1: any) => {
 
   const logToConsole = () =>
     nodeColorLog
+      .append('\n')
       .color('yellow')
       .append(dateString)
       .reset()

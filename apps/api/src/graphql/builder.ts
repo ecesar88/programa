@@ -30,7 +30,4 @@ export const builder = new SchemaBuilder<SchemaType>({
   }
 })
 
-builder.queryType({})
-builder.mutationType({})
-
 builder.addScalarType('DateTime', DateTimeResolver)

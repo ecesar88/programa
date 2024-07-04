@@ -9,6 +9,9 @@ import path from 'node:path'
 import './schema/client/operations'
 import './schema/client/types'
 
+builder.queryType({})
+builder.mutationType({})
+
 export const schema = builder.toSchema()
 
 // Write the graphql schema to a file so that we can use it on graphql-codegen
