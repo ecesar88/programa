@@ -3,6 +3,7 @@ import { renderGraphiQL } from '@graphql-yoga/render-graphiql' // Not working?
 import cors from 'cors'
 import dotenv from 'dotenv'
 import createExpress from 'express'
+import expressListEndpoints from 'express-list-endpoints'
 import figlet from 'figlet'
 import { createYoga, useLogger } from 'graphql-yoga'
 import helmet, { HelmetOptions } from 'helmet'
@@ -64,6 +65,11 @@ const SERVER_HOSTNAME = parseEnv<string>('SERVER_HOSTNAME', process.env.SERVER_H
 
   await attachControllers(express, [InfoController, ClientController, OrderController])
 
+  const endpoints = expressListEndpoints(express).map((ed) => ({
+    path: ed.path,
+    methods: ed.methods
+  }))
+
   express.listen(SERVER_PORT, SERVER_HOSTNAME, () => {
     figlet(
       'Kitchen Manager',
@@ -78,6 +84,8 @@ const SERVER_HOSTNAME = parseEnv<string>('SERVER_HOSTNAME', process.env.SERVER_H
         })
 
         nodeColorLog.color('yellow').log(data)
+        nodeColorLog.color('yellow').log('Endpoints =>')
+        console.log(endpoints)
       }
     )
   })
