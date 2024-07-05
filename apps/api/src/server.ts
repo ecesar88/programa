@@ -63,7 +63,7 @@ const SERVER_HOSTNAME = parseEnv<string>('SERVER_HOSTNAME', process.env.SERVER_H
     }
   ])
 
-  await attachControllers(express, [InfoController, ClientController, OrderController])
+  await attachControllers(express, [InfoController, ClientController])
 
   const endpoints = expressListEndpoints(express).map((ed) => ({
     path: ed.path,
