@@ -36,18 +36,21 @@ export const queryOne: Resolver<{ id: number }> = async (_parent, args, ctx, _in
     message: `Fetching client with id '${id}'`
   })
 
-  // if (!id) {
-  //   throw new Error('ID is mandatory')
-  // }
-
   try {
-    return ctx.prisma.client.findFirstOrThrow({
+    const client = await ctx.prisma.client.findFirst({
       where: {
         id
       }
     })
+
+    if (!client) {
+      console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+      throw new RecordNotFoundError(`Client with id ${id}`)
+    }
+
+    return client
   } catch (e) {
-    throw new Error('Error fetching the client')
+    throw new Error(String(e))
   }
 }
 
@@ -93,10 +96,7 @@ export const update: Resolver<{ id: number; data: Partial<Prisma.ClientUpdateInp
 
   const client = await ctx.prisma.client.findFirst({ where: { id } })
 
-  console.log('\n\n\n CLIENT >>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n', client)
-
   if (!client) {
-    console.log('ui')
     throw new RecordNotFoundError('Client')
   }
 

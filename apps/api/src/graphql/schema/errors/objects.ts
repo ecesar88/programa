@@ -1,5 +1,5 @@
 import { builder } from '../../builder'
-import { RecordNotFoundError } from './errors'
+import { LengthError, RecordNotFoundError } from './errors'
 
 export const ErrorInterface = builder.interfaceRef<Error>('Error').implement({
   fields: (t) => ({
@@ -9,7 +9,10 @@ export const ErrorInterface = builder.interfaceRef<Error>('Error').implement({
 
 builder.objectType(Error, {
   name: 'BaseError',
-  interfaces: [ErrorInterface]
+  interfaces: [ErrorInterface],
+  fields: (t) => ({
+    message: t.exposeString('message')
+  })
 })
 
 builder.objectType(RecordNotFoundError, {
@@ -17,5 +20,13 @@ builder.objectType(RecordNotFoundError, {
   interfaces: [ErrorInterface],
   fields: (t) => ({
     message: t.exposeString('message')
+  })
+})
+
+builder.objectType(LengthError, {
+  name: 'LengthError',
+  interfaces: [ErrorInterface],
+  fields: (t) => ({
+    minLength: t.exposeInt('minLength')
   })
 })

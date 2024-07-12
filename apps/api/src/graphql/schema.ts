@@ -1,13 +1,14 @@
 import { builder } from './builder'
 
-import './schema/errors/errors'
-import './schema/errors/schemas'
-
 import { printSchema } from 'graphql'
 import { writeFileSync } from 'node:fs'
 import path from 'node:path'
+
 import './schema/client/operations'
 import './schema/client/types'
+
+import './schema/errors/errors'
+import './schema/errors/objects'
 
 builder.queryType({})
 builder.mutationType({})

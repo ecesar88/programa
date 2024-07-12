@@ -6,6 +6,6 @@ import { LOG_TYPE, logger } from '../utils/logger'
 export class PrismaService extends PrismaClient {
   constructor() {
     super({ log: ['query', 'error', 'info', 'warn'] })
-    logger({ level: LOG_TYPE.INFO, message: 'Prisma Service: Connected' })
+    logger({ level: LOG_TYPE.INFO, message: '🛆  Prisma Service: Connected' })
   }
 }

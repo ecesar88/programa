@@ -18,21 +18,26 @@ interface Error {
   message: String!
 }
 
+type LengthError implements Error {
+  message: String!
+  minLength: Int!
+}
+
 type Mutation {
   createClient(name: String!, phone: String): Client!
   deleteClient(id: Int!): Client!
-  updateClient(data: UserUpdateInput!, id: Int!): MutationUpdateClientResult!
-}
-
-union MutationUpdateClientResult = MutationUpdateClientSuccess | RecordNotFoundError
-
-type MutationUpdateClientSuccess {
-  data: Client!
+  updateClient(data: UserUpdateInput!, id: Int!): Client!
 }
 
 type Query {
   getAllClients(page: Int = 1): Client!
-  getClientById(id: Int!): Client!
+  getClientById(id: Int!): QueryGetClientByIdResult!
+}
+
+union QueryGetClientByIdResult = BaseError | QueryGetClientByIdSuccess | RecordNotFoundError
+
+type QueryGetClientByIdSuccess {
+  data: Client!
 }
 
 type RecordNotFoundError implements Error {

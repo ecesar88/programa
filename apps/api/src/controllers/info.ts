@@ -3,7 +3,7 @@ import { ClassResponseInterceptor } from '../interceptors'
 import { InterceptResponse } from '../utils/interceptResponse'
 
 @ClassResponseInterceptor(InterceptResponse)
-@Controller('/healhcheck')
+@Controller('/healthcheck')
 export class InfoController {
   @Get('/')
   get() {

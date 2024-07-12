@@ -1,5 +1,5 @@
 import { builder } from '../../builder'
-import { RecordNotFoundError } from '../errors/errors'
+import { LengthError, RecordNotFoundError } from '../errors/errors'
 import { create, queryAll, queryOne, remove, update } from './resolvers'
 import { ClientType, UserUpdateInput } from './types'
 
@@ -19,9 +19,9 @@ builder.queryField('getAllClients', (t) =>
 builder.queryField('getClientById', (t) =>
   t.field({
     type: ClientType,
-    // errors: {
-    //   types: [RecordNotFoundError]
-    // },
+    errors: {
+      types: [RecordNotFoundError]
+    },
     args: {
       id: t.arg({
         type: 'Int',
@@ -52,9 +52,6 @@ builder.mutationField('createClient', (t) =>
 builder.mutationField('updateClient', (t) =>
   t.field({
     type: ClientType,
-    errors: {
-      types: [RecordNotFoundError]
-    },
     args: {
       id: t.arg({
         type: 'Int',
