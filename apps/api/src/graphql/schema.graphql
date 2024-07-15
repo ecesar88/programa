@@ -1,11 +1,11 @@
 type BaseError implements Error {
-  message: String!
+  message: String
 }
 
 """Long necks, cool patterns, taller than you."""
 type Client {
-  id: Int!
-  name: String!
+  id: Int
+  name: String
   phone: String
 }
 
@@ -15,33 +15,33 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 scalar DateTime
 
 interface Error {
-  message: String!
+  message: String
 }
 
 type LengthError implements Error {
-  message: String!
-  minLength: Int!
+  message: String
+  minLength: Int
 }
 
 type Mutation {
-  createClient(name: String!, phone: String): Client!
-  deleteClient(id: Int!): Client!
-  updateClient(data: UserUpdateInput!, id: Int!): Client!
+  createClient(name: String!, phone: String): Client
+  deleteClient(id: Int!): Client
+  updateClient(data: UserUpdateInput!, id: Int!): Client
 }
 
 type Query {
-  getAllClients(page: Int = 1): Client!
-  getClientById(id: Int!): QueryGetClientByIdResult!
+  getAllClients(page: Int = 1): Client
+  getClientById(id: Int!): QueryGetClientByIdResult
 }
 
-union QueryGetClientByIdResult = BaseError | QueryGetClientByIdSuccess | RecordNotFoundError
+union QueryGetClientByIdResult = QueryGetClientByIdSuccess | RecordNotFoundError
 
 type QueryGetClientByIdSuccess {
   data: Client!
 }
 
 type RecordNotFoundError implements Error {
-  message: String!
+  message: String
 }
 
 input UserUpdateInput {

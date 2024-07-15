@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "pnpm ts-node-dev --transpile-only --no-notify ./src/server.ts",
     "typecheck": "tsc",
-    "gen-docs": ""
+    "gen-docs": "pnpm spectaql spectaql.yml"
   },
   "dependencies": {
     "@decorators/di": "^3.1.0",
@@ -16,11 +16,11 @@
     "@decorators/server": "1.0.0-beta.18",
     "@envelop/core": "^5.0.1",
     "@graphql-tools/schema": "^10.0.4",
-    "@graphql-yoga/render-graphiql": "^5.4.0",
-    "@pothos/core": "^3.41.2",
-    "@pothos/plugin-errors": "^3.11.2",
-    "@pothos/plugin-simple-objects": "^3.7.1",
-    "@prisma/client": "5.13.0",
+    "@graphql-yoga/render-graphiql": "^5.6.0",
+    "@pothos/core": "^4.0.2",
+    "@pothos/plugin-errors": "^4.0.2",
+    "@pothos/plugin-simple-objects": "^4.0.3",
+    "@prisma/client": "5.16.2",
     "@repo/shared": "workspace:*",
     "@types/cacheable-request": "^8.3.2",
     "@types/cors": "^2.8.17",
@@ -35,17 +35,17 @@
     "graphql-query-to-json": "^2.0.1",
     "graphql-scalars": "^1.23.0",
     "graphql-tools": "^9.0.1",
-    "graphql-yoga": "^5.4.0",
+    "graphql-yoga": "^5.6.0",
     "helmet": "^7.1.0",
-    "node-color-log": "^12.0.0",
-    "prisma": "^5.13.0",
+    "node-color-log": "^12.0.1",
+    "prisma": "^5.16.2",
     "reflect-metadata": "^0.2.2",
-    "spectaql": "^2.3.1",
+    "spectaql": "^3.0.0",
     "ts-node-dev": "^2.0.0",
-    "ts-pattern": "^5.1.1",
+    "ts-pattern": "^5.2.0",
     "tsyringe": "^4.8.0",
-    "zod": "^3.23.5",
-    "zod-validation-error": "^3.2.0"
+    "zod": "^3.23.8",
+    "zod-validation-error": "^3.3.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
@@ -59,9 +59,9 @@
     "@types/debug": "^4.1.12",
     "@types/estree": "^1.0.5",
     "@types/express": "^4.17.21",
-    "@types/express-serve-static-core": "^4.19.3",
+    "@types/express-serve-static-core": "^4.19.5",
     "@types/figlet": "^1.5.8",
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^18.19.9"
+    "@types/node": "^20.14.10"
   }
 }
