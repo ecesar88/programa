@@ -32,6 +32,7 @@ export class InfoController {
       'Content-Length': stat.size
     })
 
+    // parseHTML or add base tag: <base href="/" />
     const file = readFileSync(filePath)
     return res.end(file)
   }
