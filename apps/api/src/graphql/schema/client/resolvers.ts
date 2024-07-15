@@ -44,7 +44,6 @@ export const queryOne: Resolver<{ id: number }> = async (_parent, args, ctx, _in
     })
 
     if (!client) {
-      console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
       throw new RecordNotFoundError(`Client with id ${id}`)
     }
 

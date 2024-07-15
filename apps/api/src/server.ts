@@ -2,16 +2,16 @@ import { Container, ERROR_MIDDLEWARE, attachControllers } from '@decorators/expr
 import { renderGraphiQL } from '@graphql-yoga/render-graphiql' // Not working?
 import cors from 'cors'
 import dotenv from 'dotenv'
-import createExpress from 'express'
+import Express from 'express'
 import expressListEndpoints from 'express-list-endpoints'
 import figlet from 'figlet'
 import { createYoga, useLogger } from 'graphql-yoga'
 import helmet, { HelmetOptions } from 'helmet'
 import nodeColorLog from 'node-color-log'
+import path from 'node:path'
 import 'reflect-metadata'
 import { ClientController } from './controllers/client'
 import { InfoController } from './controllers/info'
-import { OrderController } from './controllers/order'
 import { context } from './graphql/context'
 import { schema } from './graphql/schema'
 import { ErrorHandlerMiddleware, HTTPLoggerMiddleware } from './middleware'
@@ -36,7 +36,7 @@ const SERVER_PORT = parseEnv<number>('SERVER_PORT', process.env.SERVER_PORT)
 const SERVER_HOSTNAME = parseEnv<string>('SERVER_HOSTNAME', process.env.SERVER_HOSTNAME)
 
 ;(async function start() {
-  const express = createExpress()
+  const express = Express()
   const yoga = createYoga({
     renderGraphiQL,
     logging: 'debug',
@@ -49,8 +49,9 @@ const SERVER_HOSTNAME = parseEnv<string>('SERVER_HOSTNAME', process.env.SERVER_H
     ]
   })
 
+  express.use(Express.static(path.join(process.cwd(), 'public')))
   express.use(helmet(helmetOptions))
-  express.use(createExpress.json())
+  express.use(Express.json())
   express.use(cors({ origin: 'http://localhost:5173' }))
   express.use(yoga.graphqlEndpoint, yoga)
 
