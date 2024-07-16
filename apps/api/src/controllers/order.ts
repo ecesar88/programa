@@ -1,91 +1,78 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Next,
-  Params,
-  Post,
-  Put,
-  Status,
-} from "@decorators/express";
-import { Prisma } from "@prisma/client";
-import { HttpStatusCode, QTY_PER_PAGE } from "@repo/shared/constants";
-import { CreateOrderResolver } from "@repo/shared/resolvers";
-import { type NextFunction } from "express";
-import { PrismaService } from "../services/prismaService";
-import { LOG_TYPE, logger } from "../utils/logger";
+import { Body, Controller, Delete, Get, Next, Params, Post, Put, Status } from '@decorators/express'
+import { Prisma } from '@prisma/client'
+import { HttpStatusCode, QTY_PER_PAGE } from '@repo/shared/constants'
+import { CreateOrderResolver } from '@repo/shared/resolvers'
+import { type NextFunction } from 'express'
+import { PrismaService } from '../services/prismaService'
+import { LOG_TYPE, logger } from '../utils/logger'
 
-@Controller("/order")
+@Controller('/order')
 export class OrderController {
   public constructor(private prisma: PrismaService) {}
 
   @Status(HttpStatusCode.OK)
-  @Get("/")
+  @Get('/')
   async getOrders(@Next() next: NextFunction) {
     try {
       const orders = await this.prisma.order.findMany({
         take: QTY_PER_PAGE,
         orderBy: {
-          id: "desc",
-        },
-      });
+          id: 'desc'
+        }
+      })
 
-      return orders;
+      return orders
     } catch (error) {
-      next(error);
+      next(error)
     }
   }
 
   @Status(HttpStatusCode.CREATED)
-  @Post("/")
-  async create(
-    @Next() next: NextFunction,
-    @Body() orderData: Prisma.OrderCreateInput
-  ) {
+  @Post('/')
+  async create(@Next() next: NextFunction, @Body() orderData: Prisma.OrderCreateInput) {
     try {
       logger({
         level: LOG_TYPE.INFO,
-        message: "Criando novo cliente com dados:",
-        object: JSON.stringify(orderData, null, 2),
-      });
+        message: 'Criando novo cliente com dados:',
+        object: JSON.stringify(orderData, null, 2)
+      })
 
-      CreateOrderResolver.parse(orderData);
+      CreateOrderResolver.parse(orderData)
 
       const order = await this.prisma.order.create({
-        data: orderData,
-      });
+        data: orderData
+      })
 
-      return order;
+      return order
     } catch (error) {
-      next(error);
+      next(error)
     }
   }
 
   @Status(HttpStatusCode.OK)
-  @Delete("/:orderId")
-  async delete(@Next() next: NextFunction, @Params("orderId") orderId: string) {
+  @Delete('/:orderId')
+  async delete(@Next() next: NextFunction, @Params('orderId') orderId: string) {
     try {
       // const orderId = z.number().parse(+orderId);
 
       const order = await this.prisma.order.delete({
         where: {
-          id: +orderId,
-        },
-      });
+          id: +orderId
+        }
+      })
 
-      return order;
+      return order
     } catch (error) {
-      next(error);
+      next(error)
     }
   }
 
   @Status(HttpStatusCode.OK)
-  @Put("/:orderId")
+  @Put('/:orderId')
   async edit(
     @Next() next: NextFunction,
     @Body() orderData: Prisma.OrderCreateInput,
-    @Params("orderId") orderId: string
+    @Params('orderId') orderId: string
   ) {
     try {
       // const orderId = z.number().parse(parseInt(idAsString));
@@ -93,21 +80,21 @@ export class OrderController {
       logger({
         level: LOG_TYPE.INFO,
         message: `Editando pedido com id ${orderId} com dados:`,
-        object: JSON.stringify(orderData, null, 2),
-      });
+        object: JSON.stringify(orderData, null, 2)
+      })
 
-      CreateOrderResolver.parse(orderData);
+      CreateOrderResolver.parse(orderData)
 
       const order = await this.prisma.order.update({
         where: {
-          id: +orderId,
+          id: +orderId
         },
-        data: orderData,
-      });
+        data: orderData
+      })
 
-      return order;
+      return order
     } catch (error) {
-      next(error);
+      next(error)
     }
   }
 }

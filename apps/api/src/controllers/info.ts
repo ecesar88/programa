@@ -1,39 +1,15 @@
-import { Controller, Get, Res } from '@decorators/express'
+import { Controller, Get } from '@decorators/express'
 import { HttpStatusCode } from '@repo/shared/constants'
-import type { Response } from 'express'
-import { existsSync, readFileSync, statSync } from 'node:fs'
-import path from 'path'
+import HTTP_ROUTES from '../routes'
 
 // @ClassResponseInterceptor(InterceptResponse)
-@Controller('/info')
+@Controller(HTTP_ROUTES.info.routes.root)
 export class InfoController {
-  @Get('/healthcheck')
+  @Get(HTTP_ROUTES.info.routes.healthcheck)
   get() {
     return {
       version: '0.1',
-      status: 'OK'
+      status: HttpStatusCode.OK
     }
-  }
-
-  @Get('/docs')
-  async docs(@Res() res: Response) {
-    const filePath = path.resolve(process.cwd(), 'public', 'index.html')
-
-    if (!existsSync(filePath)) {
-      res
-        .status(HttpStatusCode.NOT_FOUND)
-        .json({ message: 'Documentation was not found or not generated .' })
-    }
-
-    const stat = statSync(filePath)
-
-    res.writeHead(HttpStatusCode.OK, {
-      'Content-Type': 'text/html',
-      'Content-Length': stat.size
-    })
-
-    // parseHTML or add base tag: <base href="/" />
-    const file = readFileSync(filePath)
-    return res.end(file)
   }
 }

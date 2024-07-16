@@ -18,6 +18,7 @@ import { ErrorHandlerMiddleware, HTTPLoggerMiddleware } from './middleware'
 import { gqlLogger } from './utils/graphqlLogger'
 import { LOG_TYPE, logger } from './utils/logger'
 import { parseEnv } from './utils/parseEnv'
+import HTTP_ROUTES from './routes'
 
 const helmetOptions: HelmetOptions = {
   contentSecurityPolicy: {
@@ -49,7 +50,7 @@ const SERVER_HOSTNAME = parseEnv<string>('SERVER_HOSTNAME', process.env.SERVER_H
     ]
   })
 
-  express.use(Express.static(path.join(process.cwd(), 'public')))
+  express.use(HTTP_ROUTES.info.docs, Express.static(path.join(process.cwd(), 'public')))
   express.use(helmet(helmetOptions))
   express.use(Express.json())
   express.use(cors({ origin: 'http://localhost:5173' }))

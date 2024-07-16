@@ -10,21 +10,21 @@ import {
   Query,
   Status
 } from '@decorators/express'
-import { Prisma } from '@prisma/client'
+import { Client, Prisma } from '@prisma/client'
 import { HttpStatusCode } from '@repo/shared/constants'
-import { CreateClientResolver } from '@repo/shared/resolvers'
 import type { NextFunction } from 'express'
 import { container } from 'tsyringe'
 import { z } from 'zod'
-import { ClassResponseInterceptor } from '../interceptors'
-import { ValidateWith } from '../middleware'
+import { ClassResponseInterceptor, ValidateWith } from '../interceptors'
 import { PrismaService } from '../services/prismaService'
 import { InterceptResponse } from '../utils/interceptResponse'
 import { LOG_TYPE, logger } from '../utils/logger'
 import { prismaPaginate } from '../utils/prismaPaginate'
+import HTTP_ROUTES from '../routes'
+import { CreateClientResolver } from '@repo/shared/resolvers'
 
 @ClassResponseInterceptor(InterceptResponse)
-@Controller('/clients')
+@Controller(HTTP_ROUTES.client.prefix)
 export class ClientController {
   private prisma!: PrismaService
 
@@ -33,7 +33,7 @@ export class ClientController {
   }
 
   @Status(HttpStatusCode.OK)
-  @Get('/')
+  @Get(HTTP_ROUTES.client.routes.root)
   async get(@Next() next: NextFunction, @Query() pageNumber: string) {
     try {
       return this.prisma.client.findMany({
@@ -48,7 +48,7 @@ export class ClientController {
   }
 
   @Status(HttpStatusCode.OK)
-  @Get('/:clientId')
+  @Get(HTTP_ROUTES.client.routes.withId)
   async getOne(@Next() next: NextFunction, @Params('clientId') clientId: string) {
     try {
       const clients = await this.prisma.client.findFirstOrThrow({
@@ -63,9 +63,9 @@ export class ClientController {
     }
   }
 
-  @Status(HttpStatusCode.CREATED)
   @ValidateWith(CreateClientResolver)
-  @Post('/')
+  @Status(HttpStatusCode.CREATED)
+  @Post(HTTP_ROUTES.client.routes.root)
   async create(@Next() next: NextFunction, @Body() clientData: Prisma.ClientCreateInput) {
     try {
       logger({
@@ -85,7 +85,7 @@ export class ClientController {
   }
 
   @Status(HttpStatusCode.OK)
-  @Delete('/:clientId')
+  @Delete(HTTP_ROUTES.client.routes.withId)
   async delete(@Next() next: NextFunction, @Params('clientId') clientId: string) {
     const idAsString = String(clientId)
 
@@ -105,7 +105,7 @@ export class ClientController {
   }
 
   @Status(HttpStatusCode.OK)
-  @Put('/:clientId')
+  @Put(HTTP_ROUTES.client.routes.withId)
   async edit(
     @Next() next: NextFunction,
     @Body() clientData: Prisma.ClientCreateInput,

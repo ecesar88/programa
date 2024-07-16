@@ -1,5 +1,5 @@
 import { builder } from '../../builder'
-import { LengthError, RecordNotFoundError } from '../errors/errors'
+import { RecordNotFoundError } from '../errors/errors'
 import { create, queryAll, queryOne, remove, update } from './resolvers'
 import { ClientType, UserUpdateInput } from './types'
 
