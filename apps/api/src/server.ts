@@ -19,6 +19,7 @@ import { gqlLogger } from './utils/graphqlLogger'
 import { LOG_TYPE, logger } from './utils/logger'
 import { parseEnv } from './utils/parseEnv'
 import HTTP_ROUTES from './routes'
+import { printRouteTable } from './utils/printRouteTable'
 
 const helmetOptions: HelmetOptions = {
   contentSecurityPolicy: {
@@ -50,7 +51,7 @@ const SERVER_HOSTNAME = parseEnv<string>('SERVER_HOSTNAME', process.env.SERVER_H
     ]
   })
 
-  express.use(HTTP_ROUTES.info.docs, Express.static(path.join(process.cwd(), 'public')))
+  express.use(HTTP_ROUTES.info.routes.docs, Express.static(path.join(process.cwd(), 'public')))
   express.use(helmet(helmetOptions))
   express.use(Express.json())
   express.use(cors({ origin: 'http://localhost:5173' }))
@@ -69,7 +70,12 @@ const SERVER_HOSTNAME = parseEnv<string>('SERVER_HOSTNAME', process.env.SERVER_H
 
   const endpoints = expressListEndpoints(express).map((ed) => ({
     path: ed.path,
-    methods: ed.methods
+    methods: ed.methods,
+    ...(!ed.middlewares.includes('anonymous')
+      ? {
+          middlewares: ed.middlewares
+        }
+      : {})
   }))
 
   express.listen(SERVER_PORT, SERVER_HOSTNAME, () => {
@@ -79,16 +85,16 @@ const SERVER_HOSTNAME = parseEnv<string>('SERVER_HOSTNAME', process.env.SERVER_H
         width: 80,
         whitespaceBreak: true
       },
-      (_, data) => {
+      (_, figlet) => {
         logger({
           level: LOG_TYPE.INFO,
           message: `🚀 Server ready on ${SERVER_HOSTNAME}:${SERVER_PORT}`
         })
 
-        nodeColorLog.color('yellow').log(data)
+        nodeColorLog.color('yellow').log(figlet)
 
-        nodeColorLog.color('yellow').log('Registered routes =>')
-        console.log(endpoints)
+        // nodeColorLog.color('yellow').log('Registered routes =>')
+        printRouteTable(endpoints)
       }
     )
   })

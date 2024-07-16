@@ -34,7 +34,7 @@ type Query {
   getClientById(id: Int!): QueryGetClientByIdResult
 }
 
-union QueryGetClientByIdResult = QueryGetClientByIdSuccess | RecordNotFoundError
+union QueryGetClientByIdResult = BaseError | QueryGetClientByIdSuccess | RecordNotFoundError
 
 type QueryGetClientByIdSuccess {
   data: Client!

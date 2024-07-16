@@ -25,7 +25,7 @@ type SchemaType = {
 
 export const builder = new SchemaBuilder<SchemaType>({
   plugins: [ErrorsPlugin, SimpleObjectsPlugin],
-  errorOptions: {
+  errors: {
     defaultTypes: [Error, RecordNotFoundError]
   }
 })
