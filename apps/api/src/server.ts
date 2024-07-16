@@ -3,7 +3,6 @@ import { renderGraphiQL } from '@graphql-yoga/render-graphiql' // Not working?
 import cors from 'cors'
 import dotenv from 'dotenv'
 import Express from 'express'
-import expressListEndpoints from 'express-list-endpoints'
 import figlet from 'figlet'
 import { createYoga, useLogger } from 'graphql-yoga'
 import helmet, { HelmetOptions } from 'helmet'
@@ -15,10 +14,10 @@ import { InfoController } from './controllers/info'
 import { context } from './graphql/context'
 import { schema } from './graphql/schema'
 import { ErrorHandlerMiddleware, HTTPLoggerMiddleware } from './middleware'
+import HTTP_ROUTES from './routes'
 import { gqlLogger } from './utils/graphqlLogger'
 import { LOG_TYPE, logger } from './utils/logger'
 import { parseEnv } from './utils/parseEnv'
-import HTTP_ROUTES from './routes'
 import { printRouteTable } from './utils/printRouteTable'
 
 const helmetOptions: HelmetOptions = {
@@ -68,16 +67,6 @@ const SERVER_HOSTNAME = parseEnv<string>('SERVER_HOSTNAME', process.env.SERVER_H
 
   await attachControllers(express, [InfoController, ClientController])
 
-  const endpoints = expressListEndpoints(express).map((ed) => ({
-    path: ed.path,
-    methods: ed.methods,
-    ...(!ed.middlewares.includes('anonymous')
-      ? {
-          middlewares: ed.middlewares
-        }
-      : {})
-  }))
-
   express.listen(SERVER_PORT, SERVER_HOSTNAME, () => {
     figlet(
       'Kitchen Manager',
@@ -93,8 +82,7 @@ const SERVER_HOSTNAME = parseEnv<string>('SERVER_HOSTNAME', process.env.SERVER_H
 
         nodeColorLog.color('yellow').log(figlet)
 
-        // nodeColorLog.color('yellow').log('Registered routes =>')
-        printRouteTable(endpoints)
+        printRouteTable(express)
       }
     )
   })
