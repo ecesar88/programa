@@ -35,6 +35,7 @@ dotenv.config()
 
 const SERVER_PORT = parseEnv<number>('SERVER_PORT', process.env.SERVER_PORT)
 const SERVER_HOSTNAME = parseEnv<string>('SERVER_HOSTNAME', process.env.SERVER_HOSTNAME)
+const APP_NAME = parseEnv<string>('APP_NAME', process.env.APP_NAME)
 
 ;(async function start() {
   const express = Express()
@@ -69,7 +70,7 @@ const SERVER_HOSTNAME = parseEnv<string>('SERVER_HOSTNAME', process.env.SERVER_H
 
   express.listen(SERVER_PORT, SERVER_HOSTNAME, () => {
     figlet(
-      'Kitchen Manager',
+      APP_NAME,
       {
         width: 80,
         whitespaceBreak: true
