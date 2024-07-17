@@ -37,6 +37,9 @@ const SERVER_PORT = parseEnv<number>('SERVER_PORT', process.env.SERVER_PORT)
 const SERVER_HOSTNAME = parseEnv<string>('SERVER_HOSTNAME', process.env.SERVER_HOSTNAME)
 const APP_NAME = parseEnv<string>('APP_NAME', process.env.APP_NAME)
 
+const PUBLIC_FOLDER_NAME = 'public'
+const PUBLIC_FOLDER_PATH = path.join(process.cwd(), PUBLIC_FOLDER_NAME)
+
 ;(async function start() {
   const express = Express()
   const yoga = createYoga({
@@ -51,7 +54,7 @@ const APP_NAME = parseEnv<string>('APP_NAME', process.env.APP_NAME)
     ]
   })
 
-  express.use(HTTP_ROUTES.info.routes.docs, Express.static(path.join(process.cwd(), 'public')))
+  express.use(HTTP_ROUTES.info.routes.docs, Express.static(PUBLIC_FOLDER_PATH))
   express.use(helmet(helmetOptions))
   express.use(Express.json())
   express.use(cors({ origin: 'http://localhost:5173' }))
