@@ -15,8 +15,8 @@ export const printRouteTable = (express: Express) => {
 
   const table = new Table({
     columns: [
-      { title: 'REGISTERED ROUTES', name: 'path', alignment: 'left', color: 'blue' },
-      { title: 'METHOD', name: 'methods', alignment: 'left' }
+      { title: 'REGISTERED ROUTES', name: 'path', alignment: 'left', color: 'green' },
+      { title: 'METHOD', name: 'methods', alignment: 'right' }
     ]
   })
 
