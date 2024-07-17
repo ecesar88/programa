@@ -20,6 +20,8 @@ export const printRouteTable = (express: Express) => {
     ]
   })
 
+  table.addRow({ path: '/graphql', methods: 'POST' }, { color: 'blue', separator: true })
+
   endpoints.forEach((ed) => {
     table.addRow(ed, { color: 'yellow', separator: true })
   })
