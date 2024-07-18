@@ -1,3 +1,5 @@
+import { Regex } from '@repo/shared/constants'
+import * as z from 'zod'
 import { builder } from '../../builder'
 import { RecordNotFoundError } from '../errors/errors'
 import { create, queryAll, queryOne, remove, update } from './resolvers'
@@ -7,8 +9,11 @@ builder.queryField('getAllClients', (t) =>
   t.field({
     type: ClientType,
     args: {
-      page: t.arg({
-        type: 'Int',
+      page: t.arg.int({
+        validate: {
+          int: true,
+          nonnegative: true
+        },
         defaultValue: 1
       })
     },
@@ -23,11 +28,14 @@ builder.queryField('getClientById', (t) =>
       types: [RecordNotFoundError]
     },
     args: {
-      id: t.arg({
-        type: 'Int',
-        required: true
-      })
+      id: t.arg.int({
+        required: true,
+        validate: {
+          schema: z.number().positive('Id must be positive')
+        }
+      }),
     },
+    // validate: (value) => value.id,
     resolve: queryOne
   })
 )
@@ -36,12 +44,17 @@ builder.mutationField('createClient', (t) =>
   t.field({
     type: ClientType,
     args: {
-      name: t.arg({
-        type: 'String',
+      name: t.arg.string({
+        validate: {
+          minLength: 3,
+          type: 'string'
+        },
         required: true
       }),
-      phone: t.arg({
-        type: 'String',
+      phone: t.arg.string({
+        validate: {
+          schema: z.string().regex(Regex.PHONE_REGEX, 'Invalid phone format')
+        },
         required: false
       })
     },

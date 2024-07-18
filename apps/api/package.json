@@ -20,6 +20,8 @@
     "@pothos/core": "^4.0.2",
     "@pothos/plugin-errors": "^4.0.2",
     "@pothos/plugin-simple-objects": "^4.0.3",
+    "@pothos/plugin-tracing": "^1.0.2",
+    "@pothos/plugin-zod": "^4.0.2",
     "@prisma/client": "5.16.2",
     "@repo/shared": "workspace:*",
     "@types/cacheable-request": "^8.3.2",

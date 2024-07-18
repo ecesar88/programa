@@ -41,6 +41,12 @@ importers:
       '@pothos/plugin-simple-objects':
         specifier: ^4.0.3
         version: 4.0.3(@pothos/core@4.0.2)(graphql@16.9.0)
+      '@pothos/plugin-tracing':
+        specifier: ^1.0.2
+        version: 1.0.2(@pothos/core@4.0.2)(graphql@16.9.0)
+      '@pothos/plugin-zod':
+        specifier: ^4.0.2
+        version: 4.0.2(@pothos/core@4.0.2)(graphql@16.9.0)(zod@3.23.8)
       '@prisma/client':
         specifier: 5.16.2
         version: 5.16.2(prisma@5.16.2)
@@ -3088,6 +3094,28 @@ packages:
     dependencies:
       '@pothos/core': 4.0.2(graphql@16.9.0)
       graphql: 16.9.0
+    dev: false
+
+  /@pothos/plugin-tracing@1.0.2(@pothos/core@4.0.2)(graphql@16.9.0):
+    resolution: {integrity: sha512-s6HqDtbuvLc6W/138PHS35jZNKgtEZmYckYhzuZJ4nPMGTf0PBriILJHwl/C5p7ClNv11SZ2sxhfN7YCvPdCBQ==}
+    peerDependencies:
+      '@pothos/core': 4.0.2
+      graphql: '>=16.6.0'
+    dependencies:
+      '@pothos/core': 4.0.2(graphql@16.9.0)
+      graphql: 16.9.0
+    dev: false
+
+  /@pothos/plugin-zod@4.0.2(@pothos/core@4.0.2)(graphql@16.9.0)(zod@3.23.8):
+    resolution: {integrity: sha512-1+kx6pIjRkX/CE59ZEFbhvAtK3Ktv0evB8JxmHTc7mB6Ptyhxgm4JHRfc/73MdXzKJJSfRweYE78N/vWIWO4FA==}
+    peerDependencies:
+      '@pothos/core': 4.0.2
+      graphql: '>=16.6.0'
+      zod: '*'
+    dependencies:
+      '@pothos/core': 4.0.2(graphql@16.9.0)
+      graphql: 16.9.0
+      zod: 3.23.8
     dev: false
 
   /@prisma/client@5.16.2(prisma@5.16.2):
