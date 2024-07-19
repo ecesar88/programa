@@ -20,6 +20,7 @@ import { Id, toast } from 'react-toastify'
 import { match } from 'ts-pattern'
 import { ScreenMenuProps } from '../components/molecules/ScreenMenu'
 import { create, edit, purge, get } from '@renderer/queries/rest/client'
+import { objectInputType } from 'zod'
 
 type ClientWithoutId = Omit<Client, 'id'>
 
@@ -145,7 +146,8 @@ export const Clients = (): React.ReactNode => {
   const [{ mutate: editClientMutation }] = useAtom(mutations.editClientAtom)
 
   const form = useForm<ClientWithoutId>({
-    resolver: zodResolver(CreateClientResolver),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver<any>(CreateClientResolver),
     defaultValues: {}
   })
 

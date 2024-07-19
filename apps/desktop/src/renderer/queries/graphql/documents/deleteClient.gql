@@ -1,0 +1,8 @@
+mutation deleteClientById($id: Int!) {
+  deleteClient(id: $id) {
+    __typename
+    id
+    name
+    phone
+  }
+}

@@ -1,5 +1,5 @@
-class ClientRoutes {
-  static prefix = 'client'
+abstract class ClientRoutes {
+  static prefix = 'clients'
 
   static routes = {
     root: '/',
@@ -7,7 +7,7 @@ class ClientRoutes {
   }
 }
 
-class InfoRoutes {
+abstract class InfoRoutes {
   static prefix = 'info'
 
   static routes = {

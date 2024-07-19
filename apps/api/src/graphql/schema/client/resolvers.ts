@@ -6,7 +6,8 @@ import { prismaPaginate } from '../../../utils/prismaPaginate'
 import { Context } from '../../context'
 import { RecordNotFoundError } from '../errors/errors'
 
-type Resolver<T> = (parent: {}, args: T, ctx: Context, info: GraphQLResolveInfo) => any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Resolver<T> = (parent: object, args: T, ctx: Context, info: GraphQLResolveInfo) => any
 
 export const queryAll: Resolver<{ page?: number | null }> = async (_parent, args, ctx, _info) => {
   const { page } = args
@@ -127,7 +128,11 @@ export const remove: Resolver<{ id: number }> = async (_parent, args, ctx, _info
   })
 
   try {
-    const clientToRemove = await ctx.prisma.client.findFirstOrThrow({ where: { id } })
+    const clientToRemove = await ctx.prisma.client.findFirst({ where: { id } })
+
+    if (!clientToRemove) {
+      throw new RecordNotFoundError('Client')
+    }
 
     return await ctx.prisma.client.delete({
       where: {

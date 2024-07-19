@@ -83,9 +83,11 @@ builder.mutationField('deleteClient', (t) =>
   t.field({
     type: ClientType,
     args: {
-      id: t.arg({
-        type: 'Int',
-        required: true
+      id: t.arg.int({
+        required: true,
+        validate: {
+          schema: z.number().nonnegative()
+        }
       })
     },
     resolve: remove
