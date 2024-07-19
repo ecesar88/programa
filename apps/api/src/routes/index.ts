@@ -17,9 +17,7 @@ abstract class InfoRoutes {
   }
 }
 
-const HTTP_ROUTES = {
+export const HTTP_ROUTES = () => ({
   client: ClientRoutes,
   info: InfoRoutes
-}
-
-export default HTTP_ROUTES
+})

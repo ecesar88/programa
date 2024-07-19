@@ -10,18 +10,20 @@ import {
   Query,
   Status
 } from '@decorators/express'
-import { Client, Prisma } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 import { HttpStatusCode } from '@repo/shared/constants'
+import { CreateClientResolver } from '@repo/shared/resolvers'
 import type { NextFunction } from 'express'
 import { container } from 'tsyringe'
 import { z } from 'zod'
 import { ClassResponseInterceptor, ValidateWith } from '../interceptors'
+import { HTTP_ROUTES as MakeRoutes } from '../routes'
 import { PrismaService } from '../services/prismaService'
 import { InterceptResponse } from '../utils/interceptResponse'
 import { LOG_TYPE, logger } from '../utils/logger'
 import { prismaPaginate } from '../utils/prismaPaginate'
-import HTTP_ROUTES from '../routes'
-import { CreateClientResolver } from '@repo/shared/resolvers'
+
+const HTTP_ROUTES = MakeRoutes()
 
 @ClassResponseInterceptor(InterceptResponse)
 @Controller(HTTP_ROUTES.client.prefix)
