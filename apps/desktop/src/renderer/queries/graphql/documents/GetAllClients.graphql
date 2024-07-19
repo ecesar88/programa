@@ -1,5 +1,5 @@
 query GetAllClients {
-  queryAllClient {
+  getAllClients(page: 1) {
     id
     name
     phone
