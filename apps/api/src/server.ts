@@ -14,7 +14,6 @@ import { InfoController } from './controllers/info'
 import { context } from './graphql/context'
 import { schema } from './graphql/schema'
 import { ErrorHandlerMiddleware, HTTPLoggerMiddleware } from './middleware'
-import HTTP_ROUTES from './routes'
 import { gqlLogger } from './utils/graphqlLogger'
 import { LOG_TYPE, logger } from './utils/logger'
 import { parseEnv } from './utils/parseEnv'
@@ -54,7 +53,7 @@ const PUBLIC_FOLDER_PATH = path.join(process.cwd(), PUBLIC_FOLDER_NAME)
     ]
   })
 
-  express.use(HTTP_ROUTES.info.routes.docs, Express.static(PUBLIC_FOLDER_PATH))
+  express.use('/info/docs', Express.static(PUBLIC_FOLDER_PATH))
   express.use(helmet(helmetOptions))
   express.use(Express.json())
   express.use(cors({ origin: 'http://localhost:5173' }))

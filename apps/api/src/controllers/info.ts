@@ -1,11 +1,10 @@
 import { Controller, Get } from '@decorators/express'
 import { HttpStatusCode } from '@repo/shared/constants'
-import HTTP_ROUTES from '../routes'
 
 // @ClassResponseInterceptor(InterceptResponse)
-@Controller(HTTP_ROUTES.info.routes.root)
+@Controller('/info')
 export class InfoController {
-  @Get(HTTP_ROUTES.info.routes.healthcheck)
+  @Get('/healthcheck')
   get() {
     return {
       version: '0.1',

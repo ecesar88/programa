@@ -1,4 +1,4 @@
-abstract class ClientRoutes {
+class ClientRoutes {
   static prefix = 'clients'
 
   static routes = {
@@ -7,7 +7,7 @@ abstract class ClientRoutes {
   }
 }
 
-abstract class InfoRoutes {
+class InfoRoutes {
   static prefix = 'info'
 
   static routes = {
@@ -17,7 +17,7 @@ abstract class InfoRoutes {
   }
 }
 
-export const HTTP_ROUTES = () => ({
-  client: ClientRoutes,
-  info: InfoRoutes
-})
+export const HTTP_ROUTES = {
+  client: new ClientRoutes(),
+  info: new InfoRoutes()
+}

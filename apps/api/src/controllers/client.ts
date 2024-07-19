@@ -17,16 +17,13 @@ import type { NextFunction } from 'express'
 import { container } from 'tsyringe'
 import { z } from 'zod'
 import { ClassResponseInterceptor, ValidateWith } from '../interceptors'
-import { HTTP_ROUTES as MakeRoutes } from '../routes'
 import { PrismaService } from '../services/prismaService'
 import { InterceptResponse } from '../utils/interceptResponse'
 import { LOG_TYPE, logger } from '../utils/logger'
 import { prismaPaginate } from '../utils/prismaPaginate'
 
-const HTTP_ROUTES = MakeRoutes()
-
 @ClassResponseInterceptor(InterceptResponse)
-@Controller(HTTP_ROUTES.client.prefix)
+@Controller('/clients')
 export class ClientController {
   private prisma!: PrismaService
 
@@ -35,7 +32,7 @@ export class ClientController {
   }
 
   @Status(HttpStatusCode.OK)
-  @Get(HTTP_ROUTES.client.routes.root)
+  @Get('/')
   async get(@Next() next: NextFunction, @Query() pageNumber: string) {
     try {
       return this.prisma.client.findMany({
@@ -50,7 +47,7 @@ export class ClientController {
   }
 
   @Status(HttpStatusCode.OK)
-  @Get(HTTP_ROUTES.client.routes.withId)
+  @Get('/:cliendId')
   async getOne(@Next() next: NextFunction, @Params('clientId') clientId: string) {
     try {
       const clients = await this.prisma.client.findFirstOrThrow({
@@ -67,7 +64,7 @@ export class ClientController {
 
   @ValidateWith(CreateClientResolver)
   @Status(HttpStatusCode.CREATED)
-  @Post(HTTP_ROUTES.client.routes.root)
+  @Post('/')
   async create(@Next() next: NextFunction, @Body() clientData: Prisma.ClientCreateInput) {
     try {
       logger({
@@ -87,7 +84,7 @@ export class ClientController {
   }
 
   @Status(HttpStatusCode.OK)
-  @Delete(HTTP_ROUTES.client.routes.withId)
+  @Delete('/')
   async delete(@Next() next: NextFunction, @Params('clientId') clientId: string) {
     const idAsString = String(clientId)
 
@@ -107,7 +104,7 @@ export class ClientController {
   }
 
   @Status(HttpStatusCode.OK)
-  @Put(HTTP_ROUTES.client.routes.withId)
+  @Put('/')
   async edit(
     @Next() next: NextFunction,
     @Body() clientData: Prisma.ClientCreateInput,
