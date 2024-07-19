@@ -1,0 +1,8 @@
+query createClient($name: String!, phone: String) {
+  createClient(name: $name, phone: $phone) {
+    __typename
+    id
+    name
+    phone
+  }
+}

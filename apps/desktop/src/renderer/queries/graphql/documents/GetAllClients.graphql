@@ -1,7 +1,0 @@
-query GetAllClients {
-  getAllClients(page: 1) {
-    id
-    name
-    phone
-  }
-}

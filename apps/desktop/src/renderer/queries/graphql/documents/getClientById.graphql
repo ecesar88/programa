@@ -1,0 +1,16 @@
+query getClientById($id: Int!) {
+  getClientById(id: $id) {
+    __typename
+    ... on Error {
+      message
+    }
+
+    ... on QueryGetClientByIdSuccess {
+      data {
+        id
+        name
+        phone
+      }
+    }
+  }
+}

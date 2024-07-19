@@ -98,15 +98,18 @@ export type UserUpdateInput = {
   phone?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type GetAllClientsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetAllClientsQueryVariables = Exact<{
+  page: Scalars['Int']['input'];
+}>;
 
 
-export type GetAllClientsQuery = { __typename?: 'Query', getAllClients?: { __typename?: 'Client', id?: number | null, name?: string | null, phone?: string | null } | null };
+export type GetAllClientsQuery = { __typename?: 'Query', getAllClients?: { __typename: 'Client', id?: number | null, name?: string | null, phone?: string | null } | null };
 
 
 export const GetAllClientsDocument = gql`
-    query GetAllClients {
-  getAllClients(page: 1) {
+    query getAllClients($page: Int!) {
+  getAllClients(page: $page) {
+    __typename
     id
     name
     phone
@@ -126,10 +129,11 @@ export const GetAllClientsDocument = gql`
  * @example
  * const { data, loading, error } = useGetAllClientsQuery({
  *   variables: {
+ *      page: // value for 'page'
  *   },
  * });
  */
-export function useGetAllClientsQuery(baseOptions?: Apollo.QueryHookOptions<GetAllClientsQuery, GetAllClientsQueryVariables>) {
+export function useGetAllClientsQuery(baseOptions: Apollo.QueryHookOptions<GetAllClientsQuery, GetAllClientsQueryVariables> & ({ variables: GetAllClientsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetAllClientsQuery, GetAllClientsQueryVariables>(GetAllClientsDocument, options);
       }

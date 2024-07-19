@@ -6,7 +6,8 @@ const config: CodegenConfig = {
   documents: ['**/*.graphql'],
   ignoreNoDocuments: true, // for better experience with the watcher
   generates: {
-    './src/renderer/queries/graphql/graphql.ts': {
+    // './src/renderer/queries/graphql/graphql-codegen.ts': {
+    './apps/desktop/src/renderer/queries/graphql/graphql-codegen.ts': {
       plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
       config: {
         useTypeImports: true
