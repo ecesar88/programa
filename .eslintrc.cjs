@@ -6,7 +6,6 @@ module.exports = {
     '@electron-toolkit/eslint-config-ts/recommended',
     '@electron-toolkit/eslint-config-prettier'
   ],
-  '@typescript-eslint/explicit-function-return-type': 'off',
   overrides: [
     {
       files: ['*.config.js'],
@@ -15,5 +14,17 @@ module.exports = {
       }
     }
   ],
-  ignorePatterns: ['*.config.js']
+  ignorePatterns: ['*.config.js'],
+  rules: {
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': [
+      'warn', // or "error"
+      {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_'
+      }
+    ]
+  }
 }
