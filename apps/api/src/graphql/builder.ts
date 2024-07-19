@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import SchemaBuilder from '@pothos/core'
 import ErrorsPlugin from '@pothos/plugin-errors'
 import SimpleObjectsPlugin from '@pothos/plugin-simple-objects'

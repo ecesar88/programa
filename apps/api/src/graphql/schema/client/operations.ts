@@ -33,7 +33,7 @@ builder.queryField('getClientById', (t) =>
         validate: {
           schema: z.number().positive('Id must be positive')
         }
-      }),
+      })
     },
     // validate: (value) => value.id,
     resolve: queryOne
