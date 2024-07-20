@@ -1,10 +1,13 @@
 import { Dialog, DialogBody } from '@blueprintjs/core'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Client } from '@prisma/client'
+import { gqlClient } from '@renderer/App'
 import { AlertModal, DataHeader, Loading } from '@renderer/components'
 import { CreateOrEditModal, Read } from '@renderer/components/templates/Clients'
 import { OverlayMode } from '@renderer/constants/enums'
 import { useOnKeyDown } from '@renderer/hooks'
+import { getAllClientsQueryDocument } from '@renderer/queries/graphql/documents/client'
+import { create, edit, get, purge } from '@renderer/queries/rest/client'
 import {
   isLoadingAtom,
   rowDataFocusedAtom,
@@ -12,6 +15,7 @@ import {
   selectedRowAtom
 } from '@renderer/store'
 import { CreateClientResolver } from '@repo/shared/resolvers'
+import { useQuery } from '@tanstack/react-query'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { atomWithMutation, atomWithQuery } from 'jotai-tanstack-query'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
@@ -19,13 +23,16 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { Id, toast } from 'react-toastify'
 import { match } from 'ts-pattern'
 import { ScreenMenuProps } from '../components/molecules/ScreenMenu'
-import { create, edit, purge, get } from '@renderer/queries/rest/client'
-import { objectInputType } from 'zod'
 
 type ClientWithoutId = Omit<Client, 'id'>
 
 export const Clients = (): React.ReactNode => {
   const successToast = (message: string): Id => toast(message, { type: 'success' })
+
+  const { data: clientById } = useQuery({
+    queryKey: ['clients'],
+    queryFn: async () => await gqlClient.request(getAllClientsQueryDocument)
+  })
 
   const rowData = useAtomValue(rowDataFocusedAtom) as Client
   const setRowData = useSetAtom(rowDataFocusedAtom)

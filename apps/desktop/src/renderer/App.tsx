@@ -1,6 +1,5 @@
 // import Versions from './components/Versions'
 // import electronLogo from './assets/electron.svg'
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 import { BlueprintProvider } from '@blueprintjs/core'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
@@ -13,6 +12,7 @@ import { Bounce, ToastContainer } from 'react-toastify'
 import { ErrorBoundary } from './components/templates/not_working_ErrorBoundary'
 import { queryClientConfig } from './config/queryClientConfig'
 import { routes } from './routes'
+import { GraphQLClient } from 'graphql-request'
 
 const queryClient = new QueryClient(queryClientConfig)
 
@@ -21,10 +21,7 @@ const HydrateAtoms = ({ children }): React.ReactNode => {
   return children
 }
 
-const apolloClient = new ApolloClient({
-  uri: 'http://localhost:3001/graphql',
-  cache: new InMemoryCache()
-})
+export const gqlClient = new GraphQLClient('http://localhost:3001/graphql')
 
 function App(): JSX.Element {
   // Electron IPC, not handling this at the moment
@@ -54,9 +51,7 @@ function App(): JSX.Element {
               our useQueryClient() hook will return a different QueryClient object
         */}
               <HydrateAtoms>
-                <ApolloProvider client={apolloClient}>
-                  <RouterProvider router={router} future={{ v7_startTransition: true }} />
-                </ApolloProvider>
+                <RouterProvider router={router} future={{ v7_startTransition: true }} />
               </HydrateAtoms>
             </JotaiProvider>
 

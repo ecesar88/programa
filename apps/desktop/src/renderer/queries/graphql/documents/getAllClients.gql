@@ -1,8 +1,0 @@
-query getAllClients($page: Int!) {
-  getAllClients(page: $page) {
-    __typename
-    id
-    name
-    phone
-  }
-}

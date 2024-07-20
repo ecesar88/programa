@@ -18,12 +18,16 @@ export const queryAll: Resolver<{ page?: number | null }> = async (_parent, args
   })
 
   try {
-    return ctx.prisma.client.findMany({
+    const clients = await ctx.prisma.client.findMany({
       ...prismaPaginate(page),
       orderBy: {
         id: 'desc'
       }
     })
+
+    console.log(clients)
+
+    return clients
   } catch (e) {
     throw new Error('Error fetching all clients')
   }

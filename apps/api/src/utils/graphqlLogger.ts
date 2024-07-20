@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import nodeColorLog from 'node-color-log'
 
 const removeCommentsAndEmptyLines = (queryString: string): string[] => {

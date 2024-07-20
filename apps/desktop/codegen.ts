@@ -3,12 +3,12 @@ import { CodegenConfig } from '@graphql-codegen/cli'
 const config: CodegenConfig = {
   schema: 'http://0.0.0.0:3001/graphql',
   overwrite: true,
-  documents: './apps/desktop/src/renderer/queries/graphql/documents/*.gql',
+  documents: './src/renderer/queries/graphql/documents/*.ts', // erro está aqui
   ignoreNoDocuments: true, // for better experience with the watcher
   generates: {
-    './apps/desktop/src/renderer/queries/graphql/graphql-codegen.ts': {
-      plugins: ['typescript', 'typescript-operations', 'typescript-react-query'],
-      // preset: 'client'
+    './src/renderer/queries/graphql/codegen/': {
+      preset: 'client',
+      plugins: []
     }
   }
 }
