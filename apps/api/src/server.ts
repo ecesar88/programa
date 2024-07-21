@@ -1,9 +1,11 @@
 import { Container, ERROR_MIDDLEWARE, attachControllers } from '@decorators/express'
+import { useEngine } from '@envelop/core'
 import { renderGraphiQL } from '@graphql-yoga/render-graphiql' // Not working?
 import cors from 'cors'
 import dotenv from 'dotenv'
 import Express from 'express'
 import figlet from 'figlet'
+import { execute, parse, specifiedRules, subscribe, validate } from 'graphql'
 import { createYoga, useLogger } from 'graphql-yoga'
 import helmet, { HelmetOptions } from 'helmet'
 import nodeColorLog from 'node-color-log'
@@ -32,9 +34,9 @@ const helmetOptions: HelmetOptions = {
 
 dotenv.config()
 
-const SERVER_PORT = parseEnv<number>('SERVER_PORT', process.env.SERVER_PORT)
-const SERVER_HOSTNAME = parseEnv<string>('SERVER_HOSTNAME', process.env.SERVER_HOSTNAME)
-const APP_NAME = parseEnv<string>('APP_NAME', process.env.APP_NAME)
+const SERVER_PORT = parseEnv<number>('SERVER_PORT')
+const SERVER_HOSTNAME = parseEnv<string>('SERVER_HOSTNAME')
+const APP_NAME = parseEnv<string>('APP_NAME')
 
 const PUBLIC_FOLDER_NAME = 'public'
 const PUBLIC_FOLDER_PATH = path.join(process.cwd(), PUBLIC_FOLDER_NAME)
@@ -47,6 +49,13 @@ const PUBLIC_FOLDER_PATH = path.join(process.cwd(), PUBLIC_FOLDER_NAME)
     schema,
     context,
     plugins: [
+      useEngine({
+        parse,
+        validate,
+        specifiedRules,
+        execute,
+        subscribe
+      }),
       useLogger({
         logFn: gqlLogger
       })

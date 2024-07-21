@@ -51,7 +51,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
             <Input
               placeholder="Endereço"
               fill
-              error={(errors?.['address']?.message?.toString() ?? 'false') as unknown as boolean}
+              error={errors?.['address']?.message?.toString() as unknown as boolean}
               {...register('address')}
             />
             <InputError errorMessage={errors?.['address']?.message?.toString()} />
@@ -61,7 +61,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
             <Input
               placeholder="Observações"
               fill
-              error={(errors?.['observations']?.message?.toString() ?? 'false') as unknown as boolean}
+              error={errors?.['observations']?.message?.toString() as unknown as boolean}
               {...register('observations')}
             />
             <InputError errorMessage={errors?.['phone']?.message?.toString()} />

@@ -21,7 +21,7 @@ const HydrateAtoms = ({ children }): React.ReactNode => {
   return children
 }
 
-export const gqlClient = new GraphQLClient('http://localhost:3001/graphql')
+export const gqlClient = new GraphQLClient(import.meta.env.VITE_API_ENDPOINT)
 
 function App(): JSX.Element {
   // Electron IPC, not handling this at the moment

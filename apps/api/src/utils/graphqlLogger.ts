@@ -72,7 +72,7 @@ export const gqlLogger = (eventName: EventName, args1: any) => {
     }
 
     const params = `{${cleanQuery.slice(openingParenthesis, closingParenthesis)}}`
-    return JSON.parse(fixJson(params))
+    return params.includes('$') ? params : JSON.parse(fixJson(params)) // "$" breaking parsing
   }
 
   const dateString = `[${new Date().toISOString()}]`

@@ -1,4 +1,4 @@
-import { Client } from '@prisma/client'
+import { Client } from '@renderer/queries/graphql/codegen/graphql'
 import { focusAtom } from 'jotai-optics'
 import { getSelectedRowAtom } from './universal'
 

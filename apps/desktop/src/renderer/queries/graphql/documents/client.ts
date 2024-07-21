@@ -1,8 +1,19 @@
 import { graphql } from '../codegen/gql'
 
 export const createClientMutationDocument = graphql(/* GraphQL */ `
-  mutation createClient($name: String!, phone: String) {
+  mutation createClient($name: String!, $phone: String) {
     createClient(name: $name, phone: $phone) {
+      __typename
+      id
+      name
+      phone
+    }
+  }
+`)
+
+export const updateClientMutationDocument = graphql(/* GraphQL */ `
+  mutation updateClientById($id: Int!, $data: UserUpdateInput!) {
+    updateClient(id: $id, data: $data) {
       __typename
       id
       name
@@ -23,7 +34,7 @@ export const deleteClientByIdMutationDocument = graphql(/* GraphQL */ `
 `)
 
 export const getAllClientsQueryDocument = graphql(/* GraphQL */ `
-  query getAllClients($page: Int!) {
+  query getAllClients($page: Int) {
     getAllClients(page: $page) {
       __typename
       id

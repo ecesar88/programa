@@ -62,7 +62,7 @@ export const ScreenMenu = (props: ScreenMenuProps): React.ReactNode => {
         disabled={!selectedItem || isLoading}
         className="max-w-[150px]"
         onClick={() => {
-          clearSelectedRow()
+          // clearSelectedRow()
           props?.actions?.onDeleteClick?.()
         }}
       >

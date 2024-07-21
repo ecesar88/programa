@@ -53,7 +53,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
             <Input
               placeholder="Nome"
               fill
-              error={Boolean(errors?.['name']?.message?.toString())}
+              error={errors?.['name']?.message?.toString() as unknown as boolean}
               {...register('name')}
             />
             <InputError errorMessage={errors?.['name']?.message?.toString()} />
@@ -63,7 +63,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
             <Input
               placeholder="Telefone"
               fill
-              error={Boolean(errors?.['name']?.message?.toString())}
+              error={errors?.['name']?.message?.toString() as unknown as boolean}
               {...register('phone')}
               // TODO: Add input mask
             />

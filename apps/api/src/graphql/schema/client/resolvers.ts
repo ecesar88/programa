@@ -25,8 +25,6 @@ export const queryAll: Resolver<{ page?: number | null }> = async (_parent, args
       }
     })
 
-    console.log(clients)
-
     return clients
   } catch (e) {
     throw new Error('Error fetching all clients')
@@ -105,20 +103,19 @@ export const update: Resolver<{ id: number; data: Partial<Prisma.ClientUpdateInp
   }
 
   try {
-    return await ctx.prisma.client.update({
-      where: {
-        id
-      },
-      data
-    })
-  } catch (e) {
-    return {}
     logger({
       level: LOG_TYPE.INFO,
       message: `Updating new client with id '${id}' with data: `,
       object: JSON.stringify(args.data, null, 2)
     })
 
+    return await ctx.prisma.client.update({
+      where: {
+        id: client.id
+      },
+      data
+    })
+  } catch (e) {
     throw new Error(`Error updating client with id ${id}`)
   }
 }

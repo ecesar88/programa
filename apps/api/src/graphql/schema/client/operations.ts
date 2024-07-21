@@ -7,7 +7,7 @@ import { ClientType, UserUpdateInput } from './types'
 
 builder.queryField('getAllClients', (t) =>
   t.field({
-    type: ClientType,
+    type: [ClientType],
     args: {
       page: t.arg.int({
         validate: {

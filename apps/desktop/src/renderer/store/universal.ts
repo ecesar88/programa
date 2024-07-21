@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { atom, createStore } from 'jotai'
 
 export const store = createStore()
@@ -11,8 +12,11 @@ export interface RowMetadata<T = Record<never, never>> {
   data: T
 }
 
-export const rowMetadata = atom<RowMetadata<{}>['meta']>({ index: null })
-export const rowData = atom<RowMetadata<any | {}>['data']>({})
+// TODO: Fix the state machine of this component. It should be simpler
+// FIX: Fix the state machine of this component. It should be simpler
+
+export const rowMetadata = atom<RowMetadata<object>['meta']>({ index: null })
+export const rowData = atom<RowMetadata<any | object>['data']>({})
 
 export const getSelectedRowAtom = <T>() => {
   const selectedRowAtom = atom<RowMetadata<T>, [RowMetadata<T>], void>(
@@ -36,7 +40,6 @@ rowData.debugLabel = 'rowDataAtom'
 
 /*
  *  isLoading atom:
- *  Primarily used to disable the ScreenMenu component buttons' when the screen is on
- *  a loading state.
+ *  Primarily used to disable the ScreenMenu component buttons' when the screen is on a loading state.
  */
 export const isLoadingAtom = atom(false)

@@ -1,13 +1,11 @@
 import { Dialog, DialogBody } from '@blueprintjs/core'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Client } from '@prisma/client'
-import { gqlClient } from '@renderer/App'
 import { AlertModal, DataHeader, Loading } from '@renderer/components'
 import { CreateOrEditModal, Read } from '@renderer/components/templates/Clients'
 import { OverlayMode } from '@renderer/constants/enums'
 import { useOnKeyDown } from '@renderer/hooks'
-import { getAllClientsQueryDocument } from '@renderer/queries/graphql/documents/client'
-import { create, edit, get, purge } from '@renderer/queries/rest/client'
+import { Client, CreateClientMutationVariables } from '@renderer/queries/graphql/codegen/graphql'
+import { create, edit, get, purge } from '@renderer/queries/operations/client'
 import {
   isLoadingAtom,
   rowDataFocusedAtom,
@@ -15,7 +13,6 @@ import {
   selectedRowAtom
 } from '@renderer/store'
 import { CreateClientResolver } from '@repo/shared/resolvers'
-import { useQuery } from '@tanstack/react-query'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { atomWithMutation, atomWithQuery } from 'jotai-tanstack-query'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
@@ -24,15 +21,8 @@ import { Id, toast } from 'react-toastify'
 import { match } from 'ts-pattern'
 import { ScreenMenuProps } from '../components/molecules/ScreenMenu'
 
-type ClientWithoutId = Omit<Client, 'id'>
-
 export const Clients = (): React.ReactNode => {
   const successToast = (message: string): Id => toast(message, { type: 'success' })
-
-  const { data: clientById } = useQuery({
-    queryKey: ['clients'],
-    queryFn: async () => await gqlClient.request(getAllClientsQueryDocument)
-  })
 
   const rowData = useAtomValue(rowDataFocusedAtom) as Client
   const setRowData = useSetAtom(rowDataFocusedAtom)
@@ -152,14 +142,14 @@ export const Clients = (): React.ReactNode => {
   const [{ mutate: deleteClientMutation }] = useAtom(mutations.deleteClientAtom)
   const [{ mutate: editClientMutation }] = useAtom(mutations.editClientAtom)
 
-  const form = useForm<ClientWithoutId>({
+  const form = useForm<Client>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver<any>(CreateClientResolver),
     defaultValues: {}
   })
 
   const handleDeleteActionButton = (): void => {
-    deleteClientMutation(rowData?.id)
+    deleteClientMutation(rowData?.id as number)
 
     clearSelectedRow()
     closeAlertModal()
@@ -173,16 +163,16 @@ export const Clients = (): React.ReactNode => {
       openModalOverlay(OverlayMode.EDIT)
     },
     onSaveClick: () => {
-      const onCreate: SubmitHandler<ClientWithoutId> = (data) => {
-        createClientMutation(data)
+      const onCreate: SubmitHandler<Client> = (data) => {
+        createClientMutation(data as CreateClientMutationVariables)
       }
 
-      const onEdit: SubmitHandler<ClientWithoutId> = (data) => {
+      const onEdit: SubmitHandler<Client> = (data) => {
         const { id } = rowData
 
         editClientMutation({
-          clientId: id,
-          clientData: data
+          id: id!,
+          data: data['data']
         })
       }
 
@@ -212,7 +202,7 @@ export const Clients = (): React.ReactNode => {
           .otherwise(() => (
             <div className="flex flex-col gap-5 overflow-y-auto">
               <Read
-                clients={data?.data?.data as Client[]}
+                clients={data?.getAllClients as Client[]}
                 onRowClick={(data, index) => {
                   setRowData(data)
                   setRowMetaData(index)
