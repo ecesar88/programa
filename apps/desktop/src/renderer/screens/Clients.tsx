@@ -4,7 +4,7 @@ import { AlertModal, DataHeader, Loading } from '@renderer/components'
 import { CreateOrEditModal, Read } from '@renderer/components/templates/Clients'
 import { OverlayMode } from '@renderer/constants/enums'
 import { useOnKeyDown } from '@renderer/hooks'
-import { Client, CreateClientMutationVariables } from '@renderer/queries/graphql/codegen/graphql'
+import { Client, CreateClientMutationVariables, UserUpdateInput } from '@renderer/queries/graphql/codegen/graphql'
 import { create, edit, get, purge } from '@renderer/queries/operations/client'
 import {
   isLoadingAtom,
@@ -170,9 +170,11 @@ export const Clients = (): React.ReactNode => {
       const onEdit: SubmitHandler<Client> = (data) => {
         const { id } = rowData
 
+        console.log(data)
+
         editClientMutation({
           id: id!,
-          data: data['data']
+          data: data as UserUpdateInput
         })
       }
 

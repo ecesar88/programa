@@ -3,7 +3,7 @@ import {
   CreateClientMutationVariables,
   GetAllClientsQuery,
   UpdateClientByIdDocument,
-  UpdateClientByIdMutationVariables
+  UserUpdateInput
 } from '../graphql/codegen/graphql'
 import {
   createClientMutationDocument,
@@ -41,16 +41,14 @@ export const create = async (clientData: CreateClientMutationVariables) => {
   }
 }
 
-export const edit = async ({
-  id,
-  data
-}: {
-  id: number
-  data: UpdateClientByIdMutationVariables['data']
-}) => {
+export const edit = async ({ id, data }: { id: number; data: UserUpdateInput }) => {
   try {
     // return server.put<Response<Client>>(Endpoints.clients.single(clientId), clientData)
-    return gqlClient.request(UpdateClientByIdDocument, { id, data })
+
+    console.log('RESPONSEEEEEEEEEEEE ', id, data)
+    const response = await gqlClient.request(UpdateClientByIdDocument, { id, data })
+
+    return response
   } catch (error) {
     console.error(error)
     return

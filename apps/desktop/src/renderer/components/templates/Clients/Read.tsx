@@ -1,5 +1,5 @@
-import { Client } from '@prisma/client'
 import { Table } from '@renderer/components/organisms'
+import { Client } from '@renderer/queries/graphql/codegen/graphql'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { useMemo } from 'react'
 
@@ -40,7 +40,7 @@ export const Read = ({
   )
 
   return (
-    <div className='h-full'>
+    <div className="h-full">
       <Table data={clients} columns={columns as ColumnDef<Client>[]} onRowClick={onRowClick} />
     </div>
   )
