@@ -68,14 +68,6 @@ export const Clients = (): React.ReactNode => {
     return false
   }, [overlayMode])
 
-  // const { isLoading, data, refetch } = useQuery({
-  //   queryKey: ['getAllClients'],
-  //   queryFn: get,
-  //   meta: {
-  //     errorMessage: 'Erro ao obter os clientes'
-  //   }
-  // })
-
   const queries = useMemo(() => {
     const clientsAtom = atomWithQuery(() => ({
       queryKey: ['getAllClients'],
@@ -85,7 +77,7 @@ export const Clients = (): React.ReactNode => {
       }
     }))
 
-    clientsAtom.debugLabel = 'getClients'
+    clientsAtom.debugLabel = 'getAllClientsAtom'
     return { clientsAtom }
   }, [])
 
@@ -93,46 +85,46 @@ export const Clients = (): React.ReactNode => {
     const createClientAtom = atomWithMutation(() => ({
       mutationKey: ['createClient'],
       mutationFn: create,
-      onSuccess: (): void => {
-        refetch()
-
+      onSuccess: async () => {
         successToast('Cliente criado com sucesso!')
         closeModalOverlay()
         clearSelectedRow()
         form.reset()
+
+        await refetch()
       },
       meta: {
         errorMessage: 'Erro ao criar o cliente'
       }
     }))
 
-    const deleteClientAtom = atomWithMutation(() => ({
-      mutationKey: ['deleteClient'],
-      mutationFn: purge,
-      onSuccess: (): void => {
-        refetch()
-
-        successToast('Cliente deletado com sucesso!')
-        clearSelectedRow()
-      },
-      meta: {
-        errorMessage: 'Erro ao deletar o cliente'
-      }
-    }))
-
     const editClientAtom = atomWithMutation(() => ({
       mutationKey: ['editClient'],
       mutationFn: edit,
-      onSuccess: (): void => {
-        refetch()
-
+      onSuccess: async () => {
         successToast('Cliente editado com sucesso!')
         clearSelectedRow()
         closeModalOverlay()
         form.reset()
+
+        await refetch()
       },
       meta: {
         errorMessage: 'Erro ao editar o cliente'
+      }
+    }))
+
+    const deleteClientAtom = atomWithMutation(() => ({
+      mutationKey: ['deleteClient'],
+      mutationFn: purge,
+      onSuccess: async () => {
+        successToast('Cliente deletado com sucesso!')
+        clearSelectedRow()
+
+        await refetch()
+      },
+      meta: {
+        errorMessage: 'Erro ao deletar o cliente'
       }
     }))
 
@@ -179,11 +171,11 @@ export const Clients = (): React.ReactNode => {
       openModalOverlay(OverlayMode.EDIT)
     },
     onSaveClick: () => {
-      const onCreate: SubmitHandler<Client> = (data) => {
+      const onCreate: SubmitHandler<Client> = (data): void => {
         createClientMutation(data as CreateClientMutationVariables)
       }
 
-      const onEdit: SubmitHandler<Client> = (data) => {
+      const onEdit: SubmitHandler<Client> = (data): void => {
         const { id } = rowData
 
         editClientMutation({
@@ -192,11 +184,11 @@ export const Clients = (): React.ReactNode => {
         })
       }
 
-      const submit = async (data: Client) => {
+      const submit = (data: Client) => {
         if (overlayMode === OverlayMode.NEW) {
-          await onCreate(data)
+          onCreate(data)
         } else {
-          await onEdit(data)
+          onEdit(data)
         }
       }
 
