@@ -61,8 +61,6 @@ export const create: Resolver<{
 }> = async (_parent, args, ctx, _info) => {
   const data = args as Partial<Prisma.MenuEntryCreateInput>
 
-  console.log(data)
-
   logger({
     level: LOG_TYPE.INFO,
     message: 'Creating new menu entry with data:',

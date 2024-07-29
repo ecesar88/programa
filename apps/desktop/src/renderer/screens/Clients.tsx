@@ -203,8 +203,6 @@ export const Clients = (): React.ReactNode => {
     }
   }
 
-  console.log('DATA >> ', data)
-
   return (
     <FormProvider {...form}>
       <div className="flex flex-col h-full gap-2">
