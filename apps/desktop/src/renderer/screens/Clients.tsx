@@ -4,7 +4,11 @@ import { AlertModal, DataHeader, Loading } from '@renderer/components'
 import { CreateOrEditModal, Read } from '@renderer/components/templates/Clients'
 import { OverlayMode } from '@renderer/constants/enums'
 import { useOnKeyDown } from '@renderer/hooks'
-import { Client, CreateClientMutationVariables, UserUpdateInput } from '@renderer/queries/graphql/codegen/graphql'
+import {
+  Client,
+  CreateClientMutationVariables,
+  UserUpdateInput
+} from '@renderer/queries/graphql/codegen/graphql'
 import { create, edit, get, purge } from '@renderer/queries/operations/client'
 import {
   isLoadingAtom,
@@ -64,9 +68,17 @@ export const Clients = (): React.ReactNode => {
     return false
   }, [overlayMode])
 
+  // const { isLoading, data, refetch } = useQuery({
+  //   queryKey: ['getAllClients'],
+  //   queryFn: get,
+  //   meta: {
+  //     errorMessage: 'Erro ao obter os clientes'
+  //   }
+  // })
+
   const queries = useMemo(() => {
     const clientsAtom = atomWithQuery(() => ({
-      queryKey: ['clients'],
+      queryKey: ['getAllClients'],
       queryFn: get,
       meta: {
         errorMessage: 'Erro ao obter os clientes'
@@ -76,13 +88,6 @@ export const Clients = (): React.ReactNode => {
     clientsAtom.debugLabel = 'getClients'
     return { clientsAtom }
   }, [])
-
-  const [{ isLoading, data, refetch }] = useAtom(queries.clientsAtom)
-
-  // Disable the buttons on ScreenMenu while loading the get request
-  useEffect(() => {
-    setIsLoadingAtom(isLoading)
-  }, [isLoading])
 
   const mutations = useMemo(() => {
     const createClientAtom = atomWithMutation(() => ({
@@ -138,9 +143,20 @@ export const Clients = (): React.ReactNode => {
     return { createClientAtom, deleteClientAtom, editClientAtom }
   }, [])
 
-  const [{ mutate: createClientMutation }] = useAtom(mutations.createClientAtom)
+  const [{ isLoading: isLoadingClients, data, refetch }] = useAtom(queries.clientsAtom)
   const [{ mutate: deleteClientMutation }] = useAtom(mutations.deleteClientAtom)
-  const [{ mutate: editClientMutation }] = useAtom(mutations.editClientAtom)
+
+  const [{ mutate: createClientMutation, isPending: isLoadingCreateClient }] = useAtom(
+    mutations.createClientAtom
+  )
+  const [{ mutate: editClientMutation, isPending: isLoadingUpdateClient }] = useAtom(
+    mutations.editClientAtom
+  )
+
+  // Disable the buttons on ScreenMenu while loading the get request
+  useEffect(() => {
+    setIsLoadingAtom(isLoadingClients)
+  }, [isLoadingClients])
 
   const form = useForm<Client>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -170,15 +186,21 @@ export const Clients = (): React.ReactNode => {
       const onEdit: SubmitHandler<Client> = (data) => {
         const { id } = rowData
 
-        console.log(data)
-
         editClientMutation({
           id: id!,
           data: data as UserUpdateInput
         })
       }
 
-      form.handleSubmit(overlayMode === OverlayMode.NEW ? onCreate : onEdit)()
+      const submit = async (data: Client) => {
+        if (overlayMode === OverlayMode.NEW) {
+          await onCreate(data)
+        } else {
+          await onEdit(data)
+        }
+      }
+
+      form.handleSubmit(submit)()
     },
     onDeleteClick: () => {
       openAlertModal()
@@ -188,6 +210,8 @@ export const Clients = (): React.ReactNode => {
       closeModalOverlay()
     }
   }
+
+  console.log('DATA >> ', data)
 
   return (
     <FormProvider {...form}>
@@ -199,7 +223,7 @@ export const Clients = (): React.ReactNode => {
           }}
         />
 
-        {match(isLoading)
+        {match(isLoadingClients)
           .with(true, () => <Loading />)
           .otherwise(() => (
             <div className="flex flex-col gap-5 overflow-y-auto">
@@ -224,6 +248,7 @@ export const Clients = (): React.ReactNode => {
       >
         <DialogBody className="p-0">
           <CreateOrEditModal
+            isLoading={isLoadingCreateClient || isLoadingUpdateClient}
             onSave={actions?.onSaveClick}
             onCancel={actions?.onCancelClick}
             overlayMode={overlayMode}

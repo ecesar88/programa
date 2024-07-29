@@ -15,7 +15,6 @@ model Client {
   name   String
   phone  String?
   orders Order[]
-  Food   Food[]
 }
 
 model Order {
@@ -36,9 +35,19 @@ model OrderObservation {
   orderId  Int?
 }
 
-model Food {
-  id       Int      @id @default(autoincrement())
-  dateTime DateTime @default(now())
-  Client   Client?  @relation(fields: [clientId], references: [id])
-  clientId Int?
+model Menu {
+  id    Int         @id @default(autoincrement())
+  items MenuEntry[]
+  // categories
+}
+
+model MenuEntry {
+  id          Int     @id @default(autoincrement())
+  name        String
+  price       Float
+  description String?
+  // category String
+  // images String?
+  Menu        Menu?   @relation(fields: [menuId], references: [id])
+  menuId      Int?
 }

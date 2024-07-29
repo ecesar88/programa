@@ -23,21 +23,38 @@ type LengthError implements Error {
   minLength: Int
 }
 
+"""A entry in the menu."""
+type MenuEntry {
+  description: String
+  id: Int
+  name: String
+  price: Float
+}
+
 type Mutation {
   createClient(name: String!, phone: String): Client
+  createMenuEntry(description: String, name: String!, price: Float!): MenuEntry
   deleteClient(id: Int!): Client
   updateClient(data: UserUpdateInput!, id: Int!): Client
 }
 
 type Query {
   getAllClients(page: Int = 1): [Client!]
+  getAllMenuEntries(page: Int = 1): [MenuEntry!]
   getClientById(id: Int!): QueryGetClientByIdResult
+  getMenuEntryById(id: Int!): QueryGetMenuEntryByIdResult
 }
 
 union QueryGetClientByIdResult = BaseError | QueryGetClientByIdSuccess | RecordNotFoundError
 
 type QueryGetClientByIdSuccess {
   data: Client!
+}
+
+union QueryGetMenuEntryByIdResult = BaseError | QueryGetMenuEntryByIdSuccess | RecordNotFoundError
+
+type QueryGetMenuEntryByIdSuccess {
+  data: MenuEntry!
 }
 
 type RecordNotFoundError implements Error {

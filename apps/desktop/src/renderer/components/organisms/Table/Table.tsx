@@ -165,7 +165,7 @@ export const Table = <T extends object>(props: TableProps<T>): React.ReactNode =
         </tfoot>
       </table>
 
-      <Pagination />
+      <Pagination selectedPage={1} totalPages={10} />
     </div>
   )
 }

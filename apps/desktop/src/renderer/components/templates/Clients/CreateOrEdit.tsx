@@ -7,6 +7,7 @@ import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 
 type CreateOrEditProps = {
+  isLoading: boolean
   onSave?: () => void
   onCancel?: () => void
   overlayMode: OverlayMode | null
@@ -90,6 +91,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
           intent="warning"
           form="create-form"
           type="submit"
+          loading={props.isLoading}
           onClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
             e.preventDefault()
 
