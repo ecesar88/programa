@@ -28,15 +28,15 @@ import { ScreenMenuProps } from '../components/molecules/ScreenMenu'
 export const Clients = (): React.ReactNode => {
   const successToast = (message: string): Id => toast(message, { type: 'success' })
 
-  const rowData = useAtomValue(rowDataFocusedAtom) as Client
-  const setRowData = useSetAtom(rowDataFocusedAtom)
+  const rowDataAtom = useAtomValue(rowDataFocusedAtom) as Client
+  const setRowDataAtom = useSetAtom(rowDataFocusedAtom)
 
-  const setRowMetaData = useSetAtom(rowMetaDataFocusedAtom)
+  const setRowMetaDataAtom = useSetAtom(rowMetaDataFocusedAtom)
 
-  const setSelectedRow = useSetAtom(selectedRowAtom)
+  const setSelectedRowAtom = useSetAtom(selectedRowAtom)
   const setIsLoadingAtom = useSetAtom(isLoadingAtom)
 
-  const clearSelectedRow = () => setSelectedRow({ data: {}, meta: { index: null } })
+  const clearSelectedRowAtom = () => setSelectedRowAtom({ data: {}, meta: { index: null } })
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [isOverlayOpen, setIsOverlayOpen] = useState(false)
@@ -50,7 +50,7 @@ export const Clients = (): React.ReactNode => {
   const closeAlertModal = (): void => setIsDeleteModalOpen(false)
 
   useOnKeyDown('Escape', () => {
-    clearSelectedRow()
+    clearSelectedRowAtom()
   })
 
   const openModalOverlay = useCallback(
@@ -88,7 +88,7 @@ export const Clients = (): React.ReactNode => {
       onSuccess: async () => {
         successToast('Cliente criado com sucesso!')
         closeModalOverlay()
-        clearSelectedRow()
+        clearSelectedRowAtom()
         form.reset()
 
         await refetch()
@@ -103,7 +103,7 @@ export const Clients = (): React.ReactNode => {
       mutationFn: edit,
       onSuccess: async () => {
         successToast('Cliente editado com sucesso!')
-        clearSelectedRow()
+        clearSelectedRowAtom()
         closeModalOverlay()
         form.reset()
 
@@ -119,7 +119,7 @@ export const Clients = (): React.ReactNode => {
       mutationFn: purge,
       onSuccess: async () => {
         successToast('Cliente deletado com sucesso!')
-        clearSelectedRow()
+        clearSelectedRowAtom()
 
         await refetch()
       },
@@ -157,9 +157,9 @@ export const Clients = (): React.ReactNode => {
   })
 
   const handleDeleteActionButton = (): void => {
-    deleteClientMutation(rowData?.id as number)
+    deleteClientMutation(rowDataAtom?.id as number)
 
-    clearSelectedRow()
+    clearSelectedRowAtom()
     closeAlertModal()
   }
 
@@ -176,7 +176,7 @@ export const Clients = (): React.ReactNode => {
       }
 
       const onEdit: SubmitHandler<Client> = (data): void => {
-        const { id } = rowData
+        const { id } = rowDataAtom
 
         editClientMutation({
           id: id!,
@@ -218,10 +218,10 @@ export const Clients = (): React.ReactNode => {
           .otherwise(() => (
             <div className="flex flex-col gap-5 overflow-y-auto">
               <Read
-                clients={data?.getAllClients as Client[]}
+                clients={(data?.getAllClients as Client[]) ?? []}
                 onRowClick={(data, index) => {
-                  setRowData(data)
-                  setRowMetaData(index)
+                  setRowDataAtom(data)
+                  setRowMetaDataAtom(index)
                 }}
               />
             </div>
@@ -262,7 +262,7 @@ export const Clients = (): React.ReactNode => {
         }}
       >
         <p>
-          Deletar o cliente <b>{rowData?.name}</b> ?
+          Deletar o cliente <b>{rowDataAtom?.name}</b> ?
         </p>
       </AlertModal>
     </FormProvider>

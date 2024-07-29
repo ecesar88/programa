@@ -21,7 +21,7 @@ export const get = async () => {
 
 export const create = async (clientData: CreateClientMutationVariables) => {
   try {
-    return gqlClient.request(createClientMutationDocument, clientData)
+    return await gqlClient.request(createClientMutationDocument, clientData)
   } catch (error) {
     console.error(error)
     return

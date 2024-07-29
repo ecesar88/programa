@@ -13,6 +13,8 @@ export const queryClientConfig: QueryClientConfig = {
       }
     },
     queries: {
+      refetchOnWindowFocus: false,
+      refetchOnMount: true,
       meta: {
         errorMessage: undefined
       }
