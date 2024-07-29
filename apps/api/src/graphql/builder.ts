@@ -7,7 +7,7 @@ import ZodPlugin from '@pothos/plugin-zod'
 import { DateTimeResolver } from 'graphql-scalars'
 import { LOG_TYPE, logger } from '../utils/logger'
 import { Context } from './context'
-import { RecordNotFoundError } from './schema/errors/errors'
+import { RecordNotFoundError } from './schema/_errors/errors'
 import { fromError } from 'zod-validation-error'
 
 type SchemaType = {

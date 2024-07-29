@@ -1,7 +1,7 @@
 import { Regex } from '@repo/shared/constants'
 import * as z from 'zod'
 import { builder } from '../../builder'
-import { RecordNotFoundError } from '../errors/errors'
+import { RecordNotFoundError } from '../_errors/errors'
 import { create, queryAll, queryOne, remove, update } from './resolvers'
 import { ClientType, UserUpdateInput } from './types'
 
@@ -35,7 +35,6 @@ builder.queryField('getClientById', (t) =>
         }
       })
     },
-    // validate: (value) => value.id,
     resolve: queryOne
   })
 )
@@ -82,6 +81,9 @@ builder.mutationField('updateClient', (t) =>
 builder.mutationField('deleteClient', (t) =>
   t.field({
     type: ClientType,
+    errors: {
+      types: [RecordNotFoundError]
+    },
     args: {
       id: t.arg.int({
         required: true,

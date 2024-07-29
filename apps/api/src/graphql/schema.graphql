@@ -34,8 +34,14 @@ type MenuEntry {
 type Mutation {
   createClient(name: String!, phone: String): Client
   createMenuEntry(description: String, name: String!, price: Float!): MenuEntry
-  deleteClient(id: Int!): Client
+  deleteClient(id: Int!): MutationDeleteClientResult
   updateClient(data: UserUpdateInput!, id: Int!): Client
+}
+
+union MutationDeleteClientResult = BaseError | MutationDeleteClientSuccess | RecordNotFoundError
+
+type MutationDeleteClientSuccess {
+  data: Client!
 }
 
 type Query {

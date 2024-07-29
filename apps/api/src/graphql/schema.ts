@@ -10,8 +10,8 @@ import './schema/client/types'
 import './schema/menu/operations'
 import './schema/menu/types'
 
-import './schema/errors/errors'
-import './schema/errors/objects'
+import './schema/_errors/errors'
+import './schema/_errors/objects'
 
 builder.queryType({})
 builder.mutationType({})

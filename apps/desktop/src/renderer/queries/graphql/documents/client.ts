@@ -48,11 +48,13 @@ export const getClientByIdQueryDocument = graphql(/* GraphQL */ `
   query getClientById($id: Int!) {
     getClientById(id: $id) {
       __typename
-      ... on Error {
+      ... on RecordNotFoundError {
+        __typename
         message
       }
 
       ... on QueryGetClientByIdSuccess {
+        __typename
         data {
           id
           name

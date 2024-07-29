@@ -1,15 +1,21 @@
-// import { Prisma } from '@prisma/client'
-import { Prisma } from '@prisma/client'
-import { GraphQLResolveInfo } from 'graphql'
+import { Menu, Prisma } from '@prisma/client'
 import { LOG_TYPE, logger } from '../../../utils/logger'
 import { prismaPaginate } from '../../../utils/prismaPaginate'
-import { Context } from '../../context'
-import { RecordNotFoundError } from '../errors/errors'
+import { RecordNotFoundError } from '../_errors/errors'
+import { FindById, PaginationParam, Resolver } from '../sharedTypes'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Resolver<T> = (parent: object, args: T, ctx: Context, info: GraphQLResolveInfo) => any
+type CreateMenuQueryInput = {
+  name: string
+  price: number
+  description?: string | null
+}
 
-export const queryAll: Resolver<{ page?: number | null }> = async (_parent, args, ctx, _info) => {
+type UpdateMenuQueryInput = {
+  id: number
+  data: Partial<Prisma.ClientUpdateInput>
+}
+
+export const queryAll: Resolver<PaginationParam> = async (_parent, args, ctx, _info) => {
   const { page } = args
 
   logger({
@@ -29,7 +35,7 @@ export const queryAll: Resolver<{ page?: number | null }> = async (_parent, args
   }
 }
 
-export const queryOne: Resolver<{ id: number }> = async (_parent, args, ctx, _info) => {
+export const queryOne: Resolver<FindById> = async (_parent, args, ctx, _info) => {
   const { id } = args
 
   logger({
@@ -37,28 +43,26 @@ export const queryOne: Resolver<{ id: number }> = async (_parent, args, ctx, _in
     message: `Fetching menu entry with id '${id}'`
   })
 
+  let client: Menu | null
+
   try {
-    const menuEntry = await ctx.prisma.menuEntry.findFirst({
+    client = await ctx.prisma.menu.findFirst({
       where: {
         id
       }
     })
-
-    if (!menuEntry) {
-      throw new RecordNotFoundError(`Menu entry with id ${id}`)
-    }
-
-    return menuEntry
-  } catch (e) {
-    throw new Error(String(e))
+  } catch (error) {
+    throw new Error('Prisma error')
   }
+
+  if (!client) {
+    throw new RecordNotFoundError(`Menu entry with id ${id}`)
+  }
+
+  return client
 }
 
-export const create: Resolver<{
-  name: string
-  price: number
-  description?: string | null
-}> = async (_parent, args, ctx, _info) => {
+export const create: Resolver<CreateMenuQueryInput> = async (_parent, args, ctx, _info) => {
   const data = args as Partial<Prisma.MenuEntryCreateInput>
 
   logger({
@@ -93,12 +97,7 @@ export const create: Resolver<{
   }
 }
 
-export const update: Resolver<{ id: number; data: Partial<Prisma.ClientUpdateInput> }> = async (
-  _parent,
-  args,
-  ctx,
-  _info
-) => {
+export const update: Resolver<UpdateMenuQueryInput> = async (_parent, args, ctx, _info) => {
   const { id, data } = args
 
   logger({
@@ -131,7 +130,7 @@ export const update: Resolver<{ id: number; data: Partial<Prisma.ClientUpdateInp
   }
 }
 
-export const remove: Resolver<{ id: number }> = async (_parent, args, ctx, _info) => {
+export const remove: Resolver<FindById> = async (_parent, args, ctx, _info) => {
   const { id } = args
 
   logger({
@@ -139,19 +138,19 @@ export const remove: Resolver<{ id: number }> = async (_parent, args, ctx, _info
     message: `Deleting client with id: ${id}`
   })
 
+  const clientToRemove = await ctx.prisma.client.findFirst({ where: { id } })
+
+  if (!clientToRemove) {
+    throw new RecordNotFoundError(`Client with id ${id}`)
+  }
+
   try {
-    const clientToRemove = await ctx.prisma.client.findFirst({ where: { id } })
-
-    if (!clientToRemove) {
-      throw new RecordNotFoundError('Client')
-    }
-
     return await ctx.prisma.client.delete({
       where: {
         id: clientToRemove.id
       }
     })
-  } catch (e) {
-    throw new Error(`Error deleting client with ID ${id}`)
+  } catch (error) {
+    throw new Error('Prisma error')
   }
 }

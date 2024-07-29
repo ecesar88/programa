@@ -1,6 +1,6 @@
 import * as z from 'zod'
 import { builder } from '../../builder'
-import { RecordNotFoundError } from '../errors/errors'
+import { RecordNotFoundError } from '../_errors/errors'
 import { create, queryAll, queryOne, remove, update } from './resolvers'
 import { MenuEntryType } from './types'
 

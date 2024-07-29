@@ -1,15 +1,13 @@
-// import { Prisma } from '@prisma/client'
-import { Prisma } from '@prisma/client'
-import { GraphQLResolveInfo } from 'graphql'
+import { Client, Prisma } from '@prisma/client'
 import { LOG_TYPE, logger } from '../../../utils/logger'
 import { prismaPaginate } from '../../../utils/prismaPaginate'
-import { Context } from '../../context'
-import { RecordNotFoundError } from '../errors/errors'
+import { RecordNotFoundError } from '../_errors/errors'
+import { FindById, PaginationParam, Resolver } from '../sharedTypes'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Resolver<T> = (parent: object, args: T, ctx: Context, info: GraphQLResolveInfo) => any
+type CreateClientQueryInput = { name: string; phone?: string | null }
+type UpdateClientQueryInput = { id: number; data: Partial<Prisma.ClientUpdateInput> }
 
-export const queryAll: Resolver<{ page?: number | null }> = async (_parent, args, ctx, _info) => {
+export const queryAll: Resolver<PaginationParam> = async (_parent, args, ctx, _info) => {
   const { page } = args
 
   logger({
@@ -31,7 +29,7 @@ export const queryAll: Resolver<{ page?: number | null }> = async (_parent, args
   }
 }
 
-export const queryOne: Resolver<{ id: number }> = async (_parent, args, ctx, _info) => {
+export const queryOne: Resolver<FindById> = async (_parent, args, ctx, _info) => {
   const { id } = args
 
   logger({
@@ -39,29 +37,26 @@ export const queryOne: Resolver<{ id: number }> = async (_parent, args, ctx, _in
     message: `Fetching client with id '${id}'`
   })
 
+  let client: Client | null
+
   try {
-    const client = await ctx.prisma.client.findFirst({
+    client = await ctx.prisma.client.findFirst({
       where: {
         id
       }
     })
-
-    if (!client) {
-      throw new RecordNotFoundError(`Client with id ${id}`)
-    }
-
-    return client
-  } catch (e) {
-    throw new Error(String(e))
+  } catch (error) {
+    throw new Error('Prisma error')
   }
+
+  if (!client) {
+    throw new RecordNotFoundError(`Client with id ${id}`)
+  }
+
+  return client
 }
 
-export const create: Resolver<{ name: string; phone?: string | null }> = async (
-  _parent,
-  args,
-  ctx,
-  _info
-) => {
+export const create: Resolver<CreateClientQueryInput> = async (_parent, args, ctx, _info) => {
   const { name, phone, orders } = args as Partial<Prisma.ClientCreateInput>
 
   logger({
@@ -82,12 +77,7 @@ export const create: Resolver<{ name: string; phone?: string | null }> = async (
   }
 }
 
-export const update: Resolver<{ id: number; data: Partial<Prisma.ClientUpdateInput> }> = async (
-  _parent,
-  args,
-  ctx,
-  _info
-) => {
+export const update: Resolver<UpdateClientQueryInput> = async (_parent, args, ctx, _info) => {
   const { id, data } = args
 
   logger({
@@ -120,7 +110,7 @@ export const update: Resolver<{ id: number; data: Partial<Prisma.ClientUpdateInp
   }
 }
 
-export const remove: Resolver<{ id: number }> = async (_parent, args, ctx, _info) => {
+export const remove: Resolver<FindById> = async (_parent, args, ctx, _info) => {
   const { id } = args
 
   logger({
@@ -128,19 +118,19 @@ export const remove: Resolver<{ id: number }> = async (_parent, args, ctx, _info
     message: `Deleting client with id: ${id}`
   })
 
+  const clientToRemove = await ctx.prisma.client.findFirst({ where: { id } })
+
+  if (!clientToRemove) {
+    throw new RecordNotFoundError(`Client with id ${id}`)
+  }
+
   try {
-    const clientToRemove = await ctx.prisma.client.findFirst({ where: { id } })
-
-    if (!clientToRemove) {
-      throw new RecordNotFoundError('Client')
-    }
-
     return await ctx.prisma.client.delete({
       where: {
         id: clientToRemove.id
       }
     })
-  } catch (e) {
-    throw new Error(`Error deleting client with ID ${id}`)
+  } catch (error) {
+    throw new Error('Prisma error')
   }
 }
