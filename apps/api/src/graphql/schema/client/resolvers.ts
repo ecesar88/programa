@@ -2,7 +2,7 @@ import { Client, Prisma } from '@prisma/client'
 import { LOG_TYPE, logger } from '../../../utils/logger'
 import { prismaPaginate } from '../../../utils/prismaPaginate'
 import { RecordNotFoundError } from '../_errors/errors'
-import { FindById, PaginationParam, Resolver } from '../sharedTypes'
+import { FindById, FindByQuery, PaginationParam, Resolver } from '../sharedTypes'
 
 type CreateClientQueryInput = { name: string; phone?: string | null }
 type UpdateClientQueryInput = { id: number; data: Partial<Prisma.ClientUpdateInput> }
@@ -56,8 +56,42 @@ export const queryOne: Resolver<FindById> = async (_parent, args, ctx, _info) =>
   return client
 }
 
+export const search: Resolver<FindByQuery> = async (_parent, args, ctx, _info) => {
+  const { search } = args
+
+  logger({
+    level: LOG_TYPE.INFO,
+    message: `Searching for clients with term '${search}'`
+  })
+
+  let clients: Client[] | null
+
+  try {
+    clients = await ctx.prisma.client.findMany({
+      where: {
+        OR: [
+          {
+            name: {
+              contains: search
+            }
+          },
+          {
+            phone: {
+              contains: search
+            }
+          }
+        ]
+      }
+    })
+  } catch (error) {
+    throw new Error('Prisma error')
+  }
+
+  return clients
+}
+
 export const create: Resolver<CreateClientQueryInput> = async (_parent, args, ctx, _info) => {
-  const { name, phone, orders } = args as Partial<Prisma.ClientCreateInput>
+  const { name, phone } = args as Partial<Prisma.ClientCreateInput>
 
   logger({
     level: LOG_TYPE.INFO,

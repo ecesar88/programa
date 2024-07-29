@@ -49,6 +49,7 @@ type Query {
   getAllMenuEntries(page: Int = 1): [MenuEntry!]
   getClientById(id: Int!): QueryGetClientByIdResult
   getMenuEntryById(id: Int!): QueryGetMenuEntryByIdResult
+  searchClients(search: String!): [Client!]
 }
 
 union QueryGetClientByIdResult = BaseError | QueryGetClientByIdSuccess | RecordNotFoundError

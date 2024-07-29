@@ -6,3 +6,4 @@ export type Resolver<T> = (parent: object, args: T, ctx: Context, info: GraphQLR
 
 export type PaginationParam = { page?: number | null }
 export type FindById = { id: number }
+export type FindByQuery = { search: string }

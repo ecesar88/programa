@@ -2,7 +2,7 @@ import { Regex } from '@repo/shared/constants'
 import * as z from 'zod'
 import { builder } from '../../builder'
 import { RecordNotFoundError } from '../_errors/errors'
-import { create, queryAll, queryOne, remove, update } from './resolvers'
+import { create, queryAll, queryOne, remove, search, update } from './resolvers'
 import { ClientType, UserUpdateInput } from './types'
 
 builder.queryField('getAllClients', (t) =>
@@ -36,6 +36,21 @@ builder.queryField('getClientById', (t) =>
       })
     },
     resolve: queryOne
+  })
+)
+
+builder.queryField('searchClients', (t) =>
+  t.field({
+    type: [ClientType],
+    args: {
+      search: t.arg.string({
+        required: true,
+        validate: {
+          schema: z.string()
+        }
+      })
+    },
+    resolve: search
   })
 )
 
