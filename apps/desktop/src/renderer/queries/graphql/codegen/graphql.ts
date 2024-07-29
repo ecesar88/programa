@@ -41,9 +41,19 @@ export type LengthError = Error & {
   minLength?: Maybe<Scalars['Int']['output']>;
 };
 
+/** A entry in the menu. */
+export type MenuEntry = {
+  __typename?: 'MenuEntry';
+  description?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  price?: Maybe<Scalars['Float']['output']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createClient?: Maybe<Client>;
+  createMenuEntry?: Maybe<MenuEntry>;
   deleteClient?: Maybe<Client>;
   updateClient?: Maybe<Client>;
 };
@@ -52,6 +62,13 @@ export type Mutation = {
 export type MutationCreateClientArgs = {
   name: Scalars['String']['input'];
   phone?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationCreateMenuEntryArgs = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  price: Scalars['Float']['input'];
 };
 
 
@@ -68,7 +85,9 @@ export type MutationUpdateClientArgs = {
 export type Query = {
   __typename?: 'Query';
   getAllClients?: Maybe<Array<Client>>;
+  getAllMenuEntries?: Maybe<Array<MenuEntry>>;
   getClientById?: Maybe<QueryGetClientByIdResult>;
+  getMenuEntryById?: Maybe<QueryGetMenuEntryByIdResult>;
 };
 
 
@@ -77,7 +96,17 @@ export type QueryGetAllClientsArgs = {
 };
 
 
+export type QueryGetAllMenuEntriesArgs = {
+  page?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type QueryGetClientByIdArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type QueryGetMenuEntryByIdArgs = {
   id: Scalars['Int']['input'];
 };
 
@@ -86,6 +115,13 @@ export type QueryGetClientByIdResult = BaseError | QueryGetClientByIdSuccess | R
 export type QueryGetClientByIdSuccess = {
   __typename?: 'QueryGetClientByIdSuccess';
   data: Client;
+};
+
+export type QueryGetMenuEntryByIdResult = BaseError | QueryGetMenuEntryByIdSuccess | RecordNotFoundError;
+
+export type QueryGetMenuEntryByIdSuccess = {
+  __typename?: 'QueryGetMenuEntryByIdSuccess';
+  data: MenuEntry;
 };
 
 export type RecordNotFoundError = Error & {
