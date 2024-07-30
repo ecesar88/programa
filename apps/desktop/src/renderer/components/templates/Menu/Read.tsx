@@ -2,6 +2,7 @@ import { Button } from '@blueprintjs/core'
 import { Order } from '@prisma/client'
 import { ScreenMenuProps } from '@renderer/components/molecules'
 import { OverlayMode } from '@renderer/constants/enums'
+import { MenuEntry } from '@renderer/queries/graphql/codegen/graphql'
 import { cn } from '@renderer/utils'
 import React, { useCallback, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -10,24 +11,12 @@ import { FaBowlRice } from 'react-icons/fa6'
 import { RiDrinks2Fill } from 'react-icons/ri'
 import { TbMeat } from 'react-icons/tb'
 
-const OrderTitle = ({ title }: { title: string }): React.ReactNode => {
-  return (
-    <div className="flex justify-center text-lg font-bold">
-      <h3>{title}</h3>
-    </div>
-  )
-}
-
-interface OrderColumnProps {
-  title: string
-  icon?: React.ReactNode
-  children?: React.ReactNode
-}
-
-// type OrderStatus = 'to_prepare' | 'preparing' | 'delivering' | 'delivered'
 type OrderWithoutId = Omit<Order, 'id'>
 
-export const Read = (): React.ReactNode => {
+export const Read = (props: {
+  menuEntries: MenuEntry[]
+  onRowClick?: (data: MenuEntry, index: number) => void
+}): React.ReactNode => {
   const [isOverlayOpen, setIsOverlayOpen] = useState(false)
   const [overlayMode, setOverlayMode] = useState<OverlayMode | null>(null)
 
@@ -75,138 +64,24 @@ export const Read = (): React.ReactNode => {
     }
   }
 
-  const pratos = [
+  const labels = [
     {
-      name: 'Feijoada',
-      ingredients: 'Arroz, torresmo, couve, farofa e salada de tomate, alface e laranja.',
-      price: 99.99,
-      category: 'proteina'
+      name: 'P',
+      color: '#0362fc'
     },
     {
-      name: 'Feijoada',
-      ingredients: 'Arroz, torresmo, couve, farofa e salada de tomate, alface e laranja.',
-      price: 99.99,
-      category: 'proteina'
+      name: 'M',
+      color: '#fc6b03'
     },
     {
-      name: 'Feijoada',
-      ingredients: 'Arroz, torresmo, couve, farofa e salada de tomate, alface e laranja.',
-      price: 99.99,
-      category: 'proteina'
-    },
-    {
-      name: 'Feijoada',
-      ingredients: 'Arroz, torresmo, couve, farofa e salada de tomate, alface e laranja.',
-      price: 99.99,
-      category: 'proteina'
-    },
-    {
-      name: 'Feijoada',
-      ingredients: 'Arroz, torresmo, couve, farofa e salada de tomate, alface e laranja.',
-      price: 99.99,
-      category: 'proteina'
-    },
-    {
-      name: 'Feijoada',
-      ingredients: 'Arroz, torresmo, couve, farofa e salada de tomate, alface e laranja.',
-      price: 99.99,
-      category: 'proteina'
-    },
-    {
-      name: 'Feijoada',
-      ingredients: 'Arroz, torresmo, couve, farofa e salada de tomate, alface e laranja.',
-      price: 99.99,
-      category: 'proteina'
-    },
-    {
-      name: 'Feijoada',
-      ingredients: 'Arroz, torresmo, couve, farofa e salada de tomate, alface e laranja.',
-      price: 99.99,
-      category: 'proteina'
-    },
-    {
-      name: 'Feijoada',
-      ingredients: 'Arroz, torresmo, couve, farofa e salada de tomate, alface e laranja.',
-      price: 99.99,
-      category: 'proteina'
-    },
-    {
-      name: 'Feijoada',
-      ingredients: 'Arroz, torresmo, couve, farofa e salada de tomate, alface e laranja.',
-      price: 99.99,
-      category: 'proteina'
-    },
-    {
-      name: 'Picadinho',
-      ingredients: 'Arroz, feijão, macarrão, farofa, batata palha e salada',
-      price: 99.99,
-      category: 'proteina'
-    },
-    {
-      name: 'Strogonoff',
-      ingredients: 'Arroz, batata palha e salada',
-      price: 99.99,
-      category: 'proteina'
-    },
-    {
-      name: 'Feijoada',
-      ingredients: 'Arroz, torresmo, couve, farofa e salada de tomate, alface e laranja.',
-      price: 99.99,
-      category: 'proteina'
-    },
-    {
-      name: 'Picadinho',
-      ingredients: 'Arroz, feijão, macarrão, farofa, batata palha e salada',
-      price: 99.99,
-      category: 'proteina'
-    },
-    {
-      name: 'Strogonoff',
-      ingredients: 'Arroz, batata palha e salada',
-      price: 99.99,
-      category: 'proteina'
-    },
-    {
-      name: 'Feijoada',
-      ingredients: 'Arroz, torresmo, couve, farofa e salada de tomate, alface e laranja.',
-      price: 99.99,
-      category: 'proteina'
-    },
-    {
-      name: 'Picadinho',
-      ingredients: 'Arroz, feijão, macarrão, farofa, batata palha e salada',
-      price: 99.99,
-      category: 'proteina'
-    },
-    {
-      name: 'Strogonoff',
-      ingredients: 'Arroz, batata palha e salada',
-      price: 99.99,
-      category: 'proteina'
-    },
-    {
-      name: 'Feijoada',
-      ingredients: 'Arroz, torresmo, couve, farofa e salada de tomate, alface e laranja.',
-      price: 99.99,
-      category: 'proteina'
-    },
-    {
-      name: 'Picadinho',
-      ingredients: 'Arroz, feijão, macarrão, farofa, batata palha e salada',
-      price: 99.99,
-      category: 'proteina'
-    },
-    {
-      name: 'Strogonoff',
-      ingredients: 'Arroz, batata palha e salada',
-      price: 99.99,
-      category: 'proteina'
+      name: 'G',
+      color: '#087a00'
     }
   ]
 
   return (
     <div className="flex flex-col gap-4 h-full">
-      {/* Categorias */}
+      {/* Categorias - componentizar, trocar ícones, usar ícones mais coloridos */}
 
       <div className="flex flex-row flex-grow-0 flex-shrink-0 h-[75px] gap-6 py-2 px-4 bg-lightGray4 rounded-md">
         <div className="flex flex-col items-center gap-2">
@@ -232,26 +107,45 @@ export const Read = (): React.ReactNode => {
       </div>
 
       <div className="flex flex-col flex-grow overflow-y-auto">
-        {pratos.map((prato, idx, arr) => (
+        {props.menuEntries.map((prato, idx, arr) => (
           <div
             key={idx}
-            className={cn('flex flex-row px-4 py-2 justify-between', {
+            className={cn('flex-col gap-2', {
               'bg-lightGray5': idx % 2 === 0,
-              'bg-lightGray4': idx % 2 !== 0,
-              'rounded-t-md': idx === 0,
-              'rounded-b-md': idx === arr.length - 1
+              'bg-lightGray4': idx % 2 !== 0
             })}
           >
-            <div className="flex flex-col">
-              <div>
-                <b>{prato.name}</b>
+            <div
+              className={cn('flex flex-row px-4 py-2 justify-between', {
+                'rounded-t-md': idx === 0,
+                'rounded-b-md': idx === arr.length - 1
+              })}
+            >
+              <div className="flex flex-col">
+                <div>
+                  <b>{prato.name}</b>
+                </div>
+
+                <div>{prato.description}</div>
               </div>
 
-              <div>{prato.ingredients}</div>
+              <div>
+                <b>R$ {prato.price}</b>
+              </div>
             </div>
 
-            <div>
-              <b>R$ {prato.price}</b>
+            <div className="w-full pb-2 pl-4 flex flex-row gap-1">
+              <div className="rounded-md w-fit min-w-[30px] flex justify-center px-2 py-0 bg-[#0362fc]">
+                <p className="text-xs text-white">Sem Açucar</p>
+              </div>
+
+              <div className="rounded-md w-fit min-w-[30px] flex justify-center px-2 py-0 bg-[#fc6b03]">
+                <p className="text-xs text-white">Sem Glúten</p>
+              </div>
+
+              <div className="rounded-md w-fit min-w-[30px] flex justify-center px-2 py-0 bg-[#087a00]">
+                <p className="text-xs text-white">G</p>
+              </div>
             </div>
           </div>
         ))}

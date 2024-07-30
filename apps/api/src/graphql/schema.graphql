@@ -28,12 +28,24 @@ type MenuEntry {
   description: String
   id: Int
   name: String
+  variant: [MenuEntryVariant!]
+}
+
+type MenuEntryVariant {
+  description: String
+  name: String
+  price: Float
+}
+
+input MenuEntryVariantInput {
+  description: String
+  name: String
   price: Float
 }
 
 type Mutation {
   createClient(name: String!, phone: String): Client
-  createMenuEntry(description: String, name: String!, price: Float!): MenuEntry
+  createMenuEntry(description: String, name: String!, variant: [MenuEntryVariantInput!]): MenuEntry
   deleteClient(id: Int!): MutationDeleteClientResult
   updateClient(data: UserUpdateInput!, id: Int!): Client
 }

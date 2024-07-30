@@ -1,13 +1,13 @@
 import { Menu, Prisma } from '@prisma/client'
 import { LOG_TYPE, logger } from '../../../utils/logger'
-import { prismaPaginate } from '../../../utils/prismaPaginate'
 import { RecordNotFoundError } from '../_errors/errors'
-import { FindById, PaginationParam, Resolver } from '../sharedTypes'
+import { FindById, Resolver } from '../sharedTypes'
+import { MenuEntryVariantType } from './types'
 
 type CreateMenuQueryInput = {
   name: string
-  price: number
   description?: string | null
+  variant?: (typeof MenuEntryVariantType)['$inferType'][] | null
 }
 
 type UpdateMenuQueryInput = {
@@ -15,9 +15,7 @@ type UpdateMenuQueryInput = {
   data: Partial<Prisma.ClientUpdateInput>
 }
 
-export const queryAll: Resolver<PaginationParam> = async (_parent, args, ctx, _info) => {
-  const { page } = args
-
+export const queryAll: Resolver = async (_parent, _args, ctx, _info) => {
   logger({
     level: LOG_TYPE.INFO,
     message: `Fetching all menu entries`
@@ -25,9 +23,11 @@ export const queryAll: Resolver<PaginationParam> = async (_parent, args, ctx, _i
 
   try {
     return await ctx.prisma.menuEntry.findMany({
-      ...prismaPaginate(page),
       orderBy: {
         id: 'desc'
+      },
+      include: {
+        variant: true
       }
     })
   } catch (e) {
@@ -63,7 +63,7 @@ export const queryOne: Resolver<FindById> = async (_parent, args, ctx, _info) =>
 }
 
 export const create: Resolver<CreateMenuQueryInput> = async (_parent, args, ctx, _info) => {
-  const data = args as Partial<Prisma.MenuEntryCreateInput>
+  const data = args
 
   logger({
     level: LOG_TYPE.INFO,
@@ -88,8 +88,17 @@ export const create: Resolver<CreateMenuQueryInput> = async (_parent, args, ctx,
 
     return await ctx.prisma.menuEntry.create({
       data: {
-        ...(data as Prisma.MenuEntryUncheckedCreateInput),
-        menuId: menu?.id
+        menuId: menu?.id,
+        name: data.name as string,
+        description: data.description,
+        variant: {
+          createMany: {
+            data: data.variant?.map((vr) => vr) as Prisma.MenuEntryVariantCreateManyMenuEntryInput
+          }
+        }
+      },
+      include: {
+        variant: true
       }
     })
   } catch (error) {

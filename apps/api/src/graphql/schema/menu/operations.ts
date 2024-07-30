@@ -2,7 +2,7 @@ import * as z from 'zod'
 import { builder } from '../../builder'
 import { RecordNotFoundError } from '../_errors/errors'
 import { create, queryAll, queryOne, remove, update } from './resolvers'
-import { MenuEntryType } from './types'
+import { MenuEntryType, MenuEntryVariantInputType } from './types'
 
 builder.queryField('getAllMenuEntries', (t) =>
   t.field({
@@ -34,10 +34,24 @@ builder.queryField('getMenuEntryById', (t) =>
         }
       })
     },
-    // validate: (value) => value.id,
     resolve: queryOne
   })
 )
+
+// builder.queryField('searchMenuEntries', (t) =>
+//   t.field({
+//     type: [MenuEntryType],
+//     args: {
+//       search: t.arg.string({
+//         required: true,
+//         validate: {
+//           schema: z.string()
+//         }
+//       })
+//     },
+//     resolve: search
+//   })
+// )
 
 builder.mutationField('createMenuEntry', (t) =>
   t.field({
@@ -50,19 +64,14 @@ builder.mutationField('createMenuEntry', (t) =>
         },
         required: true
       }),
-      price: t.arg.float({
-        required: true,
-        validate: {
-          schema: z.number().nonnegative()
-        }
-      }),
       description: t.arg.string({
         required: false,
         validate: {
           minLength: 3,
           type: 'string'
         }
-      })
+      }),
+      variant: t.arg({ type: [MenuEntryVariantInputType], required: false })
     },
     resolve: create
   })

@@ -25,10 +25,17 @@ export const updateClientMutationDocument = graphql(/* GraphQL */ `
 export const deleteClientByIdMutationDocument = graphql(/* GraphQL */ `
   mutation deleteClientById($id: Int!) {
     deleteClient(id: $id) {
-      __typename
-      id
-      name
-      phone
+      ... on MutationDeleteClientSuccess {
+        data {
+          __typename
+          id
+          name
+          phone
+        }
+      }
+      ... on RecordNotFoundError {
+        message
+      }
     }
   }
 `)

@@ -42,12 +42,33 @@ model Menu {
 }
 
 model MenuEntry {
-  id          Int     @id @default(autoincrement())
+  id          Int                @id @default(autoincrement())
   name        String
-  price       Float
+  variant     MenuEntryVariant[]
   description String?
+  labels      Label[]
   // category String
   // images String?
-  Menu        Menu?   @relation(fields: [menuId], references: [id])
-  menuId      Int?
+
+  Menu   Menu? @relation(fields: [menuId], references: [id])
+  menuId Int?
+}
+
+model MenuEntryVariant {
+  id          Int     @id @default(autoincrement())
+  price       Float?
+  name        String?
+  description String?
+
+  MenuEntry   MenuEntry? @relation(fields: [menuEntryId], references: [id])
+  menuEntryId Int?
+}
+
+model Label {
+  id    Int    @id @default(autoincrement())
+  name  String
+  color String
+
+  MenuEntry   MenuEntry? @relation(fields: [menuEntryId], references: [id])
+  menuEntryId Int?
 }

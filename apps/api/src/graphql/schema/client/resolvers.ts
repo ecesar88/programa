@@ -57,11 +57,11 @@ export const queryOne: Resolver<FindById> = async (_parent, args, ctx, _info) =>
 }
 
 export const search: Resolver<FindByQuery> = async (_parent, args, ctx, _info) => {
-  const { search } = args
+  const { search: searchTerm } = args
 
   logger({
     level: LOG_TYPE.INFO,
-    message: `Searching for clients with term '${search}'`
+    message: `Searching for clients with term '${searchTerm}'`
   })
 
   let clients: Client[] | null
@@ -72,12 +72,7 @@ export const search: Resolver<FindByQuery> = async (_parent, args, ctx, _info) =
         OR: [
           {
             name: {
-              contains: search
-            }
-          },
-          {
-            phone: {
-              contains: search
+              contains: searchTerm
             }
           }
         ]

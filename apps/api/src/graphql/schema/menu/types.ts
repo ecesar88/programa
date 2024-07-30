@@ -1,18 +1,27 @@
 import { builder } from '../../builder'
 
+export const MenuEntryVariantInputType = builder.inputType('MenuEntryVariantInput', {
+  fields: (t) => ({
+    price: t.float(),
+    name: t.string(),
+    description: t.string()
+  })
+})
+
+export const MenuEntryVariantType = builder.simpleObject('MenuEntryVariant', {
+  fields: (t) => ({
+    price: t.float(),
+    name: t.string(),
+    description: t.string()
+  })
+})
+
 export const MenuEntryType = builder.simpleObject('MenuEntry', {
   description: 'A entry in the menu.',
   fields: (t) => ({
     id: t.int(),
     name: t.string(),
-    price: t.float(),
-    description: t.string()
+    description: t.string(),
+    variant: t.field({ type: [MenuEntryVariantType] })
   })
 })
-
-// export const UserUpdateInput = builder.inputType('UserUpdateInput', {
-//   fields: (t) => ({
-//     name: t.string({ required: true }),
-//     phone: t.string()
-//   })
-// })
