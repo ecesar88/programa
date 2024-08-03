@@ -1,13 +1,37 @@
 import { graphql } from '../codegen/gql'
 
+graphql(/* GraphQL */ `
+  fragment variant on MenuEntryVariant {
+    __typename
+    name
+    description
+    price
+  }
+
+  fragment label on MenuEntryLabel {
+    __typename
+    name
+    color
+  }
+`)
+
 export const createMenuEntryMutationDocument = graphql(/* GraphQL */ `
-  mutation createMenuEntry($description: String, $name: String!, $price: Float!) {
-    createMenuEntry(description: $description, name: $name, price: $price) {
+  mutation createMenuEntry(
+    $name: String!
+    $description: String
+    $variant: [MenuEntryVariantInput!]
+  ) {
+    createMenuEntry(name: $name, description: $description, variant: $variant) {
       __typename
       id
       description
       name
-      price
+      variant {
+        ...variant
+      }
+      labels {
+        ...label
+      }
     }
   }
 `)
@@ -41,7 +65,12 @@ export const getAllMenuEntriesQueryDocument = graphql(/* GraphQL */ `
       id
       description
       name
-      price
+      variant {
+        ...variant
+      }
+      labels {
+        ...label
+      }
     }
   }
 `)
@@ -58,7 +87,9 @@ export const getMenuEntryByIdQueryDocument = graphql(/* GraphQL */ `
           id
           description
           name
-          price
+          variant {
+            ...variant
+          }
         }
       }
       ... on RecordNotFoundError {

@@ -3,6 +3,7 @@
 import { BlueprintProvider } from '@blueprintjs/core'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { GraphQLClient } from 'graphql-request'
 import { DevTools } from 'jotai-devtools'
 import { queryClientAtom } from 'jotai-tanstack-query'
 import { Provider as JotaiProvider } from 'jotai/react'
@@ -11,8 +12,8 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { Bounce, ToastContainer } from 'react-toastify'
 import { ErrorBoundary } from './components/templates/not_working_ErrorBoundary'
 import { queryClientConfig } from './config/queryClientConfig'
+import './i18n'
 import { routes } from './routes'
-import { GraphQLClient } from 'graphql-request'
 
 const queryClient = new QueryClient(queryClientConfig)
 

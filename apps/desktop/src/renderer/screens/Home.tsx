@@ -1,11 +1,11 @@
-import { Menu, SystemTime } from '@renderer/components'
+import { SystemMenu, SystemTime } from '@renderer/components'
 import { HOME_CONTAINER_ID } from '@renderer/constants'
 import { Outlet } from 'react-router-dom'
 
 export const Home = (): React.ReactNode => {
   return (
     <div className="flex h-[100vh] bg-white overflow-y-hidden">
-      <Menu />
+      <SystemMenu />
 
       <div id={HOME_CONTAINER_ID} className="w-full py-4 pl-0 pr-2">
         <Outlet />

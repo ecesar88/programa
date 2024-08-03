@@ -27,8 +27,14 @@ type LengthError implements Error {
 type MenuEntry {
   description: String
   id: Int
+  labels: [MenuEntryLabel!]
   name: String
   variant: [MenuEntryVariant!]
+}
+
+type MenuEntryLabel {
+  color: String
+  name: String
 }
 
 type MenuEntryVariant {

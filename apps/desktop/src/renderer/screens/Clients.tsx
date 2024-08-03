@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { AlertModal, DataHeader, Loading } from '@renderer/components'
 import { CreateOrEditModal, Read } from '@renderer/components/templates/Clients'
 import { OverlayMode } from '@renderer/constants/enums'
-import { useOnKeyDown } from '@renderer/hooks'
+import { useCreateOrEditOverlay, useHandleModalState, useOnKeyDown } from '@renderer/hooks'
 import {
   Client,
   CreateClientMutationVariables,
@@ -19,7 +19,7 @@ import {
 import { CreateClientResolver } from '@repo/shared/resolvers'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { atomWithMutation, atomWithQuery } from 'jotai-tanstack-query'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { Id, toast } from 'react-toastify'
 import { match } from 'ts-pattern'
@@ -38,35 +38,17 @@ export const Clients = (): React.ReactNode => {
 
   const clearSelectedRowAtom = () => setSelectedRowAtom({ data: {}, meta: { index: null } })
 
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  const [isOverlayOpen, setIsOverlayOpen] = useState(false)
-  const [overlayMode, setOverlayMode] = useState<OverlayMode | null>(null)
+  const {
+    openModal: openAlertModal,
+    closeModal: closeAlertModal,
+    isModalOpen: isDeleteModalOpen
+  } = useHandleModalState()
 
-  useEffect(() => {
-    if (!isOverlayOpen) setOverlayMode(null)
-  }, [isOverlayOpen])
-
-  const openAlertModal = (): void => setIsDeleteModalOpen(true)
-  const closeAlertModal = (): void => setIsDeleteModalOpen(false)
+  const { openOverlay, closeOverlay, isOverlayOpen, overlayMode } = useCreateOrEditOverlay()
 
   useOnKeyDown('Escape', () => {
     clearSelectedRowAtom()
   })
-
-  const openModalOverlay = useCallback(
-    (mode: OverlayMode) => {
-      setIsOverlayOpen(true)
-      return setOverlayMode(mode)
-    },
-    [overlayMode]
-  )
-
-  const closeModalOverlay = useCallback(() => {
-    setIsOverlayOpen(false)
-    setOverlayMode(null)
-
-    return false
-  }, [overlayMode])
 
   const queries = useMemo(() => {
     const clientsAtom = atomWithQuery(() => ({
@@ -87,7 +69,7 @@ export const Clients = (): React.ReactNode => {
       mutationFn: create,
       onSuccess: async () => {
         successToast('Cliente criado com sucesso!')
-        closeModalOverlay()
+        closeOverlay()
         clearSelectedRowAtom()
         form.reset()
 
@@ -104,7 +86,7 @@ export const Clients = (): React.ReactNode => {
       onSuccess: async () => {
         successToast('Cliente editado com sucesso!')
         clearSelectedRowAtom()
-        closeModalOverlay()
+        closeOverlay()
         form.reset()
 
         await refetch()
@@ -165,10 +147,10 @@ export const Clients = (): React.ReactNode => {
 
   const actions: ScreenMenuProps['actions'] = {
     onNewClick: () => {
-      openModalOverlay(OverlayMode.NEW)
+      openOverlay(OverlayMode.NEW)
     },
     onEditClick: () => {
-      openModalOverlay(OverlayMode.EDIT)
+      openOverlay(OverlayMode.EDIT)
     },
     onSaveClick: () => {
       const onCreate: SubmitHandler<Client> = (data): void => {
@@ -199,7 +181,7 @@ export const Clients = (): React.ReactNode => {
     },
     onCancelClick: () => {
       form.reset()
-      closeModalOverlay()
+      closeOverlay()
     }
   }
 
@@ -230,7 +212,7 @@ export const Clients = (): React.ReactNode => {
 
       <Dialog
         isOpen={isOverlayOpen}
-        onClose={closeModalOverlay}
+        onClose={closeOverlay}
         usePortal={true}
         canEscapeKeyClose={true}
         canOutsideClickClose={false}

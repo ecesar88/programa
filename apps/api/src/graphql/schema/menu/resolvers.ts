@@ -27,7 +27,8 @@ export const queryAll: Resolver = async (_parent, _args, ctx, _info) => {
         id: 'desc'
       },
       include: {
-        variant: true
+        variant: true,
+        labels: true
       }
     })
   } catch (e) {

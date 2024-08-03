@@ -1,7 +1,7 @@
 import * as z from 'zod'
 import { builder } from '../../builder'
 import { RecordNotFoundError } from '../_errors/errors'
-import { create, queryAll, queryOne, remove, update } from './resolvers'
+import { create, queryAll, queryOne } from './resolvers'
 import { MenuEntryType, MenuEntryVariantInputType } from './types'
 
 builder.queryField('getAllMenuEntries', (t) =>

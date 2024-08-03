@@ -11,7 +11,6 @@ import helmet, { HelmetOptions } from 'helmet'
 import nodeColorLog from 'node-color-log'
 import path from 'node:path'
 import 'reflect-metadata'
-import { ClientController } from './controllers/client'
 import { InfoController } from './controllers/info'
 import { context } from './graphql/context'
 import { schema } from './graphql/schema'
@@ -65,7 +64,7 @@ const PUBLIC_FOLDER_PATH = path.join(process.cwd(), PUBLIC_FOLDER_NAME)
   express.use('/info/docs', Express.static(PUBLIC_FOLDER_PATH))
   express.use(helmet(helmetOptions))
   express.use(Express.json())
-  express.use(cors({ origin: 'http://localhost:5173' }))
+  express.use(cors({ origin: 'http://localhost:5173' })) // 5173 is the Electron frontend's port
   express.use(yoga.graphqlEndpoint, yoga)
 
   express.use(HTTPLoggerMiddleware)
@@ -77,7 +76,7 @@ const PUBLIC_FOLDER_PATH = path.join(process.cwd(), PUBLIC_FOLDER_NAME)
     }
   ])
 
-  await attachControllers(express, [InfoController, ClientController])
+  await attachControllers(express, [InfoController])
 
   express.listen(SERVER_PORT, SERVER_HOSTNAME, () => {
     figlet(

@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { MdRestaurantMenu } from 'react-icons/md'
 import { cn } from '@renderer/utils'
 
-export const Menu = () => {
+export const SystemMenu = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -13,14 +13,14 @@ export const Menu = () => {
   }
 
   return (
-    <div className="flex flex-col gap-2 p-2 pr-3 bg-lightGray5 mr-3">
+    <div className="flex flex-col gap-2 p-2 pr-3 bg-lightGray5 mr-3 mt-2 mb-2 ml-2 rounded-md">
       <div className="flex justify-center h-[60px] bg-[red] text-white">LOGO</div>
 
       <div className="h-max flex flex-col">
         <ButtonGroup vertical fill large>
           <Button
-            // trocar icone - alinhar icones à esquerda
             icon="person"
+            alignText="left"
             intent={isScreenSelected(ROUTES.CLIENTS) ? 'primary' : 'none'}
             onClick={() => {
               navigate(ROUTES.CLIENTS)
@@ -32,6 +32,7 @@ export const Menu = () => {
           <Button
             // trocar icone
             icon="annotation"
+            alignText="left"
             intent={isScreenSelected(ROUTES.ORDERS) ? 'primary' : 'none'}
             onClick={() => {
               navigate(ROUTES.ORDERS)
@@ -51,6 +52,7 @@ export const Menu = () => {
                 })}
               />
             }
+            alignText="left"
             intent={isScreenSelected(ROUTES.MENU) ? 'primary' : 'none'}
             onClick={() => {
               navigate(ROUTES.MENU)

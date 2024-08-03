@@ -1,15 +1,12 @@
-import { faker } from '@faker-js/faker'
 import { PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { createClients } from './client.seed'
+import { createMenuEntries } from './menuEntry.seed'
 
 async function main(): Promise<void> {
-  const clients = await prisma.client.createMany({
-    data: Array.from({ length: 50 }, (_v, k) => k).map(() => ({
-      name: faker.person.fullName(),
-      phone: faker.helpers.fromRegExp('[0-9]{11}')
-    }))
-  })
+  const prisma = new PrismaClient()
+
+  await createClients(prisma)
+  await Promise.all(await createMenuEntries(prisma))
 }
 
 main()
