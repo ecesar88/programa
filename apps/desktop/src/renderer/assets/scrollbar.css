@@ -1,0 +1,25 @@
+:root {
+  --main-bg-color: #d3d8de;
+  --main-fg-color: #5f6b7c;
+}
+
+::-webkit-scrollbar {
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--main-bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--main-fg-color);
+  border-radius: 20px;
+  border: 3px;
+  border-style: solid;
+  border-color: transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  border: 30px !important;
+}

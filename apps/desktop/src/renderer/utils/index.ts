@@ -22,7 +22,7 @@ export { cn, parseEnv }
  */
 export const getContrastingTextColor = (color: string) => {
   // Convert hex color to RGB
-  let r, g, b
+  let r: number, g: number, b: number
   if (color.length === 4) {
     r = parseInt(color[1] + color[1], 16)
     g = parseInt(color[2] + color[2], 16)

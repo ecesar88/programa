@@ -1,6 +1,5 @@
-import { Dialog, DialogBody } from '@blueprintjs/core'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { AlertModal, DataHeader, Loading } from '@renderer/components'
+import { AlertModal, DataHeader, Dialog, Loading } from '@renderer/components'
 import { CreateOrEditModal, Read } from '@renderer/components/templates/Clients'
 import { OverlayMode } from '@renderer/constants/enums'
 import { useCreateOrEditOverlay, useHandleModalState, useOnKeyDown } from '@renderer/hooks'
@@ -210,22 +209,13 @@ export const Clients = (): React.ReactNode => {
           ))}
       </div>
 
-      <Dialog
-        isOpen={isOverlayOpen}
-        onClose={closeOverlay}
-        usePortal={true}
-        canEscapeKeyClose={true}
-        canOutsideClickClose={false}
-        className="w-fit h-fit"
-      >
-        <DialogBody className="p-0">
-          <CreateOrEditModal
-            isLoading={isLoadingCreateClient || isLoadingUpdateClient}
-            onSave={actions?.onSaveClick}
-            onCancel={actions?.onCancelClick}
-            overlayMode={overlayMode}
-          />
-        </DialogBody>
+      <Dialog isOpen={isOverlayOpen} onClose={closeOverlay}>
+        <CreateOrEditModal
+          isLoading={isLoadingCreateClient || isLoadingUpdateClient}
+          onSave={actions?.onSaveClick}
+          onCancel={actions?.onCancelClick}
+          overlayMode={overlayMode}
+        />
       </Dialog>
 
       <AlertModal
