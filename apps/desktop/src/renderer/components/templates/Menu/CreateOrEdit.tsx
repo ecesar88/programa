@@ -1,6 +1,7 @@
 import { Button, FormGroup } from '@blueprintjs/core'
 import { Input, InputError, ModalTitle } from '@renderer/components'
 import { OverlayMode } from '@renderer/constants/enums'
+import { useResetHookForm } from '@renderer/hooks/useResetHookForm'
 import { MenuEntry } from '@renderer/queries/graphql/codegen/graphql'
 import { selectedRowAtom } from '@renderer/store'
 import { useAtomValue } from 'jotai'
@@ -19,31 +20,11 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     formState: { errors }
   } = useFormContext()
 
-  if (!props.overlayMode) return null
-
-  // const selectedRow = useAtomValue(rowDataFocusedAtom)
-
-  // useEffect(() => {
-  //   const rowHasData = Object.values(selectedRow)?.length > 0
-
-  //   if (props.overlayMode === OverlayMode.EDIT && rowHasData) {
-  //     reset(selectedRow)
-  //   } else if (props.overlayMode === OverlayMode.NEW && rowHasData) {
-  //     reset()
-  //   }
-
-  //   return () => {
-  //     reset({})
-  //   }
-  // }, [selectedRow, props.overlayMode])
-
-  // const {
-  //   data: { get: menuEntryData }
-  // } = useSelectedRow<MenuEntry>({ clearOnUmount: true })
-
   const menuEntryData = useAtomValue(selectedRowAtom).data as MenuEntry
 
-  // const menuEntryData: Record<string, unknown> = {}
+  useResetHookForm(reset, props.overlayMode)
+
+  console.log(menuEntryData)
 
   if (!menuEntryData) return
 
