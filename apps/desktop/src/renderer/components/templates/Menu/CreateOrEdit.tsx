@@ -1,9 +1,8 @@
 import { Button, FormGroup } from '@blueprintjs/core'
 import { Input, InputError, ModalTitle } from '@renderer/components'
 import { OverlayMode } from '@renderer/constants/enums'
-import { rowDataFocusedAtom } from '@renderer/store/clientStore'
-import { useAtomValue } from 'jotai'
-import { useEffect } from 'react'
+import { useSelectedRow } from '@renderer/hooks'
+import { MenuEntry } from '@renderer/queries/graphql/codegen/graphql'
 import { useFormContext } from 'react-hook-form'
 
 type CreateOrEditProps = {
@@ -19,28 +18,17 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     formState: { errors }
   } = useFormContext()
 
-  // put this logic inside a hook maybe???
-  const selectedRow = useAtomValue(rowDataFocusedAtom)
-
-  useEffect(() => {
-    const rowHasData = Object.values(selectedRow)?.length > 0
-
-    if (props.overlayMode === OverlayMode.EDIT && rowHasData) {
-      reset(selectedRow)
-    } else if (props.overlayMode === OverlayMode.NEW && rowHasData) {
-      reset()
-    }
-
-    return () => {
-      reset({})
-    }
-  }, [selectedRow, props.overlayMode])
-
   if (!props.overlayMode) return null
+
+  const {
+    data: { get: menuEntryData }
+  } = useSelectedRow<MenuEntry>()
+
+  if (!menuEntryData) return
 
   return (
     <div className="p-5 bg-white h-[200px] w-[800px] rounded flex flex-col gap-1 justify-between">
-      <ModalTitle title={props.overlayMode === OverlayMode.NEW ? 'Novo Pedido' : 'Editar Pedido'} />
+      <ModalTitle title={menuEntryData.name as string} />
 
       <form id="create-form" className="w-full h-full">
         <div className="flex w-full gap-4">

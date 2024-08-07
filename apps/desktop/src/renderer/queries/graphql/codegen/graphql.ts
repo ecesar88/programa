@@ -20,75 +20,75 @@ export type Scalars = {
 
 export type BaseError = Error & {
   __typename?: 'BaseError';
-  message?: Maybe<Scalars['String']['output']>;
+  message: Maybe<Scalars['String']['output']>;
 };
 
 /** Long necks, cool patterns, taller than you. */
 export type Client = {
   __typename?: 'Client';
-  id?: Maybe<Scalars['Int']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
-  phone?: Maybe<Scalars['String']['output']>;
+  id: Maybe<Scalars['Int']['output']>;
+  name: Maybe<Scalars['String']['output']>;
+  phone: Maybe<Scalars['String']['output']>;
 };
 
 export type Error = {
-  message?: Maybe<Scalars['String']['output']>;
+  message: Maybe<Scalars['String']['output']>;
 };
 
 export type LengthError = Error & {
   __typename?: 'LengthError';
-  message?: Maybe<Scalars['String']['output']>;
-  minLength?: Maybe<Scalars['Int']['output']>;
+  message: Maybe<Scalars['String']['output']>;
+  minLength: Maybe<Scalars['Int']['output']>;
 };
 
 /** A entry in the menu. */
 export type MenuEntry = {
   __typename?: 'MenuEntry';
-  description?: Maybe<Scalars['String']['output']>;
-  id?: Maybe<Scalars['Int']['output']>;
-  labels?: Maybe<Array<MenuEntryLabel>>;
-  name?: Maybe<Scalars['String']['output']>;
-  variant?: Maybe<Array<MenuEntryVariant>>;
+  description: Maybe<Scalars['String']['output']>;
+  id: Maybe<Scalars['Int']['output']>;
+  labels: Maybe<Array<MenuEntryLabel>>;
+  name: Maybe<Scalars['String']['output']>;
+  variant: Maybe<Array<MenuEntryVariant>>;
 };
 
 export type MenuEntryLabel = {
   __typename?: 'MenuEntryLabel';
-  color?: Maybe<Scalars['String']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
+  color: Maybe<Scalars['String']['output']>;
+  name: Maybe<Scalars['String']['output']>;
 };
 
 export type MenuEntryVariant = {
   __typename?: 'MenuEntryVariant';
-  description?: Maybe<Scalars['String']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
-  price?: Maybe<Scalars['Float']['output']>;
+  description: Maybe<Scalars['String']['output']>;
+  name: Maybe<Scalars['String']['output']>;
+  price: Maybe<Scalars['Float']['output']>;
 };
 
 export type MenuEntryVariantInput = {
-  description?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  price?: InputMaybe<Scalars['Float']['input']>;
+  description: InputMaybe<Scalars['String']['input']>;
+  name: InputMaybe<Scalars['String']['input']>;
+  price: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createClient?: Maybe<Client>;
-  createMenuEntry?: Maybe<MenuEntry>;
-  deleteClient?: Maybe<MutationDeleteClientResult>;
-  updateClient?: Maybe<Client>;
+  createClient: Maybe<Client>;
+  createMenuEntry: Maybe<MenuEntry>;
+  deleteClient: Maybe<MutationDeleteClientResult>;
+  updateClient: Maybe<Client>;
 };
 
 
 export type MutationCreateClientArgs = {
   name: Scalars['String']['input'];
-  phone?: InputMaybe<Scalars['String']['input']>;
+  phone: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationCreateMenuEntryArgs = {
-  description?: InputMaybe<Scalars['String']['input']>;
+  description: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
-  variant?: InputMaybe<Array<MenuEntryVariantInput>>;
+  variant: InputMaybe<Array<MenuEntryVariantInput>>;
 };
 
 
@@ -111,11 +111,11 @@ export type MutationDeleteClientSuccess = {
 
 export type Query = {
   __typename?: 'Query';
-  getAllClients?: Maybe<Array<Client>>;
-  getAllMenuEntries?: Maybe<Array<MenuEntry>>;
-  getClientById?: Maybe<QueryGetClientByIdResult>;
-  getMenuEntryById?: Maybe<QueryGetMenuEntryByIdResult>;
-  searchClients?: Maybe<Array<Client>>;
+  getAllClients: Maybe<Array<Client>>;
+  getAllMenuEntries: Maybe<Array<MenuEntry>>;
+  getClientById: Maybe<QueryGetClientByIdResult>;
+  getMenuEntryById: Maybe<QueryGetMenuEntryByIdResult>;
+  searchClients: Maybe<Array<Client>>;
 };
 
 
@@ -159,21 +159,21 @@ export type QueryGetMenuEntryByIdSuccess = {
 
 export type RecordNotFoundError = Error & {
   __typename?: 'RecordNotFoundError';
-  message?: Maybe<Scalars['String']['output']>;
+  message: Maybe<Scalars['String']['output']>;
 };
 
 export type UserUpdateInput = {
   name: Scalars['String']['input'];
-  phone?: InputMaybe<Scalars['String']['input']>;
+  phone: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreateClientMutationVariables = Exact<{
   name: Scalars['String']['input'];
-  phone?: InputMaybe<Scalars['String']['input']>;
+  phone: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type CreateClientMutation = { __typename?: 'Mutation', createClient?: { __typename: 'Client', id?: number | null, name?: string | null, phone?: string | null } | null };
+export type CreateClientMutation = { __typename?: 'Mutation', createClient: { __typename: 'Client', id: number | null, name: string | null, phone: string | null } | null };
 
 export type UpdateClientByIdMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -181,57 +181,57 @@ export type UpdateClientByIdMutationVariables = Exact<{
 }>;
 
 
-export type UpdateClientByIdMutation = { __typename?: 'Mutation', updateClient?: { __typename: 'Client', id?: number | null, name?: string | null, phone?: string | null } | null };
+export type UpdateClientByIdMutation = { __typename?: 'Mutation', updateClient: { __typename: 'Client', id: number | null, name: string | null, phone: string | null } | null };
 
 export type DeleteClientByIdMutationVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
 
-export type DeleteClientByIdMutation = { __typename?: 'Mutation', deleteClient?: { __typename?: 'BaseError' } | { __typename?: 'MutationDeleteClientSuccess', data: { __typename: 'Client', id?: number | null, name?: string | null, phone?: string | null } } | { __typename?: 'RecordNotFoundError', message?: string | null } | null };
+export type DeleteClientByIdMutation = { __typename?: 'Mutation', deleteClient: { __typename?: 'BaseError' } | { __typename?: 'MutationDeleteClientSuccess', data: { __typename: 'Client', id: number | null, name: string | null, phone: string | null } } | { __typename?: 'RecordNotFoundError', message: string | null } | null };
 
 export type GetAllClientsQueryVariables = Exact<{
-  page?: InputMaybe<Scalars['Int']['input']>;
+  page: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type GetAllClientsQuery = { __typename?: 'Query', getAllClients?: Array<{ __typename: 'Client', id?: number | null, name?: string | null, phone?: string | null }> | null };
+export type GetAllClientsQuery = { __typename?: 'Query', getAllClients: Array<{ __typename: 'Client', id: number | null, name: string | null, phone: string | null }> | null };
 
 export type GetClientByIdQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
 
-export type GetClientByIdQuery = { __typename?: 'Query', getClientById?: { __typename: 'BaseError' } | { __typename: 'QueryGetClientByIdSuccess', data: { __typename?: 'Client', id?: number | null, name?: string | null, phone?: string | null } } | { __typename: 'RecordNotFoundError', message?: string | null } | null };
+export type GetClientByIdQuery = { __typename?: 'Query', getClientById: { __typename: 'BaseError' } | { __typename: 'QueryGetClientByIdSuccess', data: { __typename?: 'Client', id: number | null, name: string | null, phone: string | null } } | { __typename: 'RecordNotFoundError', message: string | null } | null };
 
-export type VariantFragment = { __typename: 'MenuEntryVariant', name?: string | null, description?: string | null, price?: number | null } & { ' $fragmentName'?: 'VariantFragment' };
+export type VariantFragment = { __typename: 'MenuEntryVariant', name: string | null, description: string | null, price: number | null } & { ' $fragmentName'?: 'VariantFragment' };
 
-export type LabelFragment = { __typename: 'MenuEntryLabel', name?: string | null, color?: string | null } & { ' $fragmentName'?: 'LabelFragment' };
+export type LabelFragment = { __typename: 'MenuEntryLabel', name: string | null, color: string | null } & { ' $fragmentName'?: 'LabelFragment' };
 
 export type CreateMenuEntryMutationVariables = Exact<{
   name: Scalars['String']['input'];
-  description?: InputMaybe<Scalars['String']['input']>;
-  variant?: InputMaybe<Array<MenuEntryVariantInput> | MenuEntryVariantInput>;
+  description: InputMaybe<Scalars['String']['input']>;
+  variant: InputMaybe<Array<MenuEntryVariantInput> | MenuEntryVariantInput>;
 }>;
 
 
-export type CreateMenuEntryMutation = { __typename?: 'Mutation', createMenuEntry?: { __typename: 'MenuEntry', id?: number | null, description?: string | null, name?: string | null, variant?: Array<(
+export type CreateMenuEntryMutation = { __typename?: 'Mutation', createMenuEntry: { __typename: 'MenuEntry', id: number | null, description: string | null, name: string | null, variant: Array<(
       { __typename?: 'MenuEntryVariant' }
       & { ' $fragmentRefs'?: { 'VariantFragment': VariantFragment } }
-    )> | null, labels?: Array<(
+    )> | null, labels: Array<(
       { __typename?: 'MenuEntryLabel' }
       & { ' $fragmentRefs'?: { 'LabelFragment': LabelFragment } }
     )> | null } | null };
 
 export type GetAllMenuEntriesQueryVariables = Exact<{
-  page?: InputMaybe<Scalars['Int']['input']>;
+  page: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type GetAllMenuEntriesQuery = { __typename?: 'Query', getAllMenuEntries?: Array<{ __typename: 'MenuEntry', id?: number | null, description?: string | null, name?: string | null, variant?: Array<(
+export type GetAllMenuEntriesQuery = { __typename?: 'Query', getAllMenuEntries: Array<{ __typename: 'MenuEntry', id: number | null, description: string | null, name: string | null, variant: Array<(
       { __typename?: 'MenuEntryVariant' }
       & { ' $fragmentRefs'?: { 'VariantFragment': VariantFragment } }
-    )> | null, labels?: Array<(
+    )> | null, labels: Array<(
       { __typename?: 'MenuEntryLabel' }
       & { ' $fragmentRefs'?: { 'LabelFragment': LabelFragment } }
     )> | null }> | null };
@@ -241,10 +241,10 @@ export type GetMenuEntryByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetMenuEntryByIdQuery = { __typename?: 'Query', getMenuEntryById?: { __typename?: 'BaseError', message?: string | null } | { __typename?: 'QueryGetMenuEntryByIdSuccess', data: { __typename: 'MenuEntry', id?: number | null, description?: string | null, name?: string | null, variant?: Array<(
+export type GetMenuEntryByIdQuery = { __typename?: 'Query', getMenuEntryById: { __typename?: 'BaseError', message: string | null } | { __typename?: 'QueryGetMenuEntryByIdSuccess', data: { __typename: 'MenuEntry', id: number | null, description: string | null, name: string | null, variant: Array<(
         { __typename?: 'MenuEntryVariant' }
         & { ' $fragmentRefs'?: { 'VariantFragment': VariantFragment } }
-      )> | null } } | { __typename?: 'RecordNotFoundError', message?: string | null } | null };
+      )> | null } } | { __typename?: 'RecordNotFoundError', message: string | null } | null };
 
 export const VariantFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"variant"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryVariant"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"price"}}]}}]} as unknown as DocumentNode<VariantFragment, unknown>;
 export const LabelFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"label"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryLabel"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}}]} as unknown as DocumentNode<LabelFragment, unknown>;

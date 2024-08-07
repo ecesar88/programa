@@ -20,6 +20,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     formState: { errors }
   } = useFormContext()
 
+  // maybe put this logic inside a hook???
   const selectedRow = useAtomValue(rowDataFocusedAtom)
 
   useEffect(() => {

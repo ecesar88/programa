@@ -1,7 +1,7 @@
 import { Dialog } from '@renderer/components'
 import { ScreenMenuProps } from '@renderer/components/molecules'
 import { OverlayMode } from '@renderer/constants/enums'
-import { useCreateOrEditOverlay } from '@renderer/hooks'
+import { useCreateOrEditOverlay, useSelectedRow } from '@renderer/hooks'
 import { MenuEntry } from '@renderer/queries/graphql/codegen/graphql'
 import { RefetchOptions } from '@tanstack/query-core'
 import React from 'react'
@@ -16,7 +16,11 @@ export const Read = (props: {
   menuEntries: MenuEntry[]
   onRowClick?: (data: MenuEntry, index: number) => void
 }): React.ReactNode => {
+  // refactor, pass state using jotai, get and set like the client's modal
   const { openOverlay, closeOverlay, isOverlayOpen, overlayMode } = useCreateOrEditOverlay()
+  const {
+    data: { set }
+  } = useSelectedRow<MenuEntry>()
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const form = useForm<any>({
@@ -39,6 +43,7 @@ export const Read = (props: {
               menuEntry={menuEntry}
               onClick={() => {
                 openOverlay(OverlayMode.NEW)
+                set(menuEntry)
               }}
             />
           ))}
@@ -48,7 +53,7 @@ export const Read = (props: {
       </div>
 
       <Dialog isOpen={isOverlayOpen} onClose={closeOverlay}>
-        <CreateOrEditModal onCancel={closeOverlay} overlayMode={overlayMode} />
+        <CreateOrEditModal overlayMode={overlayMode} onCancel={closeOverlay} />
       </Dialog>
     </FormProvider>
   )

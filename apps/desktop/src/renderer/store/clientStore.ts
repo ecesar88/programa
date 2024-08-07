@@ -1,8 +1,7 @@
-import { Client } from '@renderer/queries/graphql/codegen/graphql'
 import { focusAtom } from 'jotai-optics'
 import { getSelectedRowAtom } from './universal'
 
-export const selectedRowAtom = getSelectedRowAtom<Client | Record<never, never>>()
+export const selectedRowAtom = getSelectedRowAtom<Record<string, unknown>>()
 
 export const rowDataFocusedAtom = focusAtom(selectedRowAtom, (optic) => optic.prop('data'))
 rowDataFocusedAtom.debugLabel = 'rowDataFocusedAtom'
