@@ -13,22 +13,22 @@ const renderVariantPrice = (variant: MenuEntry['variant']) => {
 
   if (variant.length === 1) {
     return (
-      <>
-        <div className="min-w-[30px] flex flex-row">
+      <div className="flex flex-row min-w-[70px] justify-between">
+        <div>
           <b>R$&nbsp;</b>
         </div>
 
         <div>
           <b>{variant?.[0]?.price?.toFixed(2)}</b>
         </div>
-      </>
+      </div>
     )
   }
 
   if (variant.length > 1) {
     return (
       <div className="flex flex-row">
-        <p className="italic">Escolha a variante</p>
+        <p>{variant.length} variantes</p>
       </div>
     )
   }

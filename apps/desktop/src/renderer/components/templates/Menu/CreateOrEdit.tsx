@@ -24,8 +24,6 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
 
   useResetHookForm(reset, props.overlayMode)
 
-  console.log(menuEntryData)
-
   if (!menuEntryData) return
 
   return (
