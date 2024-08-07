@@ -1,7 +1,7 @@
 import { Button, FormGroup } from '@blueprintjs/core'
 import { Input, ModalTitle, InputError } from '@renderer/components'
 import { OverlayMode } from '@renderer/constants/enums'
-import { rowDataFocusedAtom } from '@renderer/store/clientStore'
+import { rowDataFocusedAtom } from '@renderer/store/selectedRowStore'
 import { useAtomValue } from 'jotai'
 import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'

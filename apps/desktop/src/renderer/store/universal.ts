@@ -8,7 +8,7 @@ export const store = createStore()
  *  The row data that is selected when the user clicks on the row on a table
  */
 export interface RowMetadata<T = Record<never, never>> {
-  meta: { index: number | null }
+  meta?: { index: number | null }
   data: T
 }
 

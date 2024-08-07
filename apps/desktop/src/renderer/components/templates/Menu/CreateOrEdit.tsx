@@ -1,8 +1,9 @@
 import { Button, FormGroup } from '@blueprintjs/core'
 import { Input, InputError, ModalTitle } from '@renderer/components'
 import { OverlayMode } from '@renderer/constants/enums'
-import { useSelectedRow } from '@renderer/hooks'
 import { MenuEntry } from '@renderer/queries/graphql/codegen/graphql'
+import { selectedRowAtom } from '@renderer/store'
+import { useAtomValue } from 'jotai'
 import { useFormContext } from 'react-hook-form'
 
 type CreateOrEditProps = {
@@ -20,32 +21,55 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
 
   if (!props.overlayMode) return null
 
-  const {
-    data: { get: menuEntryData }
-  } = useSelectedRow<MenuEntry>()
+  // const selectedRow = useAtomValue(rowDataFocusedAtom)
+
+  // useEffect(() => {
+  //   const rowHasData = Object.values(selectedRow)?.length > 0
+
+  //   if (props.overlayMode === OverlayMode.EDIT && rowHasData) {
+  //     reset(selectedRow)
+  //   } else if (props.overlayMode === OverlayMode.NEW && rowHasData) {
+  //     reset()
+  //   }
+
+  //   return () => {
+  //     reset({})
+  //   }
+  // }, [selectedRow, props.overlayMode])
+
+  // const {
+  //   data: { get: menuEntryData }
+  // } = useSelectedRow<MenuEntry>({ clearOnUmount: true })
+
+  const menuEntryData = useAtomValue(selectedRowAtom).data as MenuEntry
+
+  // const menuEntryData: Record<string, unknown> = {}
 
   if (!menuEntryData) return
 
   return (
-    <div className="p-5 bg-white h-[200px] w-[800px] rounded flex flex-col gap-1 justify-between">
+    <div className="p-5 bg-white h-fit w-[800px] rounded flex flex-col gap-1 justify-between">
       <ModalTitle title={menuEntryData.name as string} />
 
       <form id="create-form" className="w-full h-full">
         <div className="flex w-full gap-4">
           <FormGroup
             style={{ width: '100%', height: '60px' }}
-            label="Nome:"
+            label="Descrição:"
             labelInfo="(obrigatório)"
           >
             <Input
-              placeholder="Endereço"
+              placeholder="Descrição do item"
               fill
-              error={errors?.['address']?.message?.toString() as unknown as boolean}
-              {...register('address')}
+              error={errors?.['description']?.message?.toString() as unknown as boolean}
+              defaultValue={menuEntryData.description as string}
+              {...register('description')}
             />
             <InputError errorMessage={errors?.['address']?.message?.toString()} />
           </FormGroup>
+        </div>
 
+        <div>
           <FormGroup style={{ width: '100%', height: '60px' }} label="Telefone:">
             <Input
               placeholder="Observações"

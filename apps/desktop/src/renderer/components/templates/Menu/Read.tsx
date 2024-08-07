@@ -1,9 +1,11 @@
 import { Dialog } from '@renderer/components'
 import { ScreenMenuProps } from '@renderer/components/molecules'
 import { OverlayMode } from '@renderer/constants/enums'
-import { useCreateOrEditOverlay, useSelectedRow } from '@renderer/hooks'
+import { useCreateOrEditOverlay } from '@renderer/hooks'
 import { MenuEntry } from '@renderer/queries/graphql/codegen/graphql'
+import { selectedRowAtom } from '@renderer/store'
 import { RefetchOptions } from '@tanstack/query-core'
+import { useSetAtom } from 'jotai'
 import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { BottomButtonsRow } from './components/BottomButtonsRow'
@@ -18,12 +20,14 @@ export const Read = (props: {
 }): React.ReactNode => {
   // refactor, pass state using jotai, get and set like the client's modal
   const { openOverlay, closeOverlay, isOverlayOpen, overlayMode } = useCreateOrEditOverlay()
-  const {
-    data: { set }
-  } = useSelectedRow<MenuEntry>()
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const form = useForm<any>({
+  const setSelectedRowAtom = useSetAtom(selectedRowAtom)
+
+  // const {
+  //   data: { set }
+  // } = useSelectedRow<MenuEntry>()
+
+  const form = useForm<Omit<MenuEntry, '__typename'>>({
     // resolver: zodResolver<any>(CreateClientResolver),
     defaultValues: {}
   })
@@ -43,7 +47,7 @@ export const Read = (props: {
               menuEntry={menuEntry}
               onClick={() => {
                 openOverlay(OverlayMode.NEW)
-                set(menuEntry)
+                setSelectedRowAtom({ data: menuEntry })
               }}
             />
           ))}

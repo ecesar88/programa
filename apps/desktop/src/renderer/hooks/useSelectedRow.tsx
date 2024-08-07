@@ -1,14 +1,17 @@
-import { getSelectedRowAtom } from '@renderer/store'
+import { selectedRowAtom } from '@renderer/store'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { focusAtom } from 'jotai-optics'
+import { useEffect, useMemo } from 'react'
 
-/*
+type useSelectedRowOptions = {
+  clearOnUmount: boolean
+}
+
+/**
  * This hook is meant to be used to retrieve and modify data from the selectedRow atom from Jotai.
  * This atom is used to transfer data from Read screens to modals, such as the CreateOrEdit overlay in some of the existing screens.
  */
-export const useSelectedRow = <T extends object>() => {
-  const selectedRowAtom = getSelectedRowAtom<T>()
-
+export const useSelectedRow = <T extends object>(options?: useSelectedRowOptions) => {
   // Focus on the selectedRowAtom DATA property
   const rowDataFocusedAtom = focusAtom(selectedRowAtom, (optic) => optic.prop('data'))
 
@@ -26,20 +29,42 @@ export const useSelectedRow = <T extends object>() => {
   // Set on the selectedRowAtom atom value
   const setSelectedRow = useSetAtom(selectedRowAtom)
 
-  const clearSelectedRowAtom = () => setSelectedRow({ data: {} as T, meta: { index: null } })
-
   selectedRowAtom.debugLabel = 'selectedRowAtom'
   rowDataFocusedAtom.debugLabel = 'rowDataFocusedAtom'
   rowMetaDataFocusedAtom.debugLabel = 'rowMetaDataFocusedAtom'
 
+  const atoms = useMemo(() => {
+    return {
+      selectedRowAtom,
+      rowDataFocusedAtom,
+      rowMetaDataFocusedAtom,
+      selectedRowDataValue,
+      setSelectedRowData,
+      selectedRowMetaValue,
+      setSelectedRowMeta,
+      setSelectedRow
+    }
+  }, [])
+
+  const clearSelectedRowAtom = () => setSelectedRow({ data: {} as T, meta: { index: null } })
+
+  useEffect(() => {
+    return () => {
+      if (!options?.clearOnUmount) return
+      // setSelectedRowData({} as T)
+      // setSelectedRowMeta({} as any)
+      clearSelectedRowAtom()
+    }
+  }, [options?.clearOnUmount])
+
   return {
     data: {
-      get: selectedRowDataValue,
-      set: setSelectedRowData
+      get: atoms.selectedRowDataValue,
+      set: atoms.setSelectedRowData
     },
     meta: {
-      get: selectedRowMetaValue,
-      set: setSelectedRowMeta
+      get: atoms.selectedRowMetaValue,
+      set: atoms.setSelectedRowMeta
     },
     clearAll: clearSelectedRowAtom
   }
