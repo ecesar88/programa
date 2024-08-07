@@ -7,6 +7,7 @@ type useSelectedRowOptions = {
   clearOnUmount: boolean
 }
 
+// 😭😭😭😭😭😭😭😭😭😭😭😭😭 DOES NOT WORK 😭😭😭😭😭😭😭😭😭😭😭😭😭
 /**
  * This hook is meant to be used to retrieve and modify data from the selectedRow atom from Jotai.
  * This atom is used to transfer data from Read screens to modals, such as the CreateOrEdit overlay in some of the existing screens.
