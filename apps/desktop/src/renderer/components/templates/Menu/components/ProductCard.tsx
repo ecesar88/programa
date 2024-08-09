@@ -1,5 +1,6 @@
+import { Label } from '@renderer/components/molecules'
 import { MenuEntry } from '@renderer/queries/graphql/codegen/graphql'
-import { cn, getContrastingTextColor } from '@renderer/utils'
+import { cn } from '@renderer/utils'
 
 interface ProductCardProps {
   idx: number
@@ -70,22 +71,7 @@ export const ProductCard = (props: ProductCardProps) => {
 
         <div className="w-full pb-2 pl-4 flex flex-row gap-1">
           {props.menuEntry.labels?.map((label, idx) => (
-            <div
-              key={idx}
-              style={{
-                backgroundColor: `${label.color}`
-              }}
-              className="rounded-md w-fit min-w-[30px] flex justify-center px-2 py-0"
-            >
-              <p
-                style={{
-                  color: getContrastingTextColor(label.color as string)
-                }}
-                className="text-xs"
-              >
-                {label.name}
-              </p>
-            </div>
+            <Label key={idx} name={label.name} color={label.color} />
           ))}
         </div>
       </div>

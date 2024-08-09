@@ -15,15 +15,14 @@ export const useResetHookForm = <T extends FieldValues>(
   const selectedRow = useAtomValue(selectedRowAtom).data
 
   useEffect(() => {
-    const rowHasData = Object.values(selectedRow)?.length > 0
-
-    if (overlayMode === OverlayMode.EDIT && rowHasData) {
+    if (overlayMode === OverlayMode.EDIT) {
       resetFn(selectedRow as T)
-    } else if (overlayMode === OverlayMode.NEW && rowHasData) {
+    } else if (overlayMode === OverlayMode.NEW) {
       resetFn()
     }
+
     return () => {
       resetFn({} as T)
     }
-  }, [selectedRow, overlayMode])
+  }, [overlayMode])
 }

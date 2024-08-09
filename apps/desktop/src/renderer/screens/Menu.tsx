@@ -1,38 +1,27 @@
 import { Order } from '@prisma/client'
-import { ContentScrollContainer, DataHeader, Loading, ScreenMenuProps } from '@renderer/components'
+import {
+  ContentScrollContainer,
+  DataHeader,
+  Dialog,
+  Loading,
+  ScreenMenuProps
+} from '@renderer/components'
 import { Read } from '@renderer/components/templates/Menu'
-import { OverlayMode } from '@renderer/constants/enums'
+import { CreateOrEditModal } from '@renderer/components/templates/Menu/CreateOrEdit'
+import { useCreateOrEditOverlay } from '@renderer/hooks'
 import { MenuEntry } from '@renderer/queries/graphql/codegen/graphql'
 import { get } from '@renderer/queries/operations/menu'
 import { useAtom } from 'jotai'
 import { atomWithQuery } from 'jotai-tanstack-query'
-import { useCallback, useMemo, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useMemo } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { match } from 'ts-pattern'
 
 export const Menu = () => {
   const { t } = useTranslation()
 
-  // TODO: Implementar hook useOverlay
-  // const {open: {isOpen, setIsOpen}, mode: {mode, setMode}} = useOverlay()
-  const [isOverlayOpen, setIsOverlayOpen] = useState(false)
-  const [overlayMode, setOverlayMode] = useState<OverlayMode | null>(null)
-
-  const openModalOverlay = useCallback(
-    (mode: OverlayMode) => {
-      setIsOverlayOpen(true)
-      return setOverlayMode(mode)
-    },
-    [overlayMode]
-  )
-
-  const closeModalOverlay = useCallback(() => {
-    setIsOverlayOpen(false)
-    setOverlayMode(null)
-
-    return false
-  }, [overlayMode])
+  const { openOverlay, closeOverlay, isOverlayOpen, overlayMode } = useCreateOrEditOverlay()
 
   type OrderWithoutId = Omit<Order, 'id'>
   const form = useForm<OrderWithoutId>({
@@ -73,21 +62,31 @@ export const Menu = () => {
     },
     onCancelClick: () => {
       form.reset()
-      closeModalOverlay()
+      closeOverlay()
     }
   }
 
   return (
-    <div className="flex flex-col gap-2 h-full">
-      <DataHeader title={t('screens.menu.title')} />
+    <FormProvider {...form}>
+      <div className="flex flex-col gap-2 h-full">
+        <DataHeader title={t('screens.menu.title')} />
 
-      <ContentScrollContainer>
-        {match(isLoadingMenuEntries)
-          .with(true, () => <Loading />)
-          .otherwise(() => (
-            <Read actions={actions} menuEntries={(data?.getAllMenuEntries as MenuEntry[]) ?? []} />
-          ))}
-      </ContentScrollContainer>
-    </div>
+        <ContentScrollContainer>
+          {match(isLoadingMenuEntries)
+            .with(true, () => <Loading />)
+            .otherwise(() => (
+              <Read
+                actions={actions}
+                openOverlay={openOverlay}
+                menuEntries={(data?.getAllMenuEntries as MenuEntry[]) ?? []}
+              />
+            ))}
+        </ContentScrollContainer>
+      </div>
+
+      <Dialog isOpen={isOverlayOpen} onClose={closeOverlay}>
+        <CreateOrEditModal overlayMode={overlayMode} onCancel={closeOverlay} />
+      </Dialog>
+    </FormProvider>
   )
 }

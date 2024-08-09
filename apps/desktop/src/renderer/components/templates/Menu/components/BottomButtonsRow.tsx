@@ -5,6 +5,7 @@ import { FaFilePdf } from 'react-icons/fa'
 import { TbReload } from 'react-icons/tb'
 
 type BottomButtonsRowProps = {
+  onOpenOverlay: () => void
   actions: ScreenMenuProps['actions'] & { refetch: (options?: RefetchOptions) => void }
 }
 
@@ -17,7 +18,7 @@ export const BottomButtonsRow = (props: BottomButtonsRowProps) => {
             icon={'plus'}
             intent={'success'}
             onClick={() => {
-              alert('Exportado')
+              props.onOpenOverlay()
             }}
           >
             Novo
@@ -25,13 +26,7 @@ export const BottomButtonsRow = (props: BottomButtonsRowProps) => {
         </div>
 
         <div>
-          <Button
-            icon={<TbReload size={20} />}
-            intent={'none'}
-            onClick={async () => {
-              await props.actions.refetch()
-            }}
-          >
+          <Button icon={<TbReload size={20} />} intent={'none'} onClick={props.actions.refetch}>
             Atualizar
           </Button>
         </div>
