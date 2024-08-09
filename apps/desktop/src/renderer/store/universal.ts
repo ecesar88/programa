@@ -12,9 +12,6 @@ export interface RowMetadata<T = Record<never, never>> {
   data: T
 }
 
-// TODO: Fix the state machine of this component. It should be simpler
-// FIX: Fix the state machine of this component. It should be simpler
-
 export const rowMetadata = atom<RowMetadata<object>['meta']>({ index: null })
 export const rowData = atom<RowMetadata<any | object>['data']>({})
 

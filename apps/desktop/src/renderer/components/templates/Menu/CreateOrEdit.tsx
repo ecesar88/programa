@@ -28,9 +28,9 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
   if (!menuEntryData) return
 
   return (
-    <div className="p-5 bg-white h-fit w-[800px] rounded flex flex-col gap-1 justify-between">
-      <div className="flex flex-col">
-        <DynamicallyEditableInput render={''} />
+    <div className="flex flex-col gap-4 p-5 w-full min-w-[900px]">
+      <div className="flex flex-row items-center gap-4">
+        {/* <DynamicallyEditableInput render={(onClick) => <div onClick={onClick}>teste haha</div>} /> */}
 
         <ModalTitle
           title={
@@ -40,91 +40,73 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
           }
         />
 
-        <div className="flex flex-row gap-2">
-          <p className="underline"> {'{...categoria}'}</p>
+        <div className="flex flex-row gap-2 pb-1">
+          <p className="underline">Elemento Químico</p>
         </div>
       </div>
 
-      <div className="flex flex-col gap-1 pt-4">
-        <div>
-          <p className="font-bold">Etiquetas</p>
-        </div>
+      <div className="flex flex-row justify-between gap-4">
+        <div className="h-fit rounded flex flex-col gap-1 justify-between flex-[10]">
+          <img
+            src="https://www.sabornamesa.com.br/media/k2/items/cache/b5b56b2ae93d3dc958cf0c21c9383b18_XL.jpg"
+            className="w-full h-full max-w-[500px] rounded-md"
+          />
 
-        <div className="flex flex-row gap-2">
-          <div className="flex flex-row gap-1">
-            {menuEntryData.labels?.map((label, idx) => (
-              <Label
-                key={idx}
-                name={label.name}
-                color={label.color}
-                className="min-h-[26px] flex justify-center align-center"
-              />
-            ))}
-          </div>
-
-          <div>
-            <Button
-              icon={'plus'}
-              intent={'none'}
-              className="rounded-md"
-              onClick={() => {
-                console.log(menuEntryData)
-                // Abrir modal igual no trello
-                console.log('add new cateogory')
-              }}
-            />
-          </div>
-        </div>
-      </div>
-
-      <form id="create-form" className="w-full h-full">
-        <div className="pt-4 flex flex-col gap-4">
-          <div>
-            <p className="text-lg font-bold">Descrição</p>
-
-            {/* <DynamicallyEditableTextArea /> */}
-
-            <FormGroup className="w-full h-full max-h-[180px] min-h-[50px]">
-              <TextArea
-                className="max-h-[160px] min-h-[50px]"
-                placeholder="Descrição"
-                fill
-                // error={errors?.['description']?.message?.toString() as unknown as boolean}
-                defaultValue={menuEntryData.description as string}
-                {...register('description')}
-              />
-              {/* <InputError errorMessage={errors?.['description']?.message?.toString()} /> */}
-            </FormGroup>
-          </div>
-
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1 pt-4">
             <div>
-              <p className="text-lg font-bold">Variantes</p>
+              <p className="font-bold">Etiquetas</p>
             </div>
 
-            <div className="flex flex-col gap-2 pb-4">
-              {menuEntryData.variant?.map((variant, idx) => (
-                <div
-                  key={idx}
-                  className="rounded-md bg-gold4 text-black px-2 py-1 [&_*]:!cursor-pointer !cursor-pointer hover:bg-gold3 transition-all flex flex-row justify-between"
-                >
-                  <div className="flex flex-col">
-                    <div>
-                      <b>{variant.name}</b>
-                    </div>
+            <div className="flex flex-row gap-2">
+              <div className="flex flex-row gap-1">
+                {menuEntryData.labels?.map((label, idx) => (
+                  <Label
+                    key={idx}
+                    name={label.name}
+                    color={label.color}
+                    className="min-h-[26px] flex justify-center align-center"
+                  />
+                ))}
+              </div>
 
-                    <div>{variant.description}</div>
-                  </div>
-
-                  <div>{variant.price}</div>
-                </div>
-              ))}
+              <div>
+                <Button
+                  icon={'plus'}
+                  intent={'none'}
+                  className="rounded-md"
+                  onClick={() => {
+                    console.log(menuEntryData)
+                    // Abrir modal igual no trello
+                    console.log('add new cateogory')
+                  }}
+                />
+              </div>
             </div>
           </div>
-        </div>
-      </form>
 
-      {/* <form id="create-form" className="w-full h-full">
+          <form id="create-form" className="w-full h-full">
+            <div className="pt-4 flex flex-col gap-4">
+              <div>
+                <p className="text-lg font-bold">Descrição</p>
+
+                {/* <DynamicallyEditableTextArea /> */}
+
+                <FormGroup className="w-full h-full max-h-[180px] min-h-[100px]">
+                  <TextArea
+                    className="max-h-[160px] min-h-[100px]"
+                    placeholder="Descrição"
+                    fill
+                    // error={errors?.['description']?.message?.toString() as unknown as boolean}
+                    defaultValue={menuEntryData.description as string}
+                    {...register('description')}
+                  />
+                  {/* <InputError errorMessage={errors?.['description']?.message?.toString()} /> */}
+                </FormGroup>
+              </div>
+            </div>
+          </form>
+
+          {/* <form id="create-form" className="w-full h-full">
         <div className="flex w-full gap-4">
           <FormGroup
             style={{ width: '100%', height: '60px' }}
@@ -154,10 +136,37 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
           </FormGroup>
         </div>
       </form> */}
+        </div>
 
-      <div className="flex flex-row gap-3">
+        <div className="flex flex-col gap-2 flex-[8]">
+          <div>
+            <p className="text-lg font-bold">Variantes</p>
+          </div>
+
+          <div className="flex flex-col gap-2 pb-4">
+            {menuEntryData.variant?.map((variant, idx) => (
+              <div
+                key={idx}
+                className="rounded-md bg-gold4 text-black px-2 py-1 [&_*]:!cursor-pointer !cursor-pointer hover:bg-gold3 transition-all flex flex-row justify-between"
+              >
+                <div className="flex flex-col">
+                  <div>
+                    <b>{variant.name}</b>
+                  </div>
+
+                  <div>{variant.description}</div>
+                </div>
+
+                <div>{variant.price}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-row gap-3 justify-end">
         <Button
-          fill
+          // fill
           intent="none"
           icon="disable"
           onClick={() => {
@@ -169,7 +178,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
 
         <Button
           icon="floppy-disk"
-          fill
+          // fill
           intent="warning"
           form="create-form"
           type="submit"
