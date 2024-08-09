@@ -6,7 +6,10 @@ import { useResetHookForm } from '@renderer/hooks/useResetHookForm'
 import { MenuEntry } from '@renderer/queries/graphql/codegen/graphql'
 import { selectedRowAtom } from '@renderer/store'
 import { useAtomValue } from 'jotai'
+import { when } from 'node_modules/ts-pattern/dist/patterns'
+import { useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
+import { debounce } from 'remeda'
 
 type CreateOrEditProps = {
   onSave?: () => void
@@ -21,6 +24,30 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     formState: { errors }
   } = useFormContext()
 
+  const [imageWidth, setImageWidth] = useState<number>(200)
+
+  const getImageWidthBasedOnScreenSize = () => {
+    let width: number = 0
+
+    const wHeight = window.innerHeight
+
+    if (wHeight >= 400 && wHeight <= 768) width = 200
+    if (wHeight >= 768 && wHeight <= 1050) width = 330
+    if (wHeight >= 1050 && wHeight <= 1920) width = 450
+
+    setImageWidth(width)
+  }
+
+  const debouncer = debounce(getImageWidthBasedOnScreenSize, { waitMs: 500, timing: 'trailing' })
+
+  useEffect(() => {
+    window.addEventListener('resize', debouncer.call)
+
+    return () => {
+      window.removeEventListener('resize', debouncer.call)
+    }
+  }, [window.innerHeight])
+
   const menuEntryData = useAtomValue(selectedRowAtom).data as MenuEntry
 
   useResetHookForm(reset, props.overlayMode)
@@ -28,7 +55,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
   if (!menuEntryData) return
 
   return (
-    <div className="flex flex-col gap-4 p-5 w-full min-w-[900px]">
+    <div className="flex flex-col gap-4 p-5 w-full !h-full min-w-[900px]">
       <div className="flex flex-row items-center gap-4">
         {/* <DynamicallyEditableInput render={(onClick) => <div onClick={onClick}>teste haha</div>} /> */}
 
@@ -49,7 +76,10 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
         <div className="h-fit rounded flex flex-col gap-1 justify-between flex-[10]">
           <img
             src="https://www.sabornamesa.com.br/media/k2/items/cache/b5b56b2ae93d3dc958cf0c21c9383b18_XL.jpg"
-            className="w-full h-full max-w-[500px] rounded-md"
+            className="rounded-md transition-all"
+            style={{
+              maxWidth: `${imageWidth}px`
+            }}
           />
 
           <div className="flex flex-col gap-1 pt-4">
@@ -84,16 +114,16 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
             </div>
           </div>
 
-          <form id="create-form" className="w-full h-full">
+          <form id="create-form" className="w-full">
             <div className="pt-4 flex flex-col gap-4">
               <div>
                 <p className="text-lg font-bold">Descrição</p>
 
                 {/* <DynamicallyEditableTextArea /> */}
 
-                <FormGroup className="w-full h-full max-h-[180px] min-h-[100px]">
+                <FormGroup className="w-full h-full max-h-[180px] min-h-[20px]">
                   <TextArea
-                    className="max-h-[160px] min-h-[100px]"
+                    className="max-h-[160px] min-h-[20px]"
                     placeholder="Descrição"
                     fill
                     // error={errors?.['description']?.message?.toString() as unknown as boolean}
