@@ -1,15 +1,17 @@
-import { Button, FormGroup, TextArea } from '@blueprintjs/core'
+import { Button, Colors, FormGroup, TextArea } from '@blueprintjs/core'
 import { ModalTitle } from '@renderer/components'
 import { Label } from '@renderer/components/molecules'
 import { OverlayMode } from '@renderer/constants/enums'
 import { useResetHookForm } from '@renderer/hooks/useResetHookForm'
-import { MenuEntry } from '@renderer/queries/graphql/codegen/graphql'
+import { MenuEntry, MenuEntryVariant } from '@renderer/queries/graphql/codegen/graphql'
 import { selectedRowAtom } from '@renderer/store'
 import { useAtomValue } from 'jotai'
 import { useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { debounce } from 'remeda'
-import { Price } from './components/Price'
+import { Variants } from './components/Variants'
+import { FaLock } from 'react-icons/fa'
+import { FaLockOpen } from 'react-icons/fa'
 
 type CreateOrEditProps = {
   onSave?: () => void
@@ -146,28 +148,16 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
         </div>
 
         <div className="flex flex-col gap-2 flex-[8]">
-          <div>
+          <div className="flex flex-row gap-2 items-center">
             <p className="text-lg font-bold">Variantes</p>
+            {isEditModeActive ? (
+              <FaLockOpen color={Colors.GRAY3} size="16px" />
+            ) : (
+              <FaLock color={Colors.GRAY3} size="16px" />
+            )}
           </div>
 
-          <div className="flex flex-col gap-2 pb-4">
-            {menuEntryData.variant?.map((variant, idx) => (
-              <div
-                key={idx}
-                className="rounded-md bg-gold4 text-black px-2 py-1 [&_*]:!cursor-pointer !cursor-pointer hover:bg-gold3 transition-all flex flex-row justify-between"
-              >
-                <div className="flex flex-col">
-                  <div>
-                    <b>{variant.name}</b>
-                  </div>
-
-                  <div>{variant.description}</div>
-                </div>
-
-                <Price price={variant.price as number} />
-              </div>
-            ))}
-          </div>
+          <Variants variants={menuEntryData.variant as MenuEntryVariant[]} />
         </div>
       </div>
 
