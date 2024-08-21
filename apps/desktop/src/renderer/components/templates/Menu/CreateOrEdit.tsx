@@ -50,6 +50,10 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     }
   }, [window.innerHeight])
 
+  useEffect(() => {
+    getImageWidthBasedOnScreenSize()
+  }, [])
+
   const menuEntryData = useAtomValue(selectedRowAtom).data as MenuEntry
 
   useResetHookForm(reset, props.overlayMode)
