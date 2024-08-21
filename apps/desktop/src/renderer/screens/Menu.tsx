@@ -85,7 +85,11 @@ export const Menu = () => {
       </div>
 
       <Dialog isOpen={isOverlayOpen} onClose={closeOverlay}>
-        <CreateOrEditModal overlayMode={overlayMode} onCancel={closeOverlay} />
+        <CreateOrEditModal
+          overlayMode={overlayMode}
+          onSave={actions.onSaveClick}
+          onCancel={closeOverlay}
+        />
       </Dialog>
     </FormProvider>
   )

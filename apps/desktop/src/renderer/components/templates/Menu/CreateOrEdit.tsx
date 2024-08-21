@@ -1,15 +1,15 @@
 import { Button, FormGroup, TextArea } from '@blueprintjs/core'
 import { ModalTitle } from '@renderer/components'
-import { DynamicallyEditableInput, Label } from '@renderer/components/molecules'
+import { Label } from '@renderer/components/molecules'
 import { OverlayMode } from '@renderer/constants/enums'
 import { useResetHookForm } from '@renderer/hooks/useResetHookForm'
 import { MenuEntry } from '@renderer/queries/graphql/codegen/graphql'
 import { selectedRowAtom } from '@renderer/store'
 import { useAtomValue } from 'jotai'
-import { when } from 'node_modules/ts-pattern/dist/patterns'
 import { useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { debounce } from 'remeda'
+import { Price } from './components/Price'
 
 type CreateOrEditProps = {
   onSave?: () => void
@@ -24,7 +24,9 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     formState: { errors }
   } = useFormContext()
 
-  const [imageWidth, setImageWidth] = useState<number>(200)
+  const [imageWidth, setImageWidth] = useState<number>(450)
+
+  const [isEditModeActive, setIsEditModeActive] = useState(false)
 
   const getImageWidthBasedOnScreenSize = () => {
     let width: number = 0
@@ -55,20 +57,22 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
   if (!menuEntryData) return
 
   return (
-    <div className="flex flex-col gap-4 p-5 w-full !h-full min-w-[900px]">
-      <div className="flex flex-row items-center gap-4">
+    <div className="flex flex-col p-5 w-full !h-full min-w-[900px]">
+      <div className="flex flex-row justify-between">
         {/* <DynamicallyEditableInput render={(onClick) => <div onClick={onClick}>teste haha</div>} /> */}
 
-        <ModalTitle
-          title={
-            props.overlayMode === OverlayMode.NEW
-              ? 'Criar novo item'
-              : (menuEntryData.name as string)
-          }
-        />
+        <div className="flex flex-row items-center gap-4">
+          <ModalTitle
+            title={
+              props.overlayMode === OverlayMode.NEW
+                ? 'Criar novo item'
+                : (menuEntryData.name as string)
+            }
+          />
 
-        <div className="flex flex-row gap-2 pb-1">
-          <p className="underline">Elemento Químico</p>
+          <div className="flex flex-row gap-2 pb-1">
+            <p className="underline">Elemento Químico</p>
+          </div>
         </div>
       </div>
 
@@ -135,37 +139,6 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
               </div>
             </div>
           </form>
-
-          {/* <form id="create-form" className="w-full h-full">
-        <div className="flex w-full gap-4">
-          <FormGroup
-            style={{ width: '100%', height: '60px' }}
-            label="Descrição:"
-            labelInfo="(obrigatório)"
-          >
-            <Input
-              placeholder="Descrição do item"
-              fill
-              error={errors?.['description']?.message?.toString() as unknown as boolean}
-              defaultValue={menuEntryData.description as string}
-              {...register('description')}
-            />
-            <InputError errorMessage={errors?.['address']?.message?.toString()} />
-          </FormGroup>
-        </div>
-
-        <div>
-          <FormGroup style={{ width: '100%', height: '60px' }} label="Telefone:">
-            <Input
-              placeholder="Observações"
-              fill
-              error={errors?.['observations']?.message?.toString() as unknown as boolean}
-              {...register('observations')}
-            />
-            <InputError errorMessage={errors?.['phone']?.message?.toString()} />
-          </FormGroup>
-        </div>
-      </form> */}
         </div>
 
         <div className="flex flex-col gap-2 flex-[8]">
@@ -187,16 +160,15 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
                   <div>{variant.description}</div>
                 </div>
 
-                <div>{variant.price}</div>
+                <Price price={variant.price as number} />
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      <div className="flex flex-row gap-3 justify-end">
+      <div className="flex flex-row gap-3 justify-between border-t border-t-gray1 pt-4 border-opacity-25">
         <Button
-          // fill
           intent="none"
           icon="disable"
           onClick={() => {
@@ -206,20 +178,33 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
           Cancelar
         </Button>
 
-        <Button
-          icon="floppy-disk"
-          // fill
-          intent="warning"
-          form="create-form"
-          type="submit"
-          onClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-            e.preventDefault()
+        {isEditModeActive ? (
+          <Button
+            icon="floppy-disk"
+            intent="warning"
+            form="create-form"
+            type="submit"
+            onClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+              e.preventDefault()
+              setIsEditModeActive(false)
 
-            props?.onSave?.()
-          }}
-        >
-          Salvar
-        </Button>
+              props?.onSave?.()
+            }}
+          >
+            Salvar
+          </Button>
+        ) : (
+          <Button
+            icon={'edit'}
+            intent={'primary'}
+            onClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+              e.preventDefault()
+              setIsEditModeActive(true)
+            }}
+          >
+            Editar
+          </Button>
+        )}
       </div>
     </div>
   )

@@ -1,6 +1,7 @@
 import { Label } from '@renderer/components/molecules'
 import { MenuEntry } from '@renderer/queries/graphql/codegen/graphql'
 import { cn } from '@renderer/utils'
+import { Price } from './Price'
 
 interface ProductCardProps {
   idx: number
@@ -13,17 +14,7 @@ const renderVariantPrice = (variant: MenuEntry['variant']) => {
   if (!variant) return
 
   if (variant.length === 1) {
-    return (
-      <div className="flex flex-row min-w-[70px] justify-between">
-        <div>
-          <b>R$&nbsp;</b>
-        </div>
-
-        <div>
-          <b>{variant?.[0]?.price?.toFixed(2)}</b>
-        </div>
-      </div>
-    )
+    return <Price price={variant[0].price as number} />
   }
 
   if (variant.length > 1) {

@@ -1,7 +1,7 @@
 import { Button } from '@blueprintjs/core'
 import { FORM_ID } from '@renderer/constants'
-import { isLoadingAtom, rowDataFocusedAtom, selectedRowAtom } from '@renderer/store'
-import { useAtomValue, useSetAtom } from 'jotai'
+import { isLoadingAtom, rowDataFocusedAtom } from '@renderer/store'
+import { useAtomValue } from 'jotai'
 
 export interface ScreenMenuProps {
   actions?: {
@@ -15,9 +15,9 @@ export interface ScreenMenuProps {
 
 export const ScreenMenu = (props: ScreenMenuProps): React.ReactNode => {
   const selectedRow = useAtomValue(rowDataFocusedAtom)
-  const setSelectedRow = useSetAtom(selectedRowAtom)
+  // const setSelectedRow = useSetAtom(selectedRowAtom)
 
-  const clearSelectedRow = () => setSelectedRow({ data: {}, meta: { index: null } })
+  // const clearSelectedRow = () => setSelectedRow({ data: {}, meta: { index: null } })
 
   const selectedItem = selectedRow !== undefined && Object.values(selectedRow)?.length > 0
 
