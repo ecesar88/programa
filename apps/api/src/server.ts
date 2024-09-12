@@ -65,7 +65,7 @@ const PUBLIC_FOLDER_PATH = path.join(process.cwd(), PUBLIC_FOLDER_NAME)
   express.use(ROUTES.INFO_DOCS, Express.static(PUBLIC_FOLDER_PATH))
   express.use(helmet(helmetOptions))
   express.use(Express.json())
-  express.use(cors({ origin: 'http://localhost:5173' })) // 5173 is the Electron frontend's port
+  express.use(cors({ origin: 'http://localhost:5173' })) // 5173 is the Electron's frontend port
   express.use(yoga.graphqlEndpoint, yoga)
 
   express.use(HTTPLoggerMiddleware)
