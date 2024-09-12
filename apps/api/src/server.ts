@@ -19,6 +19,7 @@ import { gqlLogger } from './utils/graphqlLogger'
 import { LOG_TYPE, logger } from './utils/logger'
 import { parseEnv } from './utils/parseEnv'
 import { printRouteTable } from './utils/printRouteTable'
+import { ROUTES } from './routes'
 
 const helmetOptions: HelmetOptions = {
   contentSecurityPolicy: {
@@ -61,7 +62,7 @@ const PUBLIC_FOLDER_PATH = path.join(process.cwd(), PUBLIC_FOLDER_NAME)
     ]
   })
 
-  express.use('/info/docs', Express.static(PUBLIC_FOLDER_PATH))
+  express.use(ROUTES.INFO_DOCS, Express.static(PUBLIC_FOLDER_PATH))
   express.use(helmet(helmetOptions))
   express.use(Express.json())
   express.use(cors({ origin: 'http://localhost:5173' })) // 5173 is the Electron frontend's port

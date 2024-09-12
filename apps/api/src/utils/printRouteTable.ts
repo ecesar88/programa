@@ -1,9 +1,10 @@
 import { Table } from 'console-table-printer'
 import expressListEndpoints from 'express-list-endpoints'
 import { type Express } from 'express'
+import { ROUTES } from '../routes'
 
 export const printRouteTable = (express: Express) => {
-  const endpoints = expressListEndpoints(express).map((ed) => ({
+  const endpoints = expressListEndpoints(express.router).map((ed) => ({
     path: ed.path,
     methods: ed.methods,
     ...(!ed.middlewares.includes('anonymous')
@@ -20,7 +21,8 @@ export const printRouteTable = (express: Express) => {
     ]
   })
 
-  table.addRow({ path: '/graphql', methods: 'POST' }, { color: 'blue', separator: true })
+  table.addRow({ path: ROUTES.GRAPHQL, methods: 'POST' }, { color: 'blue', separator: true })
+  table.addRow({ path: ROUTES.INFO_DOCS, methods: 'GET' }, { color: 'yellow', separator: true })
 
   endpoints.forEach((ed) => {
     table.addRow(ed, { color: 'yellow', separator: true })
