@@ -67,17 +67,28 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
       <div className="flex flex-row justify-between">
         {/* <DynamicallyEditableInput render={(onClick) => <div onClick={onClick}>teste haha</div>} /> */}
 
-        <div className="flex flex-row items-center gap-4">
-          <ModalTitle
-            title={
-              props.overlayMode === OverlayMode.NEW
-                ? 'Criar novo item'
-                : (menuEntryData.name as string)
-            }
-          />
+        <div className="flex flex-row items-center gap-4 justify-between w-full">
+          <div className="flex flex-row gap-2 items-center">
+            <ModalTitle
+              title={
+                props.overlayMode === OverlayMode.NEW
+                  ? 'Criar novo item'
+                  : (menuEntryData.name as string)
+              }
+            />
 
-          <div className="flex flex-row gap-2 pb-1">
-            <p className="underline">Elemento Químico</p>
+            <div className="flex flex-row gap-2 pb-1">
+              <p className="underline">Elemento Químico</p>
+            </div>
+          </div>
+
+          <div className="pb-1.5">
+            {/* Add tooltip */}
+            {isEditModeActive ? (
+              <FaLockOpen color={Colors.GRAY3} size="22px" />
+            ) : (
+              <FaLock color={Colors.GRAY3} size="22px" />
+            )}
           </div>
         </div>
       </div>
@@ -131,33 +142,35 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
 
                 {/* <DynamicallyEditableTextArea /> */}
 
-                <FormGroup className="w-full h-full max-h-[180px] min-h-[20px]">
-                  <TextArea
-                    className="max-h-[160px] min-h-[20px]"
-                    placeholder="Descrição"
-                    fill
-                    // error={errors?.['description']?.message?.toString() as unknown as boolean}
-                    defaultValue={menuEntryData.description as string}
-                    {...register('description')}
-                  />
-                  {/* <InputError errorMessage={errors?.['description']?.message?.toString()} /> */}
-                </FormGroup>
+                {isEditModeActive ? (
+                  <FormGroup className="w-full h-full max-h-[180px] min-h-[60px]">
+                    <TextArea
+                      className="max-h-[160px] min-h-[60px]"
+                      placeholder="Descrição"
+                      fill
+                      // error={errors?.['description']?.message?.toString() as unknown as boolean}
+                      defaultValue={menuEntryData.description as string}
+                      {...register('description')}
+                    />
+                    {/* <InputError errorMessage={errors?.['description']?.message?.toString()} /> */}
+                  </FormGroup>
+                ) : (
+                  <div className="pb-4 max-w-[470px] text-wrap min-h-[85px]">
+                    <p>{menuEntryData.description}</p>
+                  </div>
+                )}
               </div>
             </div>
           </form>
         </div>
 
         <div className="flex flex-col gap-2 flex-[8]">
-          <div className="flex flex-row gap-2 items-center">
-            <p className="text-lg font-bold">Variantes</p>
-            {isEditModeActive ? (
-              <FaLockOpen color={Colors.GRAY3} size="16px" />
-            ) : (
-              <FaLock color={Colors.GRAY3} size="16px" />
-            )}
-          </div>
+          <p className="text-lg font-bold">Variantes</p>
 
-          <Variants variants={menuEntryData.variant as MenuEntryVariant[]} />
+          <Variants
+            isEditModeActive={isEditModeActive}
+            variants={menuEntryData.variant as MenuEntryVariant[]}
+          />
         </div>
       </div>
 
