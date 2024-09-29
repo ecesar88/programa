@@ -1,6 +1,7 @@
 export enum ROUTES {
-  GRAPHQL = '/graphql',
-  INFO = '/info',
-  INFO_HEALTHCHECK = '/info/healthcheck',
-  INFO_DOCS = '/info/docs'
+  GRAPHQL_ROOT = '/graphql',
+
+  INFO_ROOT = '/info',
+  INFO_HEALTHCHECK = '/healthcheck',
+  INFO_DOCS = '/docs'
 }

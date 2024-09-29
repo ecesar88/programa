@@ -101,7 +101,7 @@ export const create: Resolver<CreateClientQueryInput> = async (_parent, args, ct
         phone
       }
     })
-  } catch (error) {
+  } catch (_e) {
     throw new Error('Error creating the client')
   }
 }
@@ -134,7 +134,7 @@ export const update: Resolver<UpdateClientQueryInput> = async (_parent, args, ct
       },
       data
     })
-  } catch (e) {
+  } catch (_e) {
     throw new Error(`Error updating client with id ${id}`)
   }
 }
