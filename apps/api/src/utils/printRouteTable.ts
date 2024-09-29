@@ -7,11 +7,11 @@ export const printRouteTable = (express: Express) => {
   const endpoints = expressListEndpoints(express.router).map((ed) => ({
     path: ed.path,
     methods: ed.methods,
-    ...(!ed.middlewares.includes('anonymous')
-      ? {
-          middlewares: ed.middlewares
-        }
-      : {})
+    // ...(!ed.middlewares.includes('anonymous')
+    //   ? {
+    //       middlewares: ed.middlewares
+    //     }
+    //   : {})
   }))
 
   const table = new Table({

@@ -1,5 +1,3 @@
-import { Injectable } from '@decorators/di'
-import { ErrorMiddleware } from '@decorators/express'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 import { HttpStatusCode } from '@repo/shared/constants'
 import { NextFunction, Request, Response } from 'express'
@@ -7,8 +5,11 @@ import { ZodError } from 'zod'
 import { fromError } from 'zod-validation-error'
 import { LOG_TYPE, logger } from '../utils/logger'
 
-@Injectable()
-export class ErrorHandlerMiddleware implements ErrorMiddleware {
+// share this file with graphql AND rest:
+// https://www.reddit.com/r/node/comments/1c06bev/comment/kywsbpd/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+// @Injectable()
+// export class ErrorHandlerMiddleware implements ErrorMiddleware {
+export class ErrorHandlerMiddleware {
   public use(error: Error, _req: Request, res: Response, next: NextFunction) {
     if (error instanceof ZodError) {
       const formattedError = fromError(error)

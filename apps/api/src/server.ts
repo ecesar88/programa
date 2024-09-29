@@ -1,4 +1,3 @@
-import { Container, ERROR_MIDDLEWARE, attachControllers } from '@decorators/express'
 import { useEngine } from '@envelop/core'
 import { renderGraphiQL } from '@graphql-yoga/render-graphiql' // Not working?
 import cors from 'cors'
@@ -70,16 +69,7 @@ const PUBLIC_FOLDER_PATH = path.join(process.cwd(), PUBLIC_FOLDER_NAME)
 
   express.use(HTTPLoggerMiddleware)
 
-  express.get('', () => {})
-
-  Container.provide([
-    {
-      provide: ERROR_MIDDLEWARE,
-      useClass: ErrorHandlerMiddleware
-    }
-  ])
-
-  await attachControllers(express, [InfoController])
+  express.get(`${ROUTES.INFO_ROOT}${ROUTES.INFO_HEALTHCHECK}`, InfoController.get)
 
   express.listen(SERVER_PORT, SERVER_HOSTNAME, () => {
     figlet(

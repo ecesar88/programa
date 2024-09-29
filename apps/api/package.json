@@ -11,9 +11,6 @@
     "gen-docs": "pnpm spectaql spectaql.yml"
   },
   "dependencies": {
-    "@decorators/di": "3.1.0",
-    "@decorators/express": "3.0.0",
-    "@decorators/server": "1.0.0-beta.18",
     "@envelop/core": "5.0.2",
     "@graphql-tools/schema": "10.0.6",
     "@graphql-yoga/render-graphiql": "5.7.0",

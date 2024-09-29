@@ -26,15 +26,6 @@ importers:
 
   apps/api:
     dependencies:
-      '@decorators/di':
-        specifier: 3.1.0
-        version: 3.1.0
-      '@decorators/express':
-        specifier: 3.0.0
-        version: 3.0.0(@decorators/di@3.1.0)(express@5.0.0)
-      '@decorators/server':
-        specifier: 1.0.0-beta.18
-        version: 1.0.0-beta.18(@decorators/di@3.1.0)(body-parser@2.0.1)(class-transformer@0.5.1)(class-validator@0.14.1)(express@5.0.0)(reflect-metadata@0.2.2)
       '@envelop/core':
         specifier: 5.0.2
         version: 5.0.2
@@ -1218,72 +1209,6 @@ packages:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
 
-  /@decorators/di@3.1.0:
-    resolution: {integrity: sha512-nKVSpkLqfoWcZiSk7+Jmt+1jMvGdXhwYVshZ5a7z04ZBUTafMokQFJ9zxQqdmFATbtp95ZAK0cIVfJyil/s0Dw==}
-    dependencies:
-      reflect-metadata: 0.1.14
-    dev: false
-
-  /@decorators/express@3.0.0(@decorators/di@3.1.0)(express@5.0.0):
-    resolution: {integrity: sha512-YmQWcke/v7/memmuiSYtYYhP6lpMjiUORIn7bBWL6REsWpJnRl76PXS6D/DUPdLj9NrtBQSGJkKWfbtoSibicQ==}
-    peerDependencies:
-      '@decorators/di': ^3.0.0
-      express: ^4.16.3
-    dependencies:
-      '@decorators/di': 3.1.0
-      express: 5.0.0
-    dev: false
-
-  /@decorators/server@1.0.0-beta.18(@decorators/di@3.1.0)(body-parser@2.0.1)(class-transformer@0.5.1)(class-validator@0.14.1)(express@5.0.0)(reflect-metadata@0.2.2):
-    resolution: {integrity: sha512-KM36l09um751H7mAXziffemO6HOdUXbdwQJOVmwmzS9BlqYh7PCWB3kCnH7U9SQ6ZSOAwm4n/Z33sTDQuFlp3Q==}
-    peerDependencies:
-      '@decorators/di': ^3.1.0
-      '@fastify/cookie': ^9.0.4
-      '@fastify/static': ^6.10.2
-      body-parser: ^1.20.2
-      class-transformer: ^0.5.1
-      class-validator: ^0.14.0
-      express: ^4.18.2
-      fastify: ^4.21.0
-      koa: ^2.14.2
-      koa-bodyparser: ^4.4.1
-      koa-mount: ^4.0.0
-      koa-router: ^2.14.2
-      koa-static: ^5.0.0
-      reflect-metadata: ^0.1.13
-      socket.io: ^4.7.2
-    peerDependenciesMeta:
-      '@fastify/cookie':
-        optional: true
-      '@fastify/static':
-        optional: true
-      body-parser:
-        optional: true
-      express:
-        optional: true
-      fastify:
-        optional: true
-      koa:
-        optional: true
-      koa-bodyparser:
-        optional: true
-      koa-mount:
-        optional: true
-      koa-router:
-        optional: true
-      koa-static:
-        optional: true
-      socket.io:
-        optional: true
-    dependencies:
-      '@decorators/di': 3.1.0
-      body-parser: 2.0.1
-      class-transformer: 0.5.1
-      class-validator: 0.14.1
-      express: 5.0.0
-      reflect-metadata: 0.2.2
-    dev: false
-
   /@develar/schema-utils@2.6.5:
     resolution: {integrity: sha512-0cp4PsWQ/9avqTVMCtZ+GirikIA36ikvjtHweU4/j8yLtgObI0+JUPhYFScgwlteveGB1rt3Cm8UhN04XayDig==}
     engines: {node: '>= 8.9.0'}
@@ -1661,7 +1586,7 @@ packages:
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     dependencies:
       '@eslint/object-schema': 2.1.4
-      debug: 4.3.5
+      debug: 4.3.6
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -1672,7 +1597,7 @@ packages:
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     dependencies:
       ajv: 6.12.6
-      debug: 4.3.5
+      debug: 4.3.6
       espree: 10.1.0
       globals: 14.0.0
       ignore: 5.3.1
@@ -3482,10 +3407,6 @@ packages:
     resolution: {integrity: sha512-iEN8J0BoMnsWBqjVbWH/c0G0Hh7O21lpR2/+PrvAVgWdzL7eexIFm4JN/Wn10PTcmNdtS6U67r499mlWMXOxNw==}
     dev: true
 
-  /@types/validator@13.11.10:
-    resolution: {integrity: sha512-e2PNXoXLr6Z+dbfx5zSh9TRlXJrELycxiaXznp4S5+D2M3b9bqJEitNHA5923jhnB2zzFiZHa2f0SI1HoIahpg==}
-    dev: false
-
   /@types/verror@1.10.10:
     resolution: {integrity: sha512-l4MM0Jppn18hb9xmM6wwD1uTdShpf9Pn80aXTStnK1C94gtPvJcV2FrDmbOQUAQfJ1cKZHktkQUDwEqaAKXMMg==}
     requiresBuild: true
@@ -3594,7 +3515,7 @@ packages:
       '@typescript-eslint/types': 8.5.0
       '@typescript-eslint/typescript-estree': 8.5.0(typescript@5.6.2)
       '@typescript-eslint/visitor-keys': 8.5.0
-      debug: 4.3.5
+      debug: 4.3.6
       eslint: 9.7.0
       typescript: 5.6.2
     transitivePeerDependencies:
@@ -4853,18 +4774,6 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /class-transformer@0.5.1:
-    resolution: {integrity: sha512-SQa1Ws6hUbfC98vKGxZH3KFY0Y1lm5Zm0SY8XX9zbK7FJCyVEac3ATW0RIpwzW+oOfmHE5PMPufDG9hCfoEOMw==}
-    dev: false
-
-  /class-validator@0.14.1:
-    resolution: {integrity: sha512-2VEG9JICxIqTpoK1eMzZqaV+u/EiwEJkMGzTrZf6sU/fwsnOITVgYJ8yojSy6CaXtO9V0Cc6ZQZ8h8m4UBuLwQ==}
-    dependencies:
-      '@types/validator': 13.11.10
-      libphonenumber-js: 1.11.3
-      validator: 13.12.0
-    dev: false
-
   /class-variance-authority@0.7.0:
     resolution: {integrity: sha512-jFI8IQw4hczaL4ALINxqLEXQbWcNjoSkloa4IaufXCJr6QawJyw7tuRysRsrE8w2p/4gGaxKIt/hX3qz/IbD1A==}
     dependencies:
@@ -5327,7 +5236,6 @@ packages:
         optional: true
     dependencies:
       ms: 2.1.2
-    dev: false
 
   /decamelize@1.2.0:
     resolution: {integrity: sha512-z2S+W9X73hAUUki+N+9Za2lBlun89zigOyGrsax+KUQ6wKW4ZoWpEYBkGhQjwAjjDCkWxhY0VKEhk8wzY7F5cA==}
@@ -5997,7 +5905,7 @@ packages:
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.3
-      debug: 4.3.5
+      debug: 4.3.6
       escape-string-regexp: 4.0.0
       eslint-scope: 8.0.2
       eslint-visitor-keys: 4.0.0
@@ -7974,10 +7882,6 @@ packages:
       type-check: 0.4.0
     dev: true
 
-  /libphonenumber-js@1.11.3:
-    resolution: {integrity: sha512-RU0CTsLCu2v6VEzdP+W6UU2n5+jEpMDRkGxUeBgsAJgre3vKgm17eApISH9OQY4G0jZYJVIc8qXmz6CJFueAFg==}
-    dev: false
-
   /lie@3.1.1:
     resolution: {integrity: sha512-RiNhHysUjhrDQntfYSfY4MU24coXXdEOgw9WGcKHNeEwffDYbF//u87M1EWaMGzuFoSbqW0C9C6lEEhDOAswfw==}
     dependencies:
@@ -9534,10 +9438,6 @@ packages:
 
   /redux@5.0.1:
     resolution: {integrity: sha512-M9/ELqF6fy8FwmkpnF0S3YKOqMyoWJ4+CS5Efg2ct3oY9daQvd/Pc71FpGZsVsbl3Cpb+IIcjBDUnnyBdQbq4w==}
-    dev: false
-
-  /reflect-metadata@0.1.14:
-    resolution: {integrity: sha512-ZhYeb6nRaXCfhnndflDK8qI6ZQ/YcWZCISRAWICW9XYqMUwjZM9Z0DveWX/ABN01oxSHwVxKQmxeYZSsm0jh5A==}
     dev: false
 
   /reflect-metadata@0.2.2:
@@ -11169,11 +11069,6 @@ packages:
     engines: {node: '>= 0.10'}
     dependencies:
       homedir-polyfill: 1.0.3
-    dev: false
-
-  /validator@13.12.0:
-    resolution: {integrity: sha512-c1Q0mCiPlgdTVVVIJIrBuxNicYE+t/7oKeI9MWLj3fh/uq2Pxh/3eeWbVZ4OcGW1TUf53At0njHw5SMdA3tmMg==}
-    engines: {node: '>= 0.10'}
     dev: false
 
   /value-or-promise@1.0.12:
