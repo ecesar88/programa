@@ -45,7 +45,7 @@ The backend is a custom Express/GraphQL API.
 
 > Run ```pnpm dlx prisma migrate dev```
 
-> Execute the seed command ```pnpm dlx prisma db seed```
+> Execute the seed command: ```pnpm dlx prisma db seed```
 
 On the frontend you should be good to go, there's not much needed to setup there.
 
