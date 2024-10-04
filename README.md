@@ -39,9 +39,12 @@ The backend is a custom Express/GraphQL API.
 ## Setup
 - Install dependencies:
 > ```pnpm install```
-- Run migrations:
+
+- Run migrations and seeds:
 > CD into the ```api``` folder under */apps/api*
+
 > Run ```pnpm dlx prisma migrate dev```
+
 > Execute the seed command ```pnpm dlx prisma db seed```
 
 On the frontend you should be good to go, there's not much needed to setup there.
@@ -50,5 +53,6 @@ On the frontend you should be good to go, there's not much needed to setup there
 To run the project you have two options:
 1. Run the whole project at once using [TurboRepo](https://turbo.build/repo/docs):
 > From the monorepo root folder (where you see the folders ```apps```, ```packages``` and the file ```.editorconfig```), run ```pnpm run dev```. TurboRepo should start both the backend and the frontend at the same time in develop mode.
+
 2. Run the apps separately:
 > You can use ```pnpm run dev:api``` and ```pnpm run dev:ui``` to run the backend and frontend respectively on standalone mode
