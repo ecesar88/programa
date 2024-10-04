@@ -40,7 +40,7 @@ The backend is a custom Express/GraphQL API.
 - Install dependencies:
 > ```pnpm install```
 - Run migrations:
-> Enter into the ```api``` folder under */apps/api*
+> CD into the ```api``` folder under */apps/api*
 > Run ```pnpm dlx prisma migrate dev```
 > Execute the seed command ```pnpm dlx prisma db seed```
 
