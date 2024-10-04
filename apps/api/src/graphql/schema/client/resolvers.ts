@@ -24,7 +24,7 @@ export const queryAll: Resolver<PaginationParam> = async (_parent, args, ctx, _i
     })
 
     return clients
-  } catch (e) {
+  } catch (_error) {
     throw new Error('Error fetching all clients')
   }
 }
@@ -45,7 +45,7 @@ export const queryOne: Resolver<FindById> = async (_parent, args, ctx, _info) =>
         id
       }
     })
-  } catch (error) {
+  } catch (_error) {
     throw new Error('Prisma error')
   }
 
@@ -78,7 +78,7 @@ export const search: Resolver<FindByQuery> = async (_parent, args, ctx, _info) =
         ]
       }
     })
-  } catch (error) {
+  } catch (_error) {
     throw new Error('Prisma error')
   }
 
@@ -159,7 +159,7 @@ export const remove: Resolver<FindById> = async (_parent, args, ctx, _info) => {
         id: clientToRemove.id
       }
     })
-  } catch (error) {
+  } catch (_error) {
     throw new Error('Prisma error')
   }
 }

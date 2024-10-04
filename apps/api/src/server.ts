@@ -13,7 +13,7 @@ import 'reflect-metadata'
 import { InfoController } from './controllers/info'
 import { context } from './graphql/context'
 import { schema } from './graphql/schema'
-import { ErrorHandlerMiddleware, HTTPLoggerMiddleware } from './middleware'
+import { HTTPLoggerMiddleware } from './middleware'
 import { gqlLogger } from './utils/graphqlLogger'
 import { LOG_TYPE, logger } from './utils/logger'
 import { parseEnv } from './utils/parseEnv'
@@ -40,7 +40,7 @@ const APP_NAME = parseEnv<string>('APP_NAME')
 const PUBLIC_FOLDER_NAME = 'public'
 const PUBLIC_FOLDER_PATH = path.join(process.cwd(), PUBLIC_FOLDER_NAME)
 
-;(async function start() {
+;(async function bootstrap() {
   const express = Express()
   const yoga = createYoga({
     renderGraphiQL,
@@ -64,11 +64,12 @@ const PUBLIC_FOLDER_PATH = path.join(process.cwd(), PUBLIC_FOLDER_NAME)
   express.use(`${ROUTES.INFO_ROOT}${ROUTES.INFO_DOCS}`, Express.static(PUBLIC_FOLDER_PATH))
   express.use(helmet(helmetOptions))
   express.use(Express.json())
-  express.use(cors({ origin: 'http://localhost:5173' })) // 5173 is Electron's frontend port
+  express.use(cors({ origin: 'http://localhost:5173' })) // 5173 is the port Electron's renderer runs
   express.use(yoga.graphqlEndpoint, yoga)
 
   express.use(HTTPLoggerMiddleware)
 
+  // Register InfoController
   express.get(`${ROUTES.INFO_ROOT}${ROUTES.INFO_HEALTHCHECK}`, InfoController.get)
 
   express.listen(SERVER_PORT, SERVER_HOSTNAME, () => {

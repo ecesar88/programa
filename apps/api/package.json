@@ -48,7 +48,7 @@
     "zod-validation-error": "3.3.1"
   },
   "devDependencies": {
-    "@faker-js/faker": "9.0.0",
+    "@faker-js/faker": "9.0.3",
     "@types/ascii-art": "1.4.3",
     "@types/babel__core": "7.20.5",
     "@types/babel__generator": "7.6.8",
