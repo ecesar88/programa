@@ -1,4 +1,21 @@
+import { color, colorize, ColorTheme } from 'json-colorizer'
 import nodeColorLog from 'node-color-log'
+
+export const jsonColors: ColorTheme = {
+  Whitespace: color.gray,
+  Brace: color.gray,
+  Bracket: color.gray,
+  Colon: color.gray,
+  Comma: color.gray,
+  StringKey: color.whiteBright,
+  StringLiteral: color.greenBright,
+  NumberLiteral: color.yellowBright,
+  BooleanLiteral: color.cyan,
+  NullLiteral: color.white
+}
+
+export const colorizeAsJSON = (json: Record<string, any>) =>
+  colorize(json, { indent: 2, colors: jsonColors })
 
 export enum LOG_TYPE {
   ERROR,
@@ -57,7 +74,18 @@ export const logger = ({
       errorLogger(message)
 
       if (object) {
-        nodeColorLog.log(`Error: ${object}`)
+        nodeColorLog
+          .reset()
+          .append('\n')
+          .color('red')
+          .bold()
+          .append('############# ')
+          .reset()
+          .bold()
+          .color('cyan')
+          .append('Error: ')
+          .reset()
+          .log(`${object}`)
       }
 
       break
@@ -67,7 +95,18 @@ export const logger = ({
       warnLogger(message)
 
       if (object) {
-        nodeColorLog.reset().log(`${object}`)
+        nodeColorLog
+          .reset()
+          .append('\n')
+          .color('yellow')
+          .bold()
+          .append('############# ')
+          .reset()
+          .bold()
+          .color('cyan')
+          .append('Data: ')
+          .reset()
+          .log(`${object}`)
       }
 
       break
@@ -77,7 +116,18 @@ export const logger = ({
       infoLogger(message)
 
       if (object) {
-        nodeColorLog.reset().log(`${object}`)
+        nodeColorLog
+          .reset()
+          .append('\n')
+          .color('green')
+          .bold()
+          .append('############# ')
+          .reset()
+          .bold()
+          .color('cyan')
+          .append('Data: ')
+          .reset()
+          .log(`${object}`)
       }
 
       break

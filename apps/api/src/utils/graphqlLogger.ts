@@ -1,5 +1,5 @@
-import { colorize, color, ColorTheme } from 'json-colorizer'
 import nodeColorLog from 'node-color-log'
+import { colorizeAsJSON } from './logger'
 import { GQLDefinitions } from './types/graphqlDocument'
 
 type EventName = 'execute-start' | 'execute-end' | 'subscribe-start' | 'subscribe-end'
@@ -93,19 +93,6 @@ export const gqlLogger = (eventName: EventName, args1: { args: any }) => {
   const separator = ' :: '
   const logPrefix = '=> '
 
-  const jsonColors: ColorTheme = {
-    Whitespace: color.gray,
-    Brace: color.gray,
-    Bracket: color.gray,
-    Colon: color.gray,
-    Comma: color.gray,
-    StringKey: color.whiteBright,
-    StringLiteral: color.greenBright,
-    NumberLiteral: color.yellowBright,
-    BooleanLiteral: color.cyan,
-    NullLiteral: color.white
-  }
-
   const logToConsole = () =>
     nodeColorLog
       .append('\n')
@@ -141,12 +128,7 @@ export const gqlLogger = (eventName: EventName, args1: { args: any }) => {
       .color('cyan')
       .append('Params: ')
       .reset()
-      .append(
-        colorize(rootFieldOperationArguments, {
-          indent: 2,
-          colors: jsonColors
-        })
-      )
+      .append(colorizeAsJSON(rootFieldOperationArguments))
       .append('\n')
       .log()
   } else {

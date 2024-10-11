@@ -1,5 +1,5 @@
 import { Menu, Prisma } from '@prisma/client'
-import { LOG_TYPE, logger } from '../../../utils/logger'
+import { colorizeAsJSON, LOG_TYPE, logger } from '../../../utils/logger'
 import { RecordNotFoundError } from '../_errors/errors'
 import { FindById, Resolver } from '../sharedTypes'
 import { MenuEntryVariantType } from './types'
@@ -31,7 +31,7 @@ export const queryAll: Resolver = async (_parent, _args, ctx, _info) => {
         labels: true
       }
     })
-  } catch (e) {
+  } catch (_error) {
     throw new Error('Error fetching all menu entries')
   }
 }
@@ -52,7 +52,7 @@ export const queryOne: Resolver<FindById> = async (_parent, args, ctx, _info) =>
         id
       }
     })
-  } catch (error) {
+  } catch (_error) {
     throw new Error('Prisma error')
   }
 
@@ -69,7 +69,7 @@ export const create: Resolver<CreateMenuQueryInput> = async (_parent, args, ctx,
   logger({
     level: LOG_TYPE.INFO,
     message: 'Creating new menu entry with data:',
-    object: JSON.stringify(args, null, 2)
+    object: colorizeAsJSON(args)
   })
 
   try {
@@ -92,17 +92,21 @@ export const create: Resolver<CreateMenuQueryInput> = async (_parent, args, ctx,
         menuId: menu?.id,
         name: data.name as string,
         description: data.description,
-        variant: {
-          createMany: {
-            data: data.variant?.map((vr) => vr) as Prisma.MenuEntryVariantCreateManyMenuEntryInput
+        // Only create a variant if it exists
+        ...(data?.variant?.length && {
+          variant: {
+            createMany: {
+              data: data.variant?.map((vr) => vr) as Prisma.MenuEntryVariantCreateManyMenuEntryInput
+            }
           }
-        }
+        })
       },
       include: {
         variant: true
       }
     })
-  } catch (error) {
+  } catch (_error) {
+    console.log(_error)
     throw new Error('Error creating the menu entry')
   }
 }
@@ -135,7 +139,7 @@ export const update: Resolver<UpdateMenuQueryInput> = async (_parent, args, ctx,
       },
       data
     })
-  } catch (e) {
+  } catch (_error) {
     throw new Error(`Error updating client with id ${id}`)
   }
 }
@@ -160,7 +164,7 @@ export const remove: Resolver<FindById> = async (_parent, args, ctx, _info) => {
         id: clientToRemove.id
       }
     })
-  } catch (error) {
+  } catch (_error) {
     throw new Error('Prisma error')
   }
 }
