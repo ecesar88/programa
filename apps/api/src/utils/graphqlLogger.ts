@@ -1,15 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { colorize, color, ColorTheme } from 'json-colorizer'
 import nodeColorLog from 'node-color-log'
-import {
-  capitalize,
-  findIndexOfFirstLineThatIsAnOperation,
-  fixJson,
-  removeCommentsAndEmptyLines
-} from './misc'
+import { GQLDefinitions } from './types/graphqlDocument'
 
 type EventName = 'execute-start' | 'execute-end' | 'subscribe-start' | 'subscribe-end'
 
-export const gqlLogger = (eventName: EventName, args1: any) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const gqlLogger = (eventName: EventName, args1: { args: any }) => {
   // Event could be `execute-start` / `execute-end` / `subscribe-start` / `subscribe-end`
   // `args` will include the arguments passed to execute/subscribe (in case of "start" event) and additional result in case of "end" event.
 
@@ -20,52 +16,95 @@ export const gqlLogger = (eventName: EventName, args1: any) => {
 
   const { args } = args1
 
-  const body = args.document.definitions[0].loc.source.body as string
-  const cleanQuery = removeCommentsAndEmptyLines(body)
-
-  const operation = args?.document?.definitions?.[0]?.operation
-
-  const getOperationStringStart = (idx = 0) =>
-    cleanQuery[findIndexOfFirstLineThatIsAnOperation(cleanQuery) + idx]
-
-  const operationNameFromDocument = capitalize(getOperationStringStart()).split(' ')[0]
-
-  const queryOperationType = operation ? capitalize(operation) : operationNameFromDocument
-
-  const documentName = (
-    getOperationStringStart()?.split(' ')[1] ??
-    args?.document?.definitions?.[0]?.name?.value ??
-    'Root'
-  ).split('(')[0] // Remove params from document name
-
-  const queryName =
-    getOperationStringStart(1)?.length > 3
-      ? getOperationStringStart(1).replace(/\s/gi, '').replace(/{$/, '').replace(/\(.*/gi, '')
-      : 'Unnamed Query'
-
   const ip = args.contextValue.req.ip
 
-  // Convert params to JSON, but first we need to add quotation
-  // marks (") to the keys, otherwise parsing fails
-  const parseParams = (): boolean | Record<string, unknown> => {
-    const operationLineIndex = findIndexOfFirstLineThatIsAnOperation(cleanQuery)
+  /**
+   * You can send two, thre, even 10 GraphQL operations to be run at once.
+   *
+   * Example:
+   * {
+   *    "query": "query getClientById { getClientById(id: 3) { id name phone } }",
+   *    "operationName": "getClientById"
+   * }
+   * GraphQL knows which one to run based on the param called "operationName", that's actually the root field's name
+   * We only need to get the data from that root operation, which is the one that is going to be executed.
+   * So we search for it on the array of root fields (definitions in the object) on the AST and then get the data.
+   *
+   * There are three different names we use for logging:
+   *  query getClientByIdQuery {
+   *    getClientById(id: 3) { ... }
+   *  }
+   *
+   * "query": This is the type of the operation that is going to be run.
+   * "getClientByIdQuery": This is the name of the operation
+   * "getClientById": This is the name of the resolver that is going to be run. It's called "root field" or "root operation"
+   *
+   */
 
-    const queryOperation = cleanQuery[operationLineIndex + 1]
+  // Get the name of the operation
+  const operationNameFromRequest = args.contextValue.params.operationName
 
-    const openingParenthesis = queryOperation.split('').findIndex((str) => str === '(') + 1 // Parameters start
-    const closingParenthesis = queryOperation.split('').findIndex((str) => str === ')') // Parameters end
+  /**
+   * Get a list of all of the operations received on the request.
+   * This list is going to have all of the operations on the document sent by the client (the requesting party).
+   *
+   * Here's and example of a typical graphql document with multiple operations, each one with a single root-field:
+   *
+   * query getAllClients {
+   *   getAllClients(page: 1) { ... }
+   * }
+   *
+   * mutation deleteClientById {
+   *   deleteClient(id: 870) { ... }
+   * }
+   *
+   * query getClientByIdQuery {
+   *   getClientById(id: 3) { ... }
+   * }
+   *
+   * query searchForClients {
+   *   searchClients(search: "erick") { ... }
+   * }
+   *
+   * mutation CreateMenuEntry {
+   *   createMenuEntry(name: "churrasco", description: "teste123", ) { ... }
+   * }
+   *
+   */
+  const allOperationsReceived = args.document.definitions as GQLDefinitions
 
-    if (openingParenthesis === -1 || closingParenthesis === -1) {
-      return false
-    }
+  const operationToBeRun = allOperationsReceived.find(
+    (def) => def.name.value === operationNameFromRequest
+  )!
 
-    const params = `{${queryOperation.slice(openingParenthesis, closingParenthesis)}}`
-    return params.includes('$') ? params : JSON.parse(fixJson(params)) // "$" breaking parsing
-  }
+  // Get the type of the operation. This is either 'query', 'mutation' or 'subscription'
+  const typeOfTheOperationToBeRun: 'query' | 'mutation' | 'subscription' =
+    operationToBeRun.operation
+
+  const rootFieldOperationName = operationToBeRun.selectionSet.selections[0].name.value
+  const rootFieldOperationArguments: Record<string, unknown> = {}
+
+  // Populate rootFieldOperationArguments with the root field operation's arguments
+  operationToBeRun.selectionSet.selections[0]?.arguments?.forEach((arg) => {
+    rootFieldOperationArguments[arg.name.value] = arg.value.value
+  })
 
   const dateString = `[${new Date().toISOString()}]`
   const separator = ' :: '
   const logPrefix = '=> '
+
+  const jsonColors: ColorTheme = {
+    Whitespace: color.gray,
+    Brace: color.gray,
+    Bracket: color.gray,
+    Colon: color.gray,
+    Comma: color.gray,
+    StringKey: color.whiteBright,
+    StringLiteral: color.greenBright,
+    NumberLiteral: color.yellowBright,
+    BooleanLiteral: color.cyan,
+    NullLiteral: color.white
+  }
 
   const logToConsole = () =>
     nodeColorLog
@@ -77,28 +116,40 @@ export const gqlLogger = (eventName: EventName, args1: any) => {
       .color('magenta')
       .append(`[GQL] ${logPrefix}`)
       .color('yellow')
-      .append(`${eventName} - ${queryOperationType}: `)
+      .append(`${eventName} - ${typeOfTheOperationToBeRun}: `)
       .color('green')
-      .append(`'${documentName}'`)
+      .append(`'${operationToBeRun.name.value}'`)
       .color('yellow')
       .append(' > ')
       .color('green')
-      .append(`'${queryName}'`)
+      .append(`'${rootFieldOperationName}'`)
       .reset()
       .append(' from ')
       .color('yellow')
       .append(ip)
       .reset()
 
-  const params = parseParams()
-
-  if (params === false) {
-    logToConsole().log()
-  } else {
+  // Only log the arguments if there are arguments to be logged
+  if (Object.values(rootFieldOperationArguments).length) {
     logToConsole()
-      .append('\nParams: ')
-      .append(JSON.stringify(parseParams(), null, 2))
+      .append('\n')
+      .color('green')
+      .bold()
+      .append('############# ')
+      .reset()
+      .bold()
+      .color('cyan')
+      .append('Params: ')
+      .reset()
+      .append(
+        colorize(rootFieldOperationArguments, {
+          indent: 2,
+          colors: jsonColors
+        })
+      )
       .append('\n')
       .log()
+  } else {
+    logToConsole().log()
   }
 }

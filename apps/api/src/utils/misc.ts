@@ -1,26 +1,26 @@
-export const removeCommentsAndEmptyLines = (queryString: string): string[] => {
-  const lineIsACommentOrIsEmptyPattern = new RegExp(/(^#)|(^$)/)
+// export const removeCommentsAndEmptyLines = (queryString: string): string[] => {
+//   const lineIsACommentOrIsEmptyPattern = new RegExp(/(^(\s*)?#)|(^$)/)
 
-  return queryString
-    .split('\n')
-    .map((line) => {
-      if (lineIsACommentOrIsEmptyPattern.test(line)) return null
-      return line
-    })
-    .filter((token): token is string => token !== null)
-}
+//   return queryString
+//     .split('\n')
+//     .map((line) => {
+//       if (lineIsACommentOrIsEmptyPattern.test(line)) return null
+//       return line
+//     })
+//     .filter((token): token is string => token !== null)
+// }
 
-// Finds the first line that is actually an operation ('query' or 'mutation')
-export const findIndexOfFirstLineThatIsAnOperation = (cleanQuery: string[]) => {
-  const operationNames = { mutation: 'mutation', query: 'query' }
+// // Finds the first line that is actually an operation ('query' or 'mutation')
+// export const findIndexOfFirstLineThatIsAnOperation = (cleanQuery: string[]) => {
+//   const operationNames = { mutation: 'mutation', query: 'query' }
 
-  return cleanQuery.findIndex(
-    (param) => param.includes(operationNames.mutation) || param.includes(operationNames.query)
-  )
-}
+//   return cleanQuery.findIndex(
+//     (param) => param.includes(operationNames.mutation) || param.includes(operationNames.query)
+//   )
+// }
 
-export const parseQueryName = (body: string) =>
-  removeCommentsAndEmptyLines(body)[1].replace(/\s/gi, '').replace(/{$/, '').replace(/\(|\)/gi, '')
+// export const parseQueryName = (body: string) =>
+//   removeCommentsAndEmptyLines(body)[1].replace(/\s/gi, '').replace(/{$/, '').replace(/\(|\)/gi, '')
 
 export const capitalize = (str?: string) => `${str?.split('')[0].toUpperCase()}${str?.slice(1)}`
 
