@@ -2,7 +2,102 @@ import nodeColorLog from 'node-color-log'
 import { colorizeAsJSON } from './logger'
 import { GQLDefinitions } from './types/graphqlDocument'
 
+const getAnonymousOperationMetaData = (listOfOperations: GQLDefinitions): OperationMetaData => {
+  const operationMetaData = listOfOperations[0].selectionSet.selections[0]
+
+  const operationType = 'mutation'
+  const resolverName = operationMetaData.name.value
+
+  // Get the arguments passed to the resolver
+  const rootFieldResolverOperationArguments: Record<string, unknown> = {}
+
+  // Populate rootFieldResolverOperationArguments with the root field operation's arguments
+  operationMetaData.arguments?.forEach((arg) => {
+    rootFieldResolverOperationArguments[arg.name.value] = arg.value.value
+  })
+
+  return {
+    operationType,
+    operationName: 'Anonymous',
+    resolverName,
+    arguments: rootFieldResolverOperationArguments
+  }
+}
+
+const getNamedOperationMetaData = (
+  listOfOperations: GQLDefinitions,
+  operationNameFromRequest: string
+): OperationMetaData => {
+  const operationToBeRun = listOfOperations.find(
+    (def) => def?.name?.value === operationNameFromRequest
+  )!
+
+  // Get the type of the operation. This is either 'query', 'mutation' or 'subscription'
+  const typeOfTheOperationToBeRun: OperationType = operationToBeRun.operation
+
+  // Get the name of the resolver to be run
+  const rootFieldResolverOperationName = operationToBeRun.selectionSet.selections[0].name.value
+
+  // Get the arguments passed to the resolver
+  const rootFieldResolverOperationArguments: Record<string, unknown> = {}
+
+  // Populate rootFieldResolverOperationArguments with the root field operation's arguments
+  operationToBeRun.selectionSet.selections[0]?.arguments?.forEach((arg) => {
+    rootFieldResolverOperationArguments[arg.name.value] = arg.value.value
+  })
+
+  return {
+    operationType: typeOfTheOperationToBeRun,
+    operationName: operationToBeRun.name.value,
+    resolverName: rootFieldResolverOperationName,
+    arguments: rootFieldResolverOperationArguments
+  }
+}
+
+/**
+ * There are two ways of sending a request containing one  - or multiple - operations:
+ *
+ * 1 - The first one is a named operation:
+ *
+ * mutation deleteClientByIdMutation {
+ *   deleteClient(id: 870) { ... }
+ * }
+ *
+ * Named operations have, well, names on them.
+ * Here the name of the example operation is "deleteClientByIdMutation".
+ * And the resolver name is "deleteClient".
+ *
+ *
+ * 2 - There are also anonymous operations:
+ *
+ * {
+ *   deleteClient(id: 870) { ... }
+ * }
+ *
+ * They are virtually the same thing, except anonymous operations do not have a name.
+ * And because of that, you cannot batch the execution of anonymous operations.
+ * (Cannot have more than one operation sent simultaneously)
+ *
+ * The job of this function is to find out if the operation is a named operation,
+ * or an anonyous one.
+ * We need to know that because, to log an anonymous operation requires fetching data (such as
+ * the resolver name and arguments passed) from completelly different fields within the GraphQL AST.
+ */
+const isOperationNamedOrAnonymous = (operationNameFromRequest?: string | null) => {
+  // If the operation name was not found then it's an anonymous operation
+  if (!operationNameFromRequest) return 'anonymous'
+  return 'named'
+}
+
 type EventName = 'execute-start' | 'execute-end' | 'subscribe-start' | 'subscribe-end'
+type OperationType = 'query' | 'mutation' | 'subscription'
+
+type OperationMetaData = {
+  operationType: OperationType
+  operationName: string
+  resolverName: string
+  arguments: Record<string, unknown> | Record<never, never>
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const gqlLogger = (eventName: EventName, args1: { args: any }) => {
@@ -43,6 +138,7 @@ export const gqlLogger = (eventName: EventName, args1: { args: any }) => {
 
   // Get the name of the operation
   const operationNameFromRequest = args.contextValue.params.operationName
+  // const isOperationAnonymous = !args.contextValue.params.operationName
 
   /**
    * Get a list of all of the operations received on the request.
@@ -73,25 +169,21 @@ export const gqlLogger = (eventName: EventName, args1: { args: any }) => {
    */
   const allOperationsReceived = args.document.definitions as GQLDefinitions
 
-  const operationToBeRun = allOperationsReceived.find(
-    (def) => def.name.value === operationNameFromRequest
-  )!
+  // Store the metadata of the operation for logging
+  let operationMetaData: OperationMetaData = {} as OperationMetaData
 
-  // Get the type of the operation. This is either 'query', 'mutation' or 'subscription'
-  const typeOfTheOperationToBeRun: 'query' | 'mutation' | 'subscription' =
-    operationToBeRun.operation
+  if (isOperationNamedOrAnonymous(operationNameFromRequest) === 'anonymous') {
+    operationMetaData = getAnonymousOperationMetaData(allOperationsReceived)
+  }
 
-  const rootFieldOperationName = operationToBeRun.selectionSet.selections[0].name.value
-  const rootFieldOperationArguments: Record<string, unknown> = {}
-
-  // Populate rootFieldOperationArguments with the root field operation's arguments
-  operationToBeRun.selectionSet.selections[0]?.arguments?.forEach((arg) => {
-    rootFieldOperationArguments[arg.name.value] = arg.value.value
-  })
+  if (isOperationNamedOrAnonymous(operationNameFromRequest) === 'named') {
+    operationMetaData = getNamedOperationMetaData(allOperationsReceived, operationNameFromRequest)
+  }
 
   const dateString = `[${new Date().toISOString()}]`
   const separator = ' :: '
   const logPrefix = '=> '
+  const logElementSeparator = ' > '
 
   const logToConsole = () =>
     nodeColorLog
@@ -102,22 +194,38 @@ export const gqlLogger = (eventName: EventName, args1: { args: any }) => {
       .append(separator)
       .color('magenta')
       .append(`[GQL] ${logPrefix}`)
-      .color('yellow')
-      .append(`${eventName} - ${typeOfTheOperationToBeRun}: `)
+      .color('cyan')
+      .append('EVENT: ')
       .color('green')
-      .append(`'${operationToBeRun.name.value}'`)
+      .append(`'${eventName}'`)
       .color('yellow')
-      .append(' > ')
+      .append(logElementSeparator)
+      .color('cyan')
+      .append('TYPE: ')
+      .color('magenta')
+      .append(`${operationMetaData.operationType}`)
+      .color('yellow')
+      .append(logElementSeparator)
+      .color('cyan')
+      .append('OPERATION: ')
       .color('green')
-      .append(`'${rootFieldOperationName}'`)
-      .reset()
-      .append(' from ')
+      .append(`'${operationMetaData.operationName}'`)
       .color('yellow')
-      .append(ip)
+      .append(logElementSeparator)
+      .color('cyan')
+      .append('RESOLVER: ')
+      .color('green')
+      .append(`'${operationMetaData.resolverName}'`)
+      .color('yellow')
+      .append(logElementSeparator)
+      .color('cyan')
+      .append(' FROM: ')
+      .color('green')
+      .append(`'${ip}'`)
       .reset()
 
   // Only log the arguments if there are arguments to be logged
-  if (Object.values(rootFieldOperationArguments).length) {
+  if (Object.values(operationMetaData.arguments).length) {
     logToConsole()
       .append('\n')
       .color('green')
@@ -128,7 +236,7 @@ export const gqlLogger = (eventName: EventName, args1: { args: any }) => {
       .color('cyan')
       .append('Params: ')
       .reset()
-      .append(colorizeAsJSON(rootFieldOperationArguments))
+      .append(colorizeAsJSON(operationMetaData.arguments))
       .append('\n')
       .log()
   } else {
