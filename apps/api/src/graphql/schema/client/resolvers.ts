@@ -1,5 +1,5 @@
 import { Client, Prisma } from '@prisma/client'
-import { LOG_TYPE, logger } from '../../../utils/logger'
+import { colorizeAsJSON, LOG_TYPE, logger } from '../../../utils/logger'
 import { prismaPaginate } from '../../../utils/prismaPaginate'
 import { RecordNotFoundError } from '../_errors/errors'
 import { FindById, FindByQuery, PaginationParam, Resolver } from '../sharedTypes'
@@ -91,7 +91,7 @@ export const create: Resolver<CreateClientQueryInput> = async (_parent, args, ct
   logger({
     level: LOG_TYPE.INFO,
     message: 'Creating new client with data:',
-    object: JSON.stringify(args, null, 2)
+    object: colorizeAsJSON(args)
   })
 
   try {
@@ -112,7 +112,7 @@ export const update: Resolver<UpdateClientQueryInput> = async (_parent, args, ct
   logger({
     level: LOG_TYPE.INFO,
     message: `Updating new client with id '${id}' with data: `,
-    object: JSON.stringify(args.data, null, 2)
+    object: colorizeAsJSON(args)
   })
 
   const client = await ctx.prisma.client.findFirst({ where: { id } })
@@ -125,7 +125,7 @@ export const update: Resolver<UpdateClientQueryInput> = async (_parent, args, ct
     logger({
       level: LOG_TYPE.INFO,
       message: `Updating new client with id '${id}' with data: `,
-      object: JSON.stringify(args.data, null, 2)
+      object: colorizeAsJSON(args)
     })
 
     return await ctx.prisma.client.update({

@@ -41,6 +41,8 @@ const getNamedOperationMetaData = (
   // Get the arguments passed to the resolver
   const rootFieldResolverOperationArguments: Record<string, unknown> = {}
 
+  // console.log('arguments >>> ', operationToBeRun.selectionSet.selections[0]?.arguments[2].value.values)
+
   // Populate rootFieldResolverOperationArguments with the root field operation's arguments
   operationToBeRun.selectionSet.selections[0]?.arguments?.forEach((arg) => {
     rootFieldResolverOperationArguments[arg.name.value] = arg.value.value

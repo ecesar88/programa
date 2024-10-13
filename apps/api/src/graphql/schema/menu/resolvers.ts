@@ -117,7 +117,7 @@ export const update: Resolver<UpdateMenuQueryInput> = async (_parent, args, ctx,
   logger({
     level: LOG_TYPE.INFO,
     message: `Updating new client with id '${id}' with data: `,
-    object: JSON.stringify(args.data, null, 2)
+    object: colorizeAsJSON(args.data)
   })
 
   const client = await ctx.prisma.client.findFirst({ where: { id } })
@@ -130,7 +130,7 @@ export const update: Resolver<UpdateMenuQueryInput> = async (_parent, args, ctx,
     logger({
       level: LOG_TYPE.INFO,
       message: `Updating new client with id '${id}' with data: `,
-      object: JSON.stringify(args.data, null, 2)
+      object: colorizeAsJSON(args.data)
     })
 
     return await ctx.prisma.client.update({
