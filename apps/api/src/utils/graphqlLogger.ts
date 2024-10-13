@@ -1,6 +1,20 @@
 import nodeColorLog from 'node-color-log'
 import { colorizeAsJSON } from './logger'
-import { GQLDefinitions } from './types/graphqlDocument'
+import { GQLDefinitions, GQLSelectionFieldArgument } from './types/graphqlDocument'
+
+const recursivelyExtractRequestArguments = (operationArgs: GQLSelectionFieldArgument[]) => {
+  // Get the arguments passed to the resolver
+  const rootFieldResolverOperationArguments: Record<string, unknown> = {}
+
+  // Populate rootFieldResolverOperationArguments with the root field operation's arguments
+  for (const arg of operationArgs) {
+    if (arg.value.kind === 'ListValue') continue
+
+    rootFieldResolverOperationArguments[arg.name.value] = arg.value.value
+  }
+
+  return rootFieldResolverOperationArguments
+}
 
 const getAnonymousOperationMetaData = (listOfOperations: GQLDefinitions): OperationMetaData => {
   const operationMetaData = listOfOperations[0].selectionSet.selections[0]
@@ -8,13 +22,9 @@ const getAnonymousOperationMetaData = (listOfOperations: GQLDefinitions): Operat
   const operationType = 'mutation'
   const resolverName = operationMetaData.name.value
 
-  // Get the arguments passed to the resolver
-  const rootFieldResolverOperationArguments: Record<string, unknown> = {}
-
-  // Populate rootFieldResolverOperationArguments with the root field operation's arguments
-  operationMetaData.arguments?.forEach((arg) => {
-    rootFieldResolverOperationArguments[arg.name.value] = arg.value.value
-  })
+  const rootFieldResolverOperationArguments = recursivelyExtractRequestArguments(
+    operationMetaData?.arguments
+  )
 
   return {
     operationType,
@@ -38,15 +48,9 @@ const getNamedOperationMetaData = (
   // Get the name of the resolver to be run
   const rootFieldResolverOperationName = operationToBeRun.selectionSet.selections[0].name.value
 
-  // Get the arguments passed to the resolver
-  const rootFieldResolverOperationArguments: Record<string, unknown> = {}
-
-  // console.log('arguments >>> ', operationToBeRun.selectionSet.selections[0]?.arguments[2].value.values)
-
-  // Populate rootFieldResolverOperationArguments with the root field operation's arguments
-  operationToBeRun.selectionSet.selections[0]?.arguments?.forEach((arg) => {
-    rootFieldResolverOperationArguments[arg.name.value] = arg.value.value
-  })
+  const rootFieldResolverOperationArguments = recursivelyExtractRequestArguments(
+    operationToBeRun.selectionSet.selections[0]?.arguments
+  )
 
   return {
     operationType: typeOfTheOperationToBeRun,
@@ -140,7 +144,6 @@ export const gqlLogger = (eventName: EventName, args1: { args: any }) => {
 
   // Get the name of the operation
   const operationNameFromRequest = args.contextValue.params.operationName
-  // const isOperationAnonymous = !args.contextValue.params.operationName
 
   /**
    * Get a list of all of the operations received on the request.
@@ -226,8 +229,12 @@ export const gqlLogger = (eventName: EventName, args1: { args: any }) => {
       .append(`'${ip}'`)
       .reset()
 
-  // Only log the arguments if there are arguments to be logged
-  if (Object.values(operationMetaData.arguments).length) {
+  // Only log the arguments if there are arguments to be logged and if it's a query.
+  // Mutations' arguments are already logged at an resolver level
+  if (
+    Object.values(operationMetaData.arguments).length &&
+    operationMetaData.operationType !== 'mutation'
+  ) {
     logToConsole()
       .append('\n')
       .color('green')

@@ -43,6 +43,7 @@ const PUBLIC_FOLDER_PATH = path.join(process.cwd(), PUBLIC_FOLDER_NAME)
 ;(async function bootstrap() {
   const express = Express()
   const yoga = createYoga({
+    batching: true,
     renderGraphiQL,
     logging: 'debug',
     schema,

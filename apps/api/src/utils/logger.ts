@@ -76,7 +76,6 @@ export const logger = ({
       if (object) {
         nodeColorLog
           .reset()
-          .append('\n')
           .color('red')
           .bold()
           .append('############# ')
@@ -97,7 +96,6 @@ export const logger = ({
       if (object) {
         nodeColorLog
           .reset()
-          .append('\n')
           .color('yellow')
           .bold()
           .append('############# ')
@@ -118,7 +116,6 @@ export const logger = ({
       if (object) {
         nodeColorLog
           .reset()
-          .append('\n')
           .color('green')
           .bold()
           .append('############# ')
