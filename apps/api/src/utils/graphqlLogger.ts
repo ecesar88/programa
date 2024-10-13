@@ -188,7 +188,7 @@ export const gqlLogger = (eventName: EventName, args1: { args: any }) => {
   const dateString = `[${new Date().toISOString()}]`
   const separator = ' :: '
   const logPrefix = '=> '
-  const logElementSeparator = ' > '
+  const logElementSeparator = ' // '
 
   const logToConsole = () =>
     nodeColorLog
