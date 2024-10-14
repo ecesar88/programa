@@ -25,11 +25,12 @@ This project uses [SQLite](https://www.sqlite.org/) for the time being. However,
 - [optics-ts](https://github.com/akheron/optics-ts)
 - [ts-pattern](https://github.com/gvergnaud/ts-pattern)
 - [tinycolor2](https://www.npmjs.com/package/tinycolor2)
+
 These are the main libs, the other ones are mostly dependencies of the libs above.
 
 ### On the Backend:
 The backend is a custom Express/GraphQL API.
-- [PothosGraphQl](https://pothos-graphql.dev/)
+- [PothosGraphQL](https://pothos-graphql.dev/)
 - [ExpressJS](https://expressjs.com/)
 - [Prisma](https://www.prisma.io/)
 - [Zod](https://zod.dev/)
