@@ -53,6 +53,7 @@ type Mutation {
   createClient(name: String!, phone: String): Client
   createMenuEntry(description: String, name: String!, variant: [MenuEntryVariantInput!]): MenuEntry
   deleteClient(id: Int!): MutationDeleteClientResult
+  deleteMenuEntryById(id: Int!): MutationDeleteMenuEntryByIdResult
   updateClient(data: UserUpdateInput!, id: Int!): Client
 }
 
@@ -60,6 +61,12 @@ union MutationDeleteClientResult = BaseError | MutationDeleteClientSuccess | Rec
 
 type MutationDeleteClientSuccess {
   data: Client!
+}
+
+union MutationDeleteMenuEntryByIdResult = BaseError | MutationDeleteMenuEntryByIdSuccess | RecordNotFoundError
+
+type MutationDeleteMenuEntryByIdSuccess {
+  data: MenuEntry!
 }
 
 type Query {

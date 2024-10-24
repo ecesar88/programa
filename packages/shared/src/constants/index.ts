@@ -1,6 +1,6 @@
-const QTY_PER_PAGE = 15;
+const QTY_PER_PAGE = 15
 
-import { HttpStatusCode } from "./httpStatusCode";
-import * as Regex from "./regex";
+import { HttpStatusCode } from './httpStatusCode'
+import * as Regex from './regex'
 
-export { HttpStatusCode, Regex, QTY_PER_PAGE };
+export { HttpStatusCode, Regex, QTY_PER_PAGE }

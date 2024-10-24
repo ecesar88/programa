@@ -1,7 +1,7 @@
 import * as z from 'zod'
 import { builder } from '../../builder'
 import { RecordNotFoundError } from '../_errors/errors'
-import { create, queryAll, queryOne } from './resolvers'
+import { create, queryAll, queryOne, remove } from './resolvers'
 import { MenuEntryType, MenuEntryVariantInputType } from './types'
 
 builder.queryField('getAllMenuEntries', (t) =>
@@ -94,17 +94,20 @@ builder.mutationField('createMenuEntry', (t) =>
 //   })
 // )
 
-// builder.mutationField('deleteMenuEntry', (t) =>
-//   t.field({
-//     type: MenuEntryType,
-//     args: {
-//       id: t.arg.int({
-//         required: true,
-//         validate: {
-//           schema: z.number().nonnegative()
-//         }
-//       })
-//     },
-//     resolve: remove
-//   })
-// )
+builder.mutationField('deleteMenuEntryById', (t) =>
+  t.field({
+    type: MenuEntryType,
+    errors: {
+      types: [RecordNotFoundError]
+    },
+    args: {
+      id: t.arg.int({
+        required: true,
+        validate: {
+          schema: z.number().nonnegative().positive()
+        }
+      })
+    },
+    resolve: remove
+  })
+)

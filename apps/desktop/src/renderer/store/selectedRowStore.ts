@@ -1,6 +1,7 @@
 import { focusAtom } from 'jotai-optics'
 import { getSelectedRowAtom } from './universal'
 
+// TODO - research better usage of jotai-optics
 export const selectedRowAtom = getSelectedRowAtom<object>()
 
 export const rowDataFocusedAtom = focusAtom(selectedRowAtom, (optic) => optic.prop('data'))

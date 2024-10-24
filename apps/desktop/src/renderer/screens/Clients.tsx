@@ -16,9 +16,9 @@ import {
   selectedRowAtom
 } from '@renderer/store'
 import { CreateClientResolver } from '@repo/shared/resolvers'
-import { useAtom, useAtomValue, useSetAtom } from 'jotai'
-import { atomWithMutation, atomWithQuery } from 'jotai-tanstack-query'
-import React, { useEffect, useMemo } from 'react'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { useAtomValue, useSetAtom } from 'jotai'
+import React, { useEffect } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { Id, toast } from 'react-toastify'
 import { match } from 'ts-pattern'
@@ -49,82 +49,63 @@ export const Clients = (): React.ReactNode => {
     clearSelectedRowAtom()
   })
 
-  const queries = useMemo(() => {
-    const clientsAtom = atomWithQuery(() => ({
-      queryKey: ['getAllClients'],
-      queryFn: get,
-      meta: {
-        errorMessage: 'Erro ao obter os clientes'
-      }
-    }))
+  const {
+    isLoading: isLoadingClients,
+    data,
+    refetch
+  } = useQuery({
+    queryKey: ['getAllClients'],
+    queryFn: get,
+    meta: {
+      errorMessage: 'Erro ao obter os clientes'
+    }
+  })
 
-    clientsAtom.debugLabel = 'getAllClientsAtom'
-    return { clientsAtom }
-  }, [])
+  const { mutate: createClientMutation, isPending: isLoadingCreateClient } = useMutation({
+    mutationKey: ['createClient'],
+    mutationFn: create,
+    onSuccess: async () => {
+      successToast('Cliente criado com sucesso!')
+      closeOverlay()
+      clearSelectedRowAtom()
+      form.reset()
 
-  const mutations = useMemo(() => {
-    const createClientAtom = atomWithMutation(() => ({
-      mutationKey: ['createClient'],
-      mutationFn: create,
-      onSuccess: async () => {
-        successToast('Cliente criado com sucesso!')
-        closeOverlay()
-        clearSelectedRowAtom()
-        form.reset()
+      await refetch()
+    },
+    meta: {
+      errorMessage: 'Erro ao criar o cliente'
+    }
+  })
 
-        await refetch()
-      },
-      meta: {
-        errorMessage: 'Erro ao criar o cliente'
-      }
-    }))
+  const { mutate: editClientMutation, isPending: isLoadingUpdateClient } = useMutation({
+    mutationKey: ['editClient'],
+    mutationFn: edit,
+    onSuccess: async () => {
+      successToast('Cliente editado com sucesso!')
+      clearSelectedRowAtom()
+      closeOverlay()
+      form.reset()
 
-    const editClientAtom = atomWithMutation(() => ({
-      mutationKey: ['editClient'],
-      mutationFn: edit,
-      onSuccess: async () => {
-        successToast('Cliente editado com sucesso!')
-        clearSelectedRowAtom()
-        closeOverlay()
-        form.reset()
+      await refetch()
+    },
+    meta: {
+      errorMessage: 'Erro ao editar o cliente'
+    }
+  })
 
-        await refetch()
-      },
-      meta: {
-        errorMessage: 'Erro ao editar o cliente'
-      }
-    }))
+  const { mutate: deleteClientMutation } = useMutation({
+    mutationKey: ['deleteClient'],
+    mutationFn: purge,
+    onSuccess: async () => {
+      successToast('Cliente deletado com sucesso!')
+      clearSelectedRowAtom()
 
-    const deleteClientAtom = atomWithMutation(() => ({
-      mutationKey: ['deleteClient'],
-      mutationFn: purge,
-      onSuccess: async () => {
-        successToast('Cliente deletado com sucesso!')
-        clearSelectedRowAtom()
-
-        await refetch()
-      },
-      meta: {
-        errorMessage: 'Erro ao deletar o cliente'
-      }
-    }))
-
-    createClientAtom.debugLabel = 'createClientAtom'
-    deleteClientAtom.debugLabel = 'deleteClientAtom'
-    editClientAtom.debugLabel = 'editClientAtom'
-
-    return { createClientAtom, deleteClientAtom, editClientAtom }
-  }, [])
-
-  const [{ isLoading: isLoadingClients, data, refetch }] = useAtom(queries.clientsAtom)
-  const [{ mutate: deleteClientMutation }] = useAtom(mutations.deleteClientAtom)
-
-  const [{ mutate: createClientMutation, isPending: isLoadingCreateClient }] = useAtom(
-    mutations.createClientAtom
-  )
-  const [{ mutate: editClientMutation, isPending: isLoadingUpdateClient }] = useAtom(
-    mutations.editClientAtom
-  )
+      await refetch()
+    },
+    meta: {
+      errorMessage: 'Erro ao deletar o cliente'
+    }
+  })
 
   // Disable the buttons on ScreenMenu while loading the get request
   useEffect(() => {

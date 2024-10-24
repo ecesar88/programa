@@ -13,6 +13,19 @@ graphql(/* GraphQL */ `
     name
     color
   }
+
+  fragment menuEntry on MenuEntry {
+    __typename
+    id
+    name
+    description
+    labels {
+      ...label
+    }
+    variant {
+      ...variant
+    }
+  }
 `)
 
 export const createMenuEntryMutationDocument = graphql(/* GraphQL */ `
@@ -22,16 +35,7 @@ export const createMenuEntryMutationDocument = graphql(/* GraphQL */ `
     $variant: [MenuEntryVariantInput!]
   ) {
     createMenuEntry(name: $name, description: $description, variant: $variant) {
-      __typename
-      id
-      description
-      name
-      variant {
-        ...variant
-      }
-      labels {
-        ...label
-      }
+      ...menuEntry
     }
   }
 `)
@@ -47,30 +51,30 @@ export const createMenuEntryMutationDocument = graphql(/* GraphQL */ `
 //   }
 // `)
 
-// export const deleteClientByIdMutationDocument = graphql(/* GraphQL */ `
-//   mutation deleteClientById($id: Int!) {
-//     deleteClient(id: $id) {
-//       __typename
-//       id
-//       name
-//       phone
-//     }
-//   }
-// `)
+export const deleteMenuEntryByIdMutationDocument = graphql(/* GraphQL */ `
+  mutation deleteMenuEntryById($id: Int!) {
+    deleteMenuEntryById(id: $id) {
+      ... on BaseError {
+        message
+      }
+
+      ... on MutationDeleteMenuEntryByIdSuccess {
+        data {
+          ...menuEntry
+        }
+      }
+
+      ... on RecordNotFoundError {
+        message
+      }
+    }
+  }
+`)
 
 export const getAllMenuEntriesQueryDocument = graphql(/* GraphQL */ `
   query getAllMenuEntries($page: Int) {
     getAllMenuEntries(page: $page) {
-      __typename
-      id
-      description
-      name
-      variant {
-        ...variant
-      }
-      labels {
-        ...label
-      }
+      ...menuEntry
     }
   }
 `)
@@ -81,17 +85,13 @@ export const getMenuEntryByIdQueryDocument = graphql(/* GraphQL */ `
       ... on BaseError {
         message
       }
+
       ... on QueryGetMenuEntryByIdSuccess {
         data {
-          __typename
-          id
-          description
-          name
-          variant {
-            ...variant
-          }
+          ...menuEntry
         }
       }
+
       ... on RecordNotFoundError {
         message
       }

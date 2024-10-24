@@ -73,7 +73,7 @@ export const logger = ({
     case LOG_TYPE.ERROR: {
       errorLogger(message)
 
-      if (object) {
+      if (object && Object.values(object)?.length) {
         nodeColorLog
           .reset()
           .color('red')
@@ -93,7 +93,7 @@ export const logger = ({
     case LOG_TYPE.WARN: {
       warnLogger(message)
 
-      if (object) {
+      if (object && Object.values(object)?.length) {
         nodeColorLog
           .reset()
           .color('yellow')
@@ -102,7 +102,7 @@ export const logger = ({
           .reset()
           .bold()
           .color('cyan')
-          .append('Data: ')
+          .append('Params: ')
           .reset()
           .log(`${object}`)
       }
@@ -113,16 +113,12 @@ export const logger = ({
     case LOG_TYPE.INFO: {
       infoLogger(message)
 
-      if (object) {
+      if (object && Object.values(object)?.length) {
         nodeColorLog
-          .reset()
-          .color('green')
-          .bold()
-          .append('############# ')
           .reset()
           .bold()
           .color('cyan')
-          .append('Data: ')
+          .append('[PARAMS] => ')
           .reset()
           .log(`${object}`)
       }

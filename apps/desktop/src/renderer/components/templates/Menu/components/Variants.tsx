@@ -1,3 +1,4 @@
+import { Button } from '@blueprintjs/core'
 import { MenuEntryVariant } from '@renderer/queries/graphql/codegen/graphql'
 import { cn } from '@renderer/utils'
 import { useClickAway } from '@uidotdev/usehooks'
@@ -6,6 +7,7 @@ import { LegacyRef, useState } from 'react'
 export type VariantsProps = {
   variants: MenuEntryVariant[]
   isEditModeActive: boolean
+  isCreateModeActive: boolean
 }
 
 export const Variants = (props: VariantsProps) => {
@@ -65,7 +67,7 @@ export const Variants = (props: VariantsProps) => {
             })}
           >
             <div>
-              {props.isEditModeActive ? (
+              {props.isEditModeActive || props.isCreateModeActive ? (
                 <input
                   type="text"
                   placeholder="Nome:"
@@ -77,7 +79,7 @@ export const Variants = (props: VariantsProps) => {
               )}
             </div>
 
-            {props.isEditModeActive ? (
+            {props.isEditModeActive || props.isCreateModeActive ? (
               <input
                 type="text"
                 placeholder="Descrição:"
@@ -96,7 +98,7 @@ export const Variants = (props: VariantsProps) => {
               </div>
 
               <div>
-                {props.isEditModeActive ? (
+                {props.isEditModeActive || props.isCreateModeActive ? (
                   <input
                     type="text"
                     placeholder="Preço"
@@ -112,6 +114,24 @@ export const Variants = (props: VariantsProps) => {
           </div>
         </div>
       ))}
+
+      <div
+        className={cn(
+          'rounded-md bg-lightGray3 text-black px-2 py-1 hover:bg-lightGray2 flex flex-row gap-2 transition-all items-center h-fit justify-center'
+        )}
+      >
+        <div>
+          <Button
+            icon={'plus'}
+            intent={'none'}
+            className="rounded-md"
+            onClick={() => {
+              // Abrir modal igual no trello
+              console.log('add new cateogory')
+            }}
+          />
+        </div>
+      </div>
     </div>
   )
 }

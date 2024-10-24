@@ -1,34 +1,36 @@
-import { Button, Colors, FormGroup, TextArea } from '@blueprintjs/core'
+import { Button, Colors, EditableText, FormGroup, TextArea, Tooltip } from '@blueprintjs/core'
 import { ModalTitle } from '@renderer/components'
 import { Label } from '@renderer/components/molecules'
 import { OverlayMode } from '@renderer/constants/enums'
-import { useResetHookForm } from '@renderer/hooks/useResetHookForm'
 import { MenuEntry, MenuEntryVariant } from '@renderer/queries/graphql/codegen/graphql'
-import { selectedRowAtom } from '@renderer/store'
-import { useAtomValue } from 'jotai'
 import { useEffect, useState } from 'react'
-import { useFormContext } from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
+import { FaLock, FaLockOpen } from 'react-icons/fa'
 import { debounce } from 'remeda'
 import { Variants } from './components/Variants'
-import { FaLock } from 'react-icons/fa'
-import { FaLockOpen } from 'react-icons/fa'
 
 type CreateOrEditProps = {
   onSave?: () => void
   onCancel?: () => void
+  onDelete?: () => void
   overlayMode: OverlayMode | null
+  menuEntryData?: MenuEntry
+  isLoading?: boolean
 }
 
+/**
+ * Create or Edit MenuEntry modal
+ */
 export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => {
   const {
-    register,
-    reset,
-    formState: { errors }
+    formState: { errors },
+    control
   } = useFormContext()
 
   const [imageWidth, setImageWidth] = useState<number>(450)
 
   const [isEditModeActive, setIsEditModeActive] = useState(false)
+  const isCreateModeActive = props.overlayMode === OverlayMode.NEW
 
   const getImageWidthBasedOnScreenSize = () => {
     let width: number = 0
@@ -56,39 +58,76 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     getImageWidthBasedOnScreenSize()
   }, [])
 
-  const menuEntryData = useAtomValue(selectedRowAtom).data as MenuEntry
-
-  useResetHookForm(reset, props.overlayMode)
-
-  if (!menuEntryData) return
+  if (!props?.menuEntryData) return
 
   return (
     <div className="flex flex-col p-5 w-full !h-full min-w-[900px]">
       <div className="flex flex-row justify-between">
-        {/* <DynamicallyEditableInput render={(onClick) => <div onClick={onClick}>teste haha</div>} /> */}
-
         <div className="flex flex-row items-center gap-4 justify-between w-full">
           <div className="flex flex-row gap-2 items-center">
             <ModalTitle
               title={
-                props.overlayMode === OverlayMode.NEW
-                  ? 'Criar novo item'
-                  : (menuEntryData.name as string)
+                props.overlayMode === OverlayMode.NEW || props.overlayMode === OverlayMode.EDIT ? (
+                  <Controller
+                    control={control}
+                    name="name"
+                    render={({ field: { onChange, value, ref } }) => (
+                      <EditableText
+                        disabled={!isCreateModeActive && !isEditModeActive}
+                        onChange={onChange}
+                        value={value}
+                        ref={ref}
+                        minWidth={20}
+                        intent="none"
+                        placeholder="Título..."
+                        defaultValue={
+                          props.overlayMode === OverlayMode.EDIT
+                            ? (props.menuEntryData?.name as string)
+                            : undefined
+                        }
+                      />
+                    )}
+                  />
+                ) : (
+                  (props.menuEntryData.name as string)
+                )
               }
             />
 
             <div className="flex flex-row gap-2 pb-1">
-              <p className="underline">Elemento Químico</p>
+              <Button
+                small
+                intent={'none'}
+                className="rounded-md"
+                onClick={() => {
+                  // Abrir modal igual no trello
+                  console.log('add new cateogory')
+                }}
+              >
+                CATEGORIA
+              </Button>
             </div>
           </div>
 
           <div className="pb-1.5">
-            {/* Add tooltip */}
-            {isEditModeActive ? (
-              <FaLockOpen color={Colors.GRAY3} size="22px" />
-            ) : (
-              <FaLock color={Colors.GRAY3} size="22px" />
-            )}
+            {!isCreateModeActive &&
+              (isEditModeActive ? (
+                <Tooltip compact position="left" content={<span>Este item é editável</span>}>
+                  <FaLockOpen color={Colors.GRAY3} size="22px" />
+                </Tooltip>
+              ) : (
+                <Tooltip
+                  compact
+                  position="left"
+                  content={
+                    <span>
+                      Este item não é editável. Clique no botão &ldquo;editar&ldquo; para editar.
+                    </span>
+                  }
+                >
+                  <FaLock color={Colors.GRAY3} size="22px" />
+                </Tooltip>
+              ))}
           </div>
         </div>
       </div>
@@ -110,7 +149,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
 
             <div className="flex flex-row gap-2">
               <div className="flex flex-row gap-1">
-                {menuEntryData.labels?.map((label, idx) => (
+                {props.menuEntryData.labels?.map((label, idx) => (
                   <Label
                     key={idx}
                     name={label.name}
@@ -126,7 +165,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
                   intent={'none'}
                   className="rounded-md"
                   onClick={() => {
-                    console.log(menuEntryData)
+                    console.log(props.menuEntryData)
                     // Abrir modal igual no trello
                     console.log('add new cateogory')
                   }}
@@ -142,21 +181,29 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
 
                 {/* <DynamicallyEditableTextArea /> */}
 
-                {isEditModeActive ? (
+                {isEditModeActive || isCreateModeActive ? (
                   <FormGroup className="w-full h-full max-h-[180px] min-h-[60px]">
-                    <TextArea
-                      className="max-h-[160px] min-h-[60px]"
-                      placeholder="Descrição"
-                      fill
-                      // error={errors?.['description']?.message?.toString() as unknown as boolean}
-                      defaultValue={menuEntryData.description as string}
-                      {...register('description')}
+                    <Controller
+                      control={control}
+                      name="description"
+                      render={({ field: { onChange, value, ref } }) => (
+                        <TextArea
+                          className="max-h-[160px] min-h-[60px]"
+                          placeholder="Descrição"
+                          fill
+                          onChange={onChange}
+                          value={value}
+                          ref={ref}
+                          defaultValue={props?.menuEntryData?.description as string}
+                          // error={errors?.['description']?.message?.toString() as unknown as boolean}
+                        />
+                      )}
                     />
                     {/* <InputError errorMessage={errors?.['description']?.message?.toString()} /> */}
                   </FormGroup>
                 ) : (
                   <div className="pb-4 max-w-[470px] text-wrap min-h-[85px]">
-                    <p>{menuEntryData.description}</p>
+                    <p>{props.menuEntryData.description}</p>
                   </div>
                 )}
               </div>
@@ -169,49 +216,66 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
 
           <Variants
             isEditModeActive={isEditModeActive}
-            variants={menuEntryData.variant as MenuEntryVariant[]}
+            isCreateModeActive={isCreateModeActive}
+            variants={props.menuEntryData.variant as MenuEntryVariant[]}
           />
         </div>
       </div>
 
       <div className="flex flex-row gap-3 justify-between border-t border-t-gray1 pt-4 border-opacity-25">
-        <Button
-          intent="none"
-          icon="disable"
-          onClick={() => {
-            props?.onCancel?.()
-          }}
-        >
-          Cancelar
-        </Button>
-
-        {isEditModeActive ? (
+        <div>
           <Button
-            icon="floppy-disk"
-            intent="warning"
-            form="create-form"
-            type="submit"
-            onClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-              e.preventDefault()
-              setIsEditModeActive(false)
-
-              props?.onSave?.()
+            intent="none"
+            icon="disable"
+            onClick={() => {
+              props?.onCancel?.()
             }}
           >
-            Salvar
+            Cancelar
           </Button>
-        ) : (
+        </div>
+
+        <div className="flex gap-3">
           <Button
-            icon={'edit'}
-            intent={'primary'}
-            onClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-              e.preventDefault()
-              setIsEditModeActive(true)
+            intent="danger"
+            icon="trash"
+            disabled={isEditModeActive || isCreateModeActive}
+            onClick={() => {
+              props?.onDelete?.()
             }}
           >
-            Editar
+            Excluir
           </Button>
-        )}
+
+          {isEditModeActive || isCreateModeActive ? (
+            <Button
+              icon="floppy-disk"
+              intent="warning"
+              form="create-form"
+              type="submit"
+              loading={props.isLoading}
+              onClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+                e.preventDefault()
+                setIsEditModeActive(false)
+
+                props?.onSave?.()
+              }}
+            >
+              Salvar
+            </Button>
+          ) : (
+            <Button
+              icon={'edit'}
+              intent={'primary'}
+              onClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+                e.preventDefault()
+                setIsEditModeActive(true)
+              }}
+            >
+              Editar
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   )

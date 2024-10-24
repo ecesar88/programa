@@ -1,20 +1,5 @@
 import nodeColorLog from 'node-color-log'
-import { colorizeAsJSON } from './logger'
-import { GQLDefinitions, GQLSelectionFieldArgument } from './types/graphqlDocument'
-
-const recursivelyExtractRequestArguments = (operationArgs: GQLSelectionFieldArgument[]) => {
-  // Get the arguments passed to the resolver
-  const rootFieldResolverOperationArguments: Record<string, unknown> = {}
-
-  // Populate rootFieldResolverOperationArguments with the root field operation's arguments
-  for (const arg of operationArgs) {
-    if (arg.value.kind === 'ListValue') continue
-
-    rootFieldResolverOperationArguments[arg.name.value] = arg.value.value
-  }
-
-  return rootFieldResolverOperationArguments
-}
+import { GQLDefinitions } from './types/graphqlDocument'
 
 const getAnonymousOperationMetaData = (listOfOperations: GQLDefinitions): OperationMetaData => {
   const operationMetaData = listOfOperations[0].selectionSet.selections[0]
@@ -22,15 +7,10 @@ const getAnonymousOperationMetaData = (listOfOperations: GQLDefinitions): Operat
   const operationType = 'mutation'
   const resolverName = operationMetaData.name.value
 
-  const rootFieldResolverOperationArguments = recursivelyExtractRequestArguments(
-    operationMetaData?.arguments
-  )
-
   return {
     operationType,
     operationName: 'Anonymous',
-    resolverName,
-    arguments: rootFieldResolverOperationArguments
+    resolverName
   }
 }
 
@@ -48,15 +28,10 @@ const getNamedOperationMetaData = (
   // Get the name of the resolver to be run
   const rootFieldResolverOperationName = operationToBeRun.selectionSet.selections[0].name.value
 
-  const rootFieldResolverOperationArguments = recursivelyExtractRequestArguments(
-    operationToBeRun.selectionSet.selections[0]?.arguments
-  )
-
   return {
     operationType: typeOfTheOperationToBeRun,
     operationName: operationToBeRun.name.value,
-    resolverName: rootFieldResolverOperationName,
-    arguments: rootFieldResolverOperationArguments
+    resolverName: rootFieldResolverOperationName
   }
 }
 
@@ -102,7 +77,6 @@ type OperationMetaData = {
   operationType: OperationType
   operationName: string
   resolverName: string
-  arguments: Record<string, unknown> | Record<never, never>
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -190,65 +164,42 @@ export const gqlLogger = (eventName: EventName, args1: { args: any }) => {
   const logPrefix = '=> '
   const logElementSeparator = ' // '
 
-  const logToConsole = () =>
-    nodeColorLog
-      .append('\n')
-      .color('yellow')
-      .append(dateString)
-      .reset()
-      .append(separator)
-      .color('magenta')
-      .append(`[GQL] ${logPrefix}`)
-      .color('cyan')
-      .append('EVENT: ')
-      .color('green')
-      .append(`'${eventName}'`)
-      .color('yellow')
-      .append(logElementSeparator)
-      .color('cyan')
-      .append('TYPE: ')
-      .color('magenta')
-      .append(`${operationMetaData.operationType}`)
-      .color('yellow')
-      .append(logElementSeparator)
-      .color('cyan')
-      .append('OPERATION: ')
-      .color('green')
-      .append(`'${operationMetaData.operationName}'`)
-      .color('yellow')
-      .append(logElementSeparator)
-      .color('cyan')
-      .append('RESOLVER: ')
-      .color('green')
-      .append(`'${operationMetaData.resolverName}'`)
-      .color('yellow')
-      .append(logElementSeparator)
-      .color('cyan')
-      .append(' FROM: ')
-      .color('green')
-      .append(`'${ip}'`)
-      .reset()
-
-  // Only log the arguments if there are arguments to be logged and if it's a query.
-  // Mutations' arguments are already logged at an resolver level
-  if (
-    Object.values(operationMetaData.arguments).length &&
-    operationMetaData.operationType !== 'mutation'
-  ) {
-    logToConsole()
-      .append('\n')
-      .color('green')
-      .bold()
-      .append('############# ')
-      .reset()
-      .bold()
-      .color('cyan')
-      .append('Params: ')
-      .reset()
-      .append(colorizeAsJSON(operationMetaData.arguments))
-      .append('\n')
-      .log()
-  } else {
-    logToConsole().log()
-  }
+  nodeColorLog
+    .append('\n')
+    .color('yellow')
+    .append(dateString)
+    .reset()
+    .append(separator)
+    .color('magenta')
+    .append(`[GQL] ${logPrefix}`)
+    .color('cyan')
+    .append('EVENT: ')
+    .color('green')
+    .append(`'${eventName}'`)
+    .color('yellow')
+    .append(logElementSeparator)
+    .color('cyan')
+    .append('TYPE: ')
+    .color('magenta')
+    .append(`${operationMetaData.operationType}`)
+    .color('yellow')
+    .append(logElementSeparator)
+    .color('cyan')
+    .append('OPERATION: ')
+    .color('green')
+    .append(`'${operationMetaData.operationName}'`)
+    .color('yellow')
+    .append(logElementSeparator)
+    .color('cyan')
+    .append('RESOLVER: ')
+    .color('green')
+    .append(`'${operationMetaData.resolverName}'`)
+    .color('yellow')
+    .append(logElementSeparator)
+    .color('cyan')
+    .append(' FROM: ')
+    .color('green')
+    .append(`'${ip}'`)
+    .reset()
+    .log()
 }

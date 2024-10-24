@@ -31,7 +31,10 @@ export type GQLSelectionFieldArgument = {
     kind: 'Name'
     value: string
   }
-  value: GQLSelectionFieldArgumentValueKindStringValue | GQLSelectionFieldArgumentValueKindListValue
+  value:
+    | GQLSelectionFieldArgumentValueKindStringValue
+    | GQLSelectionFieldArgumentValueKindListValue
+    | GQLSelectionFieldArgumentValueKindObjectValue
 }
 
 export type GQLSelectionField = {

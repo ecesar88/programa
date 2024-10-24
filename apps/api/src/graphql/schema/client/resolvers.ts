@@ -12,7 +12,8 @@ export const queryAll: Resolver<PaginationParam> = async (_parent, args, ctx, _i
 
   logger({
     level: LOG_TYPE.INFO,
-    message: `Fetching all clients`
+    message: `Fetching all clients`,
+    object: colorizeAsJSON(args)
   })
 
   try {
@@ -34,7 +35,8 @@ export const queryOne: Resolver<FindById> = async (_parent, args, ctx, _info) =>
 
   logger({
     level: LOG_TYPE.INFO,
-    message: `Fetching client with id '${id}'`
+    message: `Fetching client with id '${id}'`,
+    object: colorizeAsJSON(args)
   })
 
   let client: Client | null
@@ -61,7 +63,8 @@ export const search: Resolver<FindByQuery> = async (_parent, args, ctx, _info) =
 
   logger({
     level: LOG_TYPE.INFO,
-    message: `Searching for clients with term '${searchTerm}'`
+    message: `Searching for clients with term '${searchTerm}'`,
+    object: colorizeAsJSON(args)
   })
 
   let clients: Client[] | null
@@ -144,7 +147,8 @@ export const remove: Resolver<FindById> = async (_parent, args, ctx, _info) => {
 
   logger({
     level: LOG_TYPE.INFO,
-    message: `Deleting client with id: ${id}`
+    message: `Deleting client with id: ${id}`,
+    object: colorizeAsJSON(args)
   })
 
   const clientToRemove = await ctx.prisma.client.findFirst({ where: { id } })

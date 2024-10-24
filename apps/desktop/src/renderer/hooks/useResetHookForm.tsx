@@ -4,6 +4,7 @@ import { useAtomValue } from 'jotai'
 import { useEffect } from 'react'
 import { FieldValues, useForm } from 'react-hook-form'
 
+/** @deprecated - Leading to bugs */
 export const useResetHookForm = <T extends FieldValues>(
   resetFn: ReturnType<typeof useForm<T>>['reset'],
   overlayMode?: OverlayMode | null

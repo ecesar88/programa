@@ -15,10 +15,11 @@ type UpdateMenuQueryInput = {
   data: Partial<Prisma.ClientUpdateInput>
 }
 
-export const queryAll: Resolver = async (_parent, _args, ctx, _info) => {
+export const queryAll: Resolver = async (_parent, args, ctx, _info) => {
   logger({
     level: LOG_TYPE.INFO,
-    message: `Fetching all menu entries`
+    message: `Fetching all menu entries`,
+    object: colorizeAsJSON(args)
   })
 
   try {
@@ -41,7 +42,8 @@ export const queryOne: Resolver<FindById> = async (_parent, args, ctx, _info) =>
 
   logger({
     level: LOG_TYPE.INFO,
-    message: `Fetching menu entry with id '${id}'`
+    message: `Fetching menu entry with id '${id}'`,
+    object: colorizeAsJSON(args)
   })
 
   let client: Menu | null
@@ -83,7 +85,9 @@ export const create: Resolver<CreateMenuQueryInput> = async (_parent, args, ctx,
 
       logger({
         level: LOG_TYPE.INFO,
-        message: 'Menu does not exist, creating a new menu'
+        message: 'Menu does not exist, creating a new menu',
+
+        object: colorizeAsJSON(args)
       })
     }
 
@@ -92,7 +96,7 @@ export const create: Resolver<CreateMenuQueryInput> = async (_parent, args, ctx,
         menuId: menu?.id,
         name: data.name as string,
         description: data.description,
-        // Only create a variant if it exists
+        // Only create a variant if it was passed in (exists)
         ...(data?.variant?.length && {
           variant: {
             createMany: {
@@ -111,16 +115,17 @@ export const create: Resolver<CreateMenuQueryInput> = async (_parent, args, ctx,
   }
 }
 
+/** @todo - Implement */
 export const update: Resolver<UpdateMenuQueryInput> = async (_parent, args, ctx, _info) => {
   const { id, data } = args
 
   logger({
     level: LOG_TYPE.INFO,
     message: `Updating new client with id '${id}' with data: `,
-    object: colorizeAsJSON(args.data)
+    object: colorizeAsJSON(args)
   })
 
-  const client = await ctx.prisma.client.findFirst({ where: { id } })
+  const client = await ctx.prisma.menuEntry.findFirst({ where: { id } })
 
   if (!client) {
     throw new RecordNotFoundError('Client')
@@ -130,7 +135,7 @@ export const update: Resolver<UpdateMenuQueryInput> = async (_parent, args, ctx,
     logger({
       level: LOG_TYPE.INFO,
       message: `Updating new client with id '${id}' with data: `,
-      object: colorizeAsJSON(args.data)
+      object: colorizeAsJSON(args)
     })
 
     return await ctx.prisma.client.update({
@@ -149,19 +154,20 @@ export const remove: Resolver<FindById> = async (_parent, args, ctx, _info) => {
 
   logger({
     level: LOG_TYPE.INFO,
-    message: `Deleting client with id: ${id}`
+    message: `Deleting menu entry with id: ${id}`,
+    object: colorizeAsJSON(args)
   })
 
-  const clientToRemove = await ctx.prisma.client.findFirst({ where: { id } })
+  const menuEntryToRemove = await ctx.prisma.menuEntry.findFirst({ where: { id } })
 
-  if (!clientToRemove) {
-    throw new RecordNotFoundError(`Client with id ${id}`)
+  if (!menuEntryToRemove) {
+    throw new RecordNotFoundError(`Menu entry with id ${id}`)
   }
 
   try {
-    return await ctx.prisma.client.delete({
+    return await ctx.prisma.menuEntry.delete({
       where: {
-        id: clientToRemove.id
+        id: menuEntryToRemove.id
       }
     })
   } catch (_error) {

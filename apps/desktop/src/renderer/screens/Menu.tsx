@@ -1,5 +1,5 @@
-import { Order } from '@prisma/client'
 import {
+  AlertModal,
   ContentScrollContainer,
   DataHeader,
   Dialog,
@@ -8,49 +8,107 @@ import {
 } from '@renderer/components'
 import { Read } from '@renderer/components/templates/Menu'
 import { CreateOrEditModal } from '@renderer/components/templates/Menu/CreateOrEdit'
-import { useCreateOrEditOverlay } from '@renderer/hooks'
-import { MenuEntry } from '@renderer/queries/graphql/codegen/graphql'
-import { get } from '@renderer/queries/operations/menu'
-import { useAtom } from 'jotai'
-import { atomWithQuery } from 'jotai-tanstack-query'
-import { useMemo } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
+import { OverlayMode } from '@renderer/constants/enums'
+import { useCreateOrEditOverlay, useHandleModalState } from '@renderer/hooks'
+import {
+  CreateMenuEntryMutationVariables,
+  MenuEntry
+} from '@renderer/queries/graphql/codegen/graphql'
+import { create, get, purge } from '@renderer/queries/operations/menu'
+import { selectedRowAtom } from '@renderer/store'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { useAtomValue, useSetAtom } from 'jotai'
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { Id, toast } from 'react-toastify'
 import { match } from 'ts-pattern'
 
 export const Menu = () => {
   const { t } = useTranslation()
+  const successToast = (message: string): Id => toast(message, { type: 'success' })
 
-  const { openOverlay, closeOverlay, isOverlayOpen, overlayMode } = useCreateOrEditOverlay()
+  const {
+    openOverlay: openMenuEntryModal,
+    closeOverlay: closeMenuEntryModal,
+    isOverlayOpen: isMenuEntryModalOpen,
+    overlayMode: menuEntryModalMode
+  } = useCreateOrEditOverlay()
 
-  type OrderWithoutId = Omit<Order, 'id'>
-  const form = useForm<OrderWithoutId>({
-    // resolver: zodResolver(CreateOrderResolver),
-    // resolver: zodResolver(CreateOrderResolver),
+  const {
+    openModal: openDeleteAlertModal,
+    closeModal: closeDeleteAlertModal,
+    isModalOpen: isDeleteModalOpen
+  } = useHandleModalState()
+
+  const menuEntryData = useAtomValue(selectedRowAtom).data as MenuEntry
+  const setMenuEntryData = useSetAtom(selectedRowAtom)
+  // const setIsLoadingAtom = useSetAtom(isLoadingAtom)
+
+  const clearSelectedMenuEntryData = () => setMenuEntryData({ data: {}, meta: { index: null } })
+
+  const form = useForm<CreateMenuEntryMutationVariables>({
+    // resolver: zodResolver(CreateMenuEntryResolver), // TODO - add resolver
     defaultValues: {}
   })
 
-  const queries = useMemo(() => {
-    const menuEntriesAtom = atomWithQuery(() => ({
-      queryKey: ['getAllMenuEntries'],
-      queryFn: get,
-      meta: {
-        errorMessage: 'Erro ao obter o cardápio'
-      }
-    }))
+  const {
+    isLoading: isLoadingMenuEntries,
+    data,
+    refetch
+  } = useQuery({
+    queryKey: ['getAllMenuEntries'],
+    queryFn: get,
+    meta: {
+      errorMessage: 'Erro ao obter o cardápio'
+    }
+  })
 
-    menuEntriesAtom.debugLabel = 'getAllMenuEntriesAtom'
-    return { menuEntriesAtom }
-  }, [])
+  const { mutate: createMenuEntryMutation, isPending: isLoadingCreateMenuEntry } = useMutation({
+    mutationKey: ['createMenuEntry'],
+    mutationFn: create,
+    onSuccess: async () => {
+      successToast('Produto criado com sucesso!')
+      closeMenuEntryModal()
+      clearSelectedMenuEntryData()
+      form.reset()
 
-  const [{ isLoading: isLoadingMenuEntries, data, refetch }] = useAtom(queries.menuEntriesAtom)
+      await refetch()
+    },
+    meta: {
+      errorMessage: 'Erro ao criar o produto'
+    }
+  })
+
+  const { mutate: deleteMenuEntryMutation, isPending: isLoadingDeleteMenuEntry } = useMutation({
+    mutationKey: ['deleteMenuEntry'],
+    mutationFn: purge,
+    onSuccess: async () => {
+      successToast('Produto excluído com sucesso!')
+      clearSelectedMenuEntryData()
+      closeDeleteAlertModal()
+      closeMenuEntryModal()
+      form.reset()
+
+      await refetch()
+    },
+    meta: {
+      errorMessage: 'Erro ao excluir o produto'
+    }
+  })
 
   const actions: ScreenMenuProps['actions'] & { refetch: () => void } = {
     refetch,
     onSaveClick: () => {
-      // const onCreate: SubmitHandler<ClientWithoutId> = (data) => {
-      //   createClientMutation(data)
+      const onCreate: SubmitHandler<CreateMenuEntryMutationVariables> = (data) => {
+        createMenuEntryMutation(data)
+      }
+
+      // const onEdit: SubmitHandler<any> = async (data) => {
+      //   console.log('não vai criar')
+
+      //   return await ''
       // }
+
       // const onEdit: SubmitHandler<ClientWithoutId> = (data) => {
       //   const { id } = rowData
       //   editClientMutation({
@@ -58,11 +116,25 @@ export const Menu = () => {
       //     clientData: data
       //   })
       // }
-      // form.handleSubmit(overlayMode === OverlayMode.NEW ? onCreate : onEdit)()
+
+      const submit = async (data: CreateMenuEntryMutationVariables) => {
+        if (menuEntryModalMode === OverlayMode.NEW) {
+          await onCreate(data)
+        } else {
+          // TODO - implement edition
+          // onEdit(data)
+          console.log('NOT IMPLEMENTED')
+        }
+      }
+
+      form.handleSubmit(submit)()
+    },
+    onDeleteClick: () => {
+      openDeleteAlertModal()
     },
     onCancelClick: () => {
       form.reset()
-      closeOverlay()
+      closeMenuEntryModal()
     }
   }
 
@@ -77,20 +149,44 @@ export const Menu = () => {
             .otherwise(() => (
               <Read
                 actions={actions}
-                openOverlay={openOverlay}
+                openOverlay={openMenuEntryModal}
                 menuEntries={(data?.getAllMenuEntries as MenuEntry[]) ?? []}
               />
             ))}
         </ContentScrollContainer>
       </div>
 
-      <Dialog isOpen={isOverlayOpen} onClose={closeOverlay}>
+      <Dialog isOpen={isMenuEntryModalOpen} onClose={closeMenuEntryModal}>
         <CreateOrEditModal
-          overlayMode={overlayMode}
           onSave={actions.onSaveClick}
-          onCancel={closeOverlay}
+          onDelete={actions.onDeleteClick}
+          onCancel={actions.onCancelClick}
+          overlayMode={menuEntryModalMode}
+          menuEntryData={menuEntryData}
+          isLoading={isLoadingCreateMenuEntry}
         />
       </Dialog>
+
+      <AlertModal
+        isOpen={isDeleteModalOpen}
+        confirmButtonText="Deletar"
+        isLoading={isLoadingDeleteMenuEntry}
+        cancelButtonText="Cancelar"
+        icon="trash"
+        intent="danger"
+        actions={{
+          onCancel: () => {
+            closeDeleteAlertModal()
+          },
+          onConfirm: () => {
+            deleteMenuEntryMutation((menuEntryData?.id as number) ?? 0)
+          }
+        }}
+      >
+        <p>
+          Deletar o item <b>{menuEntryData?.name}</b> ?
+        </p>
+      </AlertModal>
     </FormProvider>
   )
 }
