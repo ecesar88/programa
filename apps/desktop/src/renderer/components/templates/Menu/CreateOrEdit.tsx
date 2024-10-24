@@ -23,7 +23,7 @@ type CreateOrEditProps = {
  */
 export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => {
   const {
-    formState: { errors },
+    formState: { errors }, // TODO - add errors to inputs when doing validation with zod schema
     control
   } = useFormContext()
 
@@ -135,7 +135,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
       <div className="flex flex-row justify-between gap-4">
         <div className="h-fit rounded flex flex-col gap-1 justify-between flex-[10]">
           <img
-            src="https://www.sabornamesa.com.br/media/k2/items/cache/b5b56b2ae93d3dc958cf0c21c9383b18_XL.jpg"
+            src="https://www.sabornamesa.com.br/media/k2/items/cache/b5b56b2ae93d3dc958cf0c21c9383b18_XL.jpg" // TODO - replace with static asset placeholder image
             className="rounded-md transition-all"
             style={{
               maxWidth: `${imageWidth}px`
