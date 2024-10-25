@@ -13,6 +13,7 @@ import { ProductCard } from './components/ProductCard'
 export const Read = (props: {
   actions: ScreenMenuProps['actions'] & { refetch: (options?: RefetchOptions) => void }
   menuEntries: MenuEntry[]
+  isLoading?: boolean
   openOverlay: ReturnType<typeof useCreateOrEditOverlay>['openOverlay']
   onRowClick?: (data: MenuEntry, index: number) => void
 }): React.ReactNode => {

@@ -2,7 +2,8 @@ import { Button } from '@blueprintjs/core'
 import { MenuEntryVariant } from '@renderer/queries/graphql/codegen/graphql'
 import { cn } from '@renderer/utils'
 import { useClickAway } from '@uidotdev/usehooks'
-import { LegacyRef, useState } from 'react'
+import { useState } from 'react'
+import { VariantInputField } from './VariantInputField'
 
 export type VariantsProps = {
   variants: MenuEntryVariant[]
@@ -10,8 +11,14 @@ export type VariantsProps = {
   isCreateModeActive: boolean
 }
 
+export type CreateType_MenuEntryVariant = Omit<MenuEntryVariant, '__typename'> & { uuid: string }
+
 export const Variants = (props: VariantsProps) => {
   const [expandedEditableFields, setExpandedEditableFields] = useState<Record<string, boolean>>({})
+
+  const [isCreatingNewVariants, setIsCreatingNewVariants] = useState<CreateType_MenuEntryVariant[]>(
+    []
+  )
 
   const handleFieldOnClick = (fieldName: string) => {
     if (expandedEditableFields[fieldName] !== undefined) {
@@ -47,77 +54,75 @@ export const Variants = (props: VariantsProps) => {
     setExpandedEditableFields({})
   })
 
+  const handleCreateNewVariant = () => {
+    setIsCreatingNewVariants((prev) => {
+      const newVariantToCreate: CreateType_MenuEntryVariant = {
+        uuid: (Math.random() * 10000).toFixed(5).toString(),
+        name: '',
+        description: '',
+        price: 0
+      }
+
+      return [...prev, newVariantToCreate]
+    })
+  }
+
+  const handleDeleteCreateNewVariant = (uuid: string) => {
+    setIsCreatingNewVariants((prev) => prev.filter((variant) => variant.uuid !== uuid))
+  }
+
+  const handleDeleteVariant = (variant: MenuEntryVariant | CreateType_MenuEntryVariant) => {
+    console.log({ variant })
+
+    if ('__typename' in variant) {
+      // delete from the database
+      console.log('// delete from the database')
+    }
+
+    if ('uuid' in variant) {
+      handleDeleteCreateNewVariant(variant.uuid)
+    }
+  }
+
   return (
     <div className="flex flex-col gap-2 pb-4 h-full">
       {props.variants?.map((variant, idx) => (
-        <div
-          id={variant.name as string}
+        <VariantInputField
           key={idx}
-          ref={clickAwayRef as LegacyRef<HTMLDivElement>}
-          onClick={() => {
-            handleFieldOnClick(variant.name as string)
-          }}
-          className={cn(
-            'rounded-md bg-lightgray text-black px-2 py-1 [&_*]:!cursor-pointer !cursor-pointer hover:bg-gray4 flex flex-row justify-between transition-all items-center h-fit'
-          )}
-        >
-          <div
-            className={cn('flex flex-col w-full pr-4 transition-all', {
-              'gap-2 py-2': expandedEditableFields[variant.name as string]
-            })}
-          >
-            <div>
-              {props.isEditModeActive || props.isCreateModeActive ? (
-                <input
-                  type="text"
-                  placeholder="Nome:"
-                  className="bg-transparent font-bold"
-                  defaultValue={variant.name ?? ''}
-                />
-              ) : (
-                <p className="font-bold">{variant.name}</p>
-              )}
-            </div>
-
-            {props.isEditModeActive || props.isCreateModeActive ? (
-              <input
-                type="text"
-                placeholder="Descrição:"
-                className="bg-transparent"
-                defaultValue={variant.description ?? ''}
-              />
-            ) : (
-              <p>{variant.description}</p>
-            )}
-          </div>
-
-          <div>
-            <div className="flex flex-row min-w-[70px] justify-between">
-              <div>
-                <b>R$&nbsp;</b>
-              </div>
-
-              <div>
-                {props.isEditModeActive || props.isCreateModeActive ? (
-                  <input
-                    type="text"
-                    placeholder="Preço"
-                    size={1}
-                    className="bg-transparent font-bold justify-end"
-                    defaultValue={variant?.price?.toFixed(2)}
-                  />
-                ) : (
-                  <p className="font-bold">{variant.price}</p>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
+          variant={variant}
+          clickAwayRef={clickAwayRef}
+          expandedEditableFields={expandedEditableFields}
+          isEditModeActive={props.isEditModeActive}
+          isCreateModeActive={props.isCreateModeActive}
+          handleFieldOnClick={handleFieldOnClick}
+          handleDeleteVariant={() => handleDeleteVariant(variant)}
+        />
       ))}
+
+      {/* Adicionar animação de swipe para a direita (react-spring) */}
+      {isCreatingNewVariants?.length > 0 &&
+        isCreatingNewVariants?.map((variant) => {
+          return (
+            <VariantInputField
+              key={variant.uuid}
+              variant={{ name: '', description: '', price: 0 }}
+              clickAwayRef={clickAwayRef}
+              expandedEditableFields={expandedEditableFields}
+              isEditModeActive={props.isEditModeActive}
+              isCreateModeActive={props.isCreateModeActive}
+              handleFieldOnClick={handleFieldOnClick}
+              handleDeleteVariant={() => handleDeleteVariant(variant)}
+            />
+          )
+        })}
 
       <div
         className={cn(
-          'rounded-md bg-lightGray3 text-black px-2 py-1 hover:bg-lightGray2 flex flex-row gap-2 transition-all items-center h-fit justify-center'
+          'rounded-md bg-lightGray3 text-black px-2 py-1 hover:bg-lightGray2 flex flex-row gap-2 items-center h-fit justify-center transition-all duration-500',
+          {
+            'opacity-0': !props.isCreateModeActive && !props.isEditModeActive,
+            'opacity-100': props.isCreateModeActive || props.isEditModeActive
+          }
         )}
       >
         <div>
@@ -125,10 +130,8 @@ export const Variants = (props: VariantsProps) => {
             icon={'plus'}
             intent={'none'}
             className="rounded-md"
-            onClick={() => {
-              // Abrir modal igual no trello
-              console.log('add new cateogory')
-            }}
+            disabled={!props.isCreateModeActive && !props.isEditModeActive}
+            onClick={handleCreateNewVariant}
           />
         </div>
       </div>

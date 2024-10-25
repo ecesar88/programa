@@ -8,6 +8,7 @@ import { Controller, useFormContext } from 'react-hook-form'
 import { FaLock, FaLockOpen } from 'react-icons/fa'
 import { debounce } from 'remeda'
 import { Variants } from './components/Variants'
+import { cn } from '@renderer/utils'
 
 type CreateOrEditProps = {
   onSave?: () => void
@@ -29,7 +30,10 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
 
   const [imageWidth, setImageWidth] = useState<number>(450)
 
+  // Managed internally
   const [isEditModeActive, setIsEditModeActive] = useState(false)
+
+  // This comes from the Screen component
   const isCreateModeActive = props.overlayMode === OverlayMode.NEW
 
   const getImageWidthBasedOnScreenSize = () => {
@@ -58,6 +62,8 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     getImageWidthBasedOnScreenSize()
   }, [])
 
+  const handleCreateNewVariant = () => {}
+
   if (!props?.menuEntryData) return
 
   return (
@@ -73,6 +79,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
                     name="name"
                     render={({ field: { onChange, value, ref } }) => (
                       <EditableText
+                        className="[&_*]:!cursor-text"
                         disabled={!isCreateModeActive && !isEditModeActive}
                         onChange={onChange}
                         value={value}
@@ -159,7 +166,12 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
                 ))}
               </div>
 
-              <div>
+              <div
+                className={cn('transition-all duration-500', {
+                  'opacity-0': !isCreateModeActive || isEditModeActive,
+                  'opacity-100': isCreateModeActive || isEditModeActive
+                })}
+              >
                 <Button
                   icon={'plus'}
                   intent={'none'}
@@ -179,33 +191,29 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
               <div>
                 <p className="text-lg font-bold">Descrição</p>
 
-                {/* <DynamicallyEditableTextArea /> */}
-
-                {isEditModeActive || isCreateModeActive ? (
-                  <FormGroup className="w-full h-full max-h-[180px] min-h-[60px]">
-                    <Controller
-                      control={control}
-                      name="description"
-                      render={({ field: { onChange, value, ref } }) => (
-                        <TextArea
-                          className="max-h-[160px] min-h-[60px]"
-                          placeholder="Descrição"
-                          fill
-                          onChange={onChange}
-                          value={value}
-                          ref={ref}
-                          defaultValue={props?.menuEntryData?.description as string}
-                          // error={errors?.['description']?.message?.toString() as unknown as boolean}
-                        />
-                      )}
-                    />
-                    {/* <InputError errorMessage={errors?.['description']?.message?.toString()} /> */}
-                  </FormGroup>
-                ) : (
-                  <div className="pb-4 max-w-[470px] text-wrap min-h-[85px]">
-                    <p>{props.menuEntryData.description}</p>
-                  </div>
-                )}
+                <div className="w-full h-full max-h-[180px] min-h-[60px]">
+                  <Controller
+                    control={control}
+                    name="description"
+                    render={({ field: { onChange, value, ref } }) => (
+                      <EditableText
+                        className="[&_*]:!cursor-text max-w-[470px] min-h-[85px] text-wrap"
+                        disabled={!isCreateModeActive && !isEditModeActive}
+                        onChange={onChange}
+                        value={value}
+                        ref={ref}
+                        minWidth={20}
+                        maxLength={350}
+                        intent="none"
+                        multiline
+                        placeholder="Nome"
+                        defaultValue={props?.menuEntryData?.description as string}
+                      />
+                      // error={errors?.['description']?.message?.toString() as unknown as boolean}
+                      // <InputError errorMessage={errors?.['description']?.message?.toString()} />
+                    )}
+                  />
+                </div>
               </div>
             </div>
           </form>

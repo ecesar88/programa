@@ -11,7 +11,7 @@ export const Home = (): React.ReactNode => {
         <Outlet />
       </div>
 
-      <div className="absolute right-0 mt-3 mr-3">
+      <div className="absolute right-0 mt-4 mr-3">
         <SystemTime />
       </div>
     </div>

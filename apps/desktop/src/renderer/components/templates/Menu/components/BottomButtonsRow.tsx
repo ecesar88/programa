@@ -11,7 +11,7 @@ type BottomButtonsRowProps = {
 
 export const BottomButtonsRow = (props: BottomButtonsRowProps) => {
   return (
-    <div className="flex justify-between flex-grow-0 flex-shrink-0 h-[35px]">
+    <div className="flex justify-between flex-grow-0 flex-shrink-0 h-[35px] pb-2">
       <div className="flex gap-1">
         <div>
           <Button
@@ -26,7 +26,13 @@ export const BottomButtonsRow = (props: BottomButtonsRowProps) => {
         </div>
 
         <div>
-          <Button icon={<TbReload size={20} />} intent={'none'} onClick={props.actions.refetch}>
+          <Button
+            icon={<TbReload size={20} />}
+            intent={'none'}
+            onClick={() => {
+              props.actions.refetch()
+            }}
+          >
             Atualizar
           </Button>
         </div>

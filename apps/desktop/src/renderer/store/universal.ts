@@ -40,3 +40,4 @@ rowData.debugLabel = 'rowDataAtom'
  *  Primarily used to disable the ScreenMenu component buttons' when the screen is on a loading state.
  */
 export const isLoadingAtom = atom(false)
+isLoadingAtom.debugLabel = 'isLoadingAtom'
