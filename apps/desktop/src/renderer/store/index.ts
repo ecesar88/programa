@@ -1,3 +1,2 @@
-export * from './jotai'
-export * from './universal'
-export * from './selectedRowStore'
+export * from './global'
+export * from './selectedRow'

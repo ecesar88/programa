@@ -6,7 +6,6 @@ import {
   Loading,
   ScreenMenuProps
 } from '@renderer/components'
-import { SuspenseLoading } from '@renderer/components/molecules/SuspenseLoading'
 import { Read } from '@renderer/components/templates/Menu'
 import { CreateOrEditModal } from '@renderer/components/templates/Menu/CreateOrEdit'
 import { OverlayMode } from '@renderer/constants/enums'
@@ -19,7 +18,6 @@ import { create, get, purge } from '@renderer/queries/operations/menu'
 import { isLoadingAtom, selectedRowAtom } from '@renderer/store'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useAtomValue, useSetAtom } from 'jotai'
-import { useEffect } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Id, toast } from 'react-toastify'
@@ -44,9 +42,6 @@ export const Menu = () => {
 
   const menuEntryData = useAtomValue(selectedRowAtom).data as MenuEntry
   const setMenuEntryData = useSetAtom(selectedRowAtom)
-
-  const setIsLoadingAtom = useSetAtom(isLoadingAtom)
-  const isLoadingAtomValue = useAtomValue(isLoadingAtom)
 
   const clearSelectedMenuEntryData = () => setMenuEntryData({ data: {}, meta: { index: null } })
 

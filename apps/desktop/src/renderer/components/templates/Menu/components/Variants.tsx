@@ -1,24 +1,27 @@
 import { Button } from '@blueprintjs/core'
 import { MenuEntryVariant } from '@renderer/queries/graphql/codegen/graphql'
 import { cn } from '@renderer/utils'
-import { useClickAway } from '@uidotdev/usehooks'
+// import { useClickAway } from '@uidotdev/usehooks'
 import { useState } from 'react'
+import { UseFieldArrayReturn } from 'react-hook-form'
+import { CreateType_MenuEntryVariant } from '../CreateOrEdit'
 import { VariantInputField } from './VariantInputField'
 
 export type VariantsProps = {
   variants: MenuEntryVariant[]
+  append: UseFieldArrayReturn['append']
+  remove: UseFieldArrayReturn['remove']
   isEditModeActive: boolean
   isCreateModeActive: boolean
+  isCreatingNewVariants: CreateType_MenuEntryVariant[]
 }
-
-export type CreateType_MenuEntryVariant = Omit<MenuEntryVariant, '__typename'> & { uuid: string }
 
 export const Variants = (props: VariantsProps) => {
   const [expandedEditableFields, setExpandedEditableFields] = useState<Record<string, boolean>>({})
 
-  const [isCreatingNewVariants, setIsCreatingNewVariants] = useState<CreateType_MenuEntryVariant[]>(
-    []
-  )
+  // const [isCreatingNewVariants, setIsCreatingNewVariants] = useState<CreateType_MenuEntryVariant[]>(
+  //   []
+  // )
 
   const handleFieldOnClick = (fieldName: string) => {
     if (expandedEditableFields[fieldName] !== undefined) {
@@ -31,56 +34,67 @@ export const Variants = (props: VariantsProps) => {
   }
 
   // Get the div whose id is the variant that is expanded
-  const getContainerDiv = () => {
-    const expandedVariant = Object.entries(expandedEditableFields).find(
-      ([_key, isEnabled]) => isEnabled === true
-    )
+  // const getContainerDiv = () => {
+  //   const expandedVariant = Object.entries(expandedEditableFields).find(
+  //     ([_key, isEnabled]) => isEnabled === true
+  //   )
 
-    if (!expandedVariant) return
+  //   if (!expandedVariant) return
 
-    const [name, _] = expandedVariant
-    return document.getElementById(name)
-  }
+  //   const [name, _] = expandedVariant
+  //   return document.getElementById(name)
+  // }
 
-  const clickAwayRef = useClickAway((element) => {
-    const containerDiv = getContainerDiv()
-    if (!containerDiv?.id) return
-    if (!element.target) return
+  // const clickAwayRef = useClickAway((element) => {
+  //   const containerDiv = getContainerDiv()
+  //   if (!containerDiv?.id) return
+  //   if (!element.target) return
 
-    // Not not collapse if the clicked element is the in the container that is expanded
-    if (containerDiv.contains(element.target as Node)) return
+  //   // Not not collapse if the clicked element is the in the container that is expanded
+  //   if (containerDiv.contains(element.target as Node)) return
 
-    // Reset expanded fields
-    setExpandedEditableFields({})
-  })
+  //   // Reset expanded fields
+  //   setExpandedEditableFields({})
+  // })
 
   const handleCreateNewVariant = () => {
-    setIsCreatingNewVariants((prev) => {
-      const newVariantToCreate: CreateType_MenuEntryVariant = {
-        uuid: (Math.random() * 10000).toFixed(5).toString(),
-        name: '',
-        description: '',
-        price: 0
-      }
+    const newVariantToCreate: CreateType_MenuEntryVariant = {
+      uuid: (Math.random() * 10000).toFixed(5).toString(),
+      name: '',
+      description: '',
+      price: undefined
+    }
 
-      return [...prev, newVariantToCreate]
-    })
+    props.append(newVariantToCreate)
+
+    // setIsCreatingNewVariants((prev) => {
+    //   const newVariantToCreate: CreateType_MenuEntryVariant = {
+    //     uuid: (Math.random() * 10000).toFixed(5).toString(),
+    //     name: '',
+    //     description: '',
+    //     price: 0
+    //   }
+    //   return [...prev, newVariantToCreate]
+    // })
   }
 
-  const handleDeleteCreateNewVariant = (uuid: string) => {
-    setIsCreatingNewVariants((prev) => prev.filter((variant) => variant.uuid !== uuid))
+  const handleDeleteCreateNewVariant = (index: number) => {
+    // setIsCreatingNewVariants((prev) => prev.filter((variant) => variant.uuid !== uuid))
+
+    props.remove(index)
   }
 
-  const handleDeleteVariant = (variant: MenuEntryVariant | CreateType_MenuEntryVariant) => {
-    console.log({ variant })
-
+  const handleDeleteVariant = (
+    variant: MenuEntryVariant | CreateType_MenuEntryVariant,
+    index?: number
+  ) => {
     if ('__typename' in variant) {
       // delete from the database
       console.log('// delete from the database')
     }
 
     if ('uuid' in variant) {
-      handleDeleteCreateNewVariant(variant.uuid)
+      handleDeleteCreateNewVariant(index ?? 0)
     }
   }
 
@@ -90,28 +104,28 @@ export const Variants = (props: VariantsProps) => {
         <VariantInputField
           key={idx}
           variant={variant}
-          clickAwayRef={clickAwayRef}
+          // clickAwayRef={clickAwayRef}
           expandedEditableFields={expandedEditableFields}
           isEditModeActive={props.isEditModeActive}
           isCreateModeActive={props.isCreateModeActive}
           handleFieldOnClick={handleFieldOnClick}
-          handleDeleteVariant={() => handleDeleteVariant(variant)}
+          handleDeleteVariant={() => handleDeleteVariant(variant, idx)}
         />
       ))}
 
       {/* Adicionar animação de swipe para a direita (react-spring) */}
-      {isCreatingNewVariants?.length > 0 &&
-        isCreatingNewVariants?.map((variant) => {
+      {props.isCreatingNewVariants?.length > 0 &&
+        props.isCreatingNewVariants?.map((variant, idx) => {
           return (
             <VariantInputField
               key={variant.uuid}
               variant={{ name: '', description: '', price: 0 }}
-              clickAwayRef={clickAwayRef}
+              // clickAwayRef={clickAwayRef}
               expandedEditableFields={expandedEditableFields}
               isEditModeActive={props.isEditModeActive}
               isCreateModeActive={props.isCreateModeActive}
               handleFieldOnClick={handleFieldOnClick}
-              handleDeleteVariant={() => handleDeleteVariant(variant)}
+              handleDeleteVariant={() => handleDeleteVariant(variant, idx)}
             />
           )
         })}

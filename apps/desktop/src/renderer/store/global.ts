@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { atom, createStore } from 'jotai'
 
-export const store = createStore()
+export const globalStore = createStore()
 
 /*
  *  Selected Row atom:

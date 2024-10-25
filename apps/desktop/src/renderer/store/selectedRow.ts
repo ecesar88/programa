@@ -1,5 +1,5 @@
 import { focusAtom } from 'jotai-optics'
-import { getSelectedRowAtom } from './universal'
+import { getSelectedRowAtom } from './global'
 
 // TODO - research better usage of jotai-optics
 export const selectedRowAtom = getSelectedRowAtom<object>()

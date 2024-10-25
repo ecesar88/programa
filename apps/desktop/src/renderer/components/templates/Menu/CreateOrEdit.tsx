@@ -1,14 +1,14 @@
-import { Button, Colors, EditableText, FormGroup, TextArea, Tooltip } from '@blueprintjs/core'
+import { Button, Colors, EditableText, Tooltip } from '@blueprintjs/core'
 import { ModalTitle } from '@renderer/components'
 import { Label } from '@renderer/components/molecules'
 import { OverlayMode } from '@renderer/constants/enums'
 import { MenuEntry, MenuEntryVariant } from '@renderer/queries/graphql/codegen/graphql'
+import { cn } from '@renderer/utils'
 import { useEffect, useState } from 'react'
-import { Controller, useFormContext } from 'react-hook-form'
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { FaLock, FaLockOpen } from 'react-icons/fa'
 import { debounce } from 'remeda'
 import { Variants } from './components/Variants'
-import { cn } from '@renderer/utils'
 
 type CreateOrEditProps = {
   onSave?: () => void
@@ -19,6 +19,11 @@ type CreateOrEditProps = {
   isLoading?: boolean
 }
 
+export type CreateType_MenuEntryVariant = Omit<MenuEntryVariant, '__typename' | 'price'> & {
+  uuid: string
+  price?: number
+}
+
 /**
  * Create or Edit MenuEntry modal
  */
@@ -27,6 +32,12 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     formState: { errors }, // TODO - add errors to inputs when doing validation with zod schema
     control
   } = useFormContext()
+
+  // TODO - tipar direito
+  const { fields, append, remove } = useFieldArray({
+    control, // control props comes from useForm (optional: if you are using FormProvider)
+    name: 'variants' // unique name for your Field Array
+  })
 
   const [imageWidth, setImageWidth] = useState<number>(450)
 
@@ -61,6 +72,22 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
   useEffect(() => {
     getImageWidthBasedOnScreenSize()
   }, [])
+
+  const handleOnSaveClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    // Remove empty variants (to create)
+    ;(fields as unknown as CreateType_MenuEntryVariant[]).forEach(
+      ({ name, description, price }: CreateType_MenuEntryVariant, idx) => {
+        if (!name?.length || !description?.length || !price || price === 0) {
+          remove(idx ?? 0)
+        }
+      }
+    )
+
+    e.preventDefault()
+    setIsEditModeActive(false)
+
+    props?.onSave?.()
+  }
 
   if (!props?.menuEntryData) return
 
@@ -223,7 +250,10 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
           <Variants
             isEditModeActive={isEditModeActive}
             isCreateModeActive={isCreateModeActive}
+            isCreatingNewVariants={fields as unknown as CreateType_MenuEntryVariant[]}
             variants={props.menuEntryData.variant as MenuEntryVariant[]}
+            append={append}
+            remove={remove}
           />
         </div>
       </div>
@@ -260,12 +290,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
               form="create-form"
               type="submit"
               loading={props.isLoading}
-              onClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-                e.preventDefault()
-                setIsEditModeActive(false)
-
-                props?.onSave?.()
-              }}
+              onClick={handleOnSaveClick}
             >
               Salvar
             </Button>

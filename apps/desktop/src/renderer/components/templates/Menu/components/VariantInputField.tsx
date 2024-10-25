@@ -1,14 +1,14 @@
 import { Button, EditableText } from '@blueprintjs/core'
 import { MenuEntryVariant } from '@renderer/queries/graphql/codegen/graphql'
 import { cn } from '@renderer/utils'
-import { LegacyRef, MutableRefObject } from 'react'
+// import { LegacyRef, MutableRefObject } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { FaTrashAlt } from 'react-icons/fa'
-import { CreateType_MenuEntryVariant } from './Variants'
+import { CreateType_MenuEntryVariant } from '../CreateOrEdit'
 
 export type VariantInputFieldProps = {
   variant: MenuEntryVariant
-  clickAwayRef: MutableRefObject<Element>
+  // clickAwayRef: MutableRefObject<Element>
   expandedEditableFields: Record<string, boolean>
   isEditModeActive: boolean
   isCreateModeActive: boolean
@@ -22,17 +22,17 @@ export const VariantInputField = (props: VariantInputFieldProps) => {
   return (
     <div
       id={props.variant.name as string}
-      ref={props.clickAwayRef as LegacyRef<HTMLDivElement>}
-      onClick={() => {
-        props.handleFieldOnClick(props.variant.name as string)
-      }}
+      // ref={props.clickAwayRef as LegacyRef<HTMLDivElement>}
+      // onClick={() => {
+      //   props.handleFieldOnClick(props.variant.name as string)
+      // }}
       className={cn(
-        'flex flex-row justify-between max-w-[390px] rounded-md bg-lightgray text-black px-2 py-1 hover:bg-gray4 transition-all items-center h-fit overflow-clip group relative'
+        'flex flex-row justify-between max-w-[390px] rounded-md bg-lightgray text-black px-2 py-1 hover:bg-gray4 transition-all items-center h-fit overflow-clip group relative hover:scale-[102%]'
       )}
     >
       <div
-        className={cn('flex flex-col w-full pr-4 transition-all', {
-          'gap-2 py-2': props.expandedEditableFields[props.variant.name as string]
+        className={cn('flex flex-col w-full pr-4 transition-all flex-[8]', {
+          // 'gap-2 py-2': props.expandedEditableFields[props.variant.name as string]
         })}
       >
         <div>
@@ -61,12 +61,12 @@ export const VariantInputField = (props: VariantInputFieldProps) => {
             name="description"
             render={({ field: { onChange, value, ref } }) => (
               <EditableText
-                className="w-full max-w-[273px] [&_*]:!cursor-text"
+                className="max-w-[220px] w-max [&_*]:!cursor-text"
                 disabled={!props.isCreateModeActive && !props.isEditModeActive}
                 onChange={onChange}
                 value={value}
                 ref={ref}
-                minWidth={20}
+                minWidth={220}
                 maxLength={220}
                 multiline
                 intent="none"
@@ -78,7 +78,7 @@ export const VariantInputField = (props: VariantInputFieldProps) => {
         </div>
       </div>
 
-      <div className="flex flex-row min-w-[70px] justify-between right-[0] group-hover:right-[-5rem] relative transition-all duration-300">
+      <div className="flex flex-row min-w-[70px] justify-between right-[0] group-hover:right-[3rem] relative transition-all duration-300">
         <div>
           <b>R$&nbsp;</b>
         </div>
@@ -106,7 +106,7 @@ export const VariantInputField = (props: VariantInputFieldProps) => {
         </div>
       </div>
 
-      <div className="flex items-center gap-2 absolute right-[-3rem] group-hover:right-[0.8rem] ransition-all duration-300">
+      <div className="flex items-center gap-2 absolute right-[-3rem] group-hover:right-[0.8rem] transition-all duration-300">
         <div>
           <Button
             className="rounded"
