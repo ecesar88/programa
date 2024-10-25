@@ -62,8 +62,6 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     getImageWidthBasedOnScreenSize()
   }, [])
 
-  const handleCreateNewVariant = () => {}
-
   if (!props?.menuEntryData) return
 
   return (
