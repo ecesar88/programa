@@ -3,7 +3,6 @@
 import { BlueprintProvider } from '@blueprintjs/core'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { GraphQLClient } from 'graphql-request'
 import { DevTools } from 'jotai-devtools'
 import { queryClientAtom } from 'jotai-tanstack-query'
 import { Provider as JotaiProvider } from 'jotai/react'
@@ -22,8 +21,6 @@ const HydrateAtoms = ({ children }): React.ReactNode => {
   useHydrateAtoms([[queryClientAtom, queryClient]])
   return children
 }
-
-export const gqlClient = new GraphQLClient(import.meta.env.VITE_API_ENDPOINT)
 
 function App(): JSX.Element {
   // Electron IPC, not handling this at the moment

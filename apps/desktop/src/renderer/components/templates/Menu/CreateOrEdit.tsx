@@ -74,6 +74,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
   }, [])
 
   const handleOnSaveClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    console.log('fields >> ', fields)
     // Remove empty variants (to create)
     ;(fields as unknown as CreateType_MenuEntryVariant[]).forEach(
       ({ name, description, price }: CreateType_MenuEntryVariant, idx) => {

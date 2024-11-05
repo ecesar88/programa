@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { UseFieldArrayReturn } from 'react-hook-form'
 import { CreateType_MenuEntryVariant } from '../CreateOrEdit'
 import { VariantInputField } from './VariantInputField'
+import { animated, config, useSpring, useSprings } from '@react-spring/web'
 
 export type VariantsProps = {
   variants: MenuEntryVariant[]
@@ -84,6 +85,19 @@ export const Variants = (props: VariantsProps) => {
     props.remove(index)
   }
 
+  // const [deleteVariantAnimationStyle, deleteVariantAnimationApi] = useSpring(() => ({
+  //   from: { x: 0 }
+  // }))
+
+  const [deleteAnSprings, deleteAnApi] = useSprings(
+    props.variants.length,
+    (i) => ({
+      from: { x: 0 },
+      config: config.molasses
+    }),
+    [props.variants]
+  )
+
   const handleDeleteVariant = (
     variant: MenuEntryVariant | CreateType_MenuEntryVariant,
     index?: number
@@ -96,29 +110,44 @@ export const Variants = (props: VariantsProps) => {
     if ('uuid' in variant) {
       handleDeleteCreateNewVariant(index ?? 0)
     }
+
+    console.log('UUUUUUUUUUUUUUUUUUUUUUUI')
+    deleteAnApi.start((i) => {
+      if (index !== i) return
+
+      return {
+        to: {
+          x: 1000
+        }
+      }
+    })
   }
 
   return (
-    <div className="flex flex-col gap-2 pb-4 h-full">
-      {props.variants?.map((variant, idx) => (
-        <VariantInputField
-          key={idx}
-          variant={variant}
-          // clickAwayRef={clickAwayRef}
-          expandedEditableFields={expandedEditableFields}
-          isEditModeActive={props.isEditModeActive}
-          isCreateModeActive={props.isCreateModeActive}
-          handleFieldOnClick={handleFieldOnClick}
-          handleDeleteVariant={() => handleDeleteVariant(variant, idx)}
-        />
-      ))}
+    <div className="flex flex-col gap-2 pb-4 h-full overflow-hidden">
+      {deleteAnSprings?.map((style, idx) => {
+        const variant = props.variants[idx]
+
+        return (
+          <animated.div key={idx} style={style}>
+            <VariantInputField
+              variant={variant}
+              expandedEditableFields={expandedEditableFields}
+              isEditModeActive={props.isEditModeActive}
+              isCreateModeActive={props.isCreateModeActive}
+              handleFieldOnClick={handleFieldOnClick}
+              handleDeleteVariant={() => handleDeleteVariant(variant, idx)}
+            />
+          </animated.div>
+        )
+      })}
 
       {/* Adicionar animação de swipe para a direita (react-spring) */}
       {props.isCreatingNewVariants?.length > 0 &&
         props.isCreatingNewVariants?.map((variant, idx) => {
           return (
             <VariantInputField
-              key={variant.uuid}
+              key={idx}
               variant={{ name: '', description: '', price: 0 }}
               // clickAwayRef={clickAwayRef}
               expandedEditableFields={expandedEditableFields}
@@ -129,6 +158,36 @@ export const Variants = (props: VariantsProps) => {
             />
           )
         })}
+
+      {/* {props.variants?.map((variant, idx) => (
+        <VariantInputField
+          key={idx}
+          variant={variant}
+          // clickAwayRef={clickAwayRef}
+          expandedEditableFields={expandedEditableFields}
+          isEditModeActive={props.isEditModeActive}
+          isCreateModeActive={props.isCreateModeActive}
+          handleFieldOnClick={handleFieldOnClick}
+          handleDeleteVariant={() => handleDeleteVariant(variant, idx)}
+        />
+      ))} */}
+
+      {/* Adicionar animação de swipe para a direita (react-spring) */}
+      {/* {props.isCreatingNewVariants?.length > 0 &&
+        props.isCreatingNewVariants?.map((variant, idx) => {
+          return (
+            <VariantInputField
+              key={idx}
+              variant={{ name: '', description: '', price: 0 }}
+              // clickAwayRef={clickAwayRef}
+              expandedEditableFields={expandedEditableFields}
+              isEditModeActive={props.isEditModeActive}
+              isCreateModeActive={props.isCreateModeActive}
+              handleFieldOnClick={handleFieldOnClick}
+              handleDeleteVariant={() => handleDeleteVariant(variant, idx)}
+            />
+          )
+        })} */}
 
       <div
         className={cn(

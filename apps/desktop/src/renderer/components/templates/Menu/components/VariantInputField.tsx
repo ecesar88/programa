@@ -78,7 +78,14 @@ export const VariantInputField = (props: VariantInputFieldProps) => {
         </div>
       </div>
 
-      <div className="flex flex-row min-w-[70px] justify-between right-[0] group-hover:right-[3rem] relative transition-all duration-300">
+      <div
+        className={cn(
+          'flex flex-row min-w-[70px] justify-between relative transition-all duration-300',
+          {
+            'right-[0] group-hover:right-[3rem]': props.isEditModeActive || props.isCreateModeActive
+          }
+        )}
+      >
         <div>
           <b>R$&nbsp;</b>
         </div>
@@ -106,7 +113,14 @@ export const VariantInputField = (props: VariantInputFieldProps) => {
         </div>
       </div>
 
-      <div className="flex items-center gap-2 absolute right-[-3rem] group-hover:right-[0.8rem] transition-all duration-300">
+      <div
+        className={cn(
+          'flex items-center gap-2 absolute right-[-3rem] transition-all duration-300',
+          {
+            'group-hover:right-[0.8rem]': props.isEditModeActive || props.isCreateModeActive
+          }
+        )}
+      >
         <div>
           <Button
             className="rounded"

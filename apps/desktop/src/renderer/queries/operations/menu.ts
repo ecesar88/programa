@@ -1,4 +1,4 @@
-import { gqlClient } from '@renderer/App'
+import { gqlClient } from '@renderer/config/gqlClientConfig'
 import { CreateMenuEntryMutationVariables } from '../graphql/codegen/graphql'
 import {
   createMenuEntryMutationDocument,

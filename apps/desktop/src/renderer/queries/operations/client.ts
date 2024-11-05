@@ -1,4 +1,4 @@
-import { gqlClient } from '@renderer/App'
+import { gqlClient } from '@renderer/config/gqlClientConfig'
 import {
   CreateClientMutationVariables,
   UpdateClientByIdDocument,
