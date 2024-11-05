@@ -60,6 +60,7 @@ export type MenuEntryLabel = {
 export type MenuEntryVariant = {
   __typename?: 'MenuEntryVariant';
   description: Maybe<Scalars['String']['output']>;
+  id: Maybe<Scalars['Int']['output']>;
   name: Maybe<Scalars['String']['output']>;
   price: Maybe<Scalars['Float']['output']>;
 };

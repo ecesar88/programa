@@ -20,7 +20,7 @@ type CreateOrEditProps = {
 }
 
 export type CreateType_MenuEntryVariant = Omit<MenuEntryVariant, '__typename' | 'price'> & {
-  uuid: string
+  id: number
   price?: number
 }
 
@@ -30,13 +30,15 @@ export type CreateType_MenuEntryVariant = Omit<MenuEntryVariant, '__typename' | 
 export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => {
   const {
     formState: { errors }, // TODO - add errors to inputs when doing validation with zod schema
-    control
+    control,
+    reset
   } = useFormContext()
 
   // TODO - tipar direito
-  const { fields, append, remove } = useFieldArray({
-    control, // control props comes from useForm (optional: if you are using FormProvider)
-    name: 'variants' // unique name for your Field Array
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { fields, append, remove } = useFieldArray<any>({
+    control,
+    name: 'variant'
   })
 
   const [imageWidth, setImageWidth] = useState<number>(450)
@@ -73,6 +75,25 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     getImageWidthBasedOnScreenSize()
   }, [])
 
+  useEffect(() => {
+    console.log(props.menuEntryData)
+    if (props.overlayMode === OverlayMode.NEW) {
+      reset(
+        {
+          name: '',
+          description: '',
+          price: undefined,
+          variant: []
+        },
+        { keepValues: false, keepDefaultValues: false, keepErrors: false }
+      )
+
+      console.log('NEW')
+    } else {
+      reset(props.menuEntryData)
+    }
+  }, [props.menuEntryData])
+
   const handleOnSaveClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     console.log('fields >> ', fields)
     // Remove empty variants (to create)
@@ -103,6 +124,8 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
                   <Controller
                     control={control}
                     name="name"
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    defaultValue={(fields as Record<string, any>)?.name as string}
                     render={({ field: { onChange, value, ref } }) => (
                       <EditableText
                         className="[&_*]:!cursor-text"
@@ -113,11 +136,12 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
                         minWidth={20}
                         intent="none"
                         placeholder="Título..."
-                        defaultValue={
-                          props.overlayMode === OverlayMode.EDIT
-                            ? (props.menuEntryData?.name as string)
-                            : undefined
-                        }
+                        // defaultValue={
+                        //   props.overlayMode === OverlayMode.EDIT
+                        //     ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        //       ((fields as Record<string, any>)?.name as string)
+                        //     : undefined
+                        // }
                       />
                     )}
                   />
@@ -221,6 +245,8 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
                   <Controller
                     control={control}
                     name="description"
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    defaultValue={(fields as Record<string, any>)?.description as string}
                     render={({ field: { onChange, value, ref } }) => (
                       <EditableText
                         className="[&_*]:!cursor-text max-w-[470px] min-h-[85px] text-wrap"
@@ -233,7 +259,8 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
                         intent="none"
                         multiline
                         placeholder="Nome"
-                        defaultValue={props?.menuEntryData?.description as string}
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        // defaultValue={(fields as Record<string, any>)?.description as string}
                       />
                       // error={errors?.['description']?.message?.toString() as unknown as boolean}
                       // <InputError errorMessage={errors?.['description']?.message?.toString()} />
@@ -249,12 +276,11 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
           <p className="text-lg font-bold">Variantes</p>
 
           <Variants
-            isEditModeActive={isEditModeActive}
-            isCreateModeActive={isCreateModeActive}
-            isCreatingNewVariants={fields as unknown as CreateType_MenuEntryVariant[]}
-            variants={props.menuEntryData.variant as MenuEntryVariant[]}
+            variants={fields as unknown as MenuEntryVariant[]}
             append={append}
             remove={remove}
+            isEditModeActive={isEditModeActive}
+            isCreateModeActive={isCreateModeActive}
           />
         </div>
       </div>

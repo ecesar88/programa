@@ -10,6 +10,7 @@ export const MenuEntryVariantInputType = builder.inputType('MenuEntryVariantInpu
 
 export const MenuEntryVariantType = builder.simpleObject('MenuEntryVariant', {
   fields: (t) => ({
+    id: t.int(),
     price: t.float(),
     name: t.string(),
     description: t.string()
@@ -24,7 +25,7 @@ export const MenuEntryLabelType = builder.simpleObject('MenuEntryLabel', {
 })
 
 export const MenuEntryType = builder.simpleObject('MenuEntry', {
-  description: 'A entry in the menu.',
+  description: 'An entry in the menu.',
   fields: (t) => ({
     id: t.int(),
     name: t.string(),

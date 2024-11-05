@@ -10,8 +10,7 @@ builder.queryField('getAllMenuEntries', (t) =>
     args: {
       page: t.arg.int({
         validate: {
-          int: true,
-          nonnegative: true
+          schema: z.number().positive('Page must be a positive integer')
         },
         defaultValue: 1
       })
@@ -30,7 +29,7 @@ builder.queryField('getMenuEntryById', (t) =>
       id: t.arg.int({
         required: true,
         validate: {
-          schema: z.number().positive('Id must be positive')
+          schema: z.number().positive('Id must be a positive integer')
         }
       })
     },
@@ -52,6 +51,8 @@ builder.queryField('getMenuEntryById', (t) =>
 //     resolve: search
 //   })
 // )
+
+// create operations/resolvers: createVariant, editVariant, deleteVariant
 
 builder.mutationField('createMenuEntry', (t) =>
   t.field({

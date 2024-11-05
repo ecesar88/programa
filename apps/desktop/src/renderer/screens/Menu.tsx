@@ -15,7 +15,7 @@ import {
   MenuEntry
 } from '@renderer/queries/graphql/codegen/graphql'
 import { create, get, purge } from '@renderer/queries/operations/menu'
-import { isLoadingAtom, selectedRowAtom } from '@renderer/store'
+import { selectedRowAtom } from '@renderer/store'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
@@ -45,11 +45,6 @@ export const Menu = () => {
 
   const clearSelectedMenuEntryData = () => setMenuEntryData({ data: {}, meta: { index: null } })
 
-  const form = useForm<CreateMenuEntryMutationVariables>({
-    // resolver: zodResolver(CreateMenuEntryResolver), // TODO - add resolver
-    defaultValues: {}
-  })
-
   const {
     isLoading: isLoadingGetAllMenuEntries,
     data,
@@ -60,6 +55,11 @@ export const Menu = () => {
     meta: {
       errorMessage: 'Erro ao obter o cardápio'
     }
+  })
+
+  const form = useForm<CreateMenuEntryMutationVariables>({
+    // resolver: zodResolver(CreateMenuEntryResolver), // TODO - add resolver
+    defaultValues: {}
   })
 
   const { mutate: createMenuEntryMutation, isPending: isLoadingCreateMenuEntry } = useMutation({
@@ -101,6 +101,8 @@ export const Menu = () => {
     },
     onSaveClick: () => {
       const onCreate: SubmitHandler<CreateMenuEntryMutationVariables> = (data) => {
+        console.log('>>>>>>>>>>>>>> ', data)
+
         createMenuEntryMutation(data)
       }
 
@@ -124,6 +126,7 @@ export const Menu = () => {
         } else {
           // TODO - implement edition
           // onEdit(data)
+          console.log('>>>>>>>>>>>>>> ', data)
           console.log('NOT IMPLEMENTED')
         }
       }

@@ -23,7 +23,7 @@ type LengthError implements Error {
   minLength: Int
 }
 
-"""A entry in the menu."""
+"""An entry in the menu."""
 type MenuEntry {
   description: String
   id: Int
@@ -39,6 +39,7 @@ type MenuEntryLabel {
 
 type MenuEntryVariant {
   description: String
+  id: Int
   name: String
   price: Float
 }
