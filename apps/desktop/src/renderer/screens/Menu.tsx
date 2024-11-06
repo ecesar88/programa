@@ -7,7 +7,10 @@ import {
   ScreenMenuProps
 } from '@renderer/components'
 import { Read } from '@renderer/components/templates/Menu'
-import { CreateOrEditModal } from '@renderer/components/templates/Menu/CreateOrEdit'
+import {
+  CreateOrEditModal,
+  MenuEntryFormValues
+} from '@renderer/components/templates/Menu/CreateOrEdit'
 import { OverlayMode } from '@renderer/constants/enums'
 import { useCreateOrEditOverlay, useHandleModalState } from '@renderer/hooks'
 import {
@@ -16,8 +19,10 @@ import {
 } from '@renderer/queries/graphql/codegen/graphql'
 import { create, get, purge } from '@renderer/queries/operations/menu'
 import { selectedRowAtom } from '@renderer/store'
+import { todo } from '@renderer/utils'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useAtomValue, useSetAtom } from 'jotai'
+import * as O from 'optics-ts'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Id, toast } from 'react-toastify'
@@ -101,8 +106,6 @@ export const Menu = () => {
     },
     onSaveClick: () => {
       const onCreate: SubmitHandler<CreateMenuEntryMutationVariables> = (data) => {
-        console.log('>>>>>>>>>>>>>> ', data)
-
         createMenuEntryMutation(data)
       }
 
@@ -121,13 +124,18 @@ export const Menu = () => {
       // }
 
       const submit = async (data: CreateMenuEntryMutationVariables) => {
+        const variantPrices = O.optic<MenuEntryFormValues>().prop('variant').elems().prop('price')
+
+        const menuEntryWithParsedPrices = O.modify(variantPrices)((price) => Number(price))(
+          data as MenuEntryFormValues
+        )
+
         if (menuEntryModalMode === OverlayMode.NEW) {
-          await onCreate(data)
+          await onCreate(menuEntryWithParsedPrices as CreateMenuEntryMutationVariables)
         } else {
           // TODO - implement edition
           // onEdit(data)
-          console.log('>>>>>>>>>>>>>> ', data)
-          console.log('NOT IMPLEMENTED')
+          todo()
         }
       }
 

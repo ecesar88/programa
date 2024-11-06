@@ -1,16 +1,15 @@
 import { Button, EditableText } from '@blueprintjs/core'
-import { MenuEntryVariant } from '@renderer/queries/graphql/codegen/graphql'
 import { cn } from '@renderer/utils'
 import { Controller, useFormContext } from 'react-hook-form'
 import { FaTrashAlt } from 'react-icons/fa'
-import { CreateType_MenuEntryVariant } from '../CreateOrEdit'
+import { MenuEntryFormValues } from '../CreateOrEdit'
 
 export type VariantInputFieldProps = {
   arrayIndex: number
-  variant: MenuEntryVariant
+  variant: MenuEntryFormValues['variant'][number]
   isEditModeActive: boolean
   isCreateModeActive: boolean
-  handleDeleteVariant: (variantData: MenuEntryVariant | CreateType_MenuEntryVariant) => void
+  handleDeleteVariant: (variantData: MenuEntryFormValues['variant'][number]) => void
 }
 
 export const VariantInputField = (props: VariantInputFieldProps) => {
@@ -87,20 +86,18 @@ export const VariantInputField = (props: VariantInputFieldProps) => {
           <Controller
             control={control}
             name={`variant.${props.arrayIndex}.price`}
-            defaultValue={props.variant.price?.toString() ?? ''}
             render={({ field: { onChange, value, ref } }) => (
               <EditableText
                 disabled={!props.isCreateModeActive && !props.isEditModeActive}
-                className="text-end [&_*]:!cursor-text"
-                onChange={onChange}
-                // validate price input
+                className="text-end [&_*]:!cursor-text min-w-[60px]"
+                // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat
+                onChange={(event) => onChange(event.replace(/[^\d.-]+/g, ''))}
                 value={value}
                 ref={ref}
                 minWidth={20}
                 maxLength={6}
                 intent="none"
                 placeholder="Preço"
-                // defaultValue={props.variant.price?.toString() ?? ''}
               />
             )}
           />

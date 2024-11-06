@@ -2,7 +2,7 @@ import { Button, Colors, EditableText, Tooltip } from '@blueprintjs/core'
 import { ModalTitle } from '@renderer/components'
 import { Label } from '@renderer/components/molecules'
 import { OverlayMode } from '@renderer/constants/enums'
-import { MenuEntry, MenuEntryVariant } from '@renderer/queries/graphql/codegen/graphql'
+import { MenuEntry, MenuEntryVariantInput } from '@renderer/queries/graphql/codegen/graphql'
 import { cn } from '@renderer/utils'
 import { useEffect, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
@@ -19,9 +19,11 @@ type CreateOrEditProps = {
   isLoading?: boolean
 }
 
-export type CreateType_MenuEntryVariant = Omit<MenuEntryVariant, '__typename' | 'price'> & {
+export type MenuEntryFormValues = {
   id: number
-  price?: number
+  name: string
+  description?: string
+  variant: Array<MenuEntryVariantInput>
 }
 
 /**
@@ -29,14 +31,12 @@ export type CreateType_MenuEntryVariant = Omit<MenuEntryVariant, '__typename' | 
  */
 export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => {
   const {
-    formState: { errors }, // TODO - add errors to inputs when doing validation with zod schema
+    // formState: {  }, // TODO - add errors to inputs when doing validation with zod schema
     control,
     reset
-  } = useFormContext()
+  } = useFormContext<MenuEntryFormValues>()
 
-  // TODO - tipar direito
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { fields, append, remove } = useFieldArray<any>({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: 'variant'
   })
@@ -76,45 +76,38 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
   }, [])
 
   useEffect(() => {
-    console.log(props.menuEntryData)
     if (props.overlayMode === OverlayMode.NEW) {
       reset(
         {
           name: '',
           description: '',
-          price: undefined,
           variant: []
         },
         { keepValues: false, keepDefaultValues: false, keepErrors: false }
       )
-
-      console.log('NEW')
     } else {
-      reset(props.menuEntryData)
+      reset(props.menuEntryData as MenuEntryFormValues)
     }
   }, [props.menuEntryData])
 
   const handleOnSaveClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    console.log('fields >> ', fields)
-    // Remove empty variants (to create)
-    ;(fields as unknown as CreateType_MenuEntryVariant[]).forEach(
-      ({ name, description, price }: CreateType_MenuEntryVariant, idx) => {
-        if (!name?.length || !description?.length || !price || price === 0) {
-          remove(idx ?? 0)
-        }
-      }
-    )
+    // console.log('fields >> ', fields)
+    // // Remove empty variants (to create)
+    // fields.forEach(({ name, description, price }, idx) => {
+    //   if (!name?.length || !description?.length || !price || price === 0) {
+    //     remove(idx ?? 0)
+    //   }
+    // })
 
     e.preventDefault()
     setIsEditModeActive(false)
-
     props?.onSave?.()
   }
 
   if (!props?.menuEntryData) return
 
   return (
-    <div className="flex flex-col p-5 w-full !h-full min-w-[900px]">
+    <div className="flex flex-col p-5 w-full !h-full min-w-[900px] overflow-hidden">
       <div className="flex flex-row justify-between">
         <div className="flex flex-row items-center gap-4 justify-between w-full">
           <div className="flex flex-row gap-2 items-center">
@@ -124,8 +117,6 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
                   <Controller
                     control={control}
                     name="name"
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    defaultValue={(fields as Record<string, any>)?.name as string}
                     render={({ field: { onChange, value, ref } }) => (
                       <EditableText
                         className="[&_*]:!cursor-text"
@@ -136,12 +127,6 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
                         minWidth={20}
                         intent="none"
                         placeholder="Título..."
-                        // defaultValue={
-                        //   props.overlayMode === OverlayMode.EDIT
-                        //     ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        //       ((fields as Record<string, any>)?.name as string)
-                        //     : undefined
-                        // }
                       />
                     )}
                   />
@@ -227,7 +212,6 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
                   intent={'none'}
                   className="rounded-md"
                   onClick={() => {
-                    console.log(props.menuEntryData)
                     // Abrir modal igual no trello
                     console.log('add new cateogory')
                   }}
@@ -245,25 +229,21 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
                   <Controller
                     control={control}
                     name="description"
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    defaultValue={(fields as Record<string, any>)?.description as string}
+                    defaultValue={''}
                     render={({ field: { onChange, value, ref } }) => (
                       <EditableText
                         className="[&_*]:!cursor-text max-w-[470px] min-h-[85px] text-wrap"
                         disabled={!isCreateModeActive && !isEditModeActive}
                         onChange={onChange}
-                        value={value}
+                        value={value ?? ''}
                         ref={ref}
                         minWidth={20}
                         maxLength={350}
                         intent="none"
                         multiline
                         placeholder="Nome"
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        // defaultValue={(fields as Record<string, any>)?.description as string}
                       />
                       // error={errors?.['description']?.message?.toString() as unknown as boolean}
-                      // <InputError errorMessage={errors?.['description']?.message?.toString()} />
                     )}
                   />
                 </div>
@@ -276,7 +256,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
           <p className="text-lg font-bold">Variantes</p>
 
           <Variants
-            variants={fields as unknown as MenuEntryVariant[]}
+            variants={fields}
             append={append}
             remove={remove}
             isEditModeActive={isEditModeActive}

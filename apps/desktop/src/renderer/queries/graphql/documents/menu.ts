@@ -3,6 +3,7 @@ import { graphql } from '../codegen/gql'
 graphql(/* GraphQL */ `
   fragment variant on MenuEntryVariant {
     __typename
+    id
     name
     description
     price
