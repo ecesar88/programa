@@ -107,7 +107,10 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
   if (!props?.menuEntryData) return
 
   return (
-    <div className="flex flex-col p-5 w-full max-h-[800px] overflow-clip overflow-x-clip overflow-y-clip">
+    <div
+      id="create-or-edit-menu-entry-modal"
+      className="flex flex-col p-5 w-full overflow-clip overflow-x-clip overflow-y-clip"
+    >
       <div className="flex flex-row justify-between">
         <div className="flex flex-row items-center gap-4 justify-between w-full">
           <div className="flex flex-row gap-2 items-center">

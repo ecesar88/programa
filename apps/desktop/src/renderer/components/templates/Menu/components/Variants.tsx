@@ -4,6 +4,8 @@ import { UseFieldArrayReturn } from 'react-hook-form'
 import { MenuEntryFormValues } from '../CreateOrEdit'
 import { VariantInputField } from './VariantInputField'
 import { MenuEntryVariantInput } from '@renderer/queries/graphql/codegen/graphql'
+import { useEffect, useState } from 'react'
+import { debounce } from 'remeda'
 
 export type VariantsProps = {
   variants: MenuEntryFormValues['variant']
@@ -14,6 +16,35 @@ export type VariantsProps = {
 }
 
 export const Variants = (props: VariantsProps) => {
+  const [maxVariantListHeight, setMaxVariantListHeight] = useState<number>(0)
+
+  const calculateMaxVariantListHeight = () => {
+    const MODAL_HEIGHT = document
+      .getElementById('create-or-edit-menu-entry-modal')
+      ?.getBoundingClientRect().height
+
+    if (!MODAL_HEIGHT) return
+
+    const MAX_VARIANT_LIST_HEIGHT_PERCENTAGE = 0.6 // 60% of the modal's size
+
+    console.log('>> MODAL_HEIGHT >> ', MODAL_HEIGHT)
+    console.log('>> 60% MODAL_HEIGHT >> ', MODAL_HEIGHT * MAX_VARIANT_LIST_HEIGHT_PERCENTAGE)
+
+    const FINAL_VARIANT_LIST_HEIGHT = Math.trunc(MODAL_HEIGHT * MAX_VARIANT_LIST_HEIGHT_PERCENTAGE)
+
+    setMaxVariantListHeight(FINAL_VARIANT_LIST_HEIGHT)
+  }
+
+  const debouncer = debounce(calculateMaxVariantListHeight, { waitMs: 500, timing: 'trailing' })
+
+  useEffect(() => {
+    window.addEventListener('resize', debouncer.call)
+
+    return () => {
+      window.removeEventListener('resize', debouncer.call)
+    }
+  }, [window.innerHeight])
+
   const handleCreateNewVariant = () => {
     console.log(props.variants)
 
@@ -100,7 +131,12 @@ export const Variants = (props: VariantsProps) => {
 
     */}
 
-      <div className="overflow-y-auto overflow-hidden flex flex-col gap-2 pb-4 pl-1 px-2">
+      <div
+        className="overflow-y-auto overflow-hidden flex flex-col gap-2 pb-4 pl-1 px-2"
+        style={{
+          maxHeight: `${maxVariantListHeight}px`
+        }}
+      >
         {props.variants?.map((variant: MenuEntryVariantInput & { id?: string }, idx) => {
           return (
             <VariantInputField
