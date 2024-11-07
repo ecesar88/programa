@@ -124,18 +124,19 @@ export const Menu = () => {
       // }
 
       const submit = async (data: CreateMenuEntryMutationVariables) => {
-        const variantPrices = O.optic<MenuEntryFormValues>().prop('variant').elems().prop('price')
+        const variantPricesTraversal = O.optic<MenuEntryFormValues>()
+          .prop('variant')
+          .elems()
+          .prop('price')
 
-        const menuEntryWithParsedPrices = O.modify(variantPrices)((price) => Number(price))(
-          data as MenuEntryFormValues
-        )
+        const menuEntryWithParsedPrices = O.modify(variantPricesTraversal)((price) =>
+          Number(price)
+        )(data as MenuEntryFormValues)
 
         if (menuEntryModalMode === OverlayMode.NEW) {
           await onCreate(menuEntryWithParsedPrices as CreateMenuEntryMutationVariables)
         } else {
-          // TODO - implement edition
-          // onEdit(data)
-          todo()
+          todo('// TODO - implement edition: onEdit(data)')
         }
       }
 

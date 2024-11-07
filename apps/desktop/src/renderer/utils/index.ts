@@ -1,7 +1,8 @@
 import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
-export function todo() {
+export function todo(message?: string) {
+  if (message) console.log(message)
   return null
 }
 
