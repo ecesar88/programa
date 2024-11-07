@@ -231,7 +231,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
           </form>
         </div>
 
-        <div className="flex flex-col gap-2 flex-[8] min-w-[400px] max-h-[180px]">
+        <div className="flex flex-col gap-2 flex-[8] min-w-[400px]">
           <p className="text-lg font-bold pl-2">Variantes</p>
 
           <Variants
