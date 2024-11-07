@@ -107,7 +107,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
   if (!props?.menuEntryData) return
 
   return (
-    <div className="flex flex-col p-5 w-full !h-full overflow-clip overflow-x-clip overflow-y-clip">
+    <div className="flex flex-col p-5 w-full max-h-[800px] overflow-clip overflow-x-clip overflow-y-clip">
       <div className="flex flex-row justify-between">
         <div className="flex flex-row items-center gap-4 justify-between w-full">
           <div className="flex flex-row gap-2 items-center">
@@ -231,7 +231,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
           </form>
         </div>
 
-        <div className="flex flex-col gap-2 flex-[8] min-w-[400px] max-h-[350px]">
+        <div className="flex flex-col gap-2 flex-[8] min-w-[400px] max-h-[180px]">
           <p className="text-lg font-bold pl-2">Variantes</p>
 
           <Variants

@@ -117,22 +117,21 @@ export const Variants = (props: VariantsProps) => {
 
       <div
         className={cn(
-          'rounded-md bg-lightGray3 text-black px-2 py-1 hover:bg-lightGray2 flex flex-row gap-2 items-center h-fit justify-center transition-all duration-500',
+          'rounded-md bg-lightGray3 text-black ml-1 mr-2 py-1 hover:bg-lightGray2 flex flex-row gap-2 items-center h-fit justify-center transition-all duration-500',
           {
             'opacity-0': !props.isCreateModeActive && !props.isEditModeActive,
             'opacity-100': props.isCreateModeActive || props.isEditModeActive
           }
         )}
       >
-        <div>
-          <Button
-            icon={'plus'}
-            intent={'none'}
-            className="rounded-md"
-            disabled={!props.isCreateModeActive && !props.isEditModeActive}
-            onClick={handleCreateNewVariant}
-          />
-        </div>
+        <Button
+          small
+          icon={'plus'}
+          intent={'none'}
+          className="rounded-md"
+          disabled={!props.isCreateModeActive && !props.isEditModeActive}
+          onClick={handleCreateNewVariant}
+        />
       </div>
     </div>
   )
