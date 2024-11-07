@@ -173,14 +173,16 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
 
               <div>
                 <Button
-                  icon={'plus'}
                   intent={'none'}
+                  rightIcon="plus"
                   className="rounded-md"
                   onClick={() => {
                     // Abrir modal igual no trello
-                    console.log('add new cateogory')
+                    console.log('add new label')
                   }}
-                />
+                >
+                  {!props.menuEntryData.labels?.length ? 'Adicionar Etiqueta' : null}
+                </Button>
               </div>
             </div>
           </div>
@@ -229,8 +231,8 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
           </form>
         </div>
 
-        <div className="flex flex-col gap-2 flex-[8] min-w-[390px] max-h-[285px] px-2 overflow-y-auto overflow-hidden">
-          <p className="text-lg font-bold">Variantes</p>
+        <div className="flex flex-col gap-2 flex-[8] min-w-[400px] max-h-[350px]">
+          <p className="text-lg font-bold pl-2">Variantes</p>
 
           <Variants
             variants={fields}

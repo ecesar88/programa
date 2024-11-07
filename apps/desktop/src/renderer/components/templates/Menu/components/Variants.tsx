@@ -61,7 +61,7 @@ export const Variants = (props: VariantsProps) => {
   return (
     // Overflow hidden causing mouse over animation to clip
     // <div className="flex flex-col gap-2 pb-4 h-full overflow-hidden">
-    <div className="flex flex-col gap-2 pb-4 h-full">
+    <div className="flex flex-col gap-2 pb-4 h-full px-2">
       {/* 
       
        {deleteASpring?.map((style, idx) => {
@@ -100,18 +100,20 @@ export const Variants = (props: VariantsProps) => {
 
     */}
 
-      {props.variants?.map((variant: MenuEntryVariantInput & { id?: string }, idx) => {
-        return (
-          <VariantInputField
-            key={variant.id}
-            arrayIndex={idx}
-            variant={variant}
-            isEditModeActive={props.isEditModeActive}
-            isCreateModeActive={props.isCreateModeActive}
-            handleDeleteVariant={() => handleDeleteVariant(idx)}
-          />
-        )
-      })}
+      <div className="overflow-y-auto overflow-hidden flex flex-col gap-2 pb-4 pl-1 px-2">
+        {props.variants?.map((variant: MenuEntryVariantInput & { id?: string }, idx) => {
+          return (
+            <VariantInputField
+              key={variant.id}
+              arrayIndex={idx}
+              variant={variant}
+              isEditModeActive={props.isEditModeActive}
+              isCreateModeActive={props.isCreateModeActive}
+              handleDeleteVariant={() => handleDeleteVariant(idx)}
+            />
+          )
+        })}
+      </div>
 
       <div
         className={cn(
