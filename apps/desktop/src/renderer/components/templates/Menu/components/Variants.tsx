@@ -3,6 +3,7 @@ import { cn } from '@renderer/utils'
 import { UseFieldArrayReturn } from 'react-hook-form'
 import { MenuEntryFormValues } from '../CreateOrEdit'
 import { VariantInputField } from './VariantInputField'
+import { MenuEntryVariantInput } from '@renderer/queries/graphql/codegen/graphql'
 
 export type VariantsProps = {
   variants: MenuEntryFormValues['variant']
@@ -99,11 +100,9 @@ export const Variants = (props: VariantsProps) => {
 
     */}
 
-      {props.variants?.map((variant, idx) => {
+      {props.variants?.map((variant: MenuEntryVariantInput & { id?: string }, idx) => {
         return (
           <VariantInputField
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
             key={variant.id}
             arrayIndex={idx}
             variant={variant}

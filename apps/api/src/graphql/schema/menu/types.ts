@@ -1,26 +1,33 @@
 import { builder } from '../../builder'
+import { MenuEntry, MenuEntryCategory, MenuEntryVariant, MenuEntryLabel } from '@prisma/client'
 
 /* --- Interface Definitions --- */
 
-export interface TypeMenuEntryVariant {
+export interface TypeMenuEntryCategory extends MenuEntryCategory {
+  id: number
+  name: string
+}
+
+export interface TypeMenuEntryVariant extends MenuEntryVariant {
   id: number
   name: string
   description: string
   price: number
 }
 
-export interface TypeMenuEntryLabel {
+export interface TypeMenuEntryLabel extends MenuEntryLabel {
   id: number
   name: string
   color: string
 }
 
-export interface TypeMenuEntry {
+export interface TypeMenuEntry extends MenuEntry {
   id: number
   name: string
-  description?: string
+  description: string | null
   variant: TypeMenuEntryVariant[]
   labels: TypeMenuEntryLabel[]
+  category: TypeMenuEntryCategory[]
 }
 
 export type TypeMenuEntryInput = Omit<TypeMenuEntry, 'id'>
@@ -34,6 +41,16 @@ export const MenuEntryLabelObject = MenuEntryLabelRef.implement({
   fields: (t) => ({
     name: t.exposeString('name'),
     color: t.exposeString('color')
+  })
+})
+
+const MenuEntryCategoryRef = builder.objectRef<TypeMenuEntryCategory>('MenuEntryCategory')
+export const MenuEntryCategoryObject = MenuEntryCategoryRef.implement({
+  description:
+    'The category of a specific MenuEntry. This can be used to sort products by type, such as drinks and meats',
+  fields: (t) => ({
+    id: t.exposeInt('id'),
+    name: t.exposeString('name')
   })
 })
 

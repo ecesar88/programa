@@ -35,19 +35,41 @@ model OrderObservation {
   orderId  Int?
 }
 
+model MenuEntryCategory {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  Menu   Menu? @relation(fields: [menuId], references: [id])
+  menuId Int?  @unique
+
+  MenuEntry   MenuEntry? @relation(fields: [menuEntryId], references: [id])
+  menuEntryId Int?
+}
+
+model MenuEntryLabel {
+  id    Int    @id @default(autoincrement())
+  name  String
+  color String
+
+  MenuEntry   MenuEntry? @relation(fields: [menuEntryId], references: [id])
+  menuEntryId Int?
+
+  @@map("Label")
+}
+
 model Menu {
-  id    Int         @id @default(autoincrement())
-  items MenuEntry[]
-  // categories
+  id         Int                 @id @default(autoincrement())
+  items      MenuEntry[]
+  categories MenuEntryCategory[]
 }
 
 model MenuEntry {
-  id          Int                @id @default(autoincrement())
+  id          Int                 @id @default(autoincrement())
   name        String
   variant     MenuEntryVariant[]
   description String?
-  labels      Label[]
-  // category String
+  labels      MenuEntryLabel[]
+  category    MenuEntryCategory[]
   // images String?
 
   Menu   Menu? @relation(fields: [menuId], references: [id])
@@ -59,15 +81,6 @@ model MenuEntryVariant {
   price       Float?
   name        String?
   description String?
-
-  MenuEntry   MenuEntry? @relation(fields: [menuEntryId], references: [id])
-  menuEntryId Int?
-}
-
-model Label {
-  id    Int    @id @default(autoincrement())
-  name  String
-  color String
 
   MenuEntry   MenuEntry? @relation(fields: [menuEntryId], references: [id])
   menuEntryId Int?

@@ -32,6 +32,14 @@ type MenuEntry {
   variant: [MenuEntryVariant!]
 }
 
+"""
+The category of a specific MenuEntry. This can be used to sort products by type, such as drinks and meats
+"""
+type MenuEntryCategory {
+  id: Int
+  name: String
+}
+
 """Input to create a new MenuEntry"""
 input MenuEntryInput {
   description: String

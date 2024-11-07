@@ -107,7 +107,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
   if (!props?.menuEntryData) return
 
   return (
-    <div className="flex flex-col p-5 w-full !h-full min-w-[900px] overflow-hidden">
+    <div className="flex flex-col p-5 w-full !h-full min-w-[900px] overflow-clip overflow-x-clip overflow-y-clip">
       <div className="flex flex-row justify-between">
         <div className="flex flex-row items-center gap-4 justify-between w-full">
           <div className="flex flex-row gap-2 items-center">
@@ -151,25 +151,38 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
             </div>
           </div>
 
-          <div className="pb-1.5">
-            {!isCreateModeActive &&
-              (isEditModeActive ? (
-                <Tooltip compact position="left" content={<span>Este item é editável</span>}>
-                  <FaLockOpen color={Colors.GRAY3} size="22px" />
-                </Tooltip>
-              ) : (
-                <Tooltip
-                  compact
-                  position="left"
-                  content={
-                    <span>
-                      Este item não é editável. Clique no botão &ldquo;editar&ldquo; para editar.
-                    </span>
-                  }
-                >
-                  <FaLock color={Colors.GRAY3} size="22px" />
-                </Tooltip>
-              ))}
+          <div className="relative w-full">
+            <div
+              className={cn(
+                'flex flex-row gap-[1.5rem] absolute transition-all duration-500 right-[-3.5rem] top-[-1rem]',
+                {
+                  'right-[0]': isEditModeActive || isCreateModeActive
+                }
+              )}
+            >
+              <div className="flex flex-row gap-1">
+                {props.menuEntryData.labels?.map((label, idx) => (
+                  <Label
+                    key={idx}
+                    name={label.name}
+                    color={label.color}
+                    className="min-h-[26px] flex justify-center align-center"
+                  />
+                ))}
+              </div>
+
+              <div>
+                <Button
+                  icon={'plus'}
+                  intent={'none'}
+                  className="rounded-md"
+                  onClick={() => {
+                    // Abrir modal igual no trello
+                    console.log('add new cateogory')
+                  }}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -183,42 +196,6 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
               maxWidth: `${imageWidth}px`
             }}
           />
-
-          <div className="flex flex-col gap-1 pt-4">
-            <div>
-              <p className="font-bold">Etiquetas</p>
-            </div>
-
-            <div className="flex flex-row gap-2">
-              <div className="flex flex-row gap-1">
-                {props.menuEntryData.labels?.map((label, idx) => (
-                  <Label
-                    key={idx}
-                    name={label.name}
-                    color={label.color}
-                    className="min-h-[26px] flex justify-center align-center"
-                  />
-                ))}
-              </div>
-
-              <div
-                className={cn('transition-all duration-500', {
-                  'opacity-0': !isCreateModeActive || isEditModeActive,
-                  'opacity-100': isCreateModeActive || isEditModeActive
-                })}
-              >
-                <Button
-                  icon={'plus'}
-                  intent={'none'}
-                  className="rounded-md"
-                  onClick={() => {
-                    // Abrir modal igual no trello
-                    console.log('add new cateogory')
-                  }}
-                />
-              </div>
-            </div>
-          </div>
 
           <form id="create-form" className="w-full">
             <div className="pt-4 flex flex-col gap-4">
@@ -313,6 +290,27 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
               Editar
             </Button>
           )}
+
+          <div className="flex items-center">
+            {!isCreateModeActive &&
+              (isEditModeActive ? (
+                <Tooltip compact position="left" content={<span>Este item é editável</span>}>
+                  <FaLockOpen color={Colors.GRAY3} size="22px" />
+                </Tooltip>
+              ) : (
+                <Tooltip
+                  compact
+                  position="left"
+                  content={
+                    <span>
+                      Este item não é editável. Clique no botão &ldquo;editar&ldquo; para editar.
+                    </span>
+                  }
+                >
+                  <FaLock color={Colors.GRAY3} size="22px" />
+                </Tooltip>
+              ))}
+          </div>
         </div>
       </div>
     </div>
