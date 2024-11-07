@@ -3,13 +3,14 @@ import * as z from 'zod'
 import { builder } from '../../builder'
 import { RecordNotFoundError } from '../_errors/errors'
 import { create, queryAll, queryOne, remove, search, update } from './resolvers'
-import { ClientType, UserUpdateInput } from './types'
+import { Client, UserCreateOrUpdateInput } from './types'
 
 builder.queryField('getAllClients', (t) =>
   t.field({
-    type: [ClientType],
+    type: [Client],
     args: {
-      page: t.arg.int({
+      page: t.arg({
+        type: 'Int',
         validate: {
           int: true,
           nonnegative: true
@@ -23,12 +24,13 @@ builder.queryField('getAllClients', (t) =>
 
 builder.queryField('getClientById', (t) =>
   t.field({
-    type: ClientType,
+    type: Client,
     errors: {
       types: [RecordNotFoundError]
     },
     args: {
-      id: t.arg.int({
+      id: t.arg({
+        type: 'Int',
         required: true,
         validate: {
           schema: z.number().positive('Id must be positive')
@@ -41,9 +43,10 @@ builder.queryField('getClientById', (t) =>
 
 builder.queryField('searchClients', (t) =>
   t.field({
-    type: [ClientType],
+    type: [Client],
     args: {
-      search: t.arg.string({
+      search: t.arg({
+        type: 'String',
         required: true,
         validate: {
           schema: z.string()
@@ -56,20 +59,21 @@ builder.queryField('searchClients', (t) =>
 
 builder.mutationField('createClient', (t) =>
   t.field({
-    type: ClientType,
+    type: Client,
     args: {
-      name: t.arg.string({
+      name: t.arg({
+        type: 'String',
+        required: true,
         validate: {
-          minLength: 3,
-          type: 'string'
-        },
-        required: true
+          schema: z.string().min(3)
+        }
       }),
-      phone: t.arg.string({
+      phone: t.arg({
+        type: 'String',
+        required: false,
         validate: {
           schema: z.string().regex(Regex.PHONE_REGEX, 'Invalid phone format')
-        },
-        required: false
+        }
       })
     },
     resolve: create
@@ -78,14 +82,17 @@ builder.mutationField('createClient', (t) =>
 
 builder.mutationField('updateClient', (t) =>
   t.field({
-    type: ClientType,
+    type: Client,
     args: {
       id: t.arg({
         type: 'Int',
-        required: true
+        required: true,
+        validate: {
+          schema: z.number().nonnegative()
+        }
       }),
       data: t.arg({
-        type: UserUpdateInput,
+        type: UserCreateOrUpdateInput,
         required: true
       })
     },
@@ -95,12 +102,13 @@ builder.mutationField('updateClient', (t) =>
 
 builder.mutationField('deleteClient', (t) =>
   t.field({
-    type: ClientType,
+    type: Client,
     errors: {
       types: [RecordNotFoundError]
     },
     args: {
-      id: t.arg.int({
+      id: t.arg({
+        type: 'Int',
         required: true,
         validate: {
           schema: z.number().nonnegative()

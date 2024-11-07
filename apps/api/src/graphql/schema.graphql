@@ -23,7 +23,7 @@ type LengthError implements Error {
   minLength: Int
 }
 
-"""An entry in the menu."""
+"""A entry on the menu"""
 type MenuEntry {
   description: String
   id: Int
@@ -32,11 +32,30 @@ type MenuEntry {
   variant: [MenuEntryVariant!]
 }
 
+"""Input to create a new MenuEntry"""
+input MenuEntryInput {
+  description: String
+  labels: [MenuEntryLabelInput!]
+  name: String!
+  variant: [MenuEntryVariantInput!]
+}
+
+"""
+A label on the MenuEntryObject type. This can be used to categorize MenuEntries with different labels.
+"""
 type MenuEntryLabel {
   color: String
   name: String
 }
 
+input MenuEntryLabelInput {
+  color: String
+  name: String
+}
+
+"""
+A variant on the MenuEntry, this can be a different sized or flavored product
+"""
 type MenuEntryVariant {
   description: String
   id: Int
@@ -55,7 +74,7 @@ type Mutation {
   createMenuEntry(description: String, name: String!, variant: [MenuEntryVariantInput!]): MenuEntry
   deleteClient(id: Int!): MutationDeleteClientResult
   deleteMenuEntryById(id: Int!): MutationDeleteMenuEntryByIdResult
-  updateClient(data: UserUpdateInput!, id: Int!): Client
+  updateClient(data: UserCreateOrUpdateInput!, id: Int!): Client
 }
 
 union MutationDeleteClientResult = BaseError | MutationDeleteClientSuccess | RecordNotFoundError
@@ -94,7 +113,7 @@ type RecordNotFoundError implements Error {
   message: String
 }
 
-input UserUpdateInput {
+input UserCreateOrUpdateInput {
   name: String!
   phone: String
 }

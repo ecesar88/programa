@@ -2,17 +2,18 @@ import * as z from 'zod'
 import { builder } from '../../builder'
 import { RecordNotFoundError } from '../_errors/errors'
 import { create, queryAll, queryOne, remove } from './resolvers'
-import { MenuEntryType, MenuEntryVariantInputType } from './types'
+import { MenuEntryObject, MenuEntryVariantInput } from './types'
 
 builder.queryField('getAllMenuEntries', (t) =>
   t.field({
-    type: [MenuEntryType],
+    type: [MenuEntryObject],
     args: {
-      page: t.arg.int({
+      page: t.arg({
+        type: 'Int',
+        defaultValue: 1,
         validate: {
           schema: z.number().positive('Page must be a positive integer')
-        },
-        defaultValue: 1
+        }
       })
     },
     resolve: queryAll
@@ -21,12 +22,13 @@ builder.queryField('getAllMenuEntries', (t) =>
 
 builder.queryField('getMenuEntryById', (t) =>
   t.field({
-    type: MenuEntryType,
+    type: MenuEntryObject,
     errors: {
       types: [RecordNotFoundError]
     },
     args: {
-      id: t.arg.int({
+      id: t.arg({
+        type: 'Int',
         required: true,
         validate: {
           schema: z.number().positive('Id must be a positive integer')
@@ -56,23 +58,25 @@ builder.queryField('getMenuEntryById', (t) =>
 
 builder.mutationField('createMenuEntry', (t) =>
   t.field({
-    type: MenuEntryType,
+    type: MenuEntryObject,
     args: {
-      name: t.arg.string({
+      name: t.arg({
+        type: 'String',
+        required: true,
         validate: {
           minLength: 3,
           type: 'string'
-        },
-        required: true
+        }
       }),
-      description: t.arg.string({
+      description: t.arg({
+        type: 'String',
         required: false,
         validate: {
           minLength: 3,
           type: 'string'
         }
       }),
-      variant: t.arg({ type: [MenuEntryVariantInputType], required: false })
+      variant: t.arg({ type: [MenuEntryVariantInput], required: false })
     },
     resolve: create
   })
@@ -97,12 +101,13 @@ builder.mutationField('createMenuEntry', (t) =>
 
 builder.mutationField('deleteMenuEntryById', (t) =>
   t.field({
-    type: MenuEntryType,
+    type: MenuEntryObject,
     errors: {
       types: [RecordNotFoundError]
     },
     args: {
-      id: t.arg.int({
+      id: t.arg({
+        type: 'Int',
         required: true,
         validate: {
           schema: z.number().nonnegative().positive()

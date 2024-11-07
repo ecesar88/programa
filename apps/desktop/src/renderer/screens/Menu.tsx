@@ -129,12 +129,12 @@ export const Menu = () => {
           .elems()
           .prop('price')
 
-        const menuEntryWithParsedPrices = O.modify(variantPricesTraversal)((price) =>
-          Number(price)
-        )(data as MenuEntryFormValues)
+        const menuEntryWithParsedPrices = O.modify(variantPricesTraversal)(Number)(
+          data as MenuEntryFormValues
+        ) as CreateMenuEntryMutationVariables
 
         if (menuEntryModalMode === OverlayMode.NEW) {
-          await onCreate(menuEntryWithParsedPrices as CreateMenuEntryMutationVariables)
+          await onCreate(menuEntryWithParsedPrices)
         } else {
           todo('// TODO - implement edition: onEdit(data)')
         }

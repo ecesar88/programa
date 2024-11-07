@@ -1,15 +1,29 @@
 import { builder } from '../../builder'
 
-export const ClientType = builder.simpleObject('Client', {
+/* --- Interface Definitions --- */
+
+export interface TypeClient {
+  id: number
+  name: string
+  phone: string
+}
+
+/* --- Object Definitions --- */
+
+const ClientRef = builder.objectRef<TypeClient>('Client')
+
+export const Client = ClientRef.implement({
   description: 'Long necks, cool patterns, taller than you.',
   fields: (t) => ({
-    id: t.int(),
-    name: t.string(),
-    phone: t.string({ nullable: true })
+    id: t.exposeInt('id'),
+    name: t.exposeString('name'),
+    phone: t.exposeString('phone', { nullable: true })
   })
 })
 
-export const UserUpdateInput = builder.inputType('UserUpdateInput', {
+/* --- Inputs Definitions --- */
+
+export const UserCreateOrUpdateInput = builder.inputType('UserCreateOrUpdateInput', {
   fields: (t) => ({
     name: t.string({ required: true }),
     phone: t.string()

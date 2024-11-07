@@ -41,7 +41,7 @@ export type LengthError = Error & {
   minLength: Maybe<Scalars['Int']['output']>;
 };
 
-/** An entry in the menu. */
+/** A entry on the menu */
 export type MenuEntry = {
   __typename?: 'MenuEntry';
   description: Maybe<Scalars['String']['output']>;
@@ -51,12 +51,27 @@ export type MenuEntry = {
   variant: Maybe<Array<MenuEntryVariant>>;
 };
 
+/** Input to create a new MenuEntry */
+export type MenuEntryInput = {
+  description: InputMaybe<Scalars['String']['input']>;
+  labels: InputMaybe<Array<MenuEntryLabelInput>>;
+  name: Scalars['String']['input'];
+  variant: InputMaybe<Array<MenuEntryVariantInput>>;
+};
+
+/** A label on the MenuEntryObject type. This can be used to categorize MenuEntries with different labels. */
 export type MenuEntryLabel = {
   __typename?: 'MenuEntryLabel';
   color: Maybe<Scalars['String']['output']>;
   name: Maybe<Scalars['String']['output']>;
 };
 
+export type MenuEntryLabelInput = {
+  color: InputMaybe<Scalars['String']['input']>;
+  name: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A variant on the MenuEntry, this can be a different sized or flavored product */
 export type MenuEntryVariant = {
   __typename?: 'MenuEntryVariant';
   description: Maybe<Scalars['String']['output']>;
