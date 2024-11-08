@@ -1,11 +1,11 @@
 import { Button } from '@blueprintjs/core'
+import { MenuEntryVariantInput } from '@renderer/queries/graphql/codegen/graphql'
 import { cn } from '@renderer/utils'
+import { useEffect, useState } from 'react'
 import { UseFieldArrayReturn } from 'react-hook-form'
+import { debounce } from 'remeda'
 import { MenuEntryFormValues } from '../CreateOrEdit'
 import { VariantInputField } from './VariantInputField'
-import { MenuEntryVariantInput } from '@renderer/queries/graphql/codegen/graphql'
-import { useEffect, useState } from 'react'
-import { debounce } from 'remeda'
 
 export type VariantsProps = {
   variants: MenuEntryFormValues['variant']
@@ -15,34 +15,44 @@ export type VariantsProps = {
   isCreateModeActive: boolean
 }
 
+const MODAL_ID = 'create-or-edit-menu-entry-modal'
+
+console.log('#### >>>> ', document.getElementById(MODAL_ID)?.getBoundingClientRect().height)
+
 export const Variants = (props: VariantsProps) => {
   const [maxVariantListHeight, setMaxVariantListHeight] = useState<number>(0)
 
-  const calculateMaxVariantListHeight = () => {
-    const MODAL_HEIGHT = document
-      .getElementById('create-or-edit-menu-entry-modal')
-      ?.getBoundingClientRect().height
-
-    if (!MODAL_HEIGHT) return
-
-    const MAX_VARIANT_LIST_HEIGHT_PERCENTAGE = 0.6 // 60% of the modal's size
-
-    console.log('>> MODAL_HEIGHT >> ', MODAL_HEIGHT)
-    console.log('>> 60% MODAL_HEIGHT >> ', MODAL_HEIGHT * MAX_VARIANT_LIST_HEIGHT_PERCENTAGE)
-
-    const FINAL_VARIANT_LIST_HEIGHT = Math.trunc(MODAL_HEIGHT * MAX_VARIANT_LIST_HEIGHT_PERCENTAGE)
+  const calculateMaxVariantListHeight = (modalHeight: number) => {
+    const MAX_VARIANT_LIST_HEIGHT_PERCENTAGE = 0.7 // 50% of the modal's size
+    const FINAL_VARIANT_LIST_HEIGHT = Math.trunc(modalHeight * MAX_VARIANT_LIST_HEIGHT_PERCENTAGE)
 
     setMaxVariantListHeight(FINAL_VARIANT_LIST_HEIGHT)
   }
 
-  const debouncer = debounce(calculateMaxVariantListHeight, { waitMs: 500, timing: 'trailing' })
+  const debouncer = debounce(calculateMaxVariantListHeight, { waitMs: 0, timing: 'leading' })
 
   useEffect(() => {
-    window.addEventListener('resize', debouncer.call)
+    const modalElement = document.getElementById(MODAL_ID)
+    if (!modalElement) return
+    const observer = new MutationObserver(() => {
+      const modalHeight = modalElement.getBoundingClientRect().height
 
-    return () => {
-      window.removeEventListener('resize', debouncer.call)
-    }
+      debouncer.call(modalHeight)
+    })
+
+    observer.observe(modalElement, {
+      attributes: true, // Watch for attribute changes, e.g., style changes
+      childList: true,
+      subtree: true,
+      characterData: true,
+      attributeOldValue: true,
+      characterDataOldValue: true
+    })
+
+    // Initial delayed call in case modal height is already set
+    setTimeout(() => debouncer.call(modalElement.getBoundingClientRect().height), 250)
+
+    return () => observer.disconnect()
   }, [window.innerHeight])
 
   const handleCreateNewVariant = () => {
@@ -134,7 +144,7 @@ export const Variants = (props: VariantsProps) => {
       <div
         className="overflow-y-auto overflow-hidden flex flex-col gap-2 pb-4 pl-1 px-2"
         style={{
-          maxHeight: `${maxVariantListHeight}px`
+          maxHeight: maxVariantListHeight !== 0 ? `${maxVariantListHeight}px` : '0px'
         }}
       >
         {props.variants?.map((variant: MenuEntryVariantInput & { id?: string }, idx) => {
