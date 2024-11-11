@@ -91,7 +91,7 @@ builder.mutationField('createMenuEntry', (t) =>
 //         required: true
 //       }),
 //       data: t.arg({
-//         type: UserUpdateInput,
+//         type: UserCreateOrUpdateInput,
 //         required: true
 //       })
 //     },

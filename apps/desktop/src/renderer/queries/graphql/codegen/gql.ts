@@ -14,7 +14,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "\n  mutation createClient($name: String!, $phone: String) {\n    createClient(name: $name, phone: $phone) {\n      __typename\n      id\n      name\n      phone\n    }\n  }\n": types.CreateClientDocument,
-    "\n  mutation updateClientById($id: Int!, $data: UserUpdateInput!) {\n    updateClient(id: $id, data: $data) {\n      __typename\n      id\n      name\n      phone\n    }\n  }\n": types.UpdateClientByIdDocument,
+    "\n  mutation updateClientById($id: Int!, $data: ClientCreateOrUpdateInput!) {\n    updateClient(id: $id, data: $data) {\n      __typename\n      id\n      name\n      phone\n    }\n  }\n": types.UpdateClientByIdDocument,
     "\n  mutation deleteClientById($id: Int!) {\n    deleteClient(id: $id) {\n      ... on MutationDeleteClientSuccess {\n        data {\n          __typename\n          id\n          name\n          phone\n        }\n      }\n      ... on RecordNotFoundError {\n        message\n      }\n    }\n  }\n": types.DeleteClientByIdDocument,
     "\n  query getAllClients($page: Int) {\n    getAllClients(page: $page) {\n      __typename\n      id\n      name\n      phone\n    }\n  }\n": types.GetAllClientsDocument,
     "\n  query getClientById($id: Int!) {\n    getClientById(id: $id) {\n      __typename\n      ... on RecordNotFoundError {\n        __typename\n        message\n      }\n\n      ... on QueryGetClientByIdSuccess {\n        __typename\n        data {\n          id\n          name\n          phone\n        }\n      }\n    }\n  }\n": types.GetClientByIdDocument,
@@ -46,7 +46,7 @@ export function graphql(source: "\n  mutation createClient($name: String!, $phon
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation updateClientById($id: Int!, $data: UserUpdateInput!) {\n    updateClient(id: $id, data: $data) {\n      __typename\n      id\n      name\n      phone\n    }\n  }\n"): (typeof documents)["\n  mutation updateClientById($id: Int!, $data: UserUpdateInput!) {\n    updateClient(id: $id, data: $data) {\n      __typename\n      id\n      name\n      phone\n    }\n  }\n"];
+export function graphql(source: "\n  mutation updateClientById($id: Int!, $data: ClientCreateOrUpdateInput!) {\n    updateClient(id: $id, data: $data) {\n      __typename\n      id\n      name\n      phone\n    }\n  }\n"): (typeof documents)["\n  mutation updateClientById($id: Int!, $data: ClientCreateOrUpdateInput!) {\n    updateClient(id: $id, data: $data) {\n      __typename\n      id\n      name\n      phone\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

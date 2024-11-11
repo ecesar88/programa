@@ -12,7 +12,7 @@ export const createClientMutationDocument = graphql(/* GraphQL */ `
 `)
 
 export const updateClientMutationDocument = graphql(/* GraphQL */ `
-  mutation updateClientById($id: Int!, $data: UserUpdateInput!) {
+  mutation updateClientById($id: Int!, $data: ClientCreateOrUpdateInput!) {
     updateClient(id: $id, data: $data) {
       __typename
       id

@@ -3,7 +3,7 @@ import * as z from 'zod'
 import { builder } from '../../builder'
 import { RecordNotFoundError } from '../_errors/errors'
 import { create, queryAll, queryOne, remove, search, update } from './resolvers'
-import { Client, UserCreateOrUpdateInput } from './types'
+import { Client, ClientCreateOrUpdateInput } from './types'
 
 builder.queryField('getAllClients', (t) =>
   t.field({
@@ -92,7 +92,7 @@ builder.mutationField('updateClient', (t) =>
         }
       }),
       data: t.arg({
-        type: UserCreateOrUpdateInput,
+        type: ClientCreateOrUpdateInput,
         required: true
       })
     },
