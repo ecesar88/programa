@@ -3,9 +3,12 @@ import { colorizeAsJSON, LOG_TYPE, logger } from '../../../utils/logger'
 import { prismaPaginate } from '../../../utils/prismaPaginate'
 import { RecordNotFoundError } from '../_errors/errors'
 import { FindById, FindByQuery, PaginationParam, Resolver } from '../sharedTypes'
+import { ClientCreateOrUpdateInput } from './types'
 
-type CreateClientQueryInput = { name: string; phone?: string | null }
-type UpdateClientQueryInput = { id: number; data: Partial<Prisma.ClientUpdateInput> }
+type UpdateClientQueryInput = {
+  id: number
+  data: (typeof ClientCreateOrUpdateInput)['$inferInput']
+}
 
 export const queryAll: Resolver<PaginationParam> = async (_parent, args, ctx, _info) => {
   const { page } = args
@@ -88,7 +91,12 @@ export const search: Resolver<FindByQuery> = async (_parent, args, ctx, _info) =
   return clients
 }
 
-export const create: Resolver<CreateClientQueryInput> = async (_parent, args, ctx, _info) => {
+export const create: Resolver<(typeof ClientCreateOrUpdateInput)['$inferInput']> = async (
+  _parent,
+  args,
+  ctx,
+  _info
+) => {
   const { name, phone } = args as Partial<Prisma.ClientCreateInput>
 
   logger({

@@ -124,6 +124,8 @@ export const Menu = () => {
       // }
 
       const submit = async (data: CreateMenuEntryMutationVariables) => {
+        if (!Array.isArray(data.variant)) return
+
         const pricesTraversal = O.optic<MenuEntryFormValues>().prop('variant').elems().prop('price')
 
         const menuEntryWithParsedPrices = O.modify(pricesTraversal)(Number)(

@@ -2,17 +2,11 @@ import { Menu, Prisma } from '@prisma/client'
 import { colorizeAsJSON, LOG_TYPE, logger } from '../../../utils/logger'
 import { RecordNotFoundError } from '../_errors/errors'
 import { FindById, Resolver } from '../sharedTypes'
-import { MenuEntryVariantType } from './types'
+import { MenuEntryCreateOrUpdateInput } from './types'
 
-type CreateMenuQueryInput = {
-  name: string
-  description?: string | null
-  variant?: (typeof MenuEntryVariantType)['$inferType'][] | null
-}
-
-type UpdateMenuQueryInput = {
+type UpdateMenuEntryInput = {
   id: number
-  data: Partial<Prisma.ClientUpdateInput>
+  data: (typeof MenuEntryCreateOrUpdateInput)['$inferInput']
 }
 
 export const queryAll: Resolver = async (_parent, args, ctx, _info) => {
@@ -65,7 +59,12 @@ export const queryOne: Resolver<FindById> = async (_parent, args, ctx, _info) =>
   return client
 }
 
-export const create: Resolver<CreateMenuQueryInput> = async (_parent, args, ctx, _info) => {
+export const create: Resolver<(typeof MenuEntryCreateOrUpdateInput)['$inferInput']> = async (
+  _parent,
+  args,
+  ctx,
+  _info
+) => {
   const data = args
 
   logger({
@@ -116,7 +115,7 @@ export const create: Resolver<CreateMenuQueryInput> = async (_parent, args, ctx,
 }
 
 /** @todo - Implement */
-export const update: Resolver<UpdateMenuQueryInput> = async (_parent, args, ctx, _info) => {
+export const update: Resolver<UpdateMenuEntryInput> = async (_parent, args, ctx, _info) => {
   const { id, data } = args
 
   logger({

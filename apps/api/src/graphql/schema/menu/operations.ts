@@ -76,7 +76,19 @@ builder.mutationField('createMenuEntry', (t) =>
           type: 'string'
         }
       }),
-      variant: t.arg({ type: [MenuEntryVariantInput], required: false })
+      variant: t.arg({
+        type: [MenuEntryVariantInput],
+        required: false,
+        validate: {
+          schema: z.array(
+            z.object({
+              name: z.string(),
+              description: z.string().optional(),
+              price: z.number()
+            })
+          )
+        }
+      })
     },
     resolve: create
   })

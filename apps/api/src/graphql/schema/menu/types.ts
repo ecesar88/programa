@@ -21,11 +21,11 @@ export interface TypeMenuEntryLabel extends MenuEntryLabel {
   color: string
 }
 
-export interface TypeMenuEntry extends MenuEntry {
+export interface TypeMenuEntry extends Partial<MenuEntry> {
   id: number
   name: string
   description: string | null
-  variant: TypeMenuEntryVariant[]
+  variant: TypeMenuEntryVariant[] | null
   labels: TypeMenuEntryLabel[]
   category: TypeMenuEntryCategory[]
 }
@@ -44,7 +44,7 @@ export const MenuEntryLabelObject = MenuEntryLabelRef.implement({
   })
 })
 
-const MenuEntryCategoryRef = builder.objectRef<TypeMenuEntryCategory>('MenuEntryCategory')
+export const MenuEntryCategoryRef = builder.objectRef<TypeMenuEntryCategory>('MenuEntryCategory')
 export const MenuEntryCategoryObject = MenuEntryCategoryRef.implement({
   description:
     'The category of a specific MenuEntry. This can be used to sort products by type, such as drinks and meats',
@@ -54,7 +54,7 @@ export const MenuEntryCategoryObject = MenuEntryCategoryRef.implement({
   })
 })
 
-const MenuEntryVariantRef = builder.objectRef<TypeMenuEntryVariant>('MenuEntryVariant')
+export const MenuEntryVariantRef = builder.objectRef<TypeMenuEntryVariant>('MenuEntryVariant')
 export const MenuEntryVariantObject = MenuEntryVariantRef.implement({
   description: 'A variant on the MenuEntry, this can be a different sized or flavored product',
   fields: (t) => ({
@@ -65,7 +65,7 @@ export const MenuEntryVariantObject = MenuEntryVariantRef.implement({
   })
 })
 
-const MenuEntryRef = builder.objectRef<TypeMenuEntry>('MenuEntry')
+export const MenuEntryRef = builder.objectRef<TypeMenuEntry>('MenuEntry')
 export const MenuEntryObject = MenuEntryRef.implement({
   description: 'A entry on the menu',
   fields: (t) => ({
@@ -97,7 +97,7 @@ export const MenuEntryVariantInput = builder.inputType('MenuEntryVariantInput', 
   })
 })
 
-export const MenuEntryInput = builder.inputType('MenuEntryInput', {
+export const MenuEntryCreateOrUpdateInput = builder.inputType('MenuEntryInput', {
   description: 'Input to create a new MenuEntry',
   fields: (t) => ({
     name: t.string({ required: true }),

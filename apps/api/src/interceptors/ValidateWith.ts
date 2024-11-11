@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { attachMiddleware } from '@decorators/express'
 import { NextFunction, Request, Response } from 'express'

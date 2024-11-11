@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
 // Intercepts the response from a metho annotated with @Get, @Post, @Delete, @Put or @Patch
 import { attachMiddleware } from '@decorators/express'
 import { NextFunction, Request, Response } from 'express'
