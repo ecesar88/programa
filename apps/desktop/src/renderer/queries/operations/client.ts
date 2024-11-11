@@ -2,7 +2,7 @@ import { gqlClient } from '@renderer/config/gqlClientConfig'
 import {
   CreateClientMutationVariables,
   UpdateClientByIdDocument,
-  UserUpdateInput
+  ClientCreateOrUpdateInput
 } from '../graphql/codegen/graphql'
 import {
   createClientMutationDocument,
@@ -28,7 +28,7 @@ export const create = async (clientData: CreateClientMutationVariables) => {
   }
 }
 
-export const edit = async ({ id, data }: { id: number; data: UserUpdateInput }) => {
+export const edit = async ({ id, data }: { id: number; data: ClientCreateOrUpdateInput }) => {
   try {
     return await gqlClient.request(UpdateClientByIdDocument, { id, data })
   } catch (error) {

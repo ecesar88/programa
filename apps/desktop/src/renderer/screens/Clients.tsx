@@ -6,7 +6,7 @@ import { useCreateOrEditOverlay, useHandleModalState, useOnKeyDown } from '@rend
 import {
   Client,
   CreateClientMutationVariables,
-  UserUpdateInput
+  ClientCreateOrUpdateInput
 } from '@renderer/queries/graphql/codegen/graphql'
 import { create, edit, get, purge } from '@renderer/queries/operations/client'
 import {
@@ -142,7 +142,7 @@ export const Clients = (): React.ReactNode => {
 
         editClientMutation({
           id: id!,
-          data: data as UserUpdateInput
+          data: data as ClientCreateOrUpdateInput
         })
       }
 

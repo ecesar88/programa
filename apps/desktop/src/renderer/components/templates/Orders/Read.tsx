@@ -1,6 +1,6 @@
 import { Button, Colors, Dialog, DialogBody } from '@blueprintjs/core'
 import { faker } from '@faker-js/faker'
-import { Order } from '@prisma/client'
+// import { Order } from '@prisma/client'
 import { ScreenMenuProps } from '@renderer/components/molecules'
 import { OverlayMode } from '@renderer/constants/enums'
 import { cn } from '@renderer/utils'
@@ -117,7 +117,8 @@ const categoriasDePedido = [
 ]
 
 // type OrderStatus = 'to_prepare' | 'preparing' | 'delivering' | 'delivered'
-type OrderWithoutId = Omit<Order, 'id'>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type OrderWithoutId = Omit<any, 'id'>
 
 export const Read = (): React.ReactNode => {
   const [isOverlayOpen, setIsOverlayOpen] = useState(false)
