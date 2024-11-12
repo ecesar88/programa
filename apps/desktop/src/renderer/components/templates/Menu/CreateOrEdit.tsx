@@ -125,6 +125,14 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     setIsEditModeActive(true)
   }
 
+  const handleOnCancelClick = () => {
+    if (isEditModeActive) {
+      setIsEditModeActive(false)
+    } else {
+      props?.onCancel?.()
+    }
+  }
+
   if (!props?.menuEntryData) return
 
   return (
@@ -266,12 +274,10 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
         <div>
           <Button
             intent="none"
-            icon="disable"
-            onClick={() => {
-              props?.onCancel?.()
-            }}
+            icon={isCreateModeActive || isEditModeActive ? 'disable' : 'cross'}
+            onClick={handleOnCancelClick}
           >
-            Cancelar
+            {isCreateModeActive || isEditModeActive ? 'Cancelar' : 'Fechar'}
           </Button>
         </div>
 

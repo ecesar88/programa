@@ -76,53 +76,34 @@ export const Variants = (props: VariantsProps) => {
   }, [window.innerHeight])
 
   const handleCreateNewVariant = () => {
-    console.log(props.variants)
-
     const newVariantToCreate: MenuEntryFormValues['variant'][number] = {
       name: '',
       description: '',
       price: null
     }
 
+    // Delay scrolling until after the DOM has updated
+    setTimeout(() => {
+      const variantListDomEl = document.getElementById('variant_list_container')
+      variantListDomEl?.scrollTo({ top: variantListDomEl.scrollHeight, behavior: 'smooth' })
+    }, 0)
+
     props.append(
       newVariantToCreate,
-      { shouldFocus: false } // Breaks the app for some reason
+      { shouldFocus: false } // When set to "true", breaks the app. Need to focus on the input, not the element
     )
   }
 
-  // const [deleteVariantAnimationStyle, deleteVariantAnimationApi] = useSpring(() => ({
-  //   from: { x: 0 }
-  // }))
-
-  // const [deleteASpring, deleteASpringApi] = useSprings(
-  //   props.variants?.length ?? 0,
-  //   (i) => ({
-  //     from: { x: 0 },
-  //     config: config.molasses
-  //   }),
-  //   [props.variants]
-  // )
-
+  // Remove variant input template from the list
   const handleDeleteVariant = (index: number) => {
-    // call delete variant
-
     props.remove(index)
-
-    // deleteASpringApi.start((i) => {
-    //   if (index !== i) return
-
-    //   return {
-    //     to: {
-    //       x: 1000
-    //     }
-    //   }
-    // })
   }
 
   return match(showVariantList)
     .with(true, () => (
       <div className="flex flex-col gap-2 pb-4 h-full px-2">
         <div
+          id="variant_list_container"
           className="overflow-y-auto flex flex-col gap-2 pb-1 pl-1 px-2"
           style={{ maxHeight: `${maxVariantListHeight}px` }}
         >
@@ -161,44 +142,4 @@ export const Variants = (props: VariantsProps) => {
       </div>
     ))
     .otherwise(() => <Loading />)
-  // Overflow hidden causing mouse over animation to clip
-  // <div className="flex flex-col gap-2 pb-4 h-full overflow-hidden">
-
-  /* 
-      
-       {deleteASpring?.map((style, idx) => {
-         const variant = props.variants[idx]
-
-         return (
-           <animated.div key={idx} style={style}>
-             <VariantInputField
-               variant={variant}
-               expandedEditableFields={expandedEditableFields}
-               isEditModeActive={props.isEditModeActive}
-               isCreateModeActive={props.isCreateModeActive}
-               handleFieldOnClick={handleFieldOnClick}
-               handleDeleteVariant={() => handleDeleteVariant(variant, idx)}
-             />
-           </animated.div>
-         )
-       })} 
-
-  
-       {props.isCreatingNewVariants?.length > 0 &&
-         props.isCreatingNewVariants?.map((variant, idx) => {
-           return (
-             <VariantInputField
-               key={idx}
-               arrayIndex={idx}
-               variant={{ name: '', description: '', price: 0 }}
-               expandedEditableFields={expandedEditableFields}
-               isEditModeActive={props.isEditModeActive}
-               isCreateModeActive={props.isCreateModeActive}
-               handleFieldOnClick={handleFieldOnClick}
-               handleDeleteVariant={() => handleDeleteVariant(variant, idx)}
-             />
-           )
-         })}
-
-    */
 }
