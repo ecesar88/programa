@@ -1,11 +1,13 @@
 import { Button } from '@blueprintjs/core'
 import { MenuEntryVariantInput } from '@renderer/queries/graphql/codegen/graphql'
 import { cn } from '@renderer/utils'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { UseFieldArrayReturn } from 'react-hook-form'
 import { debounce } from 'remeda'
 import { MenuEntryFormValues } from '../CreateOrEdit'
 import { VariantInputField } from './VariantInputField'
+import { match } from 'ts-pattern'
+import { Loading } from '@renderer/components/molecules'
 
 export type VariantsProps = {
   variants: MenuEntryFormValues['variant']
@@ -21,22 +23,43 @@ console.log('#### >>>> ', document.getElementById(MODAL_ID)?.getBoundingClientRe
 
 export const Variants = (props: VariantsProps) => {
   const [maxVariantListHeight, setMaxVariantListHeight] = useState<number>(0)
+  const [showVariantList, setShowVariantList] = useState(false)
+  const hasMounted = useRef(false)
 
-  const calculateMaxVariantListHeight = (modalHeight: number) => {
-    const MAX_VARIANT_LIST_HEIGHT_PERCENTAGE = 0.7 // 50% of the modal's size
+  const calculateMaxVariantListHeight = useCallback((modalHeight: number) => {
+    const MAX_VARIANT_LIST_HEIGHT_PERCENTAGE = 0.54 // 54% of the modal's size
     const FINAL_VARIANT_LIST_HEIGHT = Math.trunc(modalHeight * MAX_VARIANT_LIST_HEIGHT_PERCENTAGE)
 
     setMaxVariantListHeight(FINAL_VARIANT_LIST_HEIGHT)
-  }
+  }, [])
 
   const debouncer = debounce(calculateMaxVariantListHeight, { waitMs: 0, timing: 'leading' })
 
   useEffect(() => {
-    const modalElement = document.getElementById(MODAL_ID)
-    if (!modalElement) return
-    const observer = new MutationObserver(() => {
+    // Initial delayed call to account for modal animation
+    setTimeout(() => {
+      hasMounted.current = true
+      console.log('CHAMANDO DOUTOR HANS CHUCRUTES')
+
+      const modalElement = document.getElementById(MODAL_ID)
+      if (!modalElement) return
+
       const modalHeight = modalElement.getBoundingClientRect().height
 
+      debouncer.call(modalHeight)
+      setShowVariantList(true)
+    }, 250)
+  }, [])
+
+  useEffect(() => {
+    if (!hasMounted.current) return
+
+    const modalElement = document.getElementById(MODAL_ID)
+    if (!modalElement) return
+
+    const modalHeight = modalElement.getBoundingClientRect().height
+
+    const observer = new MutationObserver(() => {
       debouncer.call(modalHeight)
     })
 
@@ -48,9 +71,6 @@ export const Variants = (props: VariantsProps) => {
       attributeOldValue: true,
       characterDataOldValue: true
     })
-
-    // Initial delayed call in case modal height is already set
-    setTimeout(() => debouncer.call(modalElement.getBoundingClientRect().height), 250)
 
     return () => observer.disconnect()
   }, [window.innerHeight])
@@ -99,11 +119,52 @@ export const Variants = (props: VariantsProps) => {
     // })
   }
 
-  return (
-    // Overflow hidden causing mouse over animation to clip
-    // <div className="flex flex-col gap-2 pb-4 h-full overflow-hidden">
-    <div className="flex flex-col gap-2 pb-4 h-full px-2">
-      {/* 
+  return match(showVariantList)
+    .with(true, () => (
+      <div className="flex flex-col gap-2 pb-4 h-full px-2">
+        <div
+          className="overflow-y-auto flex flex-col gap-2 pb-4 pl-1 px-2 h-full"
+          style={{ maxHeight: `${maxVariantListHeight}px` }}
+        >
+          {props.variants?.map((variant: MenuEntryVariantInput & { id?: string }, idx) => {
+            return (
+              <VariantInputField
+                key={variant.id}
+                arrayIndex={idx}
+                variant={variant}
+                isEditModeActive={props.isEditModeActive}
+                isCreateModeActive={props.isCreateModeActive}
+                handleDeleteVariant={() => handleDeleteVariant(idx)}
+              />
+            )
+          })}
+        </div>
+
+        <div
+          className={cn(
+            'rounded-md bg-lightGray3 text-black ml-1 mr-2 py-1 hover:bg-lightGray2 flex flex-row gap-2 items-center h-fit justify-center transition-all duration-500',
+            {
+              'opacity-0': !props.isCreateModeActive && !props.isEditModeActive,
+              'opacity-100': props.isCreateModeActive || props.isEditModeActive
+            }
+          )}
+        >
+          <Button
+            small
+            icon={'plus'}
+            intent={'none'}
+            className="rounded-md"
+            disabled={!props.isCreateModeActive && !props.isEditModeActive}
+            onClick={handleCreateNewVariant}
+          />
+        </div>
+      </div>
+    ))
+    .otherwise(() => <Loading />)
+  // Overflow hidden causing mouse over animation to clip
+  // <div className="flex flex-col gap-2 pb-4 h-full overflow-hidden">
+
+  /* 
       
        {deleteASpring?.map((style, idx) => {
          const variant = props.variants[idx]
@@ -139,46 +200,5 @@ export const Variants = (props: VariantsProps) => {
            )
          })}
 
-    */}
-
-      <div
-        className="overflow-y-auto overflow-hidden flex flex-col gap-2 pb-4 pl-1 px-2"
-        style={{
-          maxHeight: maxVariantListHeight !== 0 ? `${maxVariantListHeight}px` : '0px'
-        }}
-      >
-        {props.variants?.map((variant: MenuEntryVariantInput & { id?: string }, idx) => {
-          return (
-            <VariantInputField
-              key={variant.id}
-              arrayIndex={idx}
-              variant={variant}
-              isEditModeActive={props.isEditModeActive}
-              isCreateModeActive={props.isCreateModeActive}
-              handleDeleteVariant={() => handleDeleteVariant(idx)}
-            />
-          )
-        })}
-      </div>
-
-      <div
-        className={cn(
-          'rounded-md bg-lightGray3 text-black ml-1 mr-2 py-1 hover:bg-lightGray2 flex flex-row gap-2 items-center h-fit justify-center transition-all duration-500',
-          {
-            'opacity-0': !props.isCreateModeActive && !props.isEditModeActive,
-            'opacity-100': props.isCreateModeActive || props.isEditModeActive
-          }
-        )}
-      >
-        <Button
-          small
-          icon={'plus'}
-          intent={'none'}
-          className="rounded-md"
-          disabled={!props.isCreateModeActive && !props.isEditModeActive}
-          onClick={handleCreateNewVariant}
-        />
-      </div>
-    </div>
-  )
+    */
 }

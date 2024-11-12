@@ -1,10 +1,10 @@
 import { Button, Colors, EditableText, Tooltip } from '@blueprintjs/core'
+import { animated, useSpring } from '@react-spring/web'
 import { ModalTitle } from '@renderer/components'
 import { Label } from '@renderer/components/molecules'
 import { OverlayMode } from '@renderer/constants/enums'
 import { MenuEntry, MenuEntryVariantInput } from '@renderer/queries/graphql/codegen/graphql'
-import { cn } from '@renderer/utils'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { FaLock, FaLockOpen } from 'react-icons/fa'
 import { debounce } from 'remeda'
@@ -90,6 +90,21 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     }
   }, [props.menuEntryData])
 
+  const areThereLabelsToShow = props.menuEntryData?.labels?.length
+
+  const addLabelButtonAnimationStyle = useSpring({
+    right: (() => {
+      if (isEditModeActive || isCreateModeActive) return 0
+      if (areThereLabelsToShow) return -50
+      return 0
+    })(),
+    opacity: (() => {
+      if (areThereLabelsToShow) return 1
+      if (!areThereLabelsToShow && (isEditModeActive || isCreateModeActive)) return 1
+      return 0
+    })()
+  })
+
   const handleOnSaveClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     // console.log('fields >> ', fields)
     // // Remove empty variants (to create)
@@ -104,15 +119,21 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     props?.onSave?.()
   }
 
+  const handleOnEditClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    e.preventDefault()
+
+    setIsEditModeActive(true)
+  }
+
   if (!props?.menuEntryData) return
 
   return (
     <div
       id="create-or-edit-menu-entry-modal"
-      className="flex flex-col p-5 w-full overflow-clip overflow-x-clip overflow-y-clip"
+      className="flex flex-col p-5 w-full overflow-clip overflow-x-clip overflow-y-clip !max-h-[70vh]"
     >
       <div className="flex flex-row justify-between">
-        <div className="flex flex-row items-center gap-4 justify-between w-full">
+        <div className="flex flex-row items-center gap-4 justify-between w-full relative">
           <div className="flex flex-row gap-2 items-center">
             <ModalTitle
               title={
@@ -154,41 +175,35 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
             </div>
           </div>
 
-          <div className="relative w-full">
-            <div
-              className={cn(
-                'flex flex-row gap-[1.5rem] absolute transition-all duration-500 right-[-3.5rem] top-[-1rem]',
-                {
-                  'right-[0]': isEditModeActive || isCreateModeActive
-                }
-              )}
-            >
-              <div className="flex flex-row gap-1">
-                {props.menuEntryData.labels?.map((label, idx) => (
-                  <Label
-                    key={idx}
-                    name={label.name}
-                    color={label.color}
-                    className="min-h-[26px] flex justify-center align-center"
-                  />
-                ))}
-              </div>
-
-              <div>
-                <Button
-                  intent={'none'}
-                  rightIcon="plus"
-                  className="rounded-md"
-                  onClick={() => {
-                    // Abrir modal igual no trello
-                    console.log('add new label')
-                  }}
-                >
-                  {!props.menuEntryData.labels?.length ? 'Adicionar Etiqueta' : null}
-                </Button>
-              </div>
+          <animated.div
+            style={addLabelButtonAnimationStyle}
+            className="flex flex-row justify-end min-h-[30px] gap-[1rem] absolute right-0"
+          >
+            <div className="flex flex-row gap-1">
+              {props.menuEntryData?.labels?.map((label, idx) => (
+                <Label
+                  key={idx}
+                  name={label.name}
+                  color={label.color}
+                  className="min-h-[26px] flex justify-center align-center"
+                />
+              ))}
             </div>
-          </div>
+
+            <div>
+              <Button
+                intent={'none'}
+                rightIcon="plus"
+                className="rounded-md"
+                onClick={() => {
+                  // Abrir modal igual no trello
+                  console.log('add new label')
+                }}
+              >
+                {!props.menuEntryData?.labels?.length ? 'Adicionar Etiqueta' : null}
+              </Button>
+            </div>
+          </animated.div>
         </div>
       </div>
 
@@ -284,14 +299,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
               Salvar
             </Button>
           ) : (
-            <Button
-              icon={'edit'}
-              intent={'primary'}
-              onClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-                e.preventDefault()
-                setIsEditModeActive(true)
-              }}
-            >
+            <Button icon={'edit'} intent={'primary'} onClick={handleOnEditClick}>
               Editar
             </Button>
           )}
