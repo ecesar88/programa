@@ -123,7 +123,7 @@ export const Variants = (props: VariantsProps) => {
     .with(true, () => (
       <div className="flex flex-col gap-2 pb-4 h-full px-2">
         <div
-          className="overflow-y-auto flex flex-col gap-2 pb-4 pl-1 px-2 h-full"
+          className="overflow-y-auto flex flex-col gap-2 pb-1 pl-1 px-2"
           style={{ maxHeight: `${maxVariantListHeight}px` }}
         >
           {props.variants?.map((variant: MenuEntryVariantInput & { id?: string }, idx) => {
