@@ -1,5 +1,6 @@
 import { builder } from '../../builder'
 import { MenuEntry, MenuEntryCategory, MenuEntryVariant, MenuEntryLabel } from '@prisma/client'
+import { MenuEntryVariantInputSchema } from './schemas'
 
 /* --- Interface Definitions --- */
 
@@ -25,7 +26,7 @@ export interface TypeMenuEntry extends Partial<MenuEntry> {
   id: number
   name: string
   description: string | null
-  variant: TypeMenuEntryVariant[] | null
+  variants: TypeMenuEntryVariant[] | null
   labels: TypeMenuEntryLabel[]
   category: TypeMenuEntryCategory[]
 }
@@ -47,7 +48,7 @@ export const MenuEntryLabelObject = MenuEntryLabelRef.implement({
 export const MenuEntryCategoryRef = builder.objectRef<TypeMenuEntryCategory>('MenuEntryCategory')
 export const MenuEntryCategoryObject = MenuEntryCategoryRef.implement({
   description:
-    'The category of a specific MenuEntry. This can be used to sort products by type, such as drinks and meats',
+    'The category of a specific MenuEntry. This can be used to sort products by type, such as drinks, meats, grains, etc',
   fields: (t) => ({
     id: t.exposeInt('id'),
     name: t.exposeString('name')
@@ -67,20 +68,28 @@ export const MenuEntryVariantObject = MenuEntryVariantRef.implement({
 
 export const MenuEntryRef = builder.objectRef<TypeMenuEntry>('MenuEntry')
 export const MenuEntryObject = MenuEntryRef.implement({
-  description: 'A entry on the menu',
+  description: 'An entry on the menu',
   fields: (t) => ({
     id: t.exposeInt('id'),
     name: t.exposeString('name'),
     description: t.exposeString('description'),
-    variant: t.field({
+    variants: t.field({
       type: [MenuEntryVariantObject],
-      resolve: (t) => t.variant
+      resolve: (t) => t.variants
     }),
     labels: t.field({ type: [MenuEntryLabelObject], resolve: (t) => t.labels })
   })
 })
 
-/* --- Inputs Definitions --- */
+/* --- Input Definitions --- */
+
+export const MenuEntryVariantInput = builder.inputType('MenuEntryVariantInput', {
+  fields: (t) => ({
+    name: t.string(),
+    description: t.string(),
+    price: t.float()
+  })
+})
 
 export const MenuEntryLabelInput = builder.inputType('MenuEntryLabelInput', {
   fields: (t) => ({
@@ -89,11 +98,9 @@ export const MenuEntryLabelInput = builder.inputType('MenuEntryLabelInput', {
   })
 })
 
-export const MenuEntryVariantInput = builder.inputType('MenuEntryVariantInput', {
+export const MenuEntryCategoryInput = builder.inputType('MenuEntryCategoryInput', {
   fields: (t) => ({
-    price: t.float(),
-    name: t.string(),
-    description: t.string()
+    name: t.string()
   })
 })
 
@@ -102,11 +109,17 @@ export const MenuEntryCreateOrUpdateInput = builder.inputType('MenuEntryInput', 
   fields: (t) => ({
     name: t.string({ required: true }),
     description: t.string({ required: false }),
-    variant: t.field({
+    variants: t.field({
+      required: false,
       type: [MenuEntryVariantInput]
     }),
     labels: t.field({
+      required: false,
       type: [MenuEntryLabelInput]
+    }),
+    categories: t.field({
+      required: false,
+      type: [MenuEntryCategoryInput]
     })
   })
 })

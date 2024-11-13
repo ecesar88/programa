@@ -10,7 +10,7 @@ import { match } from 'ts-pattern'
 import { Loading } from '@renderer/components/molecules'
 
 export type VariantsProps = {
-  variants: MenuEntryFormValues['variant']
+  variants: MenuEntryFormValues['variants']
   append: UseFieldArrayReturn<MenuEntryFormValues>['append']
   remove: UseFieldArrayReturn['remove']
   isEditModeActive: boolean
@@ -18,8 +18,6 @@ export type VariantsProps = {
 }
 
 const MODAL_ID = 'create-or-edit-menu-entry-modal'
-
-console.log('#### >>>> ', document.getElementById(MODAL_ID)?.getBoundingClientRect().height)
 
 export const Variants = (props: VariantsProps) => {
   const [maxVariantListHeight, setMaxVariantListHeight] = useState<number>(0)
@@ -39,7 +37,6 @@ export const Variants = (props: VariantsProps) => {
     // Initial delayed call to account for modal animation
     setTimeout(() => {
       hasMounted.current = true
-      console.log('CHAMANDO DOUTOR HANS CHUCRUTES')
 
       const modalElement = document.getElementById(MODAL_ID)
       if (!modalElement) return
@@ -76,7 +73,7 @@ export const Variants = (props: VariantsProps) => {
   }, [window.innerHeight])
 
   const handleCreateNewVariant = () => {
-    const newVariantToCreate: MenuEntryFormValues['variant'][number] = {
+    const newVariantToCreate: MenuEntryFormValues['variants'][number] = {
       name: '',
       description: '',
       price: null

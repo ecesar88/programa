@@ -10,7 +10,7 @@ interface ProductCardProps {
   onClick: () => void
 }
 
-const renderVariantPrice = (variant: MenuEntry['variant']) => {
+const renderVariantPrice = (variant: MenuEntry['variants']) => {
   if (!variant) return
 
   if (variant.length === 1) {
@@ -56,7 +56,7 @@ export const ProductCard = (props: ProductCardProps) => {
           </div>
 
           <div className="flex flex-row justify-between">
-            {renderVariantPrice(props.menuEntry.variant)}
+            {renderVariantPrice(props.menuEntry.variants)}
           </div>
         </div>
 

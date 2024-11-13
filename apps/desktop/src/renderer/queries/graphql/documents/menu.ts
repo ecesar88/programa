@@ -1,72 +1,81 @@
 import { graphql } from '../codegen/gql'
 
 graphql(/* GraphQL */ `
-  fragment variant on MenuEntryVariant {
-    __typename
-    id
+  fragment variantFragment on MenuEntryVariant {
     name
     description
     price
   }
 
-  fragment label on MenuEntryLabel {
-    __typename
+  fragment labelFragment on MenuEntryLabel {
     name
     color
   }
 
-  fragment menuEntry on MenuEntry {
-    __typename
+  fragment menuEntryFragment on MenuEntry {
     id
     name
     description
     labels {
-      ...label
+      ...labelFragment
     }
-    variant {
-      ...variant
+    variants {
+      ...variantFragment
     }
+  }
+
+  fragment recordNotFoundErrorFragment on RecordNotFoundError {
+    message
+  }
+
+  fragment baseErrorFragment on BaseError {
+    message
   }
 `)
 
 export const createMenuEntryMutationDocument = graphql(/* GraphQL */ `
-  mutation createMenuEntry(
-    $name: String!
-    $description: String
-    $variant: [MenuEntryVariantInput!]
-  ) {
-    createMenuEntry(name: $name, description: $description, variant: $variant) {
-      ...menuEntry
+  mutation createMenuEntry($data: MenuEntryInput!) {
+    createMenuEntry(data: $data) {
+      ...menuEntryFragment
     }
   }
 `)
 
-// export const updateClientMutationDocument = graphql(/* GraphQL */ `
-//   mutation updateClientById($id: Int!, $data: ClientCreateOrUpdateInput!) {
-//     updateClient(id: $id, data: $data) {
-//       __typename
-//       id
-//       name
-//       phone
-//     }
-//   }
-// `)
-
-export const deleteMenuEntryByIdMutationDocument = graphql(/* GraphQL */ `
-  mutation deleteMenuEntryById($id: Int!) {
-    deleteMenuEntryById(id: $id) {
+export const updateMenuEntryMutationDocument = graphql(/* GraphQL */ `
+  mutation updateMenuEntry($id: Int!, $data: MenuEntryInput!) {
+    updateMenuEntry(id: $id, data: $data) {
       ... on BaseError {
-        message
-      }
-
-      ... on MutationDeleteMenuEntryByIdSuccess {
-        data {
-          ...menuEntry
-        }
+        ...baseErrorFragment
       }
 
       ... on RecordNotFoundError {
-        message
+        ...recordNotFoundErrorFragment
+      }
+
+      ... on MutationUpdateMenuEntrySuccess {
+        data {
+          ...menuEntryFragment
+        }
+      }
+    }
+  }
+`)
+
+export const deleteMenuEntryMutationDocument = graphql(/* GraphQL */ `
+  mutation deleteMenuEntry($id: Int!) {
+    deleteMenuEntry(id: $id) {
+      ... on BaseError {
+        ...baseErrorFragment
+      }
+
+      ... on RecordNotFoundError {
+        ...recordNotFoundErrorFragment
+      }
+
+      ... on MutationDeleteMenuEntrySuccess {
+        data {
+          ...menuEntryFragment
+        }
       }
     }
   }
@@ -75,7 +84,7 @@ export const deleteMenuEntryByIdMutationDocument = graphql(/* GraphQL */ `
 export const getAllMenuEntriesQueryDocument = graphql(/* GraphQL */ `
   query getAllMenuEntries($page: Int) {
     getAllMenuEntries(page: $page) {
-      ...menuEntry
+      ...menuEntryFragment
     }
   }
 `)
@@ -84,17 +93,17 @@ export const getMenuEntryByIdQueryDocument = graphql(/* GraphQL */ `
   query getMenuEntryById($id: Int!) {
     getMenuEntryById(id: $id) {
       ... on BaseError {
-        message
+        ...baseErrorFragment
+      }
+
+      ... on RecordNotFoundError {
+        ...recordNotFoundErrorFragment
       }
 
       ... on QueryGetMenuEntryByIdSuccess {
         data {
-          ...menuEntry
+          ...menuEntryFragment
         }
-      }
-
-      ... on RecordNotFoundError {
-        message
       }
     }
   }

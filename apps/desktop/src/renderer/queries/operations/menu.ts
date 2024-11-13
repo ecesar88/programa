@@ -1,11 +1,17 @@
 import { gqlClient } from '@renderer/config/gqlClientConfig'
-import { CreateMenuEntryMutationVariables } from '../graphql/codegen/graphql'
+import {
+  CreateMenuEntryMutationVariables,
+  DeleteMenuEntryMutationVariables,
+  UpdateMenuEntryMutationVariables
+} from '../graphql/codegen/graphql'
 import {
   createMenuEntryMutationDocument,
-  deleteMenuEntryByIdMutationDocument,
-  getAllMenuEntriesQueryDocument
+  deleteMenuEntryMutationDocument,
+  getAllMenuEntriesQueryDocument,
+  updateMenuEntryMutationDocument
 } from '../graphql/documents/menu'
 
+// TODO - type to variables
 export const get = async () => {
   try {
     return await gqlClient.request(getAllMenuEntriesQueryDocument, { page: 1 })
@@ -24,18 +30,19 @@ export const create = async (menuEntryData: CreateMenuEntryMutationVariables) =>
   }
 }
 
-// export const edit = async ({ id, data }: { id: number; data: UserUpdateInput }) => {
-//   try {
-//     return await gqlClient.request(UpdateClientByIdDocument, { id, data })
-//   } catch (error) {
-//     console.error(error)
-//     return
-//   }
-// }
-
-export const purge = async (id: number) => {
+export const edit = async ({ id, data }: UpdateMenuEntryMutationVariables) => {
+  console.log('daaaaaaata >> ', data)
   try {
-    return await gqlClient.request(deleteMenuEntryByIdMutationDocument, { id })
+    return await gqlClient.request(updateMenuEntryMutationDocument, { id, data })
+  } catch (error) {
+    console.error(error)
+    return
+  }
+}
+
+export const purge = async ({ id }: DeleteMenuEntryMutationVariables) => {
+  try {
+    return await gqlClient.request(deleteMenuEntryMutationDocument, { id })
   } catch (error) {
     console.error(error)
     return

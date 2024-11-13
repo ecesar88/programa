@@ -6,10 +6,10 @@ import { MenuEntryFormValues } from '../CreateOrEdit'
 
 export type VariantInputFieldProps = {
   arrayIndex: number
-  variant: MenuEntryFormValues['variant'][number]
+  variant: MenuEntryFormValues['variants'][number]
   isEditModeActive: boolean
   isCreateModeActive: boolean
-  handleDeleteVariant: (variantData: MenuEntryFormValues['variant'][number]) => void
+  handleDeleteVariant: (variantData: MenuEntryFormValues['variants'][number]) => void
 }
 
 export const VariantInputField = (props: VariantInputFieldProps) => {
@@ -28,7 +28,7 @@ export const VariantInputField = (props: VariantInputFieldProps) => {
         <div>
           <Controller
             control={control}
-            name={`variant.${props.arrayIndex}.name`}
+            name={`variants.${props.arrayIndex}.name`}
             defaultValue={props.variant.name ?? ''}
             render={({ field: { onChange, value, ref } }) => (
               <EditableText
@@ -49,7 +49,7 @@ export const VariantInputField = (props: VariantInputFieldProps) => {
         <div className="flex-shrink-0 flex-grow-0">
           <Controller
             control={control}
-            name={`variant.${props.arrayIndex}.description`}
+            name={`variants.${props.arrayIndex}.description`}
             defaultValue={props.variant.description ?? ''}
             render={({ field: { onChange, value, ref } }) => (
               <EditableText
@@ -85,7 +85,7 @@ export const VariantInputField = (props: VariantInputFieldProps) => {
         <div>
           <Controller
             control={control}
-            name={`variant.${props.arrayIndex}.price`}
+            name={`variants.${props.arrayIndex}.price`}
             render={({ field: { onChange, value, ref } }) => (
               <EditableText
                 disabled={!props.isCreateModeActive && !props.isEditModeActive}

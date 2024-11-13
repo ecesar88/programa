@@ -15,9 +15,10 @@ import { OverlayMode } from '@renderer/constants/enums'
 import { useCreateOrEditOverlay, useHandleModalState } from '@renderer/hooks'
 import {
   CreateMenuEntryMutationVariables,
-  MenuEntry
+  MenuEntry,
+  UpdateMenuEntryMutationVariables
 } from '@renderer/queries/graphql/codegen/graphql'
-import { create, get, purge } from '@renderer/queries/operations/menu'
+import { create, edit, get, purge } from '@renderer/queries/operations/menu'
 import { selectedRowAtom } from '@renderer/store'
 import { todo } from '@renderer/utils'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -62,7 +63,7 @@ export const Menu = () => {
     }
   })
 
-  const form = useForm<CreateMenuEntryMutationVariables>({
+  const form = useForm<CreateMenuEntryMutationVariables['data']>({
     // resolver: zodResolver(CreateMenuEntryResolver), // TODO - add resolver
     defaultValues: {}
   })
@@ -80,6 +81,22 @@ export const Menu = () => {
     },
     meta: {
       errorMessage: 'Erro ao criar o produto'
+    }
+  })
+
+  const { mutate: updateMenuEntryMutation, isPending: isLoadingUpdateMenuEntry } = useMutation({
+    mutationKey: ['updateMenuEntry'],
+    mutationFn: edit,
+    onSuccess: async () => {
+      successToast('Produto modificado com sucesso!')
+      closeMenuEntryModal()
+      clearSelectedMenuEntryData()
+      form.reset()
+
+      await refetch()
+    },
+    meta: {
+      errorMessage: 'Erro ao modificar o produto'
     }
   })
 
@@ -105,37 +122,40 @@ export const Menu = () => {
       await refetch()
     },
     onSaveClick: () => {
-      const onCreate: SubmitHandler<CreateMenuEntryMutationVariables> = (data) => {
-        createMenuEntryMutation(data)
+      const onCreate: SubmitHandler<CreateMenuEntryMutationVariables['data']> = (data) => {
+        createMenuEntryMutation({ data })
       }
 
-      // const onEdit: SubmitHandler<any> = async (data) => {
-      //   console.log('não vai criar')
+      const onEdit: SubmitHandler<UpdateMenuEntryMutationVariables> = (variables) => {
+        const { id, data } = variables
 
-      //   return await ''
-      // }
+        updateMenuEntryMutation({
+          id,
+          data
+        })
+      }
 
-      // const onEdit: SubmitHandler<ClientWithoutId> = (data) => {
-      //   const { id } = rowData
-      //   editClientMutation({
-      //     clientId: id,
-      //     clientData: data
-      //   })
-      // }
-
-      const submit = async (data: CreateMenuEntryMutationVariables) => {
-        if (!Array.isArray(data.variant)) return
-
-        const pricesTraversal = O.optic<MenuEntryFormValues>().prop('variant').elems().prop('price')
+      const submit = async (variables: CreateMenuEntryMutationVariables['data']) => {
+        console.log('variables >>> ', variables)
+        const pricesTraversal = O.optic<MenuEntryFormValues>()
+          .prop('variants')
+          .elems()
+          .prop('price')
 
         const menuEntryWithParsedPrices = O.modify(pricesTraversal)(Number)(
-          data as MenuEntryFormValues
-        ) as CreateMenuEntryMutationVariables
+          variables as MenuEntryFormValues
+        ) as CreateMenuEntryMutationVariables['data']
 
         if (menuEntryModalMode === OverlayMode.NEW) {
           await onCreate(menuEntryWithParsedPrices)
         } else {
-          todo('// TODO - implement edition: onEdit(data)')
+          // const {} = menuEntryWithParsedPrices
+          // todo('// TODO - implement edition: onEdit(data)')
+          console.log({ id: menuEntryData?.id as number, data: menuEntryWithParsedPrices })
+          await onEdit({
+            id: menuEntryData?.id as number,
+            data: menuEntryWithParsedPrices
+          })
         }
       }
 
@@ -193,7 +213,7 @@ export const Menu = () => {
             closeDeleteAlertModal()
           },
           onConfirm: () => {
-            deleteMenuEntryMutation((menuEntryData?.id as number) ?? 0)
+            deleteMenuEntryMutation({ id: menuEntryData?.id as number })
           }
         }}
       >

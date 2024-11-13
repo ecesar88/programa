@@ -1,4 +1,11 @@
-import { Menu, Prisma } from '@prisma/client'
+import {
+  Menu,
+  MenuEntry,
+  MenuEntryCategory,
+  MenuEntryLabel,
+  MenuEntryVariant,
+  Prisma
+} from '@prisma/client'
 import { colorizeAsJSON, LOG_TYPE, logger } from '../../../utils/logger'
 import { RecordNotFoundError } from '../_errors/errors'
 import { FindById, Resolver } from '../sharedTypes'
@@ -7,6 +14,12 @@ import { MenuEntryCreateOrUpdateInput } from './types'
 type UpdateMenuEntryInput = {
   id: number
   data: (typeof MenuEntryCreateOrUpdateInput)['$inferInput']
+}
+
+const prismaDefaultMenuEntryIncludes: Readonly<Prisma.MenuEntryInclude> = {
+  variants: true,
+  labels: true,
+  category: true
 }
 
 export const queryAll: Resolver = async (_parent, args, ctx, _info) => {
@@ -21,10 +34,7 @@ export const queryAll: Resolver = async (_parent, args, ctx, _info) => {
       orderBy: {
         id: 'desc'
       },
-      include: {
-        variant: true,
-        labels: true
-      }
+      include: prismaDefaultMenuEntryIncludes
     })
   } catch (_error) {
     throw new Error('Error fetching all menu entries')
@@ -59,13 +69,10 @@ export const queryOne: Resolver<FindById> = async (_parent, args, ctx, _info) =>
   return client
 }
 
-export const create: Resolver<(typeof MenuEntryCreateOrUpdateInput)['$inferInput']> = async (
-  _parent,
-  args,
-  ctx,
-  _info
-) => {
-  const data = args
+export const create: Resolver<{
+  data: (typeof MenuEntryCreateOrUpdateInput)['$inferInput']
+}> = async (_parent, args, ctx, _info) => {
+  const data = args.data
 
   logger({
     level: LOG_TYPE.INFO,
@@ -92,59 +99,121 @@ export const create: Resolver<(typeof MenuEntryCreateOrUpdateInput)['$inferInput
 
     return await ctx.prisma.menuEntry.create({
       data: {
-        menuId: menu?.id,
         name: data.name as string,
         description: data.description,
+
+        Menu: {
+          connect: {
+            id: menu.id
+          }
+        },
+
         // Only create a variant if it was passed in (exists)
-        ...(data?.variant?.length && {
-          variant: {
+        ...(data?.variants?.length && {
+          variants: {
             createMany: {
-              data: data.variant?.map((vr) => vr) as Prisma.MenuEntryVariantCreateManyMenuEntryInput
+              data: data.variants?.map((vr) => vr)
             }
           }
         })
       },
-      include: {
-        variant: true
-      }
+      include: prismaDefaultMenuEntryIncludes
     })
   } catch (_error) {
-    console.log(_error)
     throw new Error('Error creating the menu entry')
   }
 }
 
-/** @todo - Implement */
 export const update: Resolver<UpdateMenuEntryInput> = async (_parent, args, ctx, _info) => {
   const { id, data } = args
 
+  console.log('daata >>>>>>>> ', data)
+
   logger({
     level: LOG_TYPE.INFO,
-    message: `Updating new client with id '${id}' with data: `,
+    message: `Updating MenuEntry with id '${id}' with data: `,
     object: colorizeAsJSON(args)
   })
 
-  const client = await ctx.prisma.menuEntry.findFirst({ where: { id } })
+  const menuEntry = await ctx.prisma.menuEntry.findFirst({ where: { id } })
 
-  if (!client) {
-    throw new RecordNotFoundError('Client')
+  if (!menuEntry) {
+    throw new RecordNotFoundError('MenuEntry')
   }
 
   try {
     logger({
       level: LOG_TYPE.INFO,
-      message: `Updating new client with id '${id}' with data: `,
+      message: `Updating MenuEntry with id '${id}' with data: `,
       object: colorizeAsJSON(args)
     })
 
-    return await ctx.prisma.client.update({
-      where: {
-        id: client.id
-      },
-      data
+    let updatedMenuEntry:
+      | (MenuEntry & {
+          labels: MenuEntryLabel[]
+          variant: MenuEntryVariant[]
+          category: MenuEntryCategory[]
+        })
+      | Record<never, never> = {}
+
+    await ctx.prisma.$transaction(async (tx) => {
+      // Delete all categories
+      await tx.menuEntryCategory.deleteMany({
+        where: {
+          menuEntryId: menuEntry.id
+        }
+      })
+
+      // Delete all labels
+      await tx.menuEntryLabel.deleteMany({
+        where: {
+          menuEntryId: menuEntry.id
+        }
+      })
+
+      // Delete all variants
+      await tx.menuEntryVariant.deleteMany({
+        where: {
+          menuEntryId: menuEntry.id
+        }
+      })
+
+      updatedMenuEntry = await tx.menuEntry.update({
+        where: {
+          id: menuEntry.id
+        },
+        data: {
+          name: data.name,
+          description: data.description,
+          ...(data?.variants?.length && {
+            variants: {
+              createMany: {
+                data: data.variants.map((vr) => vr)
+              }
+            }
+          }),
+          ...(data?.labels?.length && {
+            labels: {
+              createMany: {
+                data: data.labels.map((lb) => lb)
+              }
+            }
+          }),
+          ...(data?.categories?.length && {
+            category: {
+              createMany: {
+                data: data.categories.map((lb) => lb)
+              }
+            }
+          })
+        },
+        include: prismaDefaultMenuEntryIncludes
+      })
     })
+
+    return updatedMenuEntry
   } catch (_error) {
-    throw new Error(`Error updating client with id ${id}`)
+    throw new Error(`Error updating MenuEntry with id ${id}`)
   }
 }
 
@@ -167,7 +236,8 @@ export const remove: Resolver<FindById> = async (_parent, args, ctx, _info) => {
     return await ctx.prisma.menuEntry.delete({
       where: {
         id: menuEntryToRemove.id
-      }
+      },
+      include: prismaDefaultMenuEntryIncludes
     })
   } catch (_error) {
     throw new Error('Prisma error')

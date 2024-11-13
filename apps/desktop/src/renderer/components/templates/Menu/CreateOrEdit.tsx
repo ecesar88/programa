@@ -3,8 +3,13 @@ import { animated, useSpring } from '@react-spring/web'
 import { ModalTitle } from '@renderer/components'
 import { Label } from '@renderer/components/molecules'
 import { OverlayMode } from '@renderer/constants/enums'
-import { MenuEntry, MenuEntryVariantInput } from '@renderer/queries/graphql/codegen/graphql'
-import { useEffect, useMemo, useState } from 'react'
+import {
+  MenuEntry,
+  MenuEntryCategoryInput,
+  MenuEntryLabelInput,
+  MenuEntryVariantInput
+} from '@renderer/queries/graphql/codegen/graphql'
+import { useEffect, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { FaLock, FaLockOpen } from 'react-icons/fa'
 import { debounce } from 'remeda'
@@ -23,7 +28,9 @@ export type MenuEntryFormValues = {
   id: number
   name: string
   description?: string
-  variant: Array<MenuEntryVariantInput>
+  variants: Array<MenuEntryVariantInput>
+  labels: Array<MenuEntryLabelInput>
+  categories: Array<MenuEntryCategoryInput>
 }
 
 /**
@@ -38,7 +45,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'variant'
+    name: 'variants'
   })
 
   const [imageWidth, setImageWidth] = useState<number>(450)
@@ -81,12 +88,15 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
         {
           name: '',
           description: '',
-          variant: []
+          variants: []
         },
         { keepValues: false, keepDefaultValues: false, keepErrors: false }
       )
     } else {
-      reset(props.menuEntryData as MenuEntryFormValues)
+      if (!props.menuEntryData) return
+
+      const { id: _id, ...data } = props.menuEntryData
+      reset(data as Partial<MenuEntryFormValues>)
     }
   }, [props.menuEntryData])
 

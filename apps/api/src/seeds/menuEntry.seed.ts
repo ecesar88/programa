@@ -12,13 +12,14 @@ export const createMenuEntries = async (prisma: PrismaClient) => {
 
   return Array.from({ length: 50 }).map(() => {
     const shouldCreateLabel = () => Math.random() > 0.5
+    const shouldCreateCategory = () => Math.random() > 0.5
 
     return prisma.menuEntry.create({
       data: {
         menuId: menu.id,
         name: faker.science.chemicalElement().name,
         description: faker.lorem.words(8),
-        variant: {
+        variants: {
           createMany: {
             data: Array.from({ length: getRandomInteger(1, 4) }).map((_, idx) => ({
               name: `Variant no ${idx}`,
@@ -37,6 +38,15 @@ export const createMenuEntries = async (prisma: PrismaClient) => {
             }
           }
         })
+        // ...(shouldCreateCategory() && {
+        //   category: {
+        //     createMany: {
+        //       data: Array.from({ length: getRandomInteger(1, 3) }).map(() => ({
+        //         name: faker.commerce.productName()
+        //       }))
+        //     }
+        //   }
+        // })
       }
     })
   })

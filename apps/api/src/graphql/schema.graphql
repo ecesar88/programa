@@ -28,29 +28,34 @@ type LengthError implements Error {
   minLength: Int
 }
 
-"""A entry on the menu"""
+"""An entry on the menu"""
 type MenuEntry {
   description: String
   id: Int
   labels: [MenuEntryLabel!]
   name: String
-  variant: [MenuEntryVariant!]
+  variants: [MenuEntryVariant!]
 }
 
 """
-The category of a specific MenuEntry. This can be used to sort products by type, such as drinks and meats
+The category of a specific MenuEntry. This can be used to sort products by type, such as drinks, meats, grains, etc
 """
 type MenuEntryCategory {
   id: Int
   name: String
 }
 
+input MenuEntryCategoryInput {
+  name: String
+}
+
 """Input to create a new MenuEntry"""
 input MenuEntryInput {
+  categories: [MenuEntryCategoryInput!]
   description: String
   labels: [MenuEntryLabelInput!]
   name: String!
-  variant: [MenuEntryVariantInput!]
+  variants: [MenuEntryVariantInput!]
 }
 
 """
@@ -84,10 +89,11 @@ input MenuEntryVariantInput {
 
 type Mutation {
   createClient(name: String!, phone: String): Client
-  createMenuEntry(description: String, name: String!, variant: [MenuEntryVariantInput!]): MenuEntry
+  createMenuEntry(data: MenuEntryInput!): MenuEntry
   deleteClient(id: Int!): MutationDeleteClientResult
-  deleteMenuEntryById(id: Int!): MutationDeleteMenuEntryByIdResult
+  deleteMenuEntry(id: Int!): MutationDeleteMenuEntryResult
   updateClient(data: ClientCreateOrUpdateInput!, id: Int!): Client
+  updateMenuEntry(data: MenuEntryInput!, id: Int!): MutationUpdateMenuEntryResult
 }
 
 union MutationDeleteClientResult = BaseError | MutationDeleteClientSuccess | RecordNotFoundError
@@ -96,9 +102,15 @@ type MutationDeleteClientSuccess {
   data: Client!
 }
 
-union MutationDeleteMenuEntryByIdResult = BaseError | MutationDeleteMenuEntryByIdSuccess | RecordNotFoundError
+union MutationDeleteMenuEntryResult = BaseError | MutationDeleteMenuEntrySuccess | RecordNotFoundError
 
-type MutationDeleteMenuEntryByIdSuccess {
+type MutationDeleteMenuEntrySuccess {
+  data: MenuEntry!
+}
+
+union MutationUpdateMenuEntryResult = BaseError | MutationUpdateMenuEntrySuccess | RecordNotFoundError
+
+type MutationUpdateMenuEntrySuccess {
   data: MenuEntry!
 }
 

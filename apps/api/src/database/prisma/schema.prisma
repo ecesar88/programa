@@ -35,28 +35,6 @@ model OrderObservation {
   orderId  Int?
 }
 
-model MenuEntryCategory {
-  id   Int    @id @default(autoincrement())
-  name String
-
-  Menu   Menu? @relation(fields: [menuId], references: [id])
-  menuId Int?  @unique
-
-  MenuEntry   MenuEntry? @relation(fields: [menuEntryId], references: [id])
-  menuEntryId Int?
-}
-
-model MenuEntryLabel {
-  id    Int    @id @default(autoincrement())
-  name  String
-  color String
-
-  MenuEntry   MenuEntry? @relation(fields: [menuEntryId], references: [id])
-  menuEntryId Int?
-
-  @@map("Label")
-}
-
 model Menu {
   id         Int                 @id @default(autoincrement())
   items      MenuEntry[]
@@ -66,10 +44,10 @@ model Menu {
 model MenuEntry {
   id          Int                 @id @default(autoincrement())
   name        String
-  variant     MenuEntryVariant[]
+  variants    MenuEntryVariant[]
   description String?
   labels      MenuEntryLabel[]
-  category    MenuEntryCategory[]
+  categories    MenuEntryCategory[]
   // images String?
 
   Menu   Menu? @relation(fields: [menuId], references: [id])
@@ -84,4 +62,26 @@ model MenuEntryVariant {
 
   MenuEntry   MenuEntry? @relation(fields: [menuEntryId], references: [id])
   menuEntryId Int?
+}
+
+model MenuEntryCategory {
+  id   Int    @id @default(autoincrement())
+  name String?
+
+  Menu   Menu? @relation(fields: [menuId], references: [id])
+  menuId Int?  @unique
+
+  MenuEntry   MenuEntry? @relation(fields: [menuEntryId], references: [id])
+  menuEntryId Int?
+}
+
+model MenuEntryLabel {
+  id    Int    @id @default(autoincrement())
+  name  String?
+  color String?
+
+  MenuEntry   MenuEntry? @relation(fields: [menuEntryId], references: [id])
+  menuEntryId Int?
+
+  @@map("Label")
 }
