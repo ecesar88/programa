@@ -20,18 +20,19 @@ import {
 } from '@renderer/queries/graphql/codegen/graphql'
 import { create, edit, get, purge } from '@renderer/queries/operations/menu'
 import { selectedRowAtom } from '@renderer/store'
-import { todo } from '@renderer/utils'
+import { errorToast, handleResponseValidation, isZodError, successToast } from '@renderer/utils'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useAtomValue, useSetAtom } from 'jotai'
 import * as O from 'optics-ts'
+import { useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { Id, toast } from 'react-toastify'
 import { match } from 'ts-pattern'
 
 export const Menu = () => {
+  const [isEditModeActive, setIsEditModeActive] = useState(false)
+
   const { t } = useTranslation()
-  const successToast = (message: string): Id => toast(message, { type: 'success' })
 
   const {
     openOverlay: openMenuEntryModal,
@@ -87,13 +88,27 @@ export const Menu = () => {
   const { mutate: updateMenuEntryMutation, isPending: isLoadingUpdateMenuEntry } = useMutation({
     mutationKey: ['updateMenuEntry'],
     mutationFn: edit,
-    onSuccess: async () => {
-      successToast('Produto modificado com sucesso!')
-      closeMenuEntryModal()
-      clearSelectedMenuEntryData()
-      form.reset()
+    onSuccess: async (data) => {
+      handleResponseValidation<MenuEntry>({
+        response: data?.updateMenuEntry as MenuEntry,
+        Ok: async () => {
+          setIsEditModeActive(false)
+          successToast('Produto modificado com sucesso!')
+          closeMenuEntryModal()
+          clearSelectedMenuEntryData()
+          form.reset()
 
-      await refetch()
+          await refetch()
+        },
+        Err: (error) => {
+          if (error.__typename === 'ZodError') {
+            errorToast('Validation error')
+            return
+          }
+
+          errorToast('API Error')
+        }
+      })
     },
     meta: {
       errorMessage: 'Erro ao modificar o produto'
@@ -122,7 +137,7 @@ export const Menu = () => {
       await refetch()
     },
     onSaveClick: () => {
-      const onCreate: SubmitHandler<CreateMenuEntryMutationVariables['data']> = (data) => {
+      const onCreate: SubmitHandler<CreateMenuEntryMutationVariables['data']> = async (data) => {
         createMenuEntryMutation({ data })
       }
 
@@ -136,7 +151,7 @@ export const Menu = () => {
       }
 
       const submit = async (variables: CreateMenuEntryMutationVariables['data']) => {
-        console.log('variables >>> ', variables)
+        // Price input values come in string format, we need to convert them to number (float 64)
         const pricesTraversal = O.optic<MenuEntryFormValues>()
           .prop('variants')
           .elems()
@@ -149,9 +164,6 @@ export const Menu = () => {
         if (menuEntryModalMode === OverlayMode.NEW) {
           await onCreate(menuEntryWithParsedPrices)
         } else {
-          // const {} = menuEntryWithParsedPrices
-          // todo('// TODO - implement edition: onEdit(data)')
-          console.log({ id: menuEntryData?.id as number, data: menuEntryWithParsedPrices })
           await onEdit({
             id: menuEntryData?.id as number,
             data: menuEntryWithParsedPrices
@@ -197,7 +209,11 @@ export const Menu = () => {
           onCancel={actions.onCancelClick}
           overlayMode={menuEntryModalMode}
           menuEntryData={menuEntryData}
-          isLoading={isLoadingCreateMenuEntry}
+          isLoading={isLoadingCreateMenuEntry || isLoadingUpdateMenuEntry}
+          editMode={{
+            isEditModeActive,
+            setIsEditModeActive
+          }}
         />
       </Dialog>
 

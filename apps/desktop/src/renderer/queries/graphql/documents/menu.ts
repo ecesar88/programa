@@ -25,10 +25,12 @@ graphql(/* GraphQL */ `
   }
 
   fragment recordNotFoundErrorFragment on RecordNotFoundError {
+    __typename
     message
   }
 
   fragment baseErrorFragment on BaseError {
+    __typename
     message
   }
 `)

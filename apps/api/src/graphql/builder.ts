@@ -5,7 +5,7 @@ import SimpleObjectsPlugin from '@pothos/plugin-simple-objects'
 import TracingPlugin, { isRootField, wrapResolver } from '@pothos/plugin-tracing'
 import ZodPlugin from '@pothos/plugin-zod'
 import { DateTimeResolver } from 'graphql-scalars'
-import { LOG_TYPE, logger } from '../utils/logger'
+import { colorizeAsJSON, LOG_TYPE, logger } from '../utils/logger'
 import { Context } from './context'
 import { RecordNotFoundError } from './schema/_errors/errors'
 import { fromError } from 'zod-validation-error'
@@ -38,7 +38,20 @@ export const builder = new SchemaBuilder<SchemaType>({
     validationError: (zodError, _args, _context, _info) => {
       // the default behavior is to just throw the zod error directly
       const formattedError = fromError(zodError)
-      return formattedError
+
+      logger({
+        level: LOG_TYPE.ERROR,
+        message: `Zod validation error`,
+        object: colorizeAsJSON(formattedError)
+      })
+
+      return new Error(
+        JSON.stringify({
+          name: 'ZodError',
+          status: 'error',
+          errorDetails: formattedError
+        })
+      )
     }
   },
   tracing: {

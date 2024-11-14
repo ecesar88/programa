@@ -9,7 +9,7 @@ import {
   MenuEntryLabelInput,
   MenuEntryVariantInput
 } from '@renderer/queries/graphql/codegen/graphql'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { FaLock, FaLockOpen } from 'react-icons/fa'
 import { debounce } from 'remeda'
@@ -22,6 +22,10 @@ type CreateOrEditProps = {
   overlayMode: OverlayMode | null
   menuEntryData?: MenuEntry
   isLoading?: boolean
+  editMode: {
+    isEditModeActive: boolean
+    setIsEditModeActive: React.Dispatch<React.SetStateAction<boolean>>
+  }
 }
 
 export type MenuEntryFormValues = {
@@ -49,9 +53,6 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
   })
 
   const [imageWidth, setImageWidth] = useState<number>(450)
-
-  // Managed internally
-  const [isEditModeActive, setIsEditModeActive] = useState(false)
 
   // This comes from the Screen component
   const isCreateModeActive = props.overlayMode === OverlayMode.NEW
@@ -104,13 +105,13 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
 
   const addLabelButtonAnimationStyle = useSpring({
     right: (() => {
-      if (isEditModeActive || isCreateModeActive) return 0
+      if (props.editMode.isEditModeActive || isCreateModeActive) return 0
       if (areThereLabelsToShow) return -50
       return 0
     })(),
     opacity: (() => {
       if (areThereLabelsToShow) return 1
-      if (!areThereLabelsToShow && (isEditModeActive || isCreateModeActive)) return 1
+      if (!areThereLabelsToShow && (props.editMode.isEditModeActive || isCreateModeActive)) return 1
       return 0
     })()
   })
@@ -125,19 +126,18 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     // })
 
     e.preventDefault()
-    setIsEditModeActive(false)
     props?.onSave?.()
   }
 
   const handleOnEditClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     e.preventDefault()
 
-    setIsEditModeActive(true)
+    props.editMode.setIsEditModeActive(true)
   }
 
   const handleOnCancelClick = () => {
-    if (isEditModeActive) {
-      setIsEditModeActive(false)
+    if (props.editMode.isEditModeActive) {
+      props.editMode.setIsEditModeActive(false)
     } else {
       props?.onCancel?.()
     }
@@ -162,7 +162,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
                     render={({ field: { onChange, value, ref } }) => (
                       <EditableText
                         className="[&_*]:!cursor-text"
-                        disabled={!isCreateModeActive && !isEditModeActive}
+                        disabled={!isCreateModeActive && !props.editMode.isEditModeActive}
                         onChange={onChange}
                         value={value}
                         ref={ref}
@@ -248,7 +248,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
                     render={({ field: { onChange, value, ref } }) => (
                       <EditableText
                         className="[&_*]:!cursor-text max-w-[470px] min-h-[85px] text-wrap"
-                        disabled={!isCreateModeActive && !isEditModeActive}
+                        disabled={!isCreateModeActive && !props.editMode.isEditModeActive}
                         onChange={onChange}
                         value={value ?? ''}
                         ref={ref}
@@ -274,7 +274,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
             variants={fields}
             append={append}
             remove={remove}
-            isEditModeActive={isEditModeActive}
+            isEditModeActive={props.editMode.isEditModeActive}
             isCreateModeActive={isCreateModeActive}
           />
         </div>
@@ -284,10 +284,10 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
         <div>
           <Button
             intent="none"
-            icon={isCreateModeActive || isEditModeActive ? 'disable' : 'cross'}
+            icon={isCreateModeActive || props.editMode.isEditModeActive ? 'disable' : 'cross'}
             onClick={handleOnCancelClick}
           >
-            {isCreateModeActive || isEditModeActive ? 'Cancelar' : 'Fechar'}
+            {isCreateModeActive || props.editMode.isEditModeActive ? 'Cancelar' : 'Fechar'}
           </Button>
         </div>
 
@@ -295,7 +295,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
           <Button
             intent="danger"
             icon="trash"
-            disabled={isEditModeActive || isCreateModeActive}
+            disabled={props.editMode.isEditModeActive || isCreateModeActive}
             onClick={() => {
               props?.onDelete?.()
             }}
@@ -303,7 +303,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
             Excluir
           </Button>
 
-          {isEditModeActive || isCreateModeActive ? (
+          {props.editMode.isEditModeActive || isCreateModeActive ? (
             <Button
               icon="floppy-disk"
               intent="warning"
@@ -322,7 +322,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
 
           <div className="flex items-center">
             {!isCreateModeActive &&
-              (isEditModeActive ? (
+              (props.editMode.isEditModeActive ? (
                 <Tooltip compact position="left" content={<span>Este item é editável</span>}>
                   <FaLockOpen color={Colors.GRAY3} size="22px" />
                 </Tooltip>

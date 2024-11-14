@@ -6,16 +6,21 @@ export const MenuEntryVariantInputSchema = z.object({
   price: z.number()
 })
 
+export const MenuEntryCategoryInputSchema = z.object({
+  name: z.string()
+})
+
 export const MenuEntryLabelInputSchema = z.object({
   name: z.string(),
   color: z.string()
 })
 
 export const MenuEntryCreateOrUpdateInputSchema = z.object({
-  name: z.string(),
+  name: z.string().min(3),
   description: z.string().optional(),
-  variant: z.array(MenuEntryVariantInputSchema).optional().nullable(),
-  labels: z.array(MenuEntryLabelInputSchema).optional().nullable()
+  variants: z.array(MenuEntryVariantInputSchema).optional().nullable(),
+  labels: z.array(MenuEntryLabelInputSchema).optional().nullable(),
+  categories: z.array(MenuEntryCategoryInputSchema).optional().nullable()
 })
 
 export const MenuEntryUpdateSchema = z.object({
