@@ -44,10 +44,10 @@ model Menu {
 model MenuEntry {
   id          Int                 @id @default(autoincrement())
   name        String
-  variants    MenuEntryVariant[]
   description String?
+  variants    MenuEntryVariant[]
   labels      MenuEntryLabel[]
-  categories    MenuEntryCategory[]
+  categories  MenuEntryCategory[]
   // images String?
 
   Menu   Menu? @relation(fields: [menuId], references: [id])
@@ -65,7 +65,7 @@ model MenuEntryVariant {
 }
 
 model MenuEntryCategory {
-  id   Int    @id @default(autoincrement())
+  id   Int     @id @default(autoincrement())
   name String?
 
   Menu   Menu? @relation(fields: [menuId], references: [id])
@@ -76,7 +76,7 @@ model MenuEntryCategory {
 }
 
 model MenuEntryLabel {
-  id    Int    @id @default(autoincrement())
+  id    Int     @id @default(autoincrement())
   name  String?
   color String?
 

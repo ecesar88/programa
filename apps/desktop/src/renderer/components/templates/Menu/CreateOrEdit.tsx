@@ -9,11 +9,14 @@ import {
   MenuEntryLabelInput,
   MenuEntryVariantInput
 } from '@renderer/queries/graphql/codegen/graphql'
-import React, { useEffect, useState } from 'react'
+import { useIsFirstRender } from '@uidotdev/usehooks'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { FaLock, FaLockOpen } from 'react-icons/fa'
 import { debounce } from 'remeda'
 import { Variants } from './components/Variants'
+import fastDeepEqual from 'fast-deep-equal'
+import { zh_CN } from '@faker-js/faker'
 
 type CreateOrEditProps = {
   onSave?: () => void
@@ -44,10 +47,16 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
   const {
     // formState: {  }, // TODO - add errors to inputs when doing validation with zod schema
     control,
-    reset
+    reset,
+    getValues,
+    watch
   } = useFormContext<MenuEntryFormValues>()
 
-  const { fields, append, remove } = useFieldArray({
+  const {
+    fields: variantsFields, 
+    append,
+    remove
+  } = useFieldArray({
     control,
     name: 'variants'
   })
@@ -69,13 +78,16 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     setImageWidth(width)
   }
 
-  const debouncer = debounce(getImageWidthBasedOnScreenSize, { waitMs: 500, timing: 'trailing' })
+  const imageDebouncer = debounce(getImageWidthBasedOnScreenSize, {
+    waitMs: 500,
+    timing: 'trailing'
+  })
 
   useEffect(() => {
-    window.addEventListener('resize', debouncer.call)
+    window.addEventListener('resize', imageDebouncer.call)
 
     return () => {
-      window.removeEventListener('resize', debouncer.call)
+      window.removeEventListener('resize', imageDebouncer.call)
     }
   }, [window.innerHeight])
 
@@ -96,6 +108,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     } else {
       if (!props.menuEntryData) return
 
+      // Remove id for GraphQL validation on update
       const { id: _id, ...data } = props.menuEntryData
       reset(data as Partial<MenuEntryFormValues>)
     }
@@ -115,6 +128,52 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
       return 0
     })()
   })
+
+  /**
+   * Only enable the "Save" button if the user has modified something.
+   * This works by running fast-deep-equal to compare the initial values on the form with the current ones
+   * This prevents sending out an useless request
+   */
+  const isFirstRender = useIsFirstRender()
+  const [initialFormValues, setInitialFormValues] = useState<MenuEntryFormValues>()
+
+  useEffect(() => {
+    if (!isFirstRender) return
+
+    setInitialFormValues(getValues())
+  }, [isFirstRender, getValues()])
+
+  const formValues = watch()
+
+  const areAllVariantsFilled = useCallback(
+    () => {
+      const a = variantsFields.some(({ name, description, price }) => {
+        console.log('', Object.values({ name, description, price }))
+
+        return Object.values({ name, description, price }).some((value) => {
+          console.log(name, ' > ', 'value > ', value)
+          if (typeof value === 'string') return value.length > 0
+          if (typeof value === 'number') return value > 0
+
+          return false
+        })
+      })
+
+      console.log(a)
+      return a
+    },
+    [formValues] // Watch the form values as they change
+  )
+
+  const theUserHasNotModifiedAnything = useCallback(
+    () => fastDeepEqual(initialFormValues, formValues),
+    [formValues]
+  )
+
+  const isSaveButtonDisabled = useMemo(
+    () => theUserHasNotModifiedAnything() || areAllVariantsFilled(),
+    [formValues]
+  )
 
   const handleOnSaveClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     // console.log('fields >> ', fields)
@@ -271,7 +330,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
           <p className="text-lg font-bold pl-2">Variantes</p>
 
           <Variants
-            variants={fields}
+            variants={variantsFields}
             append={append}
             remove={remove}
             isEditModeActive={props.editMode.isEditModeActive}
@@ -309,6 +368,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
               intent="warning"
               form="create-form"
               type="submit"
+              // disabled={isSaveButtonDisabled}
               loading={props.isLoading}
               onClick={handleOnSaveClick}
             >

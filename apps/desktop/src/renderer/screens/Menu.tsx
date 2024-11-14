@@ -20,7 +20,7 @@ import {
 } from '@renderer/queries/graphql/codegen/graphql'
 import { create, edit, get, purge } from '@renderer/queries/operations/menu'
 import { selectedRowAtom } from '@renderer/store'
-import { errorToast, handleResponseValidation, isZodError, successToast } from '@renderer/utils'
+import { errorToast, handleResponseStatus, isZodError, successToast } from '@renderer/utils'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useAtomValue, useSetAtom } from 'jotai'
 import * as O from 'optics-ts'
@@ -89,7 +89,7 @@ export const Menu = () => {
     mutationKey: ['updateMenuEntry'],
     mutationFn: edit,
     onSuccess: async (data) => {
-      handleResponseValidation<MenuEntry>({
+      handleResponseStatus<MenuEntry>({
         response: data?.updateMenuEntry as MenuEntry,
         Ok: async () => {
           setIsEditModeActive(false)

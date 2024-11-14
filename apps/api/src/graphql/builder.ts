@@ -49,7 +49,7 @@ export const builder = new SchemaBuilder<SchemaType>({
         JSON.stringify({
           name: 'ZodError',
           status: 'error',
-          errorDetails: formattedError
+          errorDetails: formattedError // TODO - check
         })
       )
     }

@@ -68,7 +68,7 @@ const checkResponseForError = <T extends Record<never, never>>(
   return [isThereAnError, errorBody]
 }
 
-export const handleResponseValidation = <T extends object>({
+export const handleResponseStatus = <T extends object>({
   response,
   Ok,
   Err

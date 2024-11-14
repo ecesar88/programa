@@ -19,7 +19,7 @@ type UpdateMenuEntryInput = {
 const prismaDefaultMenuEntryIncludes: Readonly<Prisma.MenuEntryInclude> = {
   variants: true,
   labels: true,
-  category: true
+  categories: true
 }
 
 export const queryAll: Resolver = async (_parent, args, ctx, _info) => {
@@ -127,8 +127,6 @@ export const create: Resolver<{
 export const update: Resolver<UpdateMenuEntryInput> = async (_parent, args, ctx, _info) => {
   const { id, data } = args
 
-  console.log('daata >>>>>>>> ', data)
-
   logger({
     level: LOG_TYPE.INFO,
     message: `Updating MenuEntry with id '${id}' with data: `,
@@ -142,17 +140,11 @@ export const update: Resolver<UpdateMenuEntryInput> = async (_parent, args, ctx,
   }
 
   try {
-    logger({
-      level: LOG_TYPE.INFO,
-      message: `Updating MenuEntry with id '${id}' with data: `,
-      object: colorizeAsJSON(args)
-    })
-
     let updatedMenuEntry:
       | (MenuEntry & {
           labels: MenuEntryLabel[]
           variant: MenuEntryVariant[]
-          category: MenuEntryCategory[]
+          categories: MenuEntryCategory[]
         })
       | Record<never, never> = {}
 
