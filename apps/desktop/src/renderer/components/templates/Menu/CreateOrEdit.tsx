@@ -10,13 +10,12 @@ import {
   MenuEntryVariantInput
 } from '@renderer/queries/graphql/codegen/graphql'
 import { useIsFirstRender } from '@uidotdev/usehooks'
+import fastDeepEqual from 'fast-deep-equal'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { FaLock, FaLockOpen } from 'react-icons/fa'
 import { debounce } from 'remeda'
 import { Variants } from './components/Variants'
-import fastDeepEqual from 'fast-deep-equal'
-import { zh_CN } from '@faker-js/faker'
 
 type CreateOrEditProps = {
   onSave?: () => void
@@ -53,7 +52,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
   } = useFormContext<MenuEntryFormValues>()
 
   const {
-    fields: variantsFields, 
+    fields: variantsFields,
     append,
     remove
   } = useFieldArray({
