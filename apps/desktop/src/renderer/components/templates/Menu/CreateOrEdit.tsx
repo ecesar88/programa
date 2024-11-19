@@ -172,6 +172,8 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     [formValues]
   )
 
+  /* ************************************************************************************************* */
+
   const handleOnSaveClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     // console.log('fields >> ', fields)
     // // Remove empty variants (to create)
