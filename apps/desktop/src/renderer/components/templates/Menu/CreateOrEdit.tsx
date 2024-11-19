@@ -11,7 +11,7 @@ import {
 } from '@renderer/queries/graphql/codegen/graphql'
 import { useIsFirstRender } from '@uidotdev/usehooks'
 import fastDeepEqual from 'fast-deep-equal'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { FaLock, FaLockOpen } from 'react-icons/fa'
 import { debounce } from 'remeda'
@@ -31,7 +31,6 @@ type CreateOrEditProps = {
 }
 
 export type MenuEntryFormValues = {
-  id: number
   name: string
   description?: string
   variants: Array<MenuEntryVariantInput>
@@ -94,6 +93,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     getImageWidthBasedOnScreenSize()
   }, [])
 
+  // Populate form data based on OverlayMode
   useEffect(() => {
     if (props.overlayMode === OverlayMode.NEW) {
       reset(
@@ -144,33 +144,31 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
 
   const formValues = watch()
 
-  const areAllVariantsFilled = useCallback(
-    () => {
-      const a = variantsFields.some(({ name, description, price }) => {
-        console.log('', Object.values({ name, description, price }))
+  const variantNames = formValues.variants.map((vf) => vf.name)
+  const variantPrices = formValues.variants.map((vf) => vf.price)
 
-        return Object.values({ name, description, price }).some((value) => {
-          console.log(name, ' > ', 'value > ', value)
-          if (typeof value === 'string') return value.length > 0
-          if (typeof value === 'number') return value > 0
+  const theresEmptyVariants = useMemo(
+    () => {
+      if (!formValues.variants) return
+
+      const emptyVariants = formValues.variants.map((variant) =>
+        Object.entries(variant).some(([key, value]) => {
+          if (key === 'name' && typeof value === 'string') return value.length <= 0
+          else if (key === 'price' && (typeof value === 'object' || typeof value == 'number'))
+            return value === null || value <= 0
 
           return false
         })
-      })
+      )
 
-      console.log(a)
-      return a
+      return !emptyVariants.every((result) => result === false)
     },
-    [formValues] // Watch the form values as they change
+    // Watch the form values as they change
+    [...variantNames, ...variantPrices]
   )
 
-  const theUserHasNotModifiedAnything = useCallback(
-    () => fastDeepEqual(initialFormValues, formValues),
-    [formValues]
-  )
-
-  const isSaveButtonDisabled = useMemo(
-    () => theUserHasNotModifiedAnything() || areAllVariantsFilled(),
+  const hasTheUserModifiedAnything = useMemo(
+    () => !fastDeepEqual(initialFormValues, formValues),
     [formValues]
   )
 
@@ -367,7 +365,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
               intent="warning"
               form="create-form"
               type="submit"
-              // disabled={isSaveButtonDisabled}
+              disabled={!hasTheUserModifiedAnything || theresEmptyVariants}
               loading={props.isLoading}
               onClick={handleOnSaveClick}
             >
@@ -382,13 +380,13 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
           <div className="flex items-center">
             {!isCreateModeActive &&
               (props.editMode.isEditModeActive ? (
-                <Tooltip compact position="left" content={<span>Este item é editável</span>}>
+                <Tooltip compact position="bottom" content={<span>Este item é editável</span>}>
                   <FaLockOpen color={Colors.GRAY3} size="22px" />
                 </Tooltip>
               ) : (
                 <Tooltip
                   compact
-                  position="left"
+                  position="bottom"
                   content={
                     <span>
                       Este item não é editável. Clique no botão &ldquo;editar&ldquo; para editar.
