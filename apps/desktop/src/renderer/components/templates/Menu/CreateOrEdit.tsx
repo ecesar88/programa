@@ -43,12 +43,14 @@ export type MenuEntryFormValues = {
  */
 export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => {
   const {
-    // formState: {  }, // TODO - add errors to inputs when doing validation with zod schema
+    formState: { errors }, // TODO - add errors to inputs when doing validation with zod schema
     control,
     reset,
     getValues,
     watch
   } = useFormContext<MenuEntryFormValues>()
+
+  console.log(errors, watch())
 
   const {
     fields: variantsFields,
@@ -144,8 +146,8 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
 
   const formValues = watch()
 
-  const variantNames = formValues.variants.map((vf) => vf.name)
-  const variantPrices = formValues.variants.map((vf) => vf.price)
+  const variantNames = formValues?.variants ? formValues?.variants?.map((vf) => vf.name) : []
+  const variantPrices = formValues?.variants ? formValues?.variants?.map((vf) => vf.price) : []
 
   const theresEmptyVariants = useMemo(
     () => {
@@ -153,9 +155,28 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
 
       const emptyVariants = formValues.variants.map((variant) =>
         Object.entries(variant).some(([key, value]) => {
+          // const nameSchema = z.string().min(3)
+          // const priceSchema = z.string().regex(/[0-9]/g)
+
+          // let result: boolean = false
+
+          // match(key)
+          //   .with('name', () => {
+          //     const parse = nameSchema.safeParse(value)
+          //     console.log('parse > ', parse)
+          //     result = parse.success
+          //   })
+          //   .with('price', () => {
+          //     const parse = priceSchema.safeParse(value)
+          //     console.log('parse > ', parse)
+          //     result = parse.success
+          //   })
+
           if (key === 'name' && typeof value === 'string') return value.length <= 0
           else if (key === 'price' && (typeof value === 'object' || typeof value == 'number'))
-            return value === null || value <= 0
+            return value === null || value <= 0 || isNaN(value)
+
+          // return result // replace with regex
 
           return false
         })

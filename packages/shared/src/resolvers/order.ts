@@ -1,15 +1,15 @@
-import { z } from "zod";
+import { z } from 'zod'
 
 export const CreateOrderResolver = z
   .object({
     dateTime: z.coerce.date(),
-    address: z.string().min(10, "Endereço é obrigatorio"),
-    food: z.string(),
+    address: z.string().min(10, 'Endereço é obrigatorio'),
+    food: z.string()
   })
-  .required();
+  .required()
 
 export const CreateOrderObservation = z
   .object({
-    food: z.string(),
+    food: z.string()
   })
-  .required();
+  .required()

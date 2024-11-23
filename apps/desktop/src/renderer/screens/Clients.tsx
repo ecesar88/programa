@@ -15,7 +15,6 @@ import {
   rowMetaDataFocusedAtom,
   selectedRowAtom
 } from '@renderer/store'
-import { CreateClientResolver } from '@repo/shared/resolvers'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useAtomValue, useSetAtom } from 'jotai'
 import React, { useEffect } from 'react'
@@ -23,6 +22,7 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { Id, toast } from 'react-toastify'
 import { match } from 'ts-pattern'
 import { ScreenMenuProps } from '../components/molecules/ScreenMenu'
+import { CreateClientResolver } from '@repo/shared/resolvers'
 
 export const Clients = (): React.ReactNode => {
   const successToast = (message: string): Id => toast(message, { type: 'success' })
@@ -113,8 +113,9 @@ export const Clients = (): React.ReactNode => {
   }, [isLoadingClients])
 
   const form = useForm<Client>({
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    resolver: zodResolver<any>(CreateClientResolver),
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    resolver: zodResolver(CreateClientResolver),
     defaultValues: {}
   })
 

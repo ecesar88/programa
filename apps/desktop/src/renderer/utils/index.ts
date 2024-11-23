@@ -1,7 +1,7 @@
 import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
-export * from './handleResponseValidation'
+export * from './handleGraphQlResponseStatus'
 export * from './shared'
 
 export function todo(message?: string) {

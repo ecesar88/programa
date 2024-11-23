@@ -2,8 +2,9 @@ import * as z from 'zod'
 import { builder } from '../../builder'
 import { RecordNotFoundError } from '../_errors/errors'
 import { create, queryAll, queryOne, remove, update } from './resolvers'
-import { MenuEntryCreateOrUpdateInputSchema } from './schemas'
 import { MenuEntryCreateOrUpdateInput, MenuEntryObject } from './types'
+import { MenuEntryCreateOrUpdateInputSchema } from './schemas'
+// import { MenuEntryCreateOrUpdateInputSchema } from '@repo/shared/resolvers'
 
 builder.queryField('getAllMenuEntries', (t) =>
   t.field({

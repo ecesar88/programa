@@ -1,7 +1,6 @@
 {
   "name": "@repo/shared",
-  "main": "dist/index.js",
-  "tyypes": "dist/index.d.ts",
+  "type": "module",
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc"

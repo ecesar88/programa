@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import {
   AlertModal,
   ContentScrollContainer,
@@ -21,6 +22,7 @@ import {
 import { create, edit, get, purge } from '@renderer/queries/operations/menu'
 import { selectedRowAtom } from '@renderer/store'
 import { errorToast, handleResponseStatus, successToast } from '@renderer/utils'
+import { MenuEntryCreateOrUpdateInputSchema } from '@repo/shared/resolvers'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useAtomValue, useSetAtom } from 'jotai'
 import * as O from 'optics-ts'
@@ -65,7 +67,9 @@ export const Menu = () => {
   })
 
   const form = useForm<CreateMenuEntryMutationVariables['data']>({
-    // resolver: zodResolver(CreateMenuEntryResolver), // TODO - add resolver
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    resolver: zodResolver(MenuEntryCreateOrUpdateInputSchema),
     defaultValues: {}
   })
 
