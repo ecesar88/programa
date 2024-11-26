@@ -69,9 +69,12 @@ export const Menu = () => {
   const form = useForm<CreateMenuEntryMutationVariables['data']>({
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    resolver: zodResolver(MenuEntryCreateOrUpdateInputSchema),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver<any>(MenuEntryCreateOrUpdateInputSchema),
     defaultValues: {}
   })
+
+  console.log('errors >>>>>>>> ', form.formState.errors)
 
   const { mutate: createMenuEntryMutation, isPending: isLoadingCreateMenuEntry } = useMutation({
     mutationKey: ['createMenuEntry'],
