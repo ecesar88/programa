@@ -1,4 +1,5 @@
 import { Button, Colors, EditableText, Tooltip } from '@blueprintjs/core'
+import { autoUpdate, useFloating, useTransitionStyles } from '@floating-ui/react'
 import { animated, useSpring } from '@react-spring/web'
 import { ModalTitle } from '@renderer/components'
 import { Label } from '@renderer/components/molecules'
@@ -16,6 +17,7 @@ import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { FaLock, FaLockOpen } from 'react-icons/fa'
 import { debounce } from 'remeda'
 import { Variants } from './components/Variants'
+import { DishTemplateIcon } from '@renderer/assets/icons'
 
 type CreateOrEditProps = {
   onSave?: () => void
@@ -193,6 +195,14 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     [formValues]
   )
 
+  const { refs, floatingStyles, context } = useFloating({
+    whileElementsMounted: autoUpdate,
+    placement: 'bottom',
+    open: false // isPopoverOpen
+  })
+
+  const { styles: transitionStyles } = useTransitionStyles(context)
+
   /* ************************************************************************************************* */
 
   const handleOnSaveClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -229,6 +239,25 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
       id="create-or-edit-menu-entry-modal"
       className="flex flex-col p-5 w-full overflow-clip overflow-x-clip overflow-y-clip !max-h-[70vh]"
     >
+      {/* Popover das labels e categorias
+      <div
+        ref={(node) => {
+          if (node) {
+            refs?.setFloating?.(node)
+            inputRef.current = node as Element
+          }
+        }}
+        style={{
+          ...floatingStyles,
+          ...transitionStyles,
+          width: refs.reference.current?.getBoundingClientRect().width,
+          height: dropdownHeight,
+          minWidth: isMobile ? '100vw' : '460px',
+          bottom: isMobile ? -window.innerHeight : 'unset',
+          display: isPopoverOpen ? 'block' : 'none'
+        }}
+        className="bg-white md:shadow-lg border border-pearl p-4 z-50 mt-4 md:mt-3 md:rounded-large transition overflow-auto"
+      ></div> */}
       <div className="flex flex-row justify-between">
         <div className="flex flex-row items-center gap-4 justify-between w-full relative">
           <div className="flex flex-row gap-2 items-center">
@@ -303,16 +332,23 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
           </animated.div>
         </div>
       </div>
-
       <div className="flex flex-row justify-between gap-4">
         <div className="h-fit rounded flex flex-col gap-1 justify-between flex-[10]">
-          <img
+          <div
+            className="transition-all"
+            style={{
+              maxWidth: `${imageWidth}px`
+            }}
+          >
+            <DishTemplateIcon width={'100%'} />
+          </div>
+          {/* <img
             src="https://www.sabornamesa.com.br/media/k2/items/cache/b5b56b2ae93d3dc958cf0c21c9383b18_XL.jpg" // TODO - replace with static asset placeholder image
             className="rounded-md transition-all"
             style={{
               maxWidth: `${imageWidth}px`
             }}
-          />
+          /> */}
 
           <form id="create-form" className="w-full">
             <div className="pt-4 flex flex-col gap-4">
@@ -358,7 +394,6 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
           />
         </div>
       </div>
-
       <div className="flex flex-row gap-3 justify-between border-t border-t-gray1 pt-4 border-opacity-25">
         <div>
           <Button
