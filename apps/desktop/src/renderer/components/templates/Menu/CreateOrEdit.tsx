@@ -1,8 +1,9 @@
 import { Button, Colors, EditableText, Tooltip } from '@blueprintjs/core'
-import { autoUpdate, useFloating, useTransitionStyles } from '@floating-ui/react'
+import { autoUpdate, useFloating } from '@floating-ui/react'
 import { animated, useSpring } from '@react-spring/web'
+import { DishTemplateRoundIcon } from '@renderer/assets/icons'
 import { ModalTitle } from '@renderer/components'
-import { Label } from '@renderer/components/molecules'
+import { FloatingPopover, Input, Label } from '@renderer/components/molecules'
 import { OverlayMode } from '@renderer/constants/enums'
 import {
   MenuEntry,
@@ -10,14 +11,13 @@ import {
   MenuEntryLabelInput,
   MenuEntryVariantInput
 } from '@renderer/queries/graphql/codegen/graphql'
-import { useIsFirstRender } from '@uidotdev/usehooks'
+import { useClickAway, useIsFirstRender } from '@uidotdev/usehooks'
 import fastDeepEqual from 'fast-deep-equal'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { FaLock, FaLockOpen } from 'react-icons/fa'
 import { debounce } from 'remeda'
 import { Variants } from './components/Variants'
-import { DishTemplateIcon } from '@renderer/assets/icons'
 
 type CreateOrEditProps = {
   onSave?: () => void
@@ -44,36 +44,35 @@ export type MenuEntryFormValues = {
  * Create or Edit MenuEntry modal
  */
 export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => {
-  const {
-    formState: { errors }, // TODO - add errors to inputs when doing validation with zod schema
-    control,
-    reset,
-    getValues,
-    watch
-  } = useFormContext<MenuEntryFormValues>()
-
-  console.log(errors, watch())
-
-  const {
-    fields: variantsFields,
-    append,
-    remove
-  } = useFieldArray({
-    control,
-    name: 'variants'
-  })
-
-  const [imageWidth, setImageWidth] = useState<number>(450)
-
   // This comes from the Screen component
   const isCreateModeActive = props.overlayMode === OverlayMode.NEW
+
+  /* ******************************* ADD LABEL BUTTON ANIMATION ************************************* */
+
+  const areThereLabelsToShow = props.menuEntryData?.labels?.length
+
+  const addLabelButtonAnimationStyle = useSpring({
+    right: (() => {
+      if (props.editMode.isEditModeActive || isCreateModeActive) return 0
+      if (areThereLabelsToShow) return -50
+      return 0
+    })(),
+    opacity: (() => {
+      if (areThereLabelsToShow) return 1
+      if (!areThereLabelsToShow && (props.editMode.isEditModeActive || isCreateModeActive)) return 1
+      return 0
+    })()
+  })
+  /* ************************************* FORM CONTROLS ******************************************** */
+
+  const [imageWidth, setImageWidth] = useState<number>(450)
 
   const getImageWidthBasedOnScreenSize = () => {
     let width: number = 0
 
     const wHeight = window.innerHeight
 
-    if (wHeight >= 400 && wHeight <= 768) width = 200
+    if (wHeight >= 400 && wHeight <= 768) width = 180
     if (wHeight >= 768 && wHeight <= 1050) width = 330
     if (wHeight >= 1050 && wHeight <= 1920) width = 450
 
@@ -97,6 +96,27 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     getImageWidthBasedOnScreenSize()
   }, [])
 
+  /* ************************************* FORM CONTROLS ******************************************** */
+
+  const {
+    formState: { errors }, // TODO - add errors to inputs when doing validation with zod schema
+    control,
+    reset,
+    getValues,
+    watch
+  } = useFormContext<MenuEntryFormValues>()
+
+  // console.log(errors, watch())
+
+  const {
+    fields: variantsFields,
+    append,
+    remove
+  } = useFieldArray({
+    control,
+    name: 'variants'
+  })
+
   // Populate form data based on OverlayMode
   useEffect(() => {
     if (props.overlayMode === OverlayMode.NEW) {
@@ -116,21 +136,6 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
       reset(data as Partial<MenuEntryFormValues>)
     }
   }, [props.menuEntryData])
-
-  const areThereLabelsToShow = props.menuEntryData?.labels?.length
-
-  const addLabelButtonAnimationStyle = useSpring({
-    right: (() => {
-      if (props.editMode.isEditModeActive || isCreateModeActive) return 0
-      if (areThereLabelsToShow) return -50
-      return 0
-    })(),
-    opacity: (() => {
-      if (areThereLabelsToShow) return 1
-      if (!areThereLabelsToShow && (props.editMode.isEditModeActive || isCreateModeActive)) return 1
-      return 0
-    })()
-  })
 
   /**
    * Only enable the "Save" button if the user has modified something.
@@ -195,15 +200,36 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     [formValues]
   )
 
-  const { refs, floatingStyles, context } = useFloating({
-    whileElementsMounted: autoUpdate,
-    placement: 'bottom',
-    open: false // isPopoverOpen
+  /* ************************************************************************************************ */
+
+  /* ************************************ POPOVERS SECTION ****************************************** */
+
+  const [isLabelPopoverOpen, setIsLabelPopoverOpen] = useState(false)
+  const [isCategoryPopoverOpen, setIsCategoryPopoverOpen] = useState(false)
+
+  const openLabelPopover = () => setIsLabelPopoverOpen(true)
+  const closeLabelPopover = () => setIsLabelPopoverOpen(false)
+
+  const addLabelDivAnchor = 'add_label_anchor' as const
+
+  // Do not close the popover if the user clicks on the button again.
+  const labelButtonRef = useClickAway<HTMLElement>((e) => {
+    const elementTarget = e.target as HTMLElement
+
+    const anchorElement = document.getElementById(addLabelDivAnchor)
+    if (!anchorElement) return
+    if (anchorElement.contains(elementTarget)) return
+
+    closeLabelPopover()
   })
 
-  const { styles: transitionStyles } = useTransitionStyles(context)
+  const { refs, floatingStyles, context } = useFloating({
+    whileElementsMounted: autoUpdate,
+    placement: 'bottom-end',
+    open: isLabelPopoverOpen
+  })
 
-  /* ************************************************************************************************* */
+  /* ************************************************************************************************ */
 
   const handleOnSaveClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     // console.log('fields >> ', fields)
@@ -235,228 +261,276 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
   if (!props?.menuEntryData) return
 
   return (
-    <div
-      id="create-or-edit-menu-entry-modal"
-      className="flex flex-col p-5 w-full overflow-clip overflow-x-clip overflow-y-clip !max-h-[70vh]"
-    >
-      {/* Popover das labels e categorias
+    <>
       <div
-        ref={(node) => {
-          if (node) {
-            refs?.setFloating?.(node)
-            inputRef.current = node as Element
-          }
-        }}
-        style={{
-          ...floatingStyles,
-          ...transitionStyles,
-          width: refs.reference.current?.getBoundingClientRect().width,
-          height: dropdownHeight,
-          minWidth: isMobile ? '100vw' : '460px',
-          bottom: isMobile ? -window.innerHeight : 'unset',
-          display: isPopoverOpen ? 'block' : 'none'
-        }}
-        className="bg-white md:shadow-lg border border-pearl p-4 z-50 mt-4 md:mt-3 md:rounded-large transition overflow-auto"
-      ></div> */}
-      <div className="flex flex-row justify-between">
-        <div className="flex flex-row items-center gap-4 justify-between w-full relative">
-          <div className="flex flex-row gap-2 items-center">
-            <ModalTitle
-              title={
-                props.overlayMode === OverlayMode.NEW || props.overlayMode === OverlayMode.EDIT ? (
-                  <Controller
-                    control={control}
-                    name="name"
-                    render={({ field: { onChange, value, ref } }) => (
-                      <EditableText
-                        className="[&_*]:!cursor-text"
-                        disabled={!isCreateModeActive && !props.editMode.isEditModeActive}
-                        onChange={onChange}
-                        value={value}
-                        ref={ref}
-                        minWidth={20}
-                        intent="none"
-                        placeholder="Título..."
-                      />
-                    )}
-                  />
-                ) : (
-                  (props.menuEntryData.name as string)
-                )
-              }
-            />
+        id="create-or-edit-menu-entry-modal"
+        className="flex flex-col p-5 w-full overflow-clip overflow-x-clip overflow-y-clip !max-h-[70vh]"
+      >
+        <div className="flex flex-row justify-between">
+          <div className="flex flex-row items-center gap-4 justify-between w-full relative">
+            <div className="flex flex-row gap-2 items-center">
+              <ModalTitle
+                title={
+                  props.overlayMode === OverlayMode.NEW ||
+                  props.overlayMode === OverlayMode.EDIT ? (
+                    <Controller
+                      control={control}
+                      name="name"
+                      render={({ field: { onChange, value, ref } }) => (
+                        <EditableText
+                          className="[&_*]:!cursor-text"
+                          disabled={!isCreateModeActive && !props.editMode.isEditModeActive}
+                          onChange={onChange}
+                          value={value}
+                          ref={ref}
+                          minWidth={20}
+                          intent="none"
+                          placeholder="Título..."
+                        />
+                      )}
+                    />
+                  ) : (
+                    (props.menuEntryData.name as string)
+                  )
+                }
+              />
 
-            <div className="flex flex-row gap-2 pb-1">
-              <Button
-                small
-                intent={'none'}
-                className="rounded-md"
-                onClick={() => {
-                  // Abrir modal igual no trello
-                  console.log('add new cateogory')
-                }}
-              >
-                CATEGORIA
-              </Button>
-            </div>
-          </div>
-
-          <animated.div
-            style={addLabelButtonAnimationStyle}
-            className="flex flex-row justify-end min-h-[30px] gap-[1rem] absolute right-0"
-          >
-            <div className="flex flex-row gap-1">
-              {props.menuEntryData?.labels?.map((label, idx) => (
-                <Label
-                  key={idx}
-                  name={label.name}
-                  color={label.color}
-                  className="min-h-[26px] flex justify-center align-center"
-                />
-              ))}
-            </div>
-
-            <div>
-              <Button
-                intent={'none'}
-                rightIcon="plus"
-                className="rounded-md"
-                onClick={() => {
-                  // Abrir modal igual no trello
-                  console.log('add new label')
-                }}
-              >
-                {!props.menuEntryData?.labels?.length ? 'Adicionar Etiqueta' : null}
-              </Button>
-            </div>
-          </animated.div>
-        </div>
-      </div>
-      <div className="flex flex-row justify-between gap-4">
-        <div className="h-fit rounded flex flex-col gap-1 justify-between flex-[10]">
-          <div
-            className="transition-all"
-            style={{
-              maxWidth: `${imageWidth}px`
-            }}
-          >
-            <DishTemplateIcon width={'100%'} />
-          </div>
-          {/* <img
-            src="https://www.sabornamesa.com.br/media/k2/items/cache/b5b56b2ae93d3dc958cf0c21c9383b18_XL.jpg" // TODO - replace with static asset placeholder image
-            className="rounded-md transition-all"
-            style={{
-              maxWidth: `${imageWidth}px`
-            }}
-          /> */}
-
-          <form id="create-form" className="w-full">
-            <div className="pt-4 flex flex-col gap-4">
-              <div>
-                <p className="text-lg font-bold">Descrição</p>
-
-                <div className="w-full h-full max-h-[180px] min-h-[60px]">
-                  <Controller
-                    control={control}
-                    name="description"
-                    defaultValue={''}
-                    render={({ field: { onChange, value, ref } }) => (
-                      <EditableText
-                        className="[&_*]:!cursor-text max-w-[470px] min-h-[85px] text-wrap"
-                        disabled={!isCreateModeActive && !props.editMode.isEditModeActive}
-                        onChange={onChange}
-                        value={value ?? ''}
-                        ref={ref}
-                        minWidth={20}
-                        maxLength={350}
-                        intent="none"
-                        multiline
-                        placeholder="Nome"
-                      />
-                      // error={errors?.['description']?.message?.toString() as unknown as boolean}
-                    )}
-                  />
-                </div>
+              <div className="flex flex-row gap-2 pb-1">
+                <Button
+                  small
+                  intent={'none'}
+                  className="rounded-md"
+                  onClick={() => {
+                    // Abrir modal igual no trello
+                    console.log('add new cateogory')
+                  }}
+                >
+                  CATEGORIA
+                </Button>
               </div>
             </div>
-          </form>
-        </div>
 
-        <div className="flex flex-col gap-2 flex-[8] min-w-[400px]">
-          <p className="text-lg font-bold pl-2">Variantes</p>
-
-          <Variants
-            variants={variantsFields}
-            append={append}
-            remove={remove}
-            isEditModeActive={props.editMode.isEditModeActive}
-            isCreateModeActive={isCreateModeActive}
-          />
-        </div>
-      </div>
-      <div className="flex flex-row gap-3 justify-between border-t border-t-gray1 pt-4 border-opacity-25">
-        <div>
-          <Button
-            intent="none"
-            icon={isCreateModeActive || props.editMode.isEditModeActive ? 'disable' : 'cross'}
-            onClick={handleOnCancelClick}
-          >
-            {isCreateModeActive || props.editMode.isEditModeActive ? 'Cancelar' : 'Fechar'}
-          </Button>
-        </div>
-
-        <div className="flex gap-3">
-          <Button
-            intent="danger"
-            icon="trash"
-            disabled={props.editMode.isEditModeActive || isCreateModeActive}
-            onClick={() => {
-              props?.onDelete?.()
-            }}
-          >
-            Excluir
-          </Button>
-
-          {props.editMode.isEditModeActive || isCreateModeActive ? (
-            <Button
-              icon="floppy-disk"
-              intent="warning"
-              form="create-form"
-              type="submit"
-              disabled={!hasTheUserModifiedAnything || theresEmptyVariants}
-              loading={props.isLoading}
-              onClick={handleOnSaveClick}
+            <animated.div
+              style={addLabelButtonAnimationStyle}
+              className="flex flex-row justify-end min-h-[30px] gap-[1rem] absolute right-0"
+              ref={refs.setReference}
             >
-              Salvar
-            </Button>
-          ) : (
-            <Button icon={'edit'} intent={'primary'} onClick={handleOnEditClick}>
-              Editar
-            </Button>
-          )}
+              <div className="flex flex-row gap-1">
+                {props.menuEntryData?.labels?.map((label, idx) => (
+                  <Label
+                    key={idx}
+                    name={label.name}
+                    color={label.color}
+                    className="min-h-[26px] flex justify-center align-center"
+                  />
+                ))}
+              </div>
 
-          <div className="flex items-center">
-            {!isCreateModeActive &&
-              (props.editMode.isEditModeActive ? (
-                <Tooltip compact position="bottom" content={<span>Este item é editável</span>}>
-                  <FaLockOpen color={Colors.GRAY3} size="22px" />
-                </Tooltip>
-              ) : (
-                <Tooltip
-                  compact
-                  position="bottom"
-                  content={
-                    <span>
-                      Este item não é editável. Clique no botão &ldquo;editar&ldquo; para editar.
-                    </span>
-                  }
+              <div id={addLabelDivAnchor}>
+                <Button
+                  intent={'none'}
+                  rightIcon="plus"
+                  className="rounded-md"
+                  onClick={() => {
+                    openLabelPopover()
+                  }}
                 >
-                  <FaLock color={Colors.GRAY3} size="22px" />
-                </Tooltip>
-              ))}
+                  {!props.menuEntryData?.labels?.length ? 'Adicionar Etiqueta' : null}
+                </Button>
+              </div>
+            </animated.div>
+          </div>
+        </div>
+
+        <div className="flex flex-row justify-between gap-4">
+          <div className="h-fit rounded flex flex-col gap-1 justify-between flex-[10] w-full items-center">
+            <div
+              className="transition-all pt-2 flex items-center justify-center"
+              style={{
+                maxWidth: `${imageWidth}px`
+              }}
+            >
+              <DishTemplateRoundIcon width={'100%'} />
+            </div>
+
+            <form id="create-form" className="w-full">
+              <div className="pt-4 flex flex-col gap-4">
+                <div>
+                  <p className="text-lg font-bold">Descrição</p>
+
+                  <div className="w-full h-full max-h-[180px] min-h-[60px]">
+                    <Controller
+                      control={control}
+                      name="description"
+                      defaultValue={''}
+                      render={({ field: { onChange, value, ref } }) => (
+                        <EditableText
+                          className="[&_*]:!cursor-text max-w-[470px] min-h-[85px] text-wrap"
+                          disabled={!isCreateModeActive && !props.editMode.isEditModeActive}
+                          onChange={onChange}
+                          value={value ?? ''}
+                          ref={ref}
+                          minWidth={20}
+                          maxLength={350}
+                          intent="none"
+                          multiline
+                          placeholder="Nome"
+                        />
+                        // error={errors?.['description']?.message?.toString() as unknown as boolean}
+                      )}
+                    />
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div className="flex flex-col gap-2 flex-[8] min-w-[400px]">
+            <p className="text-lg font-bold pl-2">Variantes</p>
+
+            <Variants
+              variants={variantsFields}
+              append={append}
+              remove={remove}
+              isEditModeActive={props.editMode.isEditModeActive}
+              isCreateModeActive={isCreateModeActive}
+            />
+          </div>
+        </div>
+        <div className="flex flex-row gap-3 justify-between border-t border-t-gray1 pt-4 border-opacity-25">
+          <div>
+            <Button
+              intent="none"
+              icon={isCreateModeActive || props.editMode.isEditModeActive ? 'disable' : 'cross'}
+              onClick={handleOnCancelClick}
+            >
+              {isCreateModeActive || props.editMode.isEditModeActive ? 'Cancelar' : 'Fechar'}
+            </Button>
+          </div>
+
+          <div className="flex gap-3">
+            <Button
+              intent="danger"
+              icon="trash"
+              disabled={props.editMode.isEditModeActive || isCreateModeActive}
+              onClick={() => {
+                props?.onDelete?.()
+              }}
+            >
+              Excluir
+            </Button>
+
+            {props.editMode.isEditModeActive || isCreateModeActive ? (
+              <Button
+                icon="floppy-disk"
+                intent="warning"
+                form="create-form"
+                type="submit"
+                disabled={!hasTheUserModifiedAnything || theresEmptyVariants}
+                loading={props.isLoading}
+                onClick={handleOnSaveClick}
+              >
+                Salvar
+              </Button>
+            ) : (
+              <Button icon={'edit'} intent={'primary'} onClick={handleOnEditClick}>
+                Editar
+              </Button>
+            )}
+
+            <div className="flex items-center">
+              {!isCreateModeActive &&
+                (props.editMode.isEditModeActive ? (
+                  <Tooltip compact position="bottom" content={<span>Este item é editável</span>}>
+                    <FaLockOpen color={Colors.GRAY3} size="22px" />
+                  </Tooltip>
+                ) : (
+                  <Tooltip
+                    compact
+                    position="bottom"
+                    content={
+                      <span>
+                        Este item não é editável. Clique no botão &ldquo;editar&ldquo; para editar.
+                      </span>
+                    }
+                  >
+                    <FaLock color={Colors.GRAY3} size="22px" />
+                  </Tooltip>
+                ))}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      <FloatingPopover
+        isPopoverOpen={isLabelPopoverOpen}
+        refs={refs}
+        ref={labelButtonRef}
+        floatingStyles={floatingStyles}
+        context={context}
+        maxWidth="270px"
+      >
+        <div className="flex flex-col items-center w-full gap-2">
+          <div>
+            <p className="font-bold">Labels</p>
+          </div>
+
+          <div className="w-full">
+            <Input
+              leftIcon="search"
+              className="w-full"
+              placeholder="Search labels"
+              fill
+              error={errors?.['name']?.message?.toString() as unknown as boolean}
+            />
+          </div>
+
+          <div className="flex flex-col gap-1 w-full items-center">
+            <Label
+              color="#fff700"
+              name={'teste'}
+              className="w-full min-h-[32px] flex justify-center align-center"
+            />
+            <Label
+              color="#33ff00"
+              name={'teste'}
+              className="w-full min-h-[32px] flex justify-center align-center"
+            />
+            <Label
+              color="#ff0000"
+              name={'teste'}
+              className="w-full min-h-[32px] flex justify-center align-center"
+            />
+            <Label
+              color="#ff00a2"
+              name={'teste'}
+              className="w-full min-h-[32px] flex justify-center align-center"
+            />
+            <Label
+              color="#0059ff"
+              name={'teste'}
+              className="w-full min-h-[32px] flex justify-center align-center"
+            />
+            <Label
+              color="#1ca5b8"
+              name={'teste'}
+              className="w-full min-h-[32px] flex justify-center align-center"
+            />
+            <Label
+              color="#00090a"
+              name={'teste'}
+              className="w-full min-h-[32px] flex justify-center align-center"
+            />
+          </div>
+
+          <div className="border border-t border-lightGray3 mt-0.5 w-full"></div>
+
+          <div className="flex flex-col gap-2 w-full">
+            <Button intent="primary">Create new label</Button>
+            <Button>Show more labels</Button>
+          </div>
+        </div>
+      </FloatingPopover>
+    </>
   )
 }
