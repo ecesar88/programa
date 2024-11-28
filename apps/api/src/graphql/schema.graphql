@@ -63,6 +63,7 @@ A label on the MenuEntryObject type. This can be used to categorize MenuEntries 
 """
 type MenuEntryLabel {
   color: String
+  id: Int
   name: String
 }
 
@@ -90,8 +91,10 @@ input MenuEntryVariantInput {
 type Mutation {
   createClient(name: String!, phone: String): Client
   createMenuEntry(data: MenuEntryInput!): MenuEntry
+  createMenuEntryLabel(data: MenuEntryLabelInput!): [MenuEntryLabel!]
   deleteClient(id: Int!): MutationDeleteClientResult
   deleteMenuEntry(id: Int!): MutationDeleteMenuEntryResult
+  deleteMenuEntryLabel(id: Int!): MutationDeleteMenuEntryLabelResult
   updateClient(data: ClientCreateOrUpdateInput!, id: Int!): Client
   updateMenuEntry(data: MenuEntryInput!, id: Int!): MutationUpdateMenuEntryResult
 }
@@ -100,6 +103,12 @@ union MutationDeleteClientResult = BaseError | MutationDeleteClientSuccess | Rec
 
 type MutationDeleteClientSuccess {
   data: Client!
+}
+
+union MutationDeleteMenuEntryLabelResult = BaseError | MutationDeleteMenuEntryLabelSuccess | RecordNotFoundError
+
+type MutationDeleteMenuEntryLabelSuccess {
+  data: [MenuEntryLabel!]!
 }
 
 union MutationDeleteMenuEntryResult = BaseError | MutationDeleteMenuEntrySuccess | RecordNotFoundError
@@ -117,6 +126,7 @@ type MutationUpdateMenuEntrySuccess {
 type Query {
   getAllClients(page: Int = 1): [Client!]
   getAllMenuEntries(page: Int = 1): [MenuEntry!]
+  getAllMenuEntryLabels(page: Int = 1): [MenuEntryLabel!]
   getClientById(id: Int!): QueryGetClientByIdResult
   getMenuEntryById(id: Int!): QueryGetMenuEntryByIdResult
   searchClients(search: String!): [Client!]

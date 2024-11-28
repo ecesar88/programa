@@ -10,5 +10,5 @@ export type Resolver<T = object> = (
 ) => any
 
 export type PaginationParam = { page?: number | null }
-export type FindById = { id: number }
+export type Id = { id: number }
 export type FindByQuery = { search: string }

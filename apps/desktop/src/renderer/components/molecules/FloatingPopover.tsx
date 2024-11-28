@@ -1,15 +1,15 @@
 import { FloatingContext, UseFloatingReturn, useTransitionStyles } from '@floating-ui/react'
+import { cn } from '@renderer/utils'
 import { CSSProperties, forwardRef, MutableRefObject, ReactElement } from 'react'
 
 type FloatingPopoverProps = {
   isPopoverOpen: boolean
-  dropdownHeight?: number
-  minWidth?: string
-  maxWidth?: string
   floatingStyles?: CSSProperties
+  containerStyles?: CSSProperties
   context: FloatingContext
   refs?: UseFloatingReturn['refs']
   children?: ReactElement
+  classNames?: string
 }
 
 export const FloatingPopover = forwardRef<Element, FloatingPopoverProps>((props, forwardedRef) => {
@@ -33,13 +33,18 @@ export const FloatingPopover = forwardRef<Element, FloatingPopoverProps>((props,
         ...props.floatingStyles,
         ...transitionStyles,
         width: props.refs?.reference.current?.getBoundingClientRect().width,
-        height: props.dropdownHeight ?? 'fit-content',
-        minWidth: props.minWidth ?? 'fit-content',
-        maxWidth: props.maxWidth ?? 'unset',
+        height: 'fit-content',
         bottom: 'unset',
-        display: props.isPopoverOpen ? 'block' : 'none'
+        display: props.isPopoverOpen ? 'block' : 'none',
+        minWidth: props.containerStyles?.minWidth ? props.containerStyles.minWidth : 'fit-content',
+        ...props.containerStyles
       }}
-      className="bg-white border border-lightGray1 shadow-lg shadow-gray3 rounded-md p-2 z-50 mt-4 transition-all overflow-auto"
+      className={cn(
+        // Shadow bugs out and creates a blur when outside the modal
+        // 'bg-white border border-lightGray1 shadow-lg shadow-gray3 rounded-md p-2 z-50 mt-4 transition-all overflow-auto',
+        'bg-white border border-gray4 rounded-md p-2 z-50 mt-4 transition-all overflow-auto',
+        props.classNames
+      )}
     >
       {props.children}
     </div>

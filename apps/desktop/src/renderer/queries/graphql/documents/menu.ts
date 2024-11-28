@@ -8,6 +8,7 @@ graphql(/* GraphQL */ `
   }
 
   fragment labelFragment on MenuEntryLabel {
+    id
     name
     color
   }
@@ -87,6 +88,16 @@ export const getAllMenuEntriesQueryDocument = graphql(/* GraphQL */ `
   query getAllMenuEntries($page: Int) {
     getAllMenuEntries(page: $page) {
       ...menuEntryFragment
+    }
+  }
+`)
+
+export const getAllMenuEntryLabelsQueryDocument = graphql(/* GraphQL */ `
+  query getAllMenuEntryLabels($page: Int) {
+    getAllMenuEntryLabels(page: $page) {
+      id
+      name
+      color
     }
   }
 `)

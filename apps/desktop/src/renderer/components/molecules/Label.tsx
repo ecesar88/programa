@@ -4,7 +4,7 @@ import { useState } from 'react'
 import tinycolor from 'tinycolor2'
 
 export const Label = (
-  props: Omit<LabelFragmentFragment, '__typename' | '$fragmentName'> & { className?: string }
+  props: Omit<LabelFragmentFragment, '__typename' | '$fragmentName' | 'id'> & { className?: string }
 ) => {
   const [hover, setHover] = useState<boolean>(false)
 

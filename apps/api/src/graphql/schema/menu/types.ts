@@ -1,6 +1,6 @@
 import { builder } from '../../builder'
 import { MenuEntry, MenuEntryCategory, MenuEntryVariant, MenuEntryLabel } from '@prisma/client'
-import { MenuEntryVariantInputSchema } from './schemas'
+// import { MenuEntryVariantInputSchema } from './schemas'
 
 /* --- Interface Definitions --- */
 
@@ -40,6 +40,7 @@ export const MenuEntryLabelObject = MenuEntryLabelRef.implement({
   description:
     'A label on the MenuEntryObject type. This can be used to categorize MenuEntries with different labels.',
   fields: (t) => ({
+    id: t.exposeInt('id'),
     name: t.exposeString('name'),
     color: t.exposeString('color')
   })

@@ -8,6 +8,7 @@ import {
   createMenuEntryMutationDocument,
   deleteMenuEntryMutationDocument,
   getAllMenuEntriesQueryDocument,
+  getAllMenuEntryLabelsQueryDocument,
   updateMenuEntryMutationDocument
 } from '../graphql/documents/menu'
 
@@ -41,6 +42,17 @@ export const edit = async ({ id, data }: UpdateMenuEntryMutationVariables) => {
 export const purge = async ({ id }: DeleteMenuEntryMutationVariables) => {
   try {
     return await gqlClient.request(deleteMenuEntryMutationDocument, { id })
+  } catch (error) {
+    console.error(error)
+    return
+  }
+}
+
+//*************************************** MENU ENTRY LABEL ****************************************** */
+
+export const getAllMenuEntryLabels = async () => {
+  try {
+    return await gqlClient.request(getAllMenuEntryLabelsQueryDocument, { page: 1 })
   } catch (error) {
     console.error(error)
     return

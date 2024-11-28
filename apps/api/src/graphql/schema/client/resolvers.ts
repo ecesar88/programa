@@ -2,7 +2,7 @@ import { Client, Prisma } from '@prisma/client'
 import { colorizeAsJSON, LOG_TYPE, logger } from '../../../utils/logger'
 import { prismaPaginate } from '../../../utils/prismaPaginate'
 import { RecordNotFoundError } from '../_errors/errors'
-import { FindById, FindByQuery, PaginationParam, Resolver } from '../sharedTypes'
+import { Id, FindByQuery, PaginationParam, Resolver } from '../sharedTypes'
 import { ClientCreateOrUpdateInput } from './types'
 
 type UpdateClientQueryInput = {
@@ -33,7 +33,7 @@ export const queryAll: Resolver<PaginationParam> = async (_parent, args, ctx, _i
   }
 }
 
-export const queryOne: Resolver<FindById> = async (_parent, args, ctx, _info) => {
+export const queryOne: Resolver<Id> = async (_parent, args, ctx, _info) => {
   const { id } = args
 
   logger({
@@ -150,7 +150,7 @@ export const update: Resolver<UpdateClientQueryInput> = async (_parent, args, ct
   }
 }
 
-export const remove: Resolver<FindById> = async (_parent, args, ctx, _info) => {
+export const remove: Resolver<Id> = async (_parent, args, ctx, _info) => {
   const { id } = args
 
   logger({

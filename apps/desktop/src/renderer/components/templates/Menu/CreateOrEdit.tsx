@@ -3,7 +3,7 @@ import { autoUpdate, useFloating } from '@floating-ui/react'
 import { animated, useSpring } from '@react-spring/web'
 import { DishTemplateRoundIcon } from '@renderer/assets/icons'
 import { ModalTitle } from '@renderer/components'
-import { FloatingPopover, Input, Label } from '@renderer/components/molecules'
+import { FloatingPopover, Label } from '@renderer/components/molecules'
 import { OverlayMode } from '@renderer/constants/enums'
 import {
   MenuEntry,
@@ -17,6 +17,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { FaLock, FaLockOpen } from 'react-icons/fa'
 import { debounce } from 'remeda'
+import { LabelPopupContent } from './components/LabelPopupContent'
 import { Variants } from './components/Variants'
 
 type CreateOrEditProps = {
@@ -63,7 +64,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
       return 0
     })()
   })
-  /* ************************************* FORM CONTROLS ******************************************** */
+  // ************************************* FORM CONTROLS ******************************************** */
 
   const [imageWidth, setImageWidth] = useState<number>(450)
 
@@ -96,7 +97,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     getImageWidthBasedOnScreenSize()
   }, [])
 
-  /* ************************************* FORM CONTROLS ******************************************** */
+  // ************************************* FORM CONTROLS ******************************************** */
 
   const {
     formState: { errors }, // TODO - add errors to inputs when doing validation with zod schema
@@ -200,9 +201,9 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     [formValues]
   )
 
-  /* ************************************************************************************************ */
+  // ************************************************************************************************ */
 
-  /* ************************************ POPOVERS SECTION ****************************************** */
+  // ************************************ POPOVERS SECTION ****************************************** */
 
   const [isLabelPopoverOpen, setIsLabelPopoverOpen] = useState(false)
   const [isCategoryPopoverOpen, setIsCategoryPopoverOpen] = useState(false)
@@ -229,7 +230,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     open: isLabelPopoverOpen
   })
 
-  /* ************************************************************************************************ */
+  // ************************************************************************************************ */
 
   const handleOnSaveClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     // console.log('fields >> ', fields)
@@ -468,68 +469,13 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
         ref={labelButtonRef}
         floatingStyles={floatingStyles}
         context={context}
-        maxWidth="270px"
+        classNames="p-0"
+        containerStyles={{
+          maxWidth: '270px',
+          minWidth: '270px'
+        }}
       >
-        <div className="flex flex-col items-center w-full gap-2">
-          <div>
-            <p className="font-bold">Labels</p>
-          </div>
-
-          <div className="w-full">
-            <Input
-              leftIcon="search"
-              className="w-full"
-              placeholder="Search labels"
-              fill
-              error={errors?.['name']?.message?.toString() as unknown as boolean}
-            />
-          </div>
-
-          <div className="flex flex-col gap-1 w-full items-center">
-            <Label
-              color="#fff700"
-              name={'teste'}
-              className="w-full min-h-[32px] flex justify-center align-center"
-            />
-            <Label
-              color="#33ff00"
-              name={'teste'}
-              className="w-full min-h-[32px] flex justify-center align-center"
-            />
-            <Label
-              color="#ff0000"
-              name={'teste'}
-              className="w-full min-h-[32px] flex justify-center align-center"
-            />
-            <Label
-              color="#ff00a2"
-              name={'teste'}
-              className="w-full min-h-[32px] flex justify-center align-center"
-            />
-            <Label
-              color="#0059ff"
-              name={'teste'}
-              className="w-full min-h-[32px] flex justify-center align-center"
-            />
-            <Label
-              color="#1ca5b8"
-              name={'teste'}
-              className="w-full min-h-[32px] flex justify-center align-center"
-            />
-            <Label
-              color="#00090a"
-              name={'teste'}
-              className="w-full min-h-[32px] flex justify-center align-center"
-            />
-          </div>
-
-          <div className="border border-t border-lightGray3 mt-0.5 w-full"></div>
-
-          <div className="flex flex-col gap-2 w-full">
-            <Button intent="primary">Create new label</Button>
-            <Button>Show more labels</Button>
-          </div>
-        </div>
+        <LabelPopupContent />
       </FloatingPopover>
     </>
   )
