@@ -28,7 +28,7 @@ export const LabelPopupSelectLabel = (props: LabelPopupSelectLabelProps) => {
         <Input leftIcon="search" className="w-full" placeholder="Search labels" fill />
       </div>
 
-      <div className="relative flex flex-col gap-1 w-full items-start justify-center h-full max-h-[350px] min-h-[350px] overflow-y-auto pr-1">
+      <div className="relative flex flex-col gap-1 w-full items-start justify-start h-full max-h-[350px] overflow-y-auto over pr-1">
         {match(isLoadingMenuEntryLabelData)
           .with(true, () => <Loading />)
           .otherwise(() =>
