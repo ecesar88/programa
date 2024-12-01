@@ -23,7 +23,7 @@ const documents = {
     "\n  mutation updateMenuEntry($id: Int!, $data: MenuEntryInput!) {\n    updateMenuEntry(id: $id, data: $data) {\n      ... on BaseError {\n        ...baseErrorFragment\n      }\n\n      ... on RecordNotFoundError {\n        ...recordNotFoundErrorFragment\n      }\n\n      ... on MutationUpdateMenuEntrySuccess {\n        data {\n          ...menuEntryFragment\n        }\n      }\n    }\n  }\n": types.UpdateMenuEntryDocument,
     "\n  mutation deleteMenuEntry($id: Int!) {\n    deleteMenuEntry(id: $id) {\n      ... on BaseError {\n        ...baseErrorFragment\n      }\n\n      ... on RecordNotFoundError {\n        ...recordNotFoundErrorFragment\n      }\n\n      ... on MutationDeleteMenuEntrySuccess {\n        data {\n          ...menuEntryFragment\n        }\n      }\n    }\n  }\n": types.DeleteMenuEntryDocument,
     "\n  query getAllMenuEntries($page: Int) {\n    getAllMenuEntries(page: $page) {\n      ...menuEntryFragment\n    }\n  }\n": types.GetAllMenuEntriesDocument,
-    "\n  query getAllMenuEntryLabels($page: Int) {\n    getAllMenuEntryLabels(page: $page) {\n      id\n      name\n      color\n    }\n  }\n": types.GetAllMenuEntryLabelsDocument,
+    "\n  query getAllMenuEntryLabels($page: Int) {\n    getAllMenuEntryLabels(page: $page) {\n      ...labelFragment\n    }\n  }\n": types.GetAllMenuEntryLabelsDocument,
     "\n  query getMenuEntryById($id: Int!) {\n    getMenuEntryById(id: $id) {\n      ... on BaseError {\n        ...baseErrorFragment\n      }\n\n      ... on RecordNotFoundError {\n        ...recordNotFoundErrorFragment\n      }\n\n      ... on QueryGetMenuEntryByIdSuccess {\n        data {\n          ...menuEntryFragment\n        }\n      }\n    }\n  }\n": types.GetMenuEntryByIdDocument,
 };
 
@@ -84,7 +84,7 @@ export function graphql(source: "\n  query getAllMenuEntries($page: Int) {\n    
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query getAllMenuEntryLabels($page: Int) {\n    getAllMenuEntryLabels(page: $page) {\n      id\n      name\n      color\n    }\n  }\n"): (typeof documents)["\n  query getAllMenuEntryLabels($page: Int) {\n    getAllMenuEntryLabels(page: $page) {\n      id\n      name\n      color\n    }\n  }\n"];
+export function graphql(source: "\n  query getAllMenuEntryLabels($page: Int) {\n    getAllMenuEntryLabels(page: $page) {\n      ...labelFragment\n    }\n  }\n"): (typeof documents)["\n  query getAllMenuEntryLabels($page: Int) {\n    getAllMenuEntryLabels(page: $page) {\n      ...labelFragment\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

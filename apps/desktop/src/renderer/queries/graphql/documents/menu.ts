@@ -95,9 +95,7 @@ export const getAllMenuEntriesQueryDocument = graphql(/* GraphQL */ `
 export const getAllMenuEntryLabelsQueryDocument = graphql(/* GraphQL */ `
   query getAllMenuEntryLabels($page: Int) {
     getAllMenuEntryLabels(page: $page) {
-      id
-      name
-      color
+      ...labelFragment
     }
   }
 `)

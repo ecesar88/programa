@@ -12,10 +12,10 @@ export const LabelPopupCheckboxLabel = (props: LabelPopupCheckboxLabel) => {
   return (
     <div className="flex flex-row w-full">
       <div className="flex items-center">
-        <Checkbox className="ml-1 m-0" checked={props.checked} onChange={props.onSelect} />
+        <Checkbox className="ml-1 m-0" checked={props.checked} onClick={props.onSelect} />
       </div>
 
-      <div className="w-full">
+      <div className="w-full" onClick={props.onSelect}>
         <Label
           name={props.labelData.name}
           color={props.labelData.color}
