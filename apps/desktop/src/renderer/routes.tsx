@@ -1,4 +1,4 @@
-import { RouteObject } from 'react-router-dom'
+import { RouteObject } from 'react-router'
 
 import { ROUTES } from './constants'
 import { Clients } from './screens/Clients'

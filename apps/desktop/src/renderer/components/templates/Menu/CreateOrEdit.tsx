@@ -48,7 +48,13 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
   // This comes from the Screen component
   const isCreateModeActive = props.overlayMode === OverlayMode.NEW
 
-  /* ******************************* ADD LABEL BUTTON ANIMATION ************************************* */
+  useEffect(() => {
+    return () => {
+      console.log('fechou')
+    }
+  }, [])
+
+  /* ******************************* "Add Label" button animation ************************************* */
 
   const areThereLabelsToShow = props.menuEntryData?.labels?.length
 
@@ -64,7 +70,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
       return 0
     })()
   })
-  // ************************************* FORM CONTROLS ******************************************** */
+  // ************************************* Image Resizer ******************************************** */
 
   const [imageWidth, setImageWidth] = useState<number>(450)
 
@@ -97,7 +103,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     getImageWidthBasedOnScreenSize()
   }, [])
 
-  // ************************************* FORM CONTROLS ******************************************** */
+  // ************************************* Form Controls ******************************************** */
 
   const {
     formState: { errors }, // TODO - add errors to inputs when doing validation with zod schema
@@ -203,7 +209,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
 
   // ************************************************************************************************ */
 
-  // ************************************ POPOVERS SECTION ****************************************** */
+  // ************************************ Popovers section ****************************************** */
 
   const [isLabelPopoverOpen, setIsLabelPopoverOpen] = useState(false)
   const [isCategoryPopoverOpen, setIsCategoryPopoverOpen] = useState(false)

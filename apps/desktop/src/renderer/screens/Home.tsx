@@ -1,6 +1,6 @@
 import { SystemMenu, SystemTime } from '@renderer/components'
 import { HOME_CONTAINER_ID } from '@renderer/constants'
-import { Outlet } from 'react-router-dom'
+import { Outlet } from 'react-router'
 
 export const Home = (): React.ReactNode => {
   return (

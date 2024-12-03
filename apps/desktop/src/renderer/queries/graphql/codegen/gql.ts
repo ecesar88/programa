@@ -13,11 +13,12 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n  mutation createClient($name: String!, $phone: String) {\n    createClient(name: $name, phone: $phone) {\n      id\n      name\n      phone\n    }\n  }\n": types.CreateClientDocument,
-    "\n  mutation updateClientById($id: Int!, $data: ClientCreateOrUpdateInput!) {\n    updateClient(id: $id, data: $data) {\n      id\n      name\n      phone\n    }\n  }\n": types.UpdateClientByIdDocument,
-    "\n  mutation deleteClientById($id: Int!) {\n    deleteClient(id: $id) {\n      ... on MutationDeleteClientSuccess {\n        data {\n          id\n          name\n          phone\n        }\n      }\n      ... on RecordNotFoundError {\n        message\n      }\n    }\n  }\n": types.DeleteClientByIdDocument,
-    "\n  query getAllClients($page: Int) {\n    getAllClients(page: $page) {\n      id\n      name\n      phone\n    }\n  }\n": types.GetAllClientsDocument,
-    "\n  query getClientById($id: Int!) {\n    getClientById(id: $id) {\n      ... on RecordNotFoundError {\n        message\n      }\n\n      ... on QueryGetClientByIdSuccess {\n        data {\n          id\n          name\n          phone\n        }\n      }\n    }\n  }\n": types.GetClientByIdDocument,
+    "\n  fragment clientFragment on Client {\n    id\n    name\n    phone\n  }\n": types.ClientFragmentFragmentDoc,
+    "\n  mutation createClient($name: String!, $phone: String) {\n    createClient(name: $name, phone: $phone) {\n      ...clientFragment\n    }\n  }\n": types.CreateClientDocument,
+    "\n  mutation updateClientById($id: Int!, $data: ClientCreateOrUpdateInput!) {\n    updateClient(id: $id, data: $data) {\n      ...clientFragment\n    }\n  }\n": types.UpdateClientByIdDocument,
+    "\n  mutation deleteClientById($id: Int!) {\n    deleteClient(id: $id) {\n      ... on MutationDeleteClientSuccess {\n        data {\n          ...clientFragment\n        }\n      }\n      ... on RecordNotFoundError {\n        message\n      }\n    }\n  }\n": types.DeleteClientByIdDocument,
+    "\n  query getAllClients($page: Int) {\n    getAllClients(page: $page) {\n      ...clientFragment\n    }\n  }\n": types.GetAllClientsDocument,
+    "\n  query getClientById($id: Int!) {\n    getClientById(id: $id) {\n      ... on RecordNotFoundError {\n        message\n      }\n\n      ... on QueryGetClientByIdSuccess {\n        data {\n          ...clientFragment\n        }\n      }\n    }\n  }\n": types.GetClientByIdDocument,
     "\n  fragment variantFragment on MenuEntryVariant {\n    name\n    description\n    price\n  }\n\n  fragment labelFragment on MenuEntryLabel {\n    id\n    name\n    color\n  }\n\n  fragment menuEntryFragment on MenuEntry {\n    id\n    name\n    description\n    labels {\n      ...labelFragment\n    }\n    variants {\n      ...variantFragment\n    }\n  }\n\n  fragment recordNotFoundErrorFragment on RecordNotFoundError {\n    __typename\n    message\n  }\n\n  fragment baseErrorFragment on BaseError {\n    __typename\n    message\n  }\n": types.VariantFragmentFragmentDoc,
     "\n  mutation createMenuEntry($data: MenuEntryInput!) {\n    createMenuEntry(data: $data) {\n      ...menuEntryFragment\n    }\n  }\n": types.CreateMenuEntryDocument,
     "\n  mutation updateMenuEntry($id: Int!, $data: MenuEntryInput!) {\n    updateMenuEntry(id: $id, data: $data) {\n      ... on BaseError {\n        ...baseErrorFragment\n      }\n\n      ... on RecordNotFoundError {\n        ...recordNotFoundErrorFragment\n      }\n\n      ... on MutationUpdateMenuEntrySuccess {\n        data {\n          ...menuEntryFragment\n        }\n      }\n    }\n  }\n": types.UpdateMenuEntryDocument,
@@ -44,23 +45,27 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation createClient($name: String!, $phone: String) {\n    createClient(name: $name, phone: $phone) {\n      id\n      name\n      phone\n    }\n  }\n"): (typeof documents)["\n  mutation createClient($name: String!, $phone: String) {\n    createClient(name: $name, phone: $phone) {\n      id\n      name\n      phone\n    }\n  }\n"];
+export function graphql(source: "\n  fragment clientFragment on Client {\n    id\n    name\n    phone\n  }\n"): (typeof documents)["\n  fragment clientFragment on Client {\n    id\n    name\n    phone\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation updateClientById($id: Int!, $data: ClientCreateOrUpdateInput!) {\n    updateClient(id: $id, data: $data) {\n      id\n      name\n      phone\n    }\n  }\n"): (typeof documents)["\n  mutation updateClientById($id: Int!, $data: ClientCreateOrUpdateInput!) {\n    updateClient(id: $id, data: $data) {\n      id\n      name\n      phone\n    }\n  }\n"];
+export function graphql(source: "\n  mutation createClient($name: String!, $phone: String) {\n    createClient(name: $name, phone: $phone) {\n      ...clientFragment\n    }\n  }\n"): (typeof documents)["\n  mutation createClient($name: String!, $phone: String) {\n    createClient(name: $name, phone: $phone) {\n      ...clientFragment\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation deleteClientById($id: Int!) {\n    deleteClient(id: $id) {\n      ... on MutationDeleteClientSuccess {\n        data {\n          id\n          name\n          phone\n        }\n      }\n      ... on RecordNotFoundError {\n        message\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation deleteClientById($id: Int!) {\n    deleteClient(id: $id) {\n      ... on MutationDeleteClientSuccess {\n        data {\n          id\n          name\n          phone\n        }\n      }\n      ... on RecordNotFoundError {\n        message\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  mutation updateClientById($id: Int!, $data: ClientCreateOrUpdateInput!) {\n    updateClient(id: $id, data: $data) {\n      ...clientFragment\n    }\n  }\n"): (typeof documents)["\n  mutation updateClientById($id: Int!, $data: ClientCreateOrUpdateInput!) {\n    updateClient(id: $id, data: $data) {\n      ...clientFragment\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query getAllClients($page: Int) {\n    getAllClients(page: $page) {\n      id\n      name\n      phone\n    }\n  }\n"): (typeof documents)["\n  query getAllClients($page: Int) {\n    getAllClients(page: $page) {\n      id\n      name\n      phone\n    }\n  }\n"];
+export function graphql(source: "\n  mutation deleteClientById($id: Int!) {\n    deleteClient(id: $id) {\n      ... on MutationDeleteClientSuccess {\n        data {\n          ...clientFragment\n        }\n      }\n      ... on RecordNotFoundError {\n        message\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation deleteClientById($id: Int!) {\n    deleteClient(id: $id) {\n      ... on MutationDeleteClientSuccess {\n        data {\n          ...clientFragment\n        }\n      }\n      ... on RecordNotFoundError {\n        message\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query getClientById($id: Int!) {\n    getClientById(id: $id) {\n      ... on RecordNotFoundError {\n        message\n      }\n\n      ... on QueryGetClientByIdSuccess {\n        data {\n          id\n          name\n          phone\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query getClientById($id: Int!) {\n    getClientById(id: $id) {\n      ... on RecordNotFoundError {\n        message\n      }\n\n      ... on QueryGetClientByIdSuccess {\n        data {\n          id\n          name\n          phone\n        }\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query getAllClients($page: Int) {\n    getAllClients(page: $page) {\n      ...clientFragment\n    }\n  }\n"): (typeof documents)["\n  query getAllClients($page: Int) {\n    getAllClients(page: $page) {\n      ...clientFragment\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query getClientById($id: Int!) {\n    getClientById(id: $id) {\n      ... on RecordNotFoundError {\n        message\n      }\n\n      ... on QueryGetClientByIdSuccess {\n        data {\n          ...clientFragment\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query getClientById($id: Int!) {\n    getClientById(id: $id) {\n      ... on RecordNotFoundError {\n        message\n      }\n\n      ... on QueryGetClientByIdSuccess {\n        data {\n          ...clientFragment\n        }\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

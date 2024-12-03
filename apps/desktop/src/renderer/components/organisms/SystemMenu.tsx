@@ -1,6 +1,6 @@
 import { Button, ButtonGroup } from '@blueprintjs/core'
 import { ROUTES } from '@renderer/constants'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router'
 import { MdRestaurantMenu } from 'react-icons/md'
 import { cn } from '@renderer/utils'
 

@@ -1,11 +1,17 @@
 import { graphql } from '../codegen/gql'
 
+graphql(/* GraphQL */ `
+  fragment clientFragment on Client {
+    id
+    name
+    phone
+  }
+`)
+
 export const createClientMutationDocument = graphql(/* GraphQL */ `
   mutation createClient($name: String!, $phone: String) {
     createClient(name: $name, phone: $phone) {
-      id
-      name
-      phone
+      ...clientFragment
     }
   }
 `)
@@ -13,9 +19,7 @@ export const createClientMutationDocument = graphql(/* GraphQL */ `
 export const updateClientMutationDocument = graphql(/* GraphQL */ `
   mutation updateClientById($id: Int!, $data: ClientCreateOrUpdateInput!) {
     updateClient(id: $id, data: $data) {
-      id
-      name
-      phone
+      ...clientFragment
     }
   }
 `)
@@ -25,9 +29,7 @@ export const deleteClientByIdMutationDocument = graphql(/* GraphQL */ `
     deleteClient(id: $id) {
       ... on MutationDeleteClientSuccess {
         data {
-          id
-          name
-          phone
+          ...clientFragment
         }
       }
       ... on RecordNotFoundError {
@@ -40,9 +42,7 @@ export const deleteClientByIdMutationDocument = graphql(/* GraphQL */ `
 export const getAllClientsQueryDocument = graphql(/* GraphQL */ `
   query getAllClients($page: Int) {
     getAllClients(page: $page) {
-      id
-      name
-      phone
+      ...clientFragment
     }
   }
 `)
@@ -56,9 +56,7 @@ export const getClientByIdQueryDocument = graphql(/* GraphQL */ `
 
       ... on QueryGetClientByIdSuccess {
         data {
-          id
-          name
-          phone
+          ...clientFragment
         }
       }
     }
