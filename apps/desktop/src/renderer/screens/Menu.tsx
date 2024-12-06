@@ -67,10 +67,7 @@ export const Menu = () => {
   })
 
   const form = useForm<CreateMenuEntryMutationVariables['data']>({
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    resolver: zodResolver<any>(MenuEntryCreateOrUpdateInputSchema),
+    resolver: zodResolver(MenuEntryCreateOrUpdateInputSchema),
     defaultValues: {}
   })
 
@@ -96,6 +93,7 @@ export const Menu = () => {
     mutationKey: ['updateMenuEntry'],
     mutationFn: edit,
     onSuccess: async (data) => {
+      // TODO - test this
       handleResponseStatus<MenuEntry>({
         response: data?.updateMenuEntry as MenuEntry,
         Ok: async () => {
