@@ -5,7 +5,7 @@ import { ZodError } from 'zod'
 import { fromError } from 'zod-validation-error'
 import { LOG_TYPE, logger } from '../utils/logger'
 
-// share this file with graphql AND rest:
+// TODO: // share this file with graphql AND rest:
 // https://www.reddit.com/r/node/comments/1c06bev/comment/kywsbpd/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
 // @Injectable()
 // export class ErrorHandlerMiddleware implements ErrorMiddleware {

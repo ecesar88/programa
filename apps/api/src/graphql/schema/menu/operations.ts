@@ -16,8 +16,8 @@ import {
   MenuEntryLabelObject,
   MenuEntryObject
 } from './types'
-import { MenuEntryCreateOrUpdateInputSchema } from './schemas'
-// import { MenuEntryCreateOrUpdateInputSchema } from '@repo/shared/resolvers'
+// import { MenuEntryCreateOrUpdateInputSchema } from './schemas'
+import { MenuEntryCreateOrUpdateInputSchema } from '@repo/shared/resolvers'
 
 builder.queryField('getAllMenuEntries', (t) =>
   t.field({
