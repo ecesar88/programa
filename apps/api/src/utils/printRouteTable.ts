@@ -6,7 +6,7 @@ import { ROUTES } from '../routes'
 export const printRouteTable = (express: Express) => {
   const endpoints = expressListEndpoints(express.router).map((ed) => ({
     path: ed.path,
-    methods: ed.methods,
+    methods: ed.methods
     // ...(!ed.middlewares.includes('anonymous')
     //   ? {
     //       middlewares: ed.middlewares

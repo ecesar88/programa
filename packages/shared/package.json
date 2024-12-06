@@ -1,6 +1,5 @@
 {
   "name": "@repo/shared",
-  "type": "module",
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc"
@@ -8,18 +7,15 @@
   "exports": {
     "./resolvers": {
       "types": "./src/resolvers/index.ts",
-      "default": "./dist/resolvers/index.js",
-      "require": "./dist/resolvers/index.js"
+      "default": "./dist/resolvers/index.js"
     },
     "./constants": {
       "types": "./src/constants/index.ts",
-      "default": "./dist/constants/index.js",
-      "require": "./dist/constants/index.js"
+      "default": "./dist/constants/index.js"
     },
     "./functions": {
       "types": "./src/functions/index.ts",
-      "default": "./dist/functions/index.js",
-      "require": "./dist/functions/index.js"
+      "default": "./dist/functions/index.js"
     }
   },
   "dependencies": {
