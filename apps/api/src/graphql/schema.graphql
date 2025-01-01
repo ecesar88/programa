@@ -2,7 +2,7 @@ type BaseError implements Error {
   message: String
 }
 
-"""Long necks, cool patterns, taller than you."""
+"""A client/customer on the application"""
 type Client {
   id: Int
   name: String

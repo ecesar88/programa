@@ -13,7 +13,7 @@ export interface TypeClient {
 const ClientRef = builder.objectRef<TypeClient>('Client')
 
 export const Client = ClientRef.implement({
-  description: 'Long necks, cool patterns, taller than you.',
+  description: 'A client/customer on the application',
   fields: (t) => ({
     id: t.exposeInt('id'),
     name: t.exposeString('name'),
