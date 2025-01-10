@@ -21,8 +21,6 @@
     "@pothos/plugin-zod": "4.1.0",
     "@prisma/client": "6.1.0",
     "@repo/shared": "workspace:*",
-    "@types/cacheable-request": "6.0.3",
-    "@types/cors": "2.8.17",
     "body-parser": "2.0.1",
     "cacheable-request": "12.0.1",
     "console-table-printer": "2.12.1",
@@ -49,6 +47,8 @@
     "zod-validation-error": "3.3.1"
   },
   "devDependencies": {
+    "@types/cacheable-request": "6.0.3",
+    "@types/cors": "2.8.17",
     "@faker-js/faker": "9.0.3",
     "@types/ascii-art": "1.4.3",
     "@types/babel__core": "7.20.5",

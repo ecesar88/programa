@@ -1,16 +1,20 @@
 import { Button } from '@blueprintjs/core'
 import { Input, Loading } from '@renderer/components'
 import { useFragment } from '@renderer/queries/graphql/codegen'
-import { LabelFragmentFragmentDoc } from '@renderer/queries/graphql/codegen/graphql'
+import {
+  LabelFragmentFragment,
+  LabelFragmentFragmentDoc
+} from '@renderer/queries/graphql/codegen/graphql'
 import { getAllMenuEntryLabels } from '@renderer/queries/operations/menu'
 import { useQuery } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { match } from 'ts-pattern'
 import { LabelPopupCheckboxLabel } from './LabelPopupCheckboxLabel'
 import { debounce } from 'remeda'
 
 type LabelPopupSelectLabelProps = {
   handleCreateNewLabelButton: () => void
+  setLabelData: React.Dispatch<React.SetStateAction<LabelFragmentFragment | undefined>>
 }
 
 export const LabelPopupSelectLabel = (props: LabelPopupSelectLabelProps) => {
@@ -55,6 +59,11 @@ export const LabelPopupSelectLabel = (props: LabelPopupSelectLabelProps) => {
     }
   })
 
+  const handleOnEditLabel = (labelData: LabelFragmentFragment) => {
+    props.setLabelData(labelData)
+    props.handleCreateNewLabelButton()
+  }
+
   return (
     <div className="flex flex-col items-center w-full gap-2 p-2">
       <div>
@@ -79,6 +88,7 @@ export const LabelPopupSelectLabel = (props: LabelPopupSelectLabelProps) => {
               return (
                 <LabelPopupCheckboxLabel
                   key={labelData.id}
+                  onEditLabel={() => handleOnEditLabel(labelData)}
                   labelData={labelData}
                   checked={selectedLabels.includes(labelData.id as number)}
                   onSelect={() => {

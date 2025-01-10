@@ -2,8 +2,12 @@ import { Button } from '@blueprintjs/core'
 import { Input, Label } from '@renderer/components'
 import { useState } from 'react'
 import { ColorSwatch } from './ColorSwatch'
+import { LabelFragmentFragment } from '@renderer/queries/graphql/codegen/graphql'
+import { FaTrashAlt } from 'react-icons/fa'
+import { ImCheckmark } from 'react-icons/im'
 
 type LabelPopupCreateLabelProps = {
+  labelData?: LabelFragmentFragment
   handleCancelLabelCreationButton: () => void
 }
 
@@ -37,9 +41,13 @@ const COLORS = [
 
 export const LabelPopupCreateLabel = (props: LabelPopupCreateLabelProps) => {
   const [labelData, setLabelData] = useState<{ name: string; color: string }>({
-    name: '',
-    color: COLORS[1]
+    name: props?.labelData?.name ?? '',
+    color: props?.labelData?.color ?? COLORS[1]
   })
+
+  const handleCreateLabelButton = () => {
+    props.handleCancelLabelCreationButton()
+  }
 
   return (
     <div className="flex flex-col items-center w-full gap-2">
@@ -74,6 +82,7 @@ export const LabelPopupCreateLabel = (props: LabelPopupCreateLabelProps) => {
           className="w-full"
           placeholder="Title"
           fill
+          value={labelData.name}
           onChange={(evt) => {
             setLabelData((prev) => ({ ...prev, name: evt.target.value }))
           }}
@@ -98,10 +107,21 @@ export const LabelPopupCreateLabel = (props: LabelPopupCreateLabelProps) => {
 
         <div className="border border-t border-lightGray3 mt-0.5 w-[95%]"></div>
 
-        <div className="flex flex-col gap-2 w-full pb-2">
-          <Button intent="success" disabled={!labelData.name.length}>
-            Create new label
-          </Button>
+        <div className="flex flex-row gap-4 w-full pb-2 justify-between">
+          <Button
+            icon={<FaTrashAlt className="text-white" />}
+            intent="danger"
+            fill
+            disabled={!labelData.name.length}
+          />
+
+          <Button
+            icon={<ImCheckmark className="text-white" />}
+            intent="success"
+            fill
+            disabled={!labelData.name.length}
+            onClick={handleCreateLabelButton}
+          />
         </div>
       </div>
     </div>
