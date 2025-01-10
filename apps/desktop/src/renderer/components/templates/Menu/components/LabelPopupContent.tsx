@@ -1,17 +1,17 @@
-import { useState } from 'react'
-import { LabelPopupSelectLabel } from './LabelPopupSelectLabel'
+import { isCreatingLabelAtom, labelDataAtom } from '@renderer/store/labelPopupContent'
+import { useAtom, useSetAtom } from 'jotai'
 import { LabelPopupCreateLabel } from './LabelPopupCreateLabel'
-import { LabelFragmentFragment } from '@renderer/queries/graphql/codegen/graphql'
+import { LabelPopupSelectLabel } from './LabelPopupSelectLabel'
 
 export const LabelPopupContent = () => {
-  const [isCreatingLabel, setIsCreatingLabel] = useState(false)
-
-  const [labelData, setLabelData] = useState<LabelFragmentFragment>()
+  const setLabelData = useSetAtom(labelDataAtom)
+  const [isCreatingLabel, setIsCreatingLabel] = useAtom(isCreatingLabelAtom)
 
   const handleCreateNewLabelButton = () => {
     setIsCreatingLabel(true)
   }
 
+  // TODO - clear data when unmounting
   const handleCancelLabelCreationButton = () => {
     setIsCreatingLabel(false)
     setLabelData(undefined)
@@ -20,15 +20,9 @@ export const LabelPopupContent = () => {
   return (
     <div className="transition-all">
       {isCreatingLabel ? (
-        <LabelPopupCreateLabel
-          labelData={labelData}
-          handleCancelLabelCreationButton={handleCancelLabelCreationButton}
-        />
+        <LabelPopupCreateLabel handleCancelLabelCreationButton={handleCancelLabelCreationButton} />
       ) : (
-        <LabelPopupSelectLabel
-          setLabelData={setLabelData}
-          handleCreateNewLabelButton={handleCreateNewLabelButton}
-        />
+        <LabelPopupSelectLabel handleCreateNewLabelButton={handleCreateNewLabelButton} />
       )}
     </div>
   )

@@ -1,13 +1,13 @@
 import { Button } from '@blueprintjs/core'
 import { Input, Label } from '@renderer/components'
-import { useState } from 'react'
-import { ColorSwatch } from './ColorSwatch'
 import { LabelFragmentFragment } from '@renderer/queries/graphql/codegen/graphql'
+import { labelDataAtom } from '@renderer/store/labelPopupContent'
+import { useAtom } from 'jotai'
 import { FaTrashAlt } from 'react-icons/fa'
 import { ImCheckmark } from 'react-icons/im'
+import { ColorSwatch } from './ColorSwatch'
 
 type LabelPopupCreateLabelProps = {
-  labelData?: LabelFragmentFragment
   handleCancelLabelCreationButton: () => void
 }
 
@@ -40,10 +40,7 @@ const COLORS = [
 ]
 
 export const LabelPopupCreateLabel = (props: LabelPopupCreateLabelProps) => {
-  const [labelData, setLabelData] = useState<{ name: string; color: string }>({
-    name: props?.labelData?.name ?? '',
-    color: props?.labelData?.color ?? COLORS[1]
-  })
+  const [labelData, setLabelData] = useAtom(labelDataAtom)
 
   const handleCreateLabelButton = () => {
     props.handleCancelLabelCreationButton()
@@ -68,8 +65,8 @@ export const LabelPopupCreateLabel = (props: LabelPopupCreateLabelProps) => {
 
       <div className="flex flex-col gap-1 w-full items-center p-4 bg-lightGray4">
         <Label
-          color={labelData.color}
-          name={labelData.name}
+          color={labelData?.color ?? ''}
+          name={labelData?.name ?? ''}
           className="w-full min-h-[32px] flex justify-center align-center"
         />
       </div>
@@ -82,9 +79,9 @@ export const LabelPopupCreateLabel = (props: LabelPopupCreateLabelProps) => {
           className="w-full"
           placeholder="Title"
           fill
-          value={labelData.name}
+          value={labelData?.name ?? ''}
           onChange={(evt) => {
-            setLabelData((prev) => ({ ...prev, name: evt.target.value }))
+            setLabelData({ ...(labelData as LabelFragmentFragment), name: evt.target.value })
           }}
         />
 
@@ -98,8 +95,8 @@ export const LabelPopupCreateLabel = (props: LabelPopupCreateLabelProps) => {
               <ColorSwatch
                 key={idx}
                 color={color}
-                selected={color === labelData['color']}
-                onClick={() => setLabelData((prev) => ({ ...prev, color: color }))}
+                selected={color === labelData?.['color']}
+                onClick={() => setLabelData({ ...(labelData as LabelFragmentFragment), color })}
               />
             ))}
           </div>
@@ -112,14 +109,14 @@ export const LabelPopupCreateLabel = (props: LabelPopupCreateLabelProps) => {
             icon={<FaTrashAlt className="text-white" />}
             intent="danger"
             fill
-            disabled={!labelData.name.length}
+            disabled={!labelData?.name?.length}
           />
 
           <Button
             icon={<ImCheckmark className="text-white" />}
             intent="success"
             fill
-            disabled={!labelData.name.length}
+            disabled={!labelData?.name?.length}
             onClick={handleCreateLabelButton}
           />
         </div>

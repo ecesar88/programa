@@ -6,15 +6,16 @@ import {
   LabelFragmentFragmentDoc
 } from '@renderer/queries/graphql/codegen/graphql'
 import { getAllMenuEntryLabels } from '@renderer/queries/operations/menu'
+import { labelDataAtom } from '@renderer/store/labelPopupContent'
 import { useQuery } from '@tanstack/react-query'
-import React, { useEffect, useState } from 'react'
+import { useSetAtom } from 'jotai'
+import { useEffect, useState } from 'react'
+import { debounce } from 'remeda'
 import { match } from 'ts-pattern'
 import { LabelPopupCheckboxLabel } from './LabelPopupCheckboxLabel'
-import { debounce } from 'remeda'
 
 type LabelPopupSelectLabelProps = {
   handleCreateNewLabelButton: () => void
-  setLabelData: React.Dispatch<React.SetStateAction<LabelFragmentFragment | undefined>>
 }
 
 export const LabelPopupSelectLabel = (props: LabelPopupSelectLabelProps) => {
@@ -51,6 +52,8 @@ export const LabelPopupSelectLabel = (props: LabelPopupSelectLabelProps) => {
     getPopupHeightBasedOnScreenSize()
   }, [])
 
+  const setLabelData = useSetAtom(labelDataAtom)
+
   const { data: menuEntryLabelData, isLoading: isLoadingMenuEntryLabelData } = useQuery({
     queryKey: ['getAllMenuEntryLabels'],
     queryFn: getAllMenuEntryLabels,
@@ -60,7 +63,7 @@ export const LabelPopupSelectLabel = (props: LabelPopupSelectLabelProps) => {
   })
 
   const handleOnEditLabel = (labelData: LabelFragmentFragment) => {
-    props.setLabelData(labelData)
+    setLabelData(labelData)
     props.handleCreateNewLabelButton()
   }
 
