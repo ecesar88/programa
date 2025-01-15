@@ -1,8 +1,8 @@
-import { LabelFragmentFragment } from '@renderer/queries/graphql/codegen/graphql'
+import { MenuEntryLabel_FragmentFragment } from '@renderer/queries/graphql/codegen/graphql'
 import { atom } from 'jotai'
 
 export interface LabelPopupContent {
-  labelData?: LabelFragmentFragment
+  labelData?: MenuEntryLabel_FragmentFragment
   isCreatingLabel: boolean
 }
 

@@ -186,7 +186,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
           //     result = parse.success
           //   })
 
-          if (key === 'name' && typeof value === 'string') return value.length <= 0
+          if (key === 'name' && typeof value === 'string') return (value?.length ?? 0) <= 0
           else if (key === 'price' && (typeof value === 'object' || typeof value == 'number'))
             return value === null || value <= 0 || isNaN(value)
 
@@ -199,6 +199,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
       return !emptyVariants.every((result) => result === false)
     },
     // Watch the form values as they change
+    // TODO - FIX THIS MESS
     [...variantNames, ...variantPrices]
   )
 

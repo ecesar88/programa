@@ -7,7 +7,7 @@ import ZodPlugin from '@pothos/plugin-zod'
 import { DateTimeResolver } from 'graphql-scalars'
 import { colorizeAsJSON, LOG_TYPE, logger } from '../utils/logger'
 import { Context } from './context'
-import { RecordNotFoundError } from './schema/_errors/errors'
+import { LengthError, RecordNotFoundError } from './schema/_errors/errors'
 import { fromError } from 'zod-validation-error'
 
 type SchemaType = {
@@ -31,7 +31,7 @@ type SchemaType = {
 export const builder = new SchemaBuilder<SchemaType>({
   plugins: [ErrorsPlugin, TracingPlugin, ZodPlugin, SimpleObjectsPlugin],
   errors: {
-    defaultTypes: [Error, RecordNotFoundError]
+    defaultTypes: [Error, RecordNotFoundError, LengthError]
   },
   zod: {
     // optionally customize how errors are formatted

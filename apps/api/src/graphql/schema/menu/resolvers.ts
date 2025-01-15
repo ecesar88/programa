@@ -9,7 +9,7 @@ import {
 import { colorizeAsJSON, LOG_TYPE, logger } from '../../../utils/logger'
 import { RecordNotFoundError } from '../_errors/errors'
 import { Id, Resolver } from '../sharedTypes'
-import { MenuEntryCreateOrUpdateInput } from './types'
+import { MenuEntryCreateOrUpdateInput, MenuEntryLabelInput } from './types'
 
 type UpdateMenuEntryInput = {
   id: number
@@ -271,6 +271,9 @@ export const searchMenuEntryLabels: Resolver<{ searchTerm: string }> = async (
     return await ctx.prisma.menuEntryLabel.findMany({
       orderBy: {
         id: 'desc'
+      },
+      where: {
+        name: { contains: args.searchTerm }
       }
     })
   } catch (_error) {
@@ -278,20 +281,68 @@ export const searchMenuEntryLabels: Resolver<{ searchTerm: string }> = async (
   }
 }
 
-export const createMenuEntryLabel: Resolver = async (_parent, args, ctx, _info) => {
-  logger({
-    level: LOG_TYPE.INFO,
-    message: `Creating menu entry label with data:`,
-    object: colorizeAsJSON(args)
-  })
+type CreateOrUpdateMenuEntryLabelArgs = {
+  data: (typeof MenuEntryLabelInput)['$inferInput']
+  id?: number | null
+}
+
+export const createOrUpdateMenuEntryLabel: Resolver<CreateOrUpdateMenuEntryLabelArgs> = async (
+  _parent,
+  args,
+  ctx,
+  _info
+) => {
+  const { id, data } = args
+
+  let menuEntryLabelToUpdate: MenuEntryLabel | null
+  if (id) {
+    menuEntryLabelToUpdate = await ctx.prisma.menuEntryLabel.findFirst({ where: { id } })
+
+    if (!menuEntryLabelToUpdate) {
+      throw new RecordNotFoundError(`MenuEntryLabel with id ${id}`)
+    }
+
+    try {
+      logger({
+        level: LOG_TYPE.INFO,
+        message: `Updating menu entry label (of id: ${id}) with data:`,
+        object: colorizeAsJSON(args.data)
+      })
+
+      return await ctx.prisma.menuEntryLabel.update({
+        where: {
+          id: menuEntryLabelToUpdate.id
+        },
+        data
+      })
+    } catch (error) {
+      logger({
+        level: LOG_TYPE.ERROR,
+        message: 'Error creating menu entry label',
+        object: colorizeAsJSON(JSON.parse(String(error)))
+      })
+
+      throw new Error('Error updating menu entry label')
+    }
+  }
 
   try {
-    return await ctx.prisma.menuEntryLabel.findMany({
-      orderBy: {
-        id: 'desc'
-      }
+    logger({
+      level: LOG_TYPE.INFO,
+      message: 'Creating menu entry label with data:',
+      object: colorizeAsJSON(args.data)
     })
-  } catch (_error) {
+
+    return await ctx.prisma.menuEntryLabel.create({
+      data
+    })
+  } catch (error) {
+    logger({
+      level: LOG_TYPE.ERROR,
+      message: 'Error creating menu entry label',
+      object: colorizeAsJSON(JSON.parse(String(error)))
+    })
+
     throw new Error('Error creating menu entry label')
   }
 }
@@ -302,7 +353,7 @@ export const deleteMenuEntryLabel: Resolver<Id> = async (_parent, args, ctx, _in
   const menuEntryLabelToRemove = await ctx.prisma.menuEntryLabel.findFirst({ where: { id } })
 
   if (!menuEntryLabelToRemove) {
-    throw new RecordNotFoundError(`Menu entry label with id ${id}`)
+    throw new RecordNotFoundError(`MenuEntryLabel with id ${id}`)
   }
 
   logger({
@@ -318,6 +369,6 @@ export const deleteMenuEntryLabel: Resolver<Id> = async (_parent, args, ctx, _in
       }
     })
   } catch (_error) {
-    throw new Error(`Error deleting menu entry label with id: ${id}`)
+    throw new Error(`Error deleting MenuEntryLabel with id: ${id}`)
   }
 }

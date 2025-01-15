@@ -20,106 +20,106 @@ export type Scalars = {
 
 export type BaseError = Error & {
   __typename?: 'BaseError';
-  message: Maybe<Scalars['String']['output']>;
+  message?: Maybe<Scalars['String']['output']>;
 };
 
-/** Long necks, cool patterns, taller than you. */
+/** A client/customer on the application */
 export type Client = {
   __typename?: 'Client';
-  id: Maybe<Scalars['Int']['output']>;
-  name: Maybe<Scalars['String']['output']>;
-  phone: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  phone?: Maybe<Scalars['String']['output']>;
 };
 
 export type ClientCreateOrUpdateInput = {
   name: Scalars['String']['input'];
-  phone: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Error = {
-  message: Maybe<Scalars['String']['output']>;
+  message?: Maybe<Scalars['String']['output']>;
 };
 
 export type LengthError = Error & {
   __typename?: 'LengthError';
-  message: Maybe<Scalars['String']['output']>;
-  minLength: Maybe<Scalars['Int']['output']>;
+  message?: Maybe<Scalars['String']['output']>;
+  minLength?: Maybe<Scalars['Int']['output']>;
 };
 
 /** An entry on the menu */
 export type MenuEntry = {
   __typename?: 'MenuEntry';
-  description: Maybe<Scalars['String']['output']>;
-  id: Maybe<Scalars['Int']['output']>;
-  labels: Maybe<Array<MenuEntryLabel>>;
-  name: Maybe<Scalars['String']['output']>;
-  variants: Maybe<Array<MenuEntryVariant>>;
+  description?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  labels?: Maybe<Array<MenuEntryLabel>>;
+  name?: Maybe<Scalars['String']['output']>;
+  variants?: Maybe<Array<MenuEntryVariant>>;
 };
 
 /** The category of a specific MenuEntry. This can be used to sort products by type, such as drinks, meats, grains, etc */
 export type MenuEntryCategory = {
   __typename?: 'MenuEntryCategory';
-  id: Maybe<Scalars['Int']['output']>;
-  name: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
 };
 
 export type MenuEntryCategoryInput = {
-  name: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Input to create a new MenuEntry */
 export type MenuEntryInput = {
-  categories: InputMaybe<Array<MenuEntryCategoryInput>>;
-  description: InputMaybe<Scalars['String']['input']>;
-  labels: InputMaybe<Array<MenuEntryLabelInput>>;
+  categories?: InputMaybe<Array<MenuEntryCategoryInput>>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  labels?: InputMaybe<Array<MenuEntryLabelInput>>;
   name: Scalars['String']['input'];
-  variants: InputMaybe<Array<MenuEntryVariantInput>>;
+  variants?: InputMaybe<Array<MenuEntryVariantInput>>;
 };
 
 /** A label on the MenuEntryObject type. This can be used to categorize MenuEntries with different labels. */
 export type MenuEntryLabel = {
   __typename?: 'MenuEntryLabel';
-  color: Maybe<Scalars['String']['output']>;
-  id: Maybe<Scalars['Int']['output']>;
-  name: Maybe<Scalars['String']['output']>;
+  color?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
 };
 
 export type MenuEntryLabelInput = {
-  color: InputMaybe<Scalars['String']['input']>;
-  name: InputMaybe<Scalars['String']['input']>;
+  color?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A variant on the MenuEntry, this can be a different sized or flavored product */
 export type MenuEntryVariant = {
   __typename?: 'MenuEntryVariant';
-  description: Maybe<Scalars['String']['output']>;
-  id: Maybe<Scalars['Int']['output']>;
-  name: Maybe<Scalars['String']['output']>;
-  price: Maybe<Scalars['Float']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  price?: Maybe<Scalars['Float']['output']>;
 };
 
 export type MenuEntryVariantInput = {
-  description: InputMaybe<Scalars['String']['input']>;
-  name: InputMaybe<Scalars['String']['input']>;
-  price: InputMaybe<Scalars['Float']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  price?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createClient: Maybe<Client>;
-  createMenuEntry: Maybe<MenuEntry>;
-  createMenuEntryLabel: Maybe<Array<MenuEntryLabel>>;
-  deleteClient: Maybe<MutationDeleteClientResult>;
-  deleteMenuEntry: Maybe<MutationDeleteMenuEntryResult>;
-  deleteMenuEntryLabel: Maybe<MutationDeleteMenuEntryLabelResult>;
-  updateClient: Maybe<Client>;
-  updateMenuEntry: Maybe<MutationUpdateMenuEntryResult>;
+  createClient?: Maybe<Client>;
+  createMenuEntry?: Maybe<MenuEntry>;
+  createOrUpdateMenuEntryLabel?: Maybe<MutationCreateOrUpdateMenuEntryLabelResult>;
+  deleteClient?: Maybe<MutationDeleteClientResult>;
+  deleteMenuEntry?: Maybe<MutationDeleteMenuEntryResult>;
+  deleteMenuEntryLabel?: Maybe<MutationDeleteMenuEntryLabelResult>;
+  updateClient?: Maybe<Client>;
+  updateMenuEntry?: Maybe<MutationUpdateMenuEntryResult>;
 };
 
 
 export type MutationCreateClientArgs = {
   name: Scalars['String']['input'];
-  phone: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -128,8 +128,9 @@ export type MutationCreateMenuEntryArgs = {
 };
 
 
-export type MutationCreateMenuEntryLabelArgs = {
+export type MutationCreateOrUpdateMenuEntryLabelArgs = {
   data: MenuEntryLabelInput;
+  id?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -159,28 +160,35 @@ export type MutationUpdateMenuEntryArgs = {
   id: Scalars['Int']['input'];
 };
 
-export type MutationDeleteClientResult = BaseError | MutationDeleteClientSuccess | RecordNotFoundError;
+export type MutationCreateOrUpdateMenuEntryLabelResult = BaseError | LengthError | MutationCreateOrUpdateMenuEntryLabelSuccess | RecordNotFoundError;
+
+export type MutationCreateOrUpdateMenuEntryLabelSuccess = {
+  __typename?: 'MutationCreateOrUpdateMenuEntryLabelSuccess';
+  data: MenuEntryLabel;
+};
+
+export type MutationDeleteClientResult = BaseError | LengthError | MutationDeleteClientSuccess | RecordNotFoundError;
 
 export type MutationDeleteClientSuccess = {
   __typename?: 'MutationDeleteClientSuccess';
   data: Client;
 };
 
-export type MutationDeleteMenuEntryLabelResult = BaseError | MutationDeleteMenuEntryLabelSuccess | RecordNotFoundError;
+export type MutationDeleteMenuEntryLabelResult = BaseError | LengthError | MutationDeleteMenuEntryLabelSuccess | RecordNotFoundError;
 
 export type MutationDeleteMenuEntryLabelSuccess = {
   __typename?: 'MutationDeleteMenuEntryLabelSuccess';
-  data: Array<MenuEntryLabel>;
+  data: MenuEntryLabel;
 };
 
-export type MutationDeleteMenuEntryResult = BaseError | MutationDeleteMenuEntrySuccess | RecordNotFoundError;
+export type MutationDeleteMenuEntryResult = BaseError | LengthError | MutationDeleteMenuEntrySuccess | RecordNotFoundError;
 
 export type MutationDeleteMenuEntrySuccess = {
   __typename?: 'MutationDeleteMenuEntrySuccess';
   data: MenuEntry;
 };
 
-export type MutationUpdateMenuEntryResult = BaseError | MutationUpdateMenuEntrySuccess | RecordNotFoundError;
+export type MutationUpdateMenuEntryResult = BaseError | LengthError | MutationUpdateMenuEntrySuccess | RecordNotFoundError;
 
 export type MutationUpdateMenuEntrySuccess = {
   __typename?: 'MutationUpdateMenuEntrySuccess';
@@ -189,12 +197,12 @@ export type MutationUpdateMenuEntrySuccess = {
 
 export type Query = {
   __typename?: 'Query';
-  getAllClients: Maybe<Array<Client>>;
-  getAllMenuEntries: Maybe<Array<MenuEntry>>;
-  getAllMenuEntryLabels: Maybe<Array<MenuEntryLabel>>;
-  getClientById: Maybe<QueryGetClientByIdResult>;
-  getMenuEntryById: Maybe<QueryGetMenuEntryByIdResult>;
-  searchClients: Maybe<Array<Client>>;
+  getAllClients?: Maybe<Array<Client>>;
+  getAllMenuEntries?: Maybe<Array<MenuEntry>>;
+  getAllMenuEntryLabels?: Maybe<Array<MenuEntryLabel>>;
+  getClientById?: Maybe<QueryGetClientByIdResult>;
+  getMenuEntryById?: Maybe<QueryGetMenuEntryByIdResult>;
+  searchClients?: Maybe<Array<Client>>;
 };
 
 
@@ -227,14 +235,14 @@ export type QuerySearchClientsArgs = {
   search: Scalars['String']['input'];
 };
 
-export type QueryGetClientByIdResult = BaseError | QueryGetClientByIdSuccess | RecordNotFoundError;
+export type QueryGetClientByIdResult = BaseError | LengthError | QueryGetClientByIdSuccess | RecordNotFoundError;
 
 export type QueryGetClientByIdSuccess = {
   __typename?: 'QueryGetClientByIdSuccess';
   data: Client;
 };
 
-export type QueryGetMenuEntryByIdResult = BaseError | QueryGetMenuEntryByIdSuccess | RecordNotFoundError;
+export type QueryGetMenuEntryByIdResult = BaseError | LengthError | QueryGetMenuEntryByIdSuccess | RecordNotFoundError;
 
 export type QueryGetMenuEntryByIdSuccess = {
   __typename?: 'QueryGetMenuEntryByIdSuccess';
@@ -243,18 +251,18 @@ export type QueryGetMenuEntryByIdSuccess = {
 
 export type RecordNotFoundError = Error & {
   __typename?: 'RecordNotFoundError';
-  message: Maybe<Scalars['String']['output']>;
+  message?: Maybe<Scalars['String']['output']>;
 };
 
-export type ClientFragmentFragment = { __typename?: 'Client', id: number | null, name: string | null, phone: string | null } & { ' $fragmentName'?: 'ClientFragmentFragment' };
+export type ClientFragmentFragment = { __typename?: 'Client', id?: number | null, name?: string | null, phone?: string | null } & { ' $fragmentName'?: 'ClientFragmentFragment' };
 
 export type CreateClientMutationVariables = Exact<{
   name: Scalars['String']['input'];
-  phone: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type CreateClientMutation = { __typename?: 'Mutation', createClient: (
+export type CreateClientMutation = { __typename?: 'Mutation', createClient?: (
     { __typename?: 'Client' }
     & { ' $fragmentRefs'?: { 'ClientFragmentFragment': ClientFragmentFragment } }
   ) | null };
@@ -265,7 +273,7 @@ export type UpdateClientByIdMutationVariables = Exact<{
 }>;
 
 
-export type UpdateClientByIdMutation = { __typename?: 'Mutation', updateClient: (
+export type UpdateClientByIdMutation = { __typename?: 'Mutation', updateClient?: (
     { __typename?: 'Client' }
     & { ' $fragmentRefs'?: { 'ClientFragmentFragment': ClientFragmentFragment } }
   ) | null };
@@ -275,17 +283,17 @@ export type DeleteClientByIdMutationVariables = Exact<{
 }>;
 
 
-export type DeleteClientByIdMutation = { __typename?: 'Mutation', deleteClient: { __typename?: 'BaseError' } | { __typename?: 'MutationDeleteClientSuccess', data: (
+export type DeleteClientByIdMutation = { __typename?: 'Mutation', deleteClient?: { __typename?: 'BaseError' } | { __typename?: 'LengthError' } | { __typename?: 'MutationDeleteClientSuccess', data: (
       { __typename?: 'Client' }
       & { ' $fragmentRefs'?: { 'ClientFragmentFragment': ClientFragmentFragment } }
-    ) } | { __typename?: 'RecordNotFoundError', message: string | null } | null };
+    ) } | { __typename?: 'RecordNotFoundError', message?: string | null } | null };
 
 export type GetAllClientsQueryVariables = Exact<{
-  page: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type GetAllClientsQuery = { __typename?: 'Query', getAllClients: Array<(
+export type GetAllClientsQuery = { __typename?: 'Query', getAllClients?: Array<(
     { __typename?: 'Client' }
     & { ' $fragmentRefs'?: { 'ClientFragmentFragment': ClientFragmentFragment } }
   )> | null };
@@ -295,35 +303,35 @@ export type GetClientByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetClientByIdQuery = { __typename?: 'Query', getClientById: { __typename?: 'BaseError' } | { __typename?: 'QueryGetClientByIdSuccess', data: (
+export type GetClientByIdQuery = { __typename?: 'Query', getClientById?: { __typename?: 'BaseError' } | { __typename?: 'LengthError' } | { __typename?: 'QueryGetClientByIdSuccess', data: (
       { __typename?: 'Client' }
       & { ' $fragmentRefs'?: { 'ClientFragmentFragment': ClientFragmentFragment } }
-    ) } | { __typename?: 'RecordNotFoundError', message: string | null } | null };
+    ) } | { __typename?: 'RecordNotFoundError', message?: string | null } | null };
 
-export type VariantFragmentFragment = { __typename?: 'MenuEntryVariant', name: string | null, description: string | null, price: number | null } & { ' $fragmentName'?: 'VariantFragmentFragment' };
+export type MenuEntryVariant_FragmentFragment = { __typename?: 'MenuEntryVariant', name?: string | null, description?: string | null, price?: number | null } & { ' $fragmentName'?: 'MenuEntryVariant_FragmentFragment' };
 
-export type LabelFragmentFragment = { __typename?: 'MenuEntryLabel', id: number | null, name: string | null, color: string | null } & { ' $fragmentName'?: 'LabelFragmentFragment' };
+export type MenuEntryLabel_FragmentFragment = { __typename?: 'MenuEntryLabel', id?: number | null, name?: string | null, color?: string | null } & { ' $fragmentName'?: 'MenuEntryLabel_FragmentFragment' };
 
-export type MenuEntryFragmentFragment = { __typename?: 'MenuEntry', id: number | null, name: string | null, description: string | null, labels: Array<(
+export type MenuEntry_FragmentFragment = { __typename?: 'MenuEntry', id?: number | null, name?: string | null, description?: string | null, labels?: Array<(
     { __typename?: 'MenuEntryLabel' }
-    & { ' $fragmentRefs'?: { 'LabelFragmentFragment': LabelFragmentFragment } }
-  )> | null, variants: Array<(
+    & { ' $fragmentRefs'?: { 'MenuEntryLabel_FragmentFragment': MenuEntryLabel_FragmentFragment } }
+  )> | null, variants?: Array<(
     { __typename?: 'MenuEntryVariant' }
-    & { ' $fragmentRefs'?: { 'VariantFragmentFragment': VariantFragmentFragment } }
-  )> | null } & { ' $fragmentName'?: 'MenuEntryFragmentFragment' };
+    & { ' $fragmentRefs'?: { 'MenuEntryVariant_FragmentFragment': MenuEntryVariant_FragmentFragment } }
+  )> | null } & { ' $fragmentName'?: 'MenuEntry_FragmentFragment' };
 
-export type RecordNotFoundErrorFragmentFragment = { __typename: 'RecordNotFoundError', message: string | null } & { ' $fragmentName'?: 'RecordNotFoundErrorFragmentFragment' };
+export type RecordNotFoundError_FragmentFragment = { __typename: 'RecordNotFoundError', message?: string | null } & { ' $fragmentName'?: 'RecordNotFoundError_FragmentFragment' };
 
-export type BaseErrorFragmentFragment = { __typename: 'BaseError', message: string | null } & { ' $fragmentName'?: 'BaseErrorFragmentFragment' };
+export type BaseError_FragmentFragment = { __typename: 'BaseError', message?: string | null } & { ' $fragmentName'?: 'BaseError_FragmentFragment' };
 
 export type CreateMenuEntryMutationVariables = Exact<{
   data: MenuEntryInput;
 }>;
 
 
-export type CreateMenuEntryMutation = { __typename?: 'Mutation', createMenuEntry: (
+export type CreateMenuEntryMutation = { __typename?: 'Mutation', createMenuEntry?: (
     { __typename?: 'MenuEntry' }
-    & { ' $fragmentRefs'?: { 'MenuEntryFragmentFragment': MenuEntryFragmentFragment } }
+    & { ' $fragmentRefs'?: { 'MenuEntry_FragmentFragment': MenuEntry_FragmentFragment } }
   ) | null };
 
 export type UpdateMenuEntryMutationVariables = Exact<{
@@ -332,15 +340,15 @@ export type UpdateMenuEntryMutationVariables = Exact<{
 }>;
 
 
-export type UpdateMenuEntryMutation = { __typename?: 'Mutation', updateMenuEntry: (
+export type UpdateMenuEntryMutation = { __typename?: 'Mutation', updateMenuEntry?: (
     { __typename?: 'BaseError' }
-    & { ' $fragmentRefs'?: { 'BaseErrorFragmentFragment': BaseErrorFragmentFragment } }
-  ) | { __typename?: 'MutationUpdateMenuEntrySuccess', data: (
+    & { ' $fragmentRefs'?: { 'BaseError_FragmentFragment': BaseError_FragmentFragment } }
+  ) | { __typename?: 'LengthError' } | { __typename?: 'MutationUpdateMenuEntrySuccess', data: (
       { __typename?: 'MenuEntry' }
-      & { ' $fragmentRefs'?: { 'MenuEntryFragmentFragment': MenuEntryFragmentFragment } }
+      & { ' $fragmentRefs'?: { 'MenuEntry_FragmentFragment': MenuEntry_FragmentFragment } }
     ) } | (
     { __typename?: 'RecordNotFoundError' }
-    & { ' $fragmentRefs'?: { 'RecordNotFoundErrorFragmentFragment': RecordNotFoundErrorFragmentFragment } }
+    & { ' $fragmentRefs'?: { 'RecordNotFoundError_FragmentFragment': RecordNotFoundError_FragmentFragment } }
   ) | null };
 
 export type DeleteMenuEntryMutationVariables = Exact<{
@@ -348,67 +356,93 @@ export type DeleteMenuEntryMutationVariables = Exact<{
 }>;
 
 
-export type DeleteMenuEntryMutation = { __typename?: 'Mutation', deleteMenuEntry: (
+export type DeleteMenuEntryMutation = { __typename?: 'Mutation', deleteMenuEntry?: (
     { __typename?: 'BaseError' }
-    & { ' $fragmentRefs'?: { 'BaseErrorFragmentFragment': BaseErrorFragmentFragment } }
-  ) | { __typename?: 'MutationDeleteMenuEntrySuccess', data: (
+    & { ' $fragmentRefs'?: { 'BaseError_FragmentFragment': BaseError_FragmentFragment } }
+  ) | { __typename?: 'LengthError' } | { __typename?: 'MutationDeleteMenuEntrySuccess', data: (
       { __typename?: 'MenuEntry' }
-      & { ' $fragmentRefs'?: { 'MenuEntryFragmentFragment': MenuEntryFragmentFragment } }
+      & { ' $fragmentRefs'?: { 'MenuEntry_FragmentFragment': MenuEntry_FragmentFragment } }
     ) } | (
     { __typename?: 'RecordNotFoundError' }
-    & { ' $fragmentRefs'?: { 'RecordNotFoundErrorFragmentFragment': RecordNotFoundErrorFragmentFragment } }
+    & { ' $fragmentRefs'?: { 'RecordNotFoundError_FragmentFragment': RecordNotFoundError_FragmentFragment } }
   ) | null };
 
 export type GetAllMenuEntriesQueryVariables = Exact<{
-  page: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type GetAllMenuEntriesQuery = { __typename?: 'Query', getAllMenuEntries: Array<(
+export type GetAllMenuEntriesQuery = { __typename?: 'Query', getAllMenuEntries?: Array<(
     { __typename?: 'MenuEntry' }
-    & { ' $fragmentRefs'?: { 'MenuEntryFragmentFragment': MenuEntryFragmentFragment } }
+    & { ' $fragmentRefs'?: { 'MenuEntry_FragmentFragment': MenuEntry_FragmentFragment } }
   )> | null };
 
 export type GetAllMenuEntryLabelsQueryVariables = Exact<{
-  page: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type GetAllMenuEntryLabelsQuery = { __typename?: 'Query', getAllMenuEntryLabels: Array<(
+export type GetAllMenuEntryLabelsQuery = { __typename?: 'Query', getAllMenuEntryLabels?: Array<(
     { __typename?: 'MenuEntryLabel' }
-    & { ' $fragmentRefs'?: { 'LabelFragmentFragment': LabelFragmentFragment } }
+    & { ' $fragmentRefs'?: { 'MenuEntryLabel_FragmentFragment': MenuEntryLabel_FragmentFragment } }
   )> | null };
+
+export type CreateOrUpdateMenuEntryLabelMutationVariables = Exact<{
+  id?: InputMaybe<Scalars['Int']['input']>;
+  data: MenuEntryLabelInput;
+}>;
+
+
+export type CreateOrUpdateMenuEntryLabelMutation = { __typename?: 'Mutation', createOrUpdateMenuEntryLabel?: (
+    { __typename?: 'BaseError' }
+    & { ' $fragmentRefs'?: { 'BaseError_FragmentFragment': BaseError_FragmentFragment } }
+  ) | { __typename?: 'LengthError' } | { __typename?: 'MutationCreateOrUpdateMenuEntryLabelSuccess', data: (
+      { __typename?: 'MenuEntryLabel' }
+      & { ' $fragmentRefs'?: { 'MenuEntryLabel_FragmentFragment': MenuEntryLabel_FragmentFragment } }
+    ) } | (
+    { __typename?: 'RecordNotFoundError' }
+    & { ' $fragmentRefs'?: { 'RecordNotFoundError_FragmentFragment': RecordNotFoundError_FragmentFragment } }
+  ) | null };
 
 export type GetMenuEntryByIdQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
 
-export type GetMenuEntryByIdQuery = { __typename?: 'Query', getMenuEntryById: (
+export type GetMenuEntryByIdQuery = { __typename?: 'Query', getMenuEntryById?: (
     { __typename?: 'BaseError' }
-    & { ' $fragmentRefs'?: { 'BaseErrorFragmentFragment': BaseErrorFragmentFragment } }
-  ) | { __typename?: 'QueryGetMenuEntryByIdSuccess', data: (
+    & { ' $fragmentRefs'?: { 'BaseError_FragmentFragment': BaseError_FragmentFragment } }
+  ) | { __typename?: 'LengthError' } | { __typename?: 'QueryGetMenuEntryByIdSuccess', data: (
       { __typename?: 'MenuEntry' }
-      & { ' $fragmentRefs'?: { 'MenuEntryFragmentFragment': MenuEntryFragmentFragment } }
+      & { ' $fragmentRefs'?: { 'MenuEntry_FragmentFragment': MenuEntry_FragmentFragment } }
     ) } | (
     { __typename?: 'RecordNotFoundError' }
-    & { ' $fragmentRefs'?: { 'RecordNotFoundErrorFragmentFragment': RecordNotFoundErrorFragmentFragment } }
+    & { ' $fragmentRefs'?: { 'RecordNotFoundError_FragmentFragment': RecordNotFoundError_FragmentFragment } }
   ) | null };
 
+export type DeleteMenuEntryLabelMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type DeleteMenuEntryLabelMutation = { __typename?: 'Mutation', deleteMenuEntryLabel?: { __typename?: 'BaseError', message?: string | null } | { __typename?: 'LengthError' } | { __typename?: 'MutationDeleteMenuEntryLabelSuccess', data: { __typename?: 'MenuEntryLabel', id?: number | null, name?: string | null, color?: string | null } } | { __typename?: 'RecordNotFoundError', message?: string | null } | null };
+
 export const ClientFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"clientFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Client"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}}]}}]} as unknown as DocumentNode<ClientFragmentFragment, unknown>;
-export const LabelFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"labelFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryLabel"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}}]} as unknown as DocumentNode<LabelFragmentFragment, unknown>;
-export const VariantFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"variantFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryVariant"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"price"}}]}}]} as unknown as DocumentNode<VariantFragmentFragment, unknown>;
-export const MenuEntryFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"menuEntryFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntry"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"labels"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"labelFragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"variants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"variantFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"labelFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryLabel"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"variantFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryVariant"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"price"}}]}}]} as unknown as DocumentNode<MenuEntryFragmentFragment, unknown>;
-export const RecordNotFoundErrorFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"recordNotFoundErrorFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RecordNotFoundError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]} as unknown as DocumentNode<RecordNotFoundErrorFragmentFragment, unknown>;
-export const BaseErrorFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"baseErrorFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BaseError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]} as unknown as DocumentNode<BaseErrorFragmentFragment, unknown>;
+export const MenuEntryLabel_FragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MenuEntryLabel_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryLabel"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}}]} as unknown as DocumentNode<MenuEntryLabel_FragmentFragment, unknown>;
+export const MenuEntryVariant_FragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MenuEntryVariant_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryVariant"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"price"}}]}}]} as unknown as DocumentNode<MenuEntryVariant_FragmentFragment, unknown>;
+export const MenuEntry_FragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MenuEntry_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntry"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"labels"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MenuEntryLabel_Fragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"variants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MenuEntryVariant_Fragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MenuEntryLabel_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryLabel"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MenuEntryVariant_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryVariant"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"price"}}]}}]} as unknown as DocumentNode<MenuEntry_FragmentFragment, unknown>;
+export const RecordNotFoundError_FragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RecordNotFoundError_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RecordNotFoundError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]} as unknown as DocumentNode<RecordNotFoundError_FragmentFragment, unknown>;
+export const BaseError_FragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"BaseError_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BaseError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]} as unknown as DocumentNode<BaseError_FragmentFragment, unknown>;
 export const CreateClientDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createClient"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"phone"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createClient"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"Argument","name":{"kind":"Name","value":"phone"},"value":{"kind":"Variable","name":{"kind":"Name","value":"phone"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"clientFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"clientFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Client"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}}]}}]} as unknown as DocumentNode<CreateClientMutation, CreateClientMutationVariables>;
 export const UpdateClientByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateClientById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ClientCreateOrUpdateInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateClient"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"clientFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"clientFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Client"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}}]}}]} as unknown as DocumentNode<UpdateClientByIdMutation, UpdateClientByIdMutationVariables>;
 export const DeleteClientByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"deleteClientById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteClient"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MutationDeleteClientSuccess"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"clientFragment"}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RecordNotFoundError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"clientFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Client"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}}]}}]} as unknown as DocumentNode<DeleteClientByIdMutation, DeleteClientByIdMutationVariables>;
 export const GetAllClientsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getAllClients"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"page"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getAllClients"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"page"},"value":{"kind":"Variable","name":{"kind":"Name","value":"page"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"clientFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"clientFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Client"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}}]}}]} as unknown as DocumentNode<GetAllClientsQuery, GetAllClientsQueryVariables>;
 export const GetClientByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getClientById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getClientById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RecordNotFoundError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"QueryGetClientByIdSuccess"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"clientFragment"}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"clientFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Client"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}}]}}]} as unknown as DocumentNode<GetClientByIdQuery, GetClientByIdQueryVariables>;
-export const CreateMenuEntryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createMenuEntry"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createMenuEntry"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"menuEntryFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"labelFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryLabel"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"variantFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryVariant"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"price"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"menuEntryFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntry"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"labels"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"labelFragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"variants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"variantFragment"}}]}}]}}]} as unknown as DocumentNode<CreateMenuEntryMutation, CreateMenuEntryMutationVariables>;
-export const UpdateMenuEntryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateMenuEntry"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateMenuEntry"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BaseError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"baseErrorFragment"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RecordNotFoundError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"recordNotFoundErrorFragment"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MutationUpdateMenuEntrySuccess"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"menuEntryFragment"}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"labelFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryLabel"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"variantFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryVariant"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"price"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"baseErrorFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BaseError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"recordNotFoundErrorFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RecordNotFoundError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"menuEntryFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntry"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"labels"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"labelFragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"variants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"variantFragment"}}]}}]}}]} as unknown as DocumentNode<UpdateMenuEntryMutation, UpdateMenuEntryMutationVariables>;
-export const DeleteMenuEntryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"deleteMenuEntry"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteMenuEntry"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BaseError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"baseErrorFragment"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RecordNotFoundError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"recordNotFoundErrorFragment"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MutationDeleteMenuEntrySuccess"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"menuEntryFragment"}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"labelFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryLabel"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"variantFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryVariant"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"price"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"baseErrorFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BaseError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"recordNotFoundErrorFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RecordNotFoundError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"menuEntryFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntry"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"labels"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"labelFragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"variants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"variantFragment"}}]}}]}}]} as unknown as DocumentNode<DeleteMenuEntryMutation, DeleteMenuEntryMutationVariables>;
-export const GetAllMenuEntriesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getAllMenuEntries"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"page"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getAllMenuEntries"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"page"},"value":{"kind":"Variable","name":{"kind":"Name","value":"page"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"menuEntryFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"labelFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryLabel"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"variantFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryVariant"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"price"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"menuEntryFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntry"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"labels"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"labelFragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"variants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"variantFragment"}}]}}]}}]} as unknown as DocumentNode<GetAllMenuEntriesQuery, GetAllMenuEntriesQueryVariables>;
-export const GetAllMenuEntryLabelsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getAllMenuEntryLabels"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"page"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getAllMenuEntryLabels"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"page"},"value":{"kind":"Variable","name":{"kind":"Name","value":"page"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"labelFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"labelFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryLabel"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}}]} as unknown as DocumentNode<GetAllMenuEntryLabelsQuery, GetAllMenuEntryLabelsQueryVariables>;
-export const GetMenuEntryByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getMenuEntryById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getMenuEntryById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BaseError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"baseErrorFragment"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RecordNotFoundError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"recordNotFoundErrorFragment"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"QueryGetMenuEntryByIdSuccess"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"menuEntryFragment"}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"labelFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryLabel"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"variantFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryVariant"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"price"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"baseErrorFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BaseError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"recordNotFoundErrorFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RecordNotFoundError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"menuEntryFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntry"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"labels"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"labelFragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"variants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"variantFragment"}}]}}]}}]} as unknown as DocumentNode<GetMenuEntryByIdQuery, GetMenuEntryByIdQueryVariables>;
+export const CreateMenuEntryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createMenuEntry"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createMenuEntry"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MenuEntry_Fragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MenuEntryLabel_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryLabel"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MenuEntryVariant_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryVariant"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"price"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MenuEntry_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntry"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"labels"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MenuEntryLabel_Fragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"variants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MenuEntryVariant_Fragment"}}]}}]}}]} as unknown as DocumentNode<CreateMenuEntryMutation, CreateMenuEntryMutationVariables>;
+export const UpdateMenuEntryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateMenuEntry"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateMenuEntry"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BaseError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"BaseError_Fragment"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RecordNotFoundError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"RecordNotFoundError_Fragment"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MutationUpdateMenuEntrySuccess"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MenuEntry_Fragment"}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MenuEntryLabel_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryLabel"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MenuEntryVariant_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryVariant"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"price"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"BaseError_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BaseError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RecordNotFoundError_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RecordNotFoundError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MenuEntry_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntry"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"labels"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MenuEntryLabel_Fragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"variants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MenuEntryVariant_Fragment"}}]}}]}}]} as unknown as DocumentNode<UpdateMenuEntryMutation, UpdateMenuEntryMutationVariables>;
+export const DeleteMenuEntryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"deleteMenuEntry"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteMenuEntry"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BaseError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"BaseError_Fragment"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RecordNotFoundError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"RecordNotFoundError_Fragment"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MutationDeleteMenuEntrySuccess"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MenuEntry_Fragment"}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MenuEntryLabel_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryLabel"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MenuEntryVariant_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryVariant"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"price"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"BaseError_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BaseError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RecordNotFoundError_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RecordNotFoundError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MenuEntry_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntry"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"labels"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MenuEntryLabel_Fragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"variants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MenuEntryVariant_Fragment"}}]}}]}}]} as unknown as DocumentNode<DeleteMenuEntryMutation, DeleteMenuEntryMutationVariables>;
+export const GetAllMenuEntriesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getAllMenuEntries"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"page"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getAllMenuEntries"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"page"},"value":{"kind":"Variable","name":{"kind":"Name","value":"page"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MenuEntry_Fragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MenuEntryLabel_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryLabel"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MenuEntryVariant_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryVariant"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"price"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MenuEntry_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntry"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"labels"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MenuEntryLabel_Fragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"variants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MenuEntryVariant_Fragment"}}]}}]}}]} as unknown as DocumentNode<GetAllMenuEntriesQuery, GetAllMenuEntriesQueryVariables>;
+export const GetAllMenuEntryLabelsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getAllMenuEntryLabels"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"page"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getAllMenuEntryLabels"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"page"},"value":{"kind":"Variable","name":{"kind":"Name","value":"page"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MenuEntryLabel_Fragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MenuEntryLabel_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryLabel"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}}]} as unknown as DocumentNode<GetAllMenuEntryLabelsQuery, GetAllMenuEntryLabelsQueryVariables>;
+export const CreateOrUpdateMenuEntryLabelDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createOrUpdateMenuEntryLabel"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryLabelInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createOrUpdateMenuEntryLabel"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BaseError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"BaseError_Fragment"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RecordNotFoundError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"RecordNotFoundError_Fragment"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MutationCreateOrUpdateMenuEntryLabelSuccess"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MenuEntryLabel_Fragment"}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"BaseError_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BaseError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RecordNotFoundError_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RecordNotFoundError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MenuEntryLabel_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryLabel"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}}]} as unknown as DocumentNode<CreateOrUpdateMenuEntryLabelMutation, CreateOrUpdateMenuEntryLabelMutationVariables>;
+export const GetMenuEntryByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getMenuEntryById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getMenuEntryById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BaseError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"BaseError_Fragment"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RecordNotFoundError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"RecordNotFoundError_Fragment"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"QueryGetMenuEntryByIdSuccess"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MenuEntry_Fragment"}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MenuEntryLabel_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryLabel"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MenuEntryVariant_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntryVariant"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"price"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"BaseError_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BaseError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RecordNotFoundError_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RecordNotFoundError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MenuEntry_Fragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MenuEntry"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"labels"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MenuEntryLabel_Fragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"variants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MenuEntryVariant_Fragment"}}]}}]}}]} as unknown as DocumentNode<GetMenuEntryByIdQuery, GetMenuEntryByIdQueryVariables>;
+export const DeleteMenuEntryLabelDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"deleteMenuEntryLabel"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteMenuEntryLabel"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BaseError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RecordNotFoundError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MutationDeleteMenuEntryLabelSuccess"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}}]}}]}}]}}]} as unknown as DocumentNode<DeleteMenuEntryLabelMutation, DeleteMenuEntryLabelMutationVariables>;

@@ -2,7 +2,7 @@ spectaql:
   displayAllServers: true
 
 introspection:
-  url: http://localhost:3001/graphql
+  url: http://127.0.0.1:3001/graphql
   removeTrailingPeriodFromDescriptions: false
   queryNameStrategy: capitalizeFirst
   fieldExpansionDepth: 2

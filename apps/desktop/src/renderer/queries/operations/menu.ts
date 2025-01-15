@@ -1,11 +1,15 @@
 import { gqlClient } from '@renderer/config/gqlClientConfig'
 import {
   CreateMenuEntryMutationVariables,
+  CreateOrUpdateMenuEntryLabelMutationVariables,
   DeleteMenuEntryMutationVariables,
+  MutationDeleteMenuEntryLabelArgs,
   UpdateMenuEntryMutationVariables
 } from '../graphql/codegen/graphql'
 import {
   createMenuEntryMutationDocument,
+  createOrUpdateMenuEntryLabelMutationDocument,
+  deleteMenuEntryLabelMutationDocument,
   deleteMenuEntryMutationDocument,
   getAllMenuEntriesQueryDocument,
   getAllMenuEntryLabelsQueryDocument,
@@ -53,6 +57,27 @@ export const purge = async ({ id }: DeleteMenuEntryMutationVariables) => {
 export const getAllMenuEntryLabels = async () => {
   try {
     return await gqlClient.request(getAllMenuEntryLabelsQueryDocument, { page: 1 })
+  } catch (error) {
+    console.error(error)
+    return
+  }
+}
+
+export const createOrUpdateMenuEntryLabel = async ({
+  id,
+  data
+}: CreateOrUpdateMenuEntryLabelMutationVariables) => {
+  try {
+    return await gqlClient.request(createOrUpdateMenuEntryLabelMutationDocument, { id, data })
+  } catch (error) {
+    console.error(error)
+    return
+  }
+}
+
+export const deleteMenuEntryLabel = async ({ id }: MutationDeleteMenuEntryLabelArgs) => {
+  try {
+    return await gqlClient.request(deleteMenuEntryLabelMutationDocument, { id })
   } catch (error) {
     console.error(error)
     return

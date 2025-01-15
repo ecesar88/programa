@@ -2,11 +2,11 @@ import { Button } from '@blueprintjs/core'
 import { Input, Loading } from '@renderer/components'
 import { useFragment } from '@renderer/queries/graphql/codegen'
 import {
-  LabelFragmentFragment,
-  LabelFragmentFragmentDoc
+  MenuEntryLabel_FragmentFragment,
+  MenuEntryLabel_FragmentFragmentDoc
 } from '@renderer/queries/graphql/codegen/graphql'
 import { getAllMenuEntryLabels } from '@renderer/queries/operations/menu'
-import { labelDataAtom } from '@renderer/store/labelPopupContent'
+import { isCreatingLabelAtom, labelDataAtom } from '@renderer/store/labelPopupContent'
 import { useQuery } from '@tanstack/react-query'
 import { useSetAtom } from 'jotai'
 import { useEffect, useState } from 'react'
@@ -15,7 +15,7 @@ import { match } from 'ts-pattern'
 import { LabelPopupCheckboxLabel } from './LabelPopupCheckboxLabel'
 
 type LabelPopupSelectLabelProps = {
-  handleCreateNewLabelButton: () => void
+  data: MenuEntryLabel_FragmentFragment[]
 }
 
 export const LabelPopupSelectLabel = (props: LabelPopupSelectLabelProps) => {
@@ -53,6 +53,7 @@ export const LabelPopupSelectLabel = (props: LabelPopupSelectLabelProps) => {
   }, [])
 
   const setLabelData = useSetAtom(labelDataAtom)
+  const setIsCreatingLabel = useSetAtom(isCreatingLabelAtom)
 
   const { data: menuEntryLabelData, isLoading: isLoadingMenuEntryLabelData } = useQuery({
     queryKey: ['getAllMenuEntryLabels'],
@@ -62,9 +63,9 @@ export const LabelPopupSelectLabel = (props: LabelPopupSelectLabelProps) => {
     }
   })
 
-  const handleOnEditLabel = (labelData: LabelFragmentFragment) => {
+  const handleOnEditLabel = (labelData: MenuEntryLabel_FragmentFragment) => {
     setLabelData(labelData)
-    props.handleCreateNewLabelButton()
+    setIsCreatingLabel(true)
   }
 
   return (
@@ -86,7 +87,7 @@ export const LabelPopupSelectLabel = (props: LabelPopupSelectLabelProps) => {
           .with(true, () => <Loading />)
           .otherwise(() =>
             menuEntryLabelData?.getAllMenuEntryLabels?.map((label) => {
-              const labelData = useFragment(LabelFragmentFragmentDoc, label)
+              const labelData = useFragment(MenuEntryLabel_FragmentFragmentDoc, label)
 
               return (
                 <LabelPopupCheckboxLabel
@@ -114,7 +115,9 @@ export const LabelPopupSelectLabel = (props: LabelPopupSelectLabelProps) => {
       <div className="flex flex-col gap-2 w-full">
         <Button
           intent="none"
-          onClick={props.handleCreateNewLabelButton}
+          onClick={() => {
+            setIsCreatingLabel(true)
+          }}
           disabled={isLoadingMenuEntryLabelData}
           small
         >

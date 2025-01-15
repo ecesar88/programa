@@ -28,7 +28,9 @@ export { cn, parseEnv }
  * Get text color based on relative luminance of the background
  * https://www.w3.org/WAI/GL/wiki/Relative_luminance
  */
-export const getContrastingTextColor = (color: string) => {
+export const getContrastingTextColor = (color?: string) => {
+  if (!color) return 'white'
+
   // Convert hex color to RGB
   let r: number, g: number, b: number
   if (color.length === 4) {

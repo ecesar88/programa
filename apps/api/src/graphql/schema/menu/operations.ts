@@ -3,11 +3,13 @@ import { builder } from '../../builder'
 import { RecordNotFoundError } from '../_errors/errors'
 import {
   create,
-  createMenuEntryLabel,
+  createOrUpdateMenuEntryLabel,
+  deleteMenuEntryLabel,
   queryAll,
   queryAllMenuLabels,
   queryOne,
   remove,
+  searchMenuEntryLabels,
   update
 } from './resolvers'
 import {
@@ -145,38 +147,49 @@ builder.queryField('getAllMenuEntryLabels', (t) =>
   })
 )
 
-// builder.queryField('searchMenuEntryLabels', (t) =>
-//   t.field({
-//     type: [MenuEntryLabelObject],
-//     args: {
-//       page: t.arg({
-//         type: 'Int',
-//         defaultValue: 1,
-//         validate: {
-//           schema: z.number().positive('Page must be a positive integer')
-//         }
-//       })
-//     },
-//     resolve: queryAllMenuLabels
-//   })
-// )
-
-builder.mutationField('createMenuEntryLabel', (t) =>
+builder.queryField('searchMenuEntryLabels', (t) =>
   t.field({
     type: [MenuEntryLabelObject],
     args: {
+      searchTerm: t.arg({
+        type: 'String',
+        required: true,
+        validate: {
+          schema: z.string({ message: 'Search argument must be a string' })
+        }
+      })
+    },
+    resolve: searchMenuEntryLabels
+  })
+)
+
+builder.mutationField('createOrUpdateMenuEntryLabel', (t) =>
+  t.field({
+    type: MenuEntryLabelObject,
+    errors: {
+      types: [RecordNotFoundError]
+    },
+    args: {
+      id: t.arg({
+        type: 'Int',
+        required: false,
+
+        validate: {
+          schema: z.number().positive('Id must be a positive integer')
+        }
+      }),
       data: t.arg({
         type: MenuEntryLabelInput,
         required: true
       })
     },
-    resolve: createMenuEntryLabel
+    resolve: createOrUpdateMenuEntryLabel
   })
 )
 
 builder.mutationField('deleteMenuEntryLabel', (t) =>
   t.field({
-    type: [MenuEntryLabelObject],
+    type: MenuEntryLabelObject,
     errors: {
       types: [RecordNotFoundError]
     },
@@ -190,6 +203,6 @@ builder.mutationField('deleteMenuEntryLabel', (t) =>
         }
       })
     },
-    resolve: createMenuEntryLabel
+    resolve: deleteMenuEntryLabel
   })
 )

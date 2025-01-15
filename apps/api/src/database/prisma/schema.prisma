@@ -83,5 +83,5 @@ model MenuEntryLabel {
   MenuEntry   MenuEntry? @relation(fields: [menuEntryId], references: [id])
   menuEntryId Int?
 
-  @@map("Label")
+  @@map("MenuEntryLabel")
 }

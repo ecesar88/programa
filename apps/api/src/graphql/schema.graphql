@@ -91,7 +91,7 @@ input MenuEntryVariantInput {
 type Mutation {
   createClient(name: String!, phone: String): Client
   createMenuEntry(data: MenuEntryInput!): MenuEntry
-  createMenuEntryLabel(data: MenuEntryLabelInput!): [MenuEntryLabel!]
+  createOrUpdateMenuEntryLabel(data: MenuEntryLabelInput!, id: Int): MutationCreateOrUpdateMenuEntryLabelResult
   deleteClient(id: Int!): MutationDeleteClientResult
   deleteMenuEntry(id: Int!): MutationDeleteMenuEntryResult
   deleteMenuEntryLabel(id: Int!): MutationDeleteMenuEntryLabelResult
@@ -99,25 +99,31 @@ type Mutation {
   updateMenuEntry(data: MenuEntryInput!, id: Int!): MutationUpdateMenuEntryResult
 }
 
-union MutationDeleteClientResult = BaseError | MutationDeleteClientSuccess | RecordNotFoundError
+union MutationCreateOrUpdateMenuEntryLabelResult = BaseError | LengthError | MutationCreateOrUpdateMenuEntryLabelSuccess | RecordNotFoundError
+
+type MutationCreateOrUpdateMenuEntryLabelSuccess {
+  data: MenuEntryLabel!
+}
+
+union MutationDeleteClientResult = BaseError | LengthError | MutationDeleteClientSuccess | RecordNotFoundError
 
 type MutationDeleteClientSuccess {
   data: Client!
 }
 
-union MutationDeleteMenuEntryLabelResult = BaseError | MutationDeleteMenuEntryLabelSuccess | RecordNotFoundError
+union MutationDeleteMenuEntryLabelResult = BaseError | LengthError | MutationDeleteMenuEntryLabelSuccess | RecordNotFoundError
 
 type MutationDeleteMenuEntryLabelSuccess {
-  data: [MenuEntryLabel!]!
+  data: MenuEntryLabel!
 }
 
-union MutationDeleteMenuEntryResult = BaseError | MutationDeleteMenuEntrySuccess | RecordNotFoundError
+union MutationDeleteMenuEntryResult = BaseError | LengthError | MutationDeleteMenuEntrySuccess | RecordNotFoundError
 
 type MutationDeleteMenuEntrySuccess {
   data: MenuEntry!
 }
 
-union MutationUpdateMenuEntryResult = BaseError | MutationUpdateMenuEntrySuccess | RecordNotFoundError
+union MutationUpdateMenuEntryResult = BaseError | LengthError | MutationUpdateMenuEntrySuccess | RecordNotFoundError
 
 type MutationUpdateMenuEntrySuccess {
   data: MenuEntry!
@@ -130,15 +136,16 @@ type Query {
   getClientById(id: Int!): QueryGetClientByIdResult
   getMenuEntryById(id: Int!): QueryGetMenuEntryByIdResult
   searchClients(search: String!): [Client!]
+  searchMenuEntryLabels(searchTerm: String!): [MenuEntryLabel!]
 }
 
-union QueryGetClientByIdResult = BaseError | QueryGetClientByIdSuccess | RecordNotFoundError
+union QueryGetClientByIdResult = BaseError | LengthError | QueryGetClientByIdSuccess | RecordNotFoundError
 
 type QueryGetClientByIdSuccess {
   data: Client!
 }
 
-union QueryGetMenuEntryByIdResult = BaseError | QueryGetMenuEntryByIdSuccess | RecordNotFoundError
+union QueryGetMenuEntryByIdResult = BaseError | LengthError | QueryGetMenuEntryByIdSuccess | RecordNotFoundError
 
 type QueryGetMenuEntryByIdSuccess {
   data: MenuEntry!

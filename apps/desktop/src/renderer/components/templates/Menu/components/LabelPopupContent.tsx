@@ -1,28 +1,42 @@
-import { isCreatingLabelAtom, labelDataAtom } from '@renderer/store/labelPopupContent'
-import { useAtom, useSetAtom } from 'jotai'
+import { useFragment } from '@renderer/queries/graphql/codegen'
+import {
+  MenuEntryLabel_FragmentFragment,
+  MenuEntryLabel_FragmentFragmentDoc
+} from '@renderer/queries/graphql/codegen/graphql'
+import { getAllMenuEntryLabels } from '@renderer/queries/operations/menu'
+import { isCreatingLabelAtom } from '@renderer/store/labelPopupContent'
+import { useQuery } from '@tanstack/react-query'
+import { useAtomValue } from 'jotai'
 import { LabelPopupCreateLabel } from './LabelPopupCreateLabel'
 import { LabelPopupSelectLabel } from './LabelPopupSelectLabel'
 
 export const LabelPopupContent = () => {
-  const setLabelData = useSetAtom(labelDataAtom)
-  const [isCreatingLabel, setIsCreatingLabel] = useAtom(isCreatingLabelAtom)
+  const isCreatingLabel = useAtomValue(isCreatingLabelAtom)
 
-  const handleCreateNewLabelButton = () => {
-    setIsCreatingLabel(true)
-  }
+  const menuEntryLabelQuery = useQuery({
+    queryKey: ['getAllMenuEntryLabels'],
+    queryFn: getAllMenuEntryLabels,
+    staleTime: 0,
+    meta: {
+      errorMessage: 'Err fetching MenuEntryLabels'
+    }
+  })
 
-  // TODO - clear data when unmounting
-  const handleCancelLabelCreationButton = () => {
-    setIsCreatingLabel(false)
-    setLabelData(undefined)
+  const menuEntryLabels = useFragment(
+    MenuEntryLabel_FragmentFragmentDoc,
+    menuEntryLabelQuery.data?.getAllMenuEntryLabels
+  )
+
+  const onCreateOrUpdate = async () => {
+    await menuEntryLabelQuery.refetch()
   }
 
   return (
     <div className="transition-all">
       {isCreatingLabel ? (
-        <LabelPopupCreateLabel handleCancelLabelCreationButton={handleCancelLabelCreationButton} />
+        <LabelPopupCreateLabel refetchLabels={onCreateOrUpdate} />
       ) : (
-        <LabelPopupSelectLabel handleCreateNewLabelButton={handleCreateNewLabelButton} />
+        <LabelPopupSelectLabel data={menuEntryLabels as MenuEntryLabel_FragmentFragment[]} />
       )}
     </div>
   )

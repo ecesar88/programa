@@ -1,61 +1,111 @@
 import { Button } from '@blueprintjs/core'
 import { Input, Label } from '@renderer/components'
-import { LabelFragmentFragment } from '@renderer/queries/graphql/codegen/graphql'
-import { labelDataAtom } from '@renderer/store/labelPopupContent'
-import { useAtom } from 'jotai'
+import { LABEL_COLORS } from '@renderer/constants'
+import {
+  MenuEntryLabel,
+  MenuEntryLabel_FragmentFragment
+} from '@renderer/queries/graphql/codegen/graphql'
+import {
+  createOrUpdateMenuEntryLabel,
+  deleteMenuEntryLabel
+} from '@renderer/queries/operations/menu'
+import { isCreatingLabelAtom, labelDataAtom } from '@renderer/store/labelPopupContent'
+import { errorToast, handleResponseStatus, successToast } from '@renderer/utils'
+import { useMutation } from '@tanstack/react-query'
+import { useAtom, useSetAtom } from 'jotai'
 import { FaTrashAlt } from 'react-icons/fa'
 import { ImCheckmark } from 'react-icons/im'
 import { ColorSwatch } from './ColorSwatch'
 
 type LabelPopupCreateLabelProps = {
-  handleCancelLabelCreationButton: () => void
+  refetchLabels: () => void
 }
-
-const COLORS = [
-  '#004d40',
-  '#5d4037',
-  '#6d4c41',
-  '#bf360c',
-  '#4a148c',
-  '#00796b',
-  '#827717',
-  '#c6a700',
-  '#d84315',
-  '#512da8',
-  '#1a237e',
-  '#1976d2',
-  '#388e3c',
-  '#9e9d24',
-  '#7b1fa2',
-  '#0d47a1',
-  '#0288d1',
-  '#43a047',
-  '#689f38',
-  '#e91e63',
-  '#03a9f4',
-  '#81d4fa',
-  '#64dd17',
-  '#aed581',
-  '#9e9e9e'
-]
 
 export const LabelPopupCreateLabel = (props: LabelPopupCreateLabelProps) => {
   const [labelData, setLabelData] = useAtom(labelDataAtom)
+  const setIsCreatingLabel = useSetAtom(isCreatingLabelAtom)
 
-  const handleCreateLabelButton = () => {
-    props.handleCancelLabelCreationButton()
+  const createOrUpdateMenuEntryLabelMutation = useMutation({
+    mutationKey: ['createOrUpdateMenuEntryLabel'],
+    mutationFn: createOrUpdateMenuEntryLabel,
+    onSuccess: async (data) => {
+      console.log({ data })
+      // TODO - test this
+      handleResponseStatus<MenuEntryLabel>({
+        response: data?.createOrUpdateMenuEntryLabel as MenuEntryLabel,
+        Ok: async () => {
+          props.refetchLabels()
+        },
+        Err: (error) => {
+          if (error.__typename === 'ZodError') {
+            errorToast('Validation error')
+            return
+          }
+
+          errorToast('API Error')
+        }
+      })
+    },
+    meta: {
+      errorMessage: 'Erro ao modificar o produto'
+    }
+  })
+
+  const deleteMenuEntryLabelMutation = useMutation({
+    mutationKey: ['deleteMenuEntryLabelMutation'],
+    mutationFn: deleteMenuEntryLabel,
+    onSuccess: async (data) => {
+      // TODO - test this
+      handleResponseStatus<MenuEntryLabel>({
+        response: data?.deleteMenuEntryLabel as MenuEntryLabel,
+        Ok: async () => {
+          successToast('Etiqueta deletada')
+          props.refetchLabels?.()
+        },
+        Err: (error) => {
+          console.log({ error })
+          if (error.__typename === 'ZodError') {
+            errorToast('Validation error')
+            return
+          }
+
+          errorToast('API Error')
+        }
+      })
+    },
+    meta: {
+      errorMessage: 'Erro ao modificar o produto'
+    }
+  })
+
+  const cancelLabelCreation = () => {
+    setIsCreatingLabel(false)
+    setLabelData(undefined)
+  }
+
+  const handleCreateOrUpdateLabelButton = () => {
+    if (!labelData) return
+
+    const { id, name, color } = labelData
+    createOrUpdateMenuEntryLabelMutation.mutate({ id, data: { name, color } })
+
+    cancelLabelCreation()
+  }
+
+  const handleDeleteLabelButton = () => {
+    if (!labelData?.id) return
+
+    const { id } = labelData
+    deleteMenuEntryLabelMutation.mutate({ id })
+
+    cancelLabelCreation()
   }
 
   return (
     <div className="flex flex-col items-center w-full gap-2">
       <div className="relative w-full flex items-center justify-center px-2 pt-2">
         <div className="absolute left-0 ml-1">
-          <Button
-            intent="none"
-            minimal
-            icon="chevron-left"
-            onClick={props.handleCancelLabelCreationButton}
-          />
+          <Button intent="none" minimal icon="chevron-left" onClick={cancelLabelCreation} />
         </div>
 
         <div>
@@ -81,7 +131,10 @@ export const LabelPopupCreateLabel = (props: LabelPopupCreateLabelProps) => {
           fill
           value={labelData?.name ?? ''}
           onChange={(evt) => {
-            setLabelData({ ...(labelData as LabelFragmentFragment), name: evt.target.value })
+            setLabelData({
+              ...(labelData as MenuEntryLabel_FragmentFragment),
+              name: evt.target.value
+            })
           }}
         />
 
@@ -91,12 +144,14 @@ export const LabelPopupCreateLabel = (props: LabelPopupCreateLabelProps) => {
           </div>
 
           <div className="w-full grid grid-cols-5 gap-1 gap-x-1">
-            {COLORS.map((color, idx) => (
+            {LABEL_COLORS.map((color, idx) => (
               <ColorSwatch
                 key={idx}
                 color={color}
                 selected={color === labelData?.['color']}
-                onClick={() => setLabelData({ ...(labelData as LabelFragmentFragment), color })}
+                onClick={() =>
+                  setLabelData({ ...(labelData as MenuEntryLabel_FragmentFragment), color })
+                }
               />
             ))}
           </div>
@@ -110,6 +165,7 @@ export const LabelPopupCreateLabel = (props: LabelPopupCreateLabelProps) => {
             intent="danger"
             fill
             disabled={!labelData?.name?.length}
+            onClick={handleDeleteLabelButton}
           />
 
           <Button
@@ -117,7 +173,7 @@ export const LabelPopupCreateLabel = (props: LabelPopupCreateLabelProps) => {
             intent="success"
             fill
             disabled={!labelData?.name?.length}
-            onClick={handleCreateLabelButton}
+            onClick={handleCreateOrUpdateLabelButton}
           />
         </div>
       </div>
