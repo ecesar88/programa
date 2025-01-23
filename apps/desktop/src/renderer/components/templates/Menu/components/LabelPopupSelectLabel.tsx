@@ -14,11 +14,7 @@ import { debounce } from 'remeda'
 import { match } from 'ts-pattern'
 import { LabelPopupCheckboxLabel } from './LabelPopupCheckboxLabel'
 
-type LabelPopupSelectLabelProps = {
-  data: MenuEntryLabel_FragmentFragment[]
-}
-
-export const LabelPopupSelectLabel = (props: LabelPopupSelectLabelProps) => {
+export const LabelPopupSelectLabel = () => {
   const [selectedLabels, setSelectedLabels] = useState<number[]>([])
 
   const [popupHeight, setPopupHeight] = useState<number>(350)

@@ -31,6 +31,7 @@ export const VariantInputField = (props: VariantInputFieldProps) => {
             name={`variants.${props.arrayIndex}.name`}
             defaultValue={props.variant.name ?? ''}
             render={({ field: { onChange, value, ref } }) => (
+              // <input value={value} onChange={onChange} ref={ref} />
               <EditableText
                 className="font-bold [&_*]:!cursor-text"
                 disabled={!props.isCreateModeActive && !props.isEditModeActive}
@@ -52,12 +53,14 @@ export const VariantInputField = (props: VariantInputFieldProps) => {
             name={`variants.${props.arrayIndex}.description`}
             defaultValue={props.variant.description ?? ''}
             render={({ field: { onChange, value, ref } }) => (
+              // <input value={value} onChange={onChange} ref={ref} />
               <EditableText
                 className="max-w-[220px] w-max [&_*]:!cursor-text"
                 disabled={!props.isCreateModeActive && !props.isEditModeActive}
                 onChange={onChange}
                 value={value}
                 ref={ref}
+                elementRef={ref}
                 minWidth={220}
                 maxLength={220}
                 multiline
@@ -87,6 +90,7 @@ export const VariantInputField = (props: VariantInputFieldProps) => {
             control={control}
             name={`variants.${props.arrayIndex}.price`}
             render={({ field: { onChange, value, ref } }) => (
+              // <input value={value} onChange={onChange} ref={ref} type="number" />
               <EditableText
                 disabled={!props.isCreateModeActive && !props.isEditModeActive}
                 className="text-end [&_*]:!cursor-text min-w-[60px]"
@@ -94,9 +98,11 @@ export const VariantInputField = (props: VariantInputFieldProps) => {
                 onChange={(event) => onChange(event.replace(/[^\d.-]+/g, ''))}
                 value={value}
                 ref={ref}
+                elementRef={ref}
                 minWidth={20}
                 maxLength={6}
                 intent="none"
+                type="number"
                 placeholder="Preço"
               />
             )}

@@ -276,14 +276,20 @@ export const searchMenuEntryLabels: Resolver<{ searchTerm: string }> = async (
         name: { contains: args.searchTerm }
       }
     })
-  } catch (_error) {
+  } catch (error) {
+    logger({
+      level: LOG_TYPE.ERROR,
+      message: 'Error searching for menu entry label',
+      object: colorizeAsJSON(JSON.parse(String(error)))
+    })
+
     throw new Error('Error searching for menu entry labels')
   }
 }
 
 type CreateOrUpdateMenuEntryLabelArgs = {
-  data: (typeof MenuEntryLabelInput)['$inferInput']
   id?: number | null
+  data: (typeof MenuEntryLabelInput)['$inferInput']
 }
 
 export const createOrUpdateMenuEntryLabel: Resolver<CreateOrUpdateMenuEntryLabelArgs> = async (
@@ -318,7 +324,7 @@ export const createOrUpdateMenuEntryLabel: Resolver<CreateOrUpdateMenuEntryLabel
     } catch (error) {
       logger({
         level: LOG_TYPE.ERROR,
-        message: 'Error creating menu entry label',
+        message: 'Error updating menu entry label',
         object: colorizeAsJSON(JSON.parse(String(error)))
       })
 
@@ -356,19 +362,25 @@ export const deleteMenuEntryLabel: Resolver<Id> = async (_parent, args, ctx, _in
     throw new RecordNotFoundError(`MenuEntryLabel with id ${id}`)
   }
 
-  logger({
-    level: LOG_TYPE.INFO,
-    message: `Deleting menu entry label with id ${id}`,
-    object: colorizeAsJSON(args)
-  })
-
   try {
+    logger({
+      level: LOG_TYPE.INFO,
+      message: `Deleting menu entry label with id: ${id}`,
+      object: colorizeAsJSON(args)
+    })
+
     return await ctx.prisma.menuEntryLabel.delete({
       where: {
         id
       }
     })
-  } catch (_error) {
+  } catch (error) {
+    logger({
+      level: LOG_TYPE.ERROR,
+      message: `Error deleting menu entry label with id: ${id}`,
+      object: colorizeAsJSON(JSON.parse(String(error)))
+    })
+
     throw new Error(`Error deleting MenuEntryLabel with id: ${id}`)
   }
 }

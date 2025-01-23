@@ -22,7 +22,7 @@ export const isBaseError = (res: { message?: string }): res is BaseError => {
   try {
     JSON.parse(res?.message)
     return false
-  } catch (_error) {
+  } catch {
     return true
   }
 }
@@ -35,7 +35,7 @@ export const isZodError = (res: { message?: string }): res is ZodError<string> =
 
   try {
     JSON.parse(res?.message)
-  } catch (_error) {
+  } catch {
     return false
   }
 

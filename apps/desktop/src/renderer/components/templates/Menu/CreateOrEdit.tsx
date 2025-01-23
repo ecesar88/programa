@@ -285,12 +285,14 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
                       control={control}
                       name="name"
                       render={({ field: { onChange, value, ref } }) => (
+                        // <input value={value} onChange={onChange} ref={ref} />
                         <EditableText
                           className="[&_*]:!cursor-text"
                           disabled={!isCreateModeActive && !props.editMode.isEditModeActive}
                           onChange={onChange}
                           value={value}
                           ref={ref}
+                          elementRef={ref}
                           minWidth={20}
                           intent="none"
                           placeholder="Título..."
@@ -372,12 +374,14 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
                       name="description"
                       defaultValue={''}
                       render={({ field: { onChange, value, ref } }) => (
+                        // <input value={value} onChange={onChange} ref={ref} />
                         <EditableText
                           className="[&_*]:!cursor-text max-w-[470px] min-h-[85px] text-wrap"
                           disabled={!isCreateModeActive && !props.editMode.isEditModeActive}
                           onChange={onChange}
                           value={value ?? ''}
                           ref={ref}
+                          elementRef={ref}
                           minWidth={20}
                           maxLength={350}
                           intent="none"

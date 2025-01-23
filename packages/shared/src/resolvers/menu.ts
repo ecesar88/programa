@@ -3,7 +3,7 @@ import z from 'zod'
 export const MenuEntryVariantInputSchema = z.object({
   name: z.string(),
   description: z.string().optional(),
-  price: z.number()
+  price: z.any()
 })
 
 export const MenuEntryCategoryInputSchema = z.object({

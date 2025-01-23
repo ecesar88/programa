@@ -1,4 +1,3 @@
-import { zodResolver } from '@hookform/resolvers/zod'
 import {
   AlertModal,
   ContentScrollContainer,
@@ -22,7 +21,6 @@ import {
 import { create, edit, get, purge } from '@renderer/queries/operations/menu'
 import { selectedRowAtom } from '@renderer/store'
 import { errorToast, handleResponseStatus, successToast } from '@renderer/utils'
-import { MenuEntryCreateOrUpdateInputSchema } from '@repo/shared/resolvers'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useAtomValue, useSetAtom } from 'jotai'
 import * as O from 'optics-ts'
@@ -67,11 +65,9 @@ export const Menu = () => {
   })
 
   const form = useForm<CreateMenuEntryMutationVariables['data']>({
-    resolver: zodResolver(MenuEntryCreateOrUpdateInputSchema),
+    // resolver: zodResolver(MenuEntryCreateOrUpdateInputSchema),
     defaultValues: {}
   })
-
-  console.log('errors >>>>>>>> ', form.formState.errors)
 
   const { mutate: createMenuEntryMutation, isPending: isLoadingCreateMenuEntry } = useMutation({
     mutationKey: ['createMenuEntry'],
@@ -96,14 +92,14 @@ export const Menu = () => {
       // TODO - test this
       handleResponseStatus<MenuEntry>({
         response: data?.updateMenuEntry as MenuEntry,
-        Ok: async () => {
+        Ok: () => {
           setIsEditModeActive(false)
           successToast('Produto modificado com sucesso!')
           closeMenuEntryModal()
           clearSelectedMenuEntryData()
           form.reset()
 
-          await refetch()
+          refetch()
         },
         Err: (error) => {
           if (error.__typename === 'ZodError') {
@@ -142,7 +138,9 @@ export const Menu = () => {
       await refetch()
     },
     onSaveClick: () => {
-      const onCreate: SubmitHandler<CreateMenuEntryMutationVariables['data']> = async (data) => {
+      console.log({ errors: form.formState.errors })
+
+      const onCreate: SubmitHandler<CreateMenuEntryMutationVariables['data']> = (data) => {
         createMenuEntryMutation({ data })
       }
 
@@ -155,28 +153,28 @@ export const Menu = () => {
         })
       }
 
-      const submit = async (variables: CreateMenuEntryMutationVariables['data']) => {
+      const onSubmit = (variables: CreateMenuEntryMutationVariables['data']) => {
         // Price input values come in string format, we need to convert them to number (float 64)
-        const pricesTraversal = O.optic<MenuEntryFormValues>()
+        const variantPricesTraversal = O.optic<MenuEntryFormValues>()
           .prop('variants')
           .elems()
           .prop('price')
 
-        const menuEntryWithParsedPrices = O.modify(pricesTraversal)(Number)(
+        const menuEntryWithParsedPrices = O.modify(variantPricesTraversal)(Number)(
           variables as MenuEntryFormValues
         ) as CreateMenuEntryMutationVariables['data']
 
         if (menuEntryModalMode === OverlayMode.NEW) {
-          await onCreate(menuEntryWithParsedPrices)
+          onCreate(menuEntryWithParsedPrices)
         } else {
-          await onEdit({
+          onEdit({
             id: menuEntryData?.id as number,
             data: menuEntryWithParsedPrices
           })
         }
       }
 
-      form.handleSubmit(submit)()
+      form.handleSubmit(onSubmit)()
     },
     onDeleteClick: () => {
       openDeleteAlertModal()

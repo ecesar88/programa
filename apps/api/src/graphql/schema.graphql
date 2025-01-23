@@ -70,6 +70,7 @@ type MenuEntryLabel {
 
 input MenuEntryLabelInput {
   color: String
+  id: ID
   name: String
 }
 
