@@ -11,6 +11,7 @@ import {
   CreateOrEditModal,
   MenuEntryFormValues
 } from '@renderer/components/templates/Menu/CreateOrEdit'
+import { queryKeys } from '@renderer/constants'
 import { OverlayMode } from '@renderer/constants/enums'
 import { useCreateOrEditOverlay, useHandleModalState } from '@renderer/hooks'
 import {
@@ -57,7 +58,7 @@ export const Menu = () => {
     data,
     refetch
   } = useQuery({
-    queryKey: ['getAllMenuEntries'],
+    queryKey: queryKeys['menu']['getAll'],
     queryFn: get,
     meta: {
       errorMessage: 'Erro ao obter o cardápio'
@@ -70,7 +71,7 @@ export const Menu = () => {
   })
 
   const { mutate: createMenuEntryMutation, isPending: isLoadingCreateMenuEntry } = useMutation({
-    mutationKey: ['createMenuEntry'],
+    mutationKey: queryKeys['menu']['create'],
     mutationFn: create,
     onSuccess: async () => {
       successToast('Produto criado com sucesso!')
@@ -86,7 +87,7 @@ export const Menu = () => {
   })
 
   const { mutate: updateMenuEntryMutation, isPending: isLoadingUpdateMenuEntry } = useMutation({
-    mutationKey: ['updateMenuEntry'],
+    mutationKey: queryKeys['menu']['update'],
     mutationFn: edit,
     onSuccess: async (data) => {
       // TODO - test this
@@ -117,7 +118,7 @@ export const Menu = () => {
   })
 
   const { mutate: deleteMenuEntryMutation, isPending: isLoadingDeleteMenuEntry } = useMutation({
-    mutationKey: ['deleteMenuEntry'],
+    mutationKey: queryKeys['menu']['delete'],
     mutationFn: purge,
     onSuccess: async () => {
       successToast('Produto excluído com sucesso!')
