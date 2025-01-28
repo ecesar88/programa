@@ -1,35 +1,20 @@
+import { Prisma } from '@prisma/client'
 import { builder } from '../../builder'
-import { MenuEntry, MenuEntryCategory, MenuEntryVariant, MenuEntryLabel } from '@prisma/client'
 // import { MenuEntryVariantInputSchema } from './schemas'
 
 /* --- Interface Definitions --- */
 
-export interface TypeMenuEntryCategory extends MenuEntryCategory {
-  id: number
-  name: string
-}
+type TypeMenuEntry = Prisma.MenuEntryGetPayload<{
+  include: {
+    categories: true
+    variants: true
+    labels: true
+  }
+}>
 
-export interface TypeMenuEntryVariant extends MenuEntryVariant {
-  id: number
-  name: string
-  description: string
-  price: number
-}
-
-export interface TypeMenuEntryLabel extends MenuEntryLabel {
-  id: number
-  name: string
-  color: string
-}
-
-export interface TypeMenuEntry extends Partial<MenuEntry> {
-  id: number
-  name: string
-  description: string | null
-  variants: TypeMenuEntryVariant[] | null
-  labels: TypeMenuEntryLabel[]
-  category: TypeMenuEntryCategory[]
-}
+type TypeMenuEntryCategory = TypeMenuEntry['categories'][number]
+type TypeMenuEntryVariant = TypeMenuEntry['variants'][number]
+type TypeMenuEntryLabel = TypeMenuEntry['labels'][number]
 
 export type TypeMenuEntryInput = Omit<TypeMenuEntry, 'id'>
 

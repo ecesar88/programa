@@ -1,29 +1,25 @@
-import { MenuEntry, Order, OrderBill, OrderObservation } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 import { builder } from '../../builder'
 import { MenuEntryObject } from '../menu/types'
 
 /* --- Interface Definitions --- */
 
-export interface TypeOrder extends Order {
-  id: number
-  dateTime: Date
-  address: string
-  // items: MenuEntry[]
-  totalPrice: number
-  splitOrderPriceBy: number
-  bill: OrderBill[]
-  observations: OrderObservation[]
-}
+type TypeOrder = Prisma.OrderGetPayload<{
+  include: {
+    items: {
+      include: {
+        variants: true
+        labels: true
+        categories: true
+      }
+    }
+    bill: true
+    observations: true
+  }
+}>
 
-export interface TypeOrderBill extends OrderBill {
-  id: number
-  price: number
-}
-
-export interface TypeOrderObservation extends OrderObservation {
-  id: number
-  content: string
-}
+type TypeOrderObservation = TypeOrder['observations'][number]
+type TypeOrderBill = TypeOrder['bill'][number]
 
 export type TypeOrderInput = Omit<TypeOrder, 'id'>
 
@@ -57,10 +53,10 @@ export const OrderObject = OrderRef.implement({
     address: t.exposeString('address'),
     splitOrderPriceBy: t.exposeFloat('splitOrderPriceBy'),
     totalPrice: t.exposeFloat('totalPrice'),
-    // items: t.field({
-    //   type: [MenuEntryObject],
-    //   resolve: (t) => t.items
-    // }),
+    items: t.field({
+      type: [MenuEntryObject],
+      resolve: (t) => t.items
+    }),
     observations: t.field({
       type: [OrderObservationObject],
       resolve: (t) => t.observations

@@ -1,12 +1,9 @@
+import { Prisma } from '@prisma/client'
 import { builder } from '../../builder'
 
 /* --- Interface Definitions --- */
 
-export interface TypeClient {
-  id: number
-  name: string
-  phone: string
-}
+export type TypeClient = Prisma.ClientGetPayload<{ include: { orders: true } }>
 
 /* --- Object Definitions --- */
 
