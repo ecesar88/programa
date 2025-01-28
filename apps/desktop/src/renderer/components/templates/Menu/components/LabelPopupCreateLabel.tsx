@@ -1,6 +1,6 @@
 import { Button } from '@blueprintjs/core'
 import { Input, Label } from '@renderer/components'
-import { LABEL_COLORS } from '@renderer/constants'
+import { LABEL_COLORS, queryKeys } from '@renderer/constants'
 import {
   MenuEntryLabel,
   MenuEntryLabel_FragmentFragment
@@ -26,7 +26,7 @@ export const LabelPopupCreateLabel = (props: LabelPopupCreateLabelProps) => {
   const setIsCreatingLabel = useSetAtom(isCreatingLabelAtom)
 
   const createOrUpdateMenuEntryLabelMutation = useMutation({
-    mutationKey: ['createOrUpdateMenuEntryLabel'],
+    mutationKey: queryKeys['menuEntryLabels']['createOrUpdate'],
     mutationFn: createOrUpdateMenuEntryLabel,
     onSuccess: async (data) => {
       console.log({ data })
@@ -52,7 +52,7 @@ export const LabelPopupCreateLabel = (props: LabelPopupCreateLabelProps) => {
   })
 
   const deleteMenuEntryLabelMutation = useMutation({
-    mutationKey: ['deleteMenuEntryLabelMutation'],
+    mutationKey: queryKeys['menuEntryLabels']['delete'],
     mutationFn: deleteMenuEntryLabel,
     onSuccess: async (data) => {
       // TODO - test this

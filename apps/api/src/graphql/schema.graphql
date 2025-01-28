@@ -94,6 +94,7 @@ type Mutation {
   createClient(name: String!, phone: String): Client
   createMenuEntry(data: MenuEntryInput!): MenuEntry
   createOrUpdateMenuEntryLabel(data: MenuEntryLabelInput!, id: Int): MutationCreateOrUpdateMenuEntryLabelResult
+  createOrder(data: OrderInput!): Order
   deleteClient(id: Int!): MutationDeleteClientResult
   deleteMenuEntry(id: Int!): MutationDeleteMenuEntryResult
   deleteMenuEntryLabel(id: Int!): MutationDeleteMenuEntryLabelResult
@@ -131,12 +132,58 @@ type MutationUpdateMenuEntrySuccess {
   data: MenuEntry!
 }
 
+"""An Order containing one or more MenuEntries"""
+type Order {
+  address: String
+  bill: [OrderBill!]
+  dateTime: DateTime
+  id: Int
+  observations: [OrderObservation!]
+  splitOrderPriceBy: Float
+  totalPrice: Float
+}
+
+"""
+The order bill which contains the price for each bill if the order price was split, or a single total price if it was not.
+"""
+type OrderBill {
+  id: Int
+  price: Float
+}
+
+input OrderBillInput {
+  price: Float
+}
+
+"""Input to create a new Order"""
+input OrderInput {
+  address: String!
+  bill: [OrderBillInput!]
+  observations: [OrderObservationInput!]
+  splitOrderPriceBy: Int = 1
+  totalPrice: Float = 0
+}
+
+"""
+The order observation. Example: "No pepper on pizza"
+"""
+type OrderObservation {
+  content: String
+  id: Int
+}
+
+input OrderObservationInput {
+  content: String
+}
+
 type Query {
   getAllClients(page: Int = 1): [Client!]
   getAllMenuEntries(page: Int = 1): [MenuEntry!]
   getAllMenuEntryLabels(page: Int = 1): [MenuEntryLabel!]
+  getAllOrders(page: Int = 1): [Order!]
   getClientById(id: Int!): QueryGetClientByIdResult
   getMenuEntryById(id: Int!): QueryGetMenuEntryByIdResult
+  getOrderById(id: Int!): QueryGetOrderByIdResult
   searchClients(search: String!): [Client!]
   searchMenuEntryLabels(searchTerm: String!): [MenuEntryLabel!]
 }
@@ -151,6 +198,12 @@ union QueryGetMenuEntryByIdResult = BaseError | LengthError | QueryGetMenuEntryB
 
 type QueryGetMenuEntryByIdSuccess {
   data: MenuEntry!
+}
+
+union QueryGetOrderByIdResult = BaseError | LengthError | QueryGetOrderByIdSuccess | RecordNotFoundError
+
+type QueryGetOrderByIdSuccess {
+  data: Order!
 }
 
 type RecordNotFoundError implements Error {

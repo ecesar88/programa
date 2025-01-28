@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react'
 import { debounce } from 'remeda'
 import { match } from 'ts-pattern'
 import { LabelPopupCheckboxLabel } from './LabelPopupCheckboxLabel'
+import { queryKeys } from '@renderer/constants'
 
 export const LabelPopupSelectLabel = () => {
   const [selectedLabels, setSelectedLabels] = useState<number[]>([])
@@ -52,7 +53,7 @@ export const LabelPopupSelectLabel = () => {
   const setIsCreatingLabel = useSetAtom(isCreatingLabelAtom)
 
   const { data: menuEntryLabelData, isLoading: isLoadingMenuEntryLabelData } = useQuery({
-    queryKey: ['getAllMenuEntryLabels'],
+    queryKey: queryKeys['menuEntryLabels']['getAll'],
     queryFn: getAllMenuEntryLabels,
     meta: {
       errorMessage: 'Erro ao obter labels do menu entry'

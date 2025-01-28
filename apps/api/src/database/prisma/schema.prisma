@@ -18,21 +18,30 @@ model Client {
 }
 
 model Order {
-  id           Int                @id @default(autoincrement())
-  dateTime     DateTime           @default(now())
-  address      String
-  food         String
-  observations OrderObservation[]
-  Client       Client?            @relation(fields: [clientId], references: [id])
-  clientId     Int?
+  id                Int                @id @default(autoincrement())
+  dateTime          DateTime           @default(now())
+  address           String
+  totalPrice        Float
+  splitOrderPriceBy Int                @default(1)
+  items             MenuEntry[]
+  bill              OrderBill[]
+  observations      OrderObservation[]
+  Client            Client?            @relation(fields: [clientId], references: [id])
+  clientId          Int?
 }
 
 model OrderObservation {
-  id       Int      @id @default(autoincrement())
-  content  String
-  dateTime DateTime @default(now())
-  Order    Order?   @relation(fields: [orderId], references: [id])
-  orderId  Int?
+  id      Int    @id @default(autoincrement())
+  content String
+  Order   Order? @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId Int?
+}
+
+model OrderBill {
+  id      Int    @id @default(autoincrement())
+  price   Float
+  Order   Order? @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId Int?
 }
 
 model Menu {
@@ -50,8 +59,10 @@ model MenuEntry {
   categories  MenuEntryCategory[]
   // images String?
 
-  Menu   Menu? @relation(fields: [menuId], references: [id])
-  menuId Int?
+  Menu    Menu?  @relation(fields: [menuId], references: [id])
+  menuId  Int?
+  Order   Order? @relation(fields: [orderId], references: [id])
+  orderId Int?
 }
 
 model MenuEntryVariant {

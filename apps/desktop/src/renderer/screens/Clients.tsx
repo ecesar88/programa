@@ -23,6 +23,7 @@ import { Id, toast } from 'react-toastify'
 import { match } from 'ts-pattern'
 import { ScreenMenuProps } from '../components/molecules/ScreenMenu'
 import { CreateClientResolver } from '@repo/shared/resolvers'
+import { queryKeys } from '@renderer/constants'
 
 export const Clients = (): React.ReactNode => {
   const successToast = (message: string): Id => toast(message, { type: 'success' })
@@ -54,7 +55,7 @@ export const Clients = (): React.ReactNode => {
     data,
     refetch
   } = useQuery({
-    queryKey: ['getAllClients'],
+    queryKey: queryKeys['clients']['getAll'],
     queryFn: get,
     meta: {
       errorMessage: 'Erro ao obter os clientes'
@@ -62,7 +63,7 @@ export const Clients = (): React.ReactNode => {
   })
 
   const { mutate: createClientMutation, isPending: isLoadingCreateClient } = useMutation({
-    mutationKey: ['createClient'],
+    mutationKey: queryKeys['clients']['create'],
     mutationFn: create,
     onSuccess: async () => {
       successToast('Cliente criado com sucesso!')
@@ -78,7 +79,7 @@ export const Clients = (): React.ReactNode => {
   })
 
   const { mutate: editClientMutation, isPending: isLoadingUpdateClient } = useMutation({
-    mutationKey: ['editClient'],
+    mutationKey: queryKeys['clients']['update'],
     mutationFn: edit,
     onSuccess: async () => {
       successToast('Cliente editado com sucesso!')
@@ -94,7 +95,7 @@ export const Clients = (): React.ReactNode => {
   })
 
   const { mutate: deleteClientMutation } = useMutation({
-    mutationKey: ['deleteClient'],
+    mutationKey: queryKeys['clients']['delete'],
     mutationFn: purge,
     onSuccess: async () => {
       successToast('Cliente deletado com sucesso!')

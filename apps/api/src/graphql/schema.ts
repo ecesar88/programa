@@ -4,6 +4,9 @@ import { printSchema } from 'graphql'
 import { writeFileSync } from 'node:fs'
 import path from 'node:path'
 
+import './schema/order/operations'
+import './schema/order/types'
+
 import './schema/client/operations'
 import './schema/client/types'
 
