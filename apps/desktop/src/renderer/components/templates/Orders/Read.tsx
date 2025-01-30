@@ -1,7 +1,7 @@
 import { Button, Colors, Dialog, DialogBody } from '@blueprintjs/core'
 import { faker } from '@faker-js/faker'
 // import { Order } from '@prisma/client'
-import { ScreenMenuProps } from '@renderer/components/molecules'
+import { BottomButtonsRow, ScreenMenuProps } from '@renderer/components/molecules'
 import { OverlayMode } from '@renderer/constants/enums'
 import { cn } from '@renderer/utils'
 // import { CreateOrderResolver } from '@repo/shared'
@@ -43,20 +43,6 @@ const OrderColumn = (props: OrderColumnProps): React.ReactNode => {
       <div className="flex flex-col w-full h-full gap-2 mt-4 overflow-y-auto pl-4 pr-4">
         {props.children}
       </div>
-
-      {props.status === 'to_prepare' && (
-        <div className="w-full py-3 px-4">
-          <Button
-            className="rounded"
-            icon="plus"
-            fill
-            intent="success"
-            onClick={props.onClickNewButton}
-          >
-            Novo
-          </Button>
-        </div>
-      )}
     </div>
   )
 }
@@ -120,7 +106,11 @@ const categoriasDePedido = [
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type OrderWithoutId = Omit<any, 'id'>
 
-export const Read = (): React.ReactNode => {
+type ReadOrdersProps = {
+  onCreateOrEdit: () => void
+}
+
+export const Read = (props: ReadOrdersProps): React.ReactNode => {
   const [isOverlayOpen, setIsOverlayOpen] = useState(false)
   const [overlayMode, setOverlayMode] = useState<OverlayMode | null>(null)
 
@@ -170,7 +160,7 @@ export const Read = (): React.ReactNode => {
 
   return (
     <FormProvider {...form}>
-      <div className="flex flex-row w-full h-full gap-4">
+      <div className="flex flex-col w-full h-full gap-4">
         <div className="flex justify-between w-full h-full gap-4">
           {categoriasDePedido.map((categoria, idx) => (
             <React.Fragment key={idx}>
@@ -196,24 +186,18 @@ export const Read = (): React.ReactNode => {
             </React.Fragment>
           ))}
         </div>
-      </div>
 
-      <Dialog
-        isOpen={isOverlayOpen}
-        onClose={closeModalOverlay}
-        usePortal={true}
-        canEscapeKeyClose={true}
-        canOutsideClickClose={false}
-        className="w-fit h-fit"
-      >
-        <DialogBody className="p-0">
-          <CreateOrEditModal
-            onSave={actions?.onSaveClick}
-            onCancel={actions?.onCancelClick}
-            overlayMode={overlayMode}
+        <div className="w-full">
+          <BottomButtonsRow
+            onNewButtonClick={props.onCreateOrEdit}
+            // actions={props.actions}
+            // onOpenOverlay={() => {
+            //   props.openOverlay(OverlayMode.NEW)
+            //   setSelectedRowAtom({ data: {} })
+            // }}
           />
-        </DialogBody>
-      </Dialog>
+        </div>
+      </div>
     </FormProvider>
   )
 }

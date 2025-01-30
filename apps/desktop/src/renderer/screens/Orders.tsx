@@ -1,17 +1,17 @@
-import { DataHeader } from '@renderer/components'
+import { DataHeader, Loading } from '@renderer/components'
 import { ContentScrollContainer } from '@renderer/components/layout'
 import { Read } from '@renderer/components/templates/Orders'
 import { queryKeys } from '@renderer/constants'
 import { useCreateOrEditOverlay, useHandleModalState } from '@renderer/hooks'
 import { handleResponseStatus, successToast } from '@renderer/utils'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useMemo, useState } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { match } from 'ts-pattern'
+import { oboolean } from 'zod'
 
 export const Orders = () => {
-  const [isEditModeActive, setIsEditModeActive] = useState(false)
-
   const { t } = useTranslation()
 
   // const {
@@ -35,7 +35,7 @@ export const Orders = () => {
   // const {
   //   isLoading: isLoadingGetAllMenuEntries,
   //   data,
-  //   refetch
+  //   refetch,
   // } = useQuery({
   //   queryKey: queryKeys['menu']['getAll'],
   //   queryFn: get,
@@ -45,9 +45,10 @@ export const Orders = () => {
   // })
 
   // const form = useForm<CreateMenuEntryMutationVariables['data']>({
-  //   // resolver: zodResolver(MenuEntryCreateOrUpdateInputSchema),
-  //   defaultValues: {}
-  // })
+  const form = useForm<any>({
+    // resolver: zodResolver(MenuEntryCreateOrUpdateInputSchema),
+    defaultValues: {}
+  })
 
   // const { mutate: createMenuEntryMutation, isPending: isLoadingCreateMenuEntry } = useMutation({
   //   mutationKey: queryKeys['menu']['create'],
@@ -164,13 +165,89 @@ export const Orders = () => {
   //   }
   // }
 
-  return (
-    <div className="flex flex-col gap-2 h-full">
-      <DataHeader title="PEDIDOS" />
+  const isLoading: boolean = false
 
-      <ContentScrollContainer>
-        <Read />
-      </ContentScrollContainer>
-    </div>
+  const [isEditModeActive, setIsEditModeActive] = useState(false)
+
+  // const renderReadOrCreateOrUpdate = (isEditModeActive: boolean) => {
+  //   switch (isEditModeActive) {
+  //     case true: {
+  //       return <>edit</>
+  //     }
+  //     default: {
+  //       return match(isLoading as boolean)
+  //         .with(true, () => <Loading />)
+  //         .otherwise(() => (
+  //           <Read
+  //             onCreateOrEdit={() => setIsEditModeActive(true)}
+  //             // actions={actions}
+  //             // openOverlay={openMenuEntryModal}
+  //             // menuEntries={(data?.getAllMenuEntries as MenuEntry[]) ?? []}
+  //           />
+  //         ))
+  //     }
+  //   }
+  // }
+
+  const screenStatus = useMemo((): { status: 'edit' | 'loading' | 'read' } => {
+    if (isEditModeActive) return { status: 'edit' }
+    if (isLoading) return { status: 'loading' }
+
+    return { status: 'read' }
+  }, [isEditModeActive, isLoading])
+
+  return (
+    <FormProvider {...form}>
+      <div className="flex flex-col gap-2 h-full relative">
+        <DataHeader title={t('screens.menu.title')} />
+
+        {/* <SuspenseLoading isLoading={isLoadingAtomValue} /> */}
+
+        <ContentScrollContainer>
+          {match(screenStatus)
+            .with({ status: 'loading' }, () => <Loading />)
+            .with({ status: 'edit' }, () => <>editando</>)
+            .otherwise(() => (
+              <Read onCreateOrEdit={() => setIsEditModeActive(true)} />
+            ))}
+        </ContentScrollContainer>
+      </div>
+
+      {/* <Dialog isOpen={isMenuEntryModalOpen} onClose={closeMenuEntryModal}>
+        <CreateOrEditModal
+          onSave={actions.onSaveClick}
+          onDelete={actions.onDeleteClick}
+          onCancel={actions.onCancelClick}
+          overlayMode={menuEntryModalMode}
+          menuEntryData={menuEntryData}
+          isLoading={isLoadingCreateMenuEntry || isLoadingUpdateMenuEntry}
+          editMode={{
+            isEditModeActive,
+            setIsEditModeActive
+          }}
+        />
+      </Dialog> */}
+
+      {/* <AlertModal
+        isOpen={isDeleteModalOpen}
+        confirmButtonText="Deletar"
+        isLoading={isLoadingDeleteMenuEntry}
+        cancelButtonText="Cancelar"
+        icon="trash"
+        intent="danger"
+        actions={{
+          onCancel: () => {
+            closeDeleteAlertModal()
+          },
+          onConfirm: () => {
+            deleteMenuEntryMutation({ id: menuEntryData?.id as number })
+          }
+        }}
+      >
+        <p>
+          Deletar o item <b>{menuEntryData?.name}</b> ?
+        </p>
+      </AlertModal> */}
+    </FormProvider>
   )
 }

@@ -1,4 +1,4 @@
-import { ScreenMenuProps } from '@renderer/components/molecules'
+import { BottomButtonsRow, ScreenMenuProps } from '@renderer/components/molecules'
 import { OverlayMode } from '@renderer/constants/enums'
 import { useCreateOrEditOverlay } from '@renderer/hooks'
 import { MenuEntry } from '@renderer/queries/graphql/codegen/graphql'
@@ -6,9 +6,11 @@ import { selectedRowAtom } from '@renderer/store'
 import { RefetchOptions } from '@tanstack/query-core'
 import { useSetAtom } from 'jotai'
 import React from 'react'
-import { BottomButtonsRow } from './components/BottomButtonsRow'
 import { CategoryBar } from './components/CategoryBar'
 import { ProductCard } from './components/ProductCard'
+import { Button } from '@blueprintjs/core'
+import { FaFilePdf } from 'react-icons/fa'
+import { MdPendingActions } from 'react-icons/md'
 
 export const Read = (props: {
   actions: ScreenMenuProps['actions'] & { refetch: (options?: RefetchOptions) => void }
@@ -40,11 +42,24 @@ export const Read = (props: {
       </div>
 
       <BottomButtonsRow
-        actions={props.actions}
-        onOpenOverlay={() => {
+        onNewButtonClick={() => {
           props.openOverlay(OverlayMode.NEW)
           setSelectedRowAtom({ data: {} })
         }}
+        onRefreshButtonClick={props.actions.refetch}
+        children={
+          <div>
+            <Button
+              icon={<FaFilePdf size={20} className="text-red3" />}
+              intent={'none'}
+              onClick={() => {
+                alert('Exportado')
+              }}
+            >
+              Exportar em PDF
+            </Button>
+          </div>
+        }
       />
     </div>
   )

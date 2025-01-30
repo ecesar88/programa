@@ -70,7 +70,6 @@ type MenuEntryLabel {
 
 input MenuEntryLabelInput {
   color: String
-  id: ID
   name: String
 }
 
@@ -138,6 +137,7 @@ type Order {
   bill: [OrderBill!]
   dateTime: DateTime
   id: Int
+  items: [MenuEntry!]
   observations: [OrderObservation!]
   splitOrderPriceBy: Float
   totalPrice: Float

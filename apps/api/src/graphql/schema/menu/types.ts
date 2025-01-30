@@ -79,7 +79,7 @@ export const MenuEntryVariantInput = builder.inputType('MenuEntryVariantInput', 
 
 export const MenuEntryLabelInput = builder.inputType('MenuEntryLabelInput', {
   fields: (t) => ({
-    id: t.id({ required: false }),
+    // id: t.id(), // TODO - fix bug
     name: t.string(),
     color: t.string()
   })
