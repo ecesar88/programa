@@ -26,6 +26,7 @@ export type BaseError = Error & {
 /** A client/customer on the application */
 export type Client = {
   __typename?: 'Client';
+  /** The id on the database */
   id?: Maybe<Scalars['Int']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   phone?: Maybe<Scalars['String']['output']>;
@@ -109,6 +110,7 @@ export type Mutation = {
   createClient?: Maybe<Client>;
   createMenuEntry?: Maybe<MenuEntry>;
   createOrUpdateMenuEntryLabel?: Maybe<MutationCreateOrUpdateMenuEntryLabelResult>;
+  createOrder?: Maybe<Order>;
   deleteClient?: Maybe<MutationDeleteClientResult>;
   deleteMenuEntry?: Maybe<MutationDeleteMenuEntryResult>;
   deleteMenuEntryLabel?: Maybe<MutationDeleteMenuEntryLabelResult>;
@@ -131,6 +133,11 @@ export type MutationCreateMenuEntryArgs = {
 export type MutationCreateOrUpdateMenuEntryLabelArgs = {
   data: MenuEntryLabelInput;
   id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type MutationCreateOrderArgs = {
+  data: OrderInput;
 };
 
 
@@ -195,14 +202,61 @@ export type MutationUpdateMenuEntrySuccess = {
   data: MenuEntry;
 };
 
+/** An Order containing one or more MenuEntries */
+export type Order = {
+  __typename?: 'Order';
+  address?: Maybe<Scalars['String']['output']>;
+  bill?: Maybe<Array<OrderBill>>;
+  dateTime?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  items?: Maybe<Array<MenuEntry>>;
+  observations?: Maybe<Array<OrderObservation>>;
+  splitOrderPriceBy?: Maybe<Scalars['Float']['output']>;
+  totalPrice?: Maybe<Scalars['Float']['output']>;
+};
+
+/** The order bill which contains the price for each bill if the order price was split, or a single total price if it was not. */
+export type OrderBill = {
+  __typename?: 'OrderBill';
+  id?: Maybe<Scalars['Int']['output']>;
+  price?: Maybe<Scalars['Float']['output']>;
+};
+
+export type OrderBillInput = {
+  price?: InputMaybe<Scalars['Float']['input']>;
+};
+
+/** Input to create a new Order */
+export type OrderInput = {
+  address: Scalars['String']['input'];
+  bill?: InputMaybe<Array<OrderBillInput>>;
+  observations?: InputMaybe<Array<OrderObservationInput>>;
+  splitOrderPriceBy?: InputMaybe<Scalars['Int']['input']>;
+  totalPrice?: InputMaybe<Scalars['Float']['input']>;
+};
+
+/** The order observation. Example: "No pepper on pizza" */
+export type OrderObservation = {
+  __typename?: 'OrderObservation';
+  content?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+};
+
+export type OrderObservationInput = {
+  content?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   getAllClients?: Maybe<Array<Client>>;
   getAllMenuEntries?: Maybe<Array<MenuEntry>>;
   getAllMenuEntryLabels?: Maybe<Array<MenuEntryLabel>>;
+  getAllOrders?: Maybe<Array<Order>>;
   getClientById?: Maybe<QueryGetClientByIdResult>;
   getMenuEntryById?: Maybe<QueryGetMenuEntryByIdResult>;
+  getOrderById?: Maybe<QueryGetOrderByIdResult>;
   searchClients?: Maybe<Array<Client>>;
+  searchMenuEntryLabels?: Maybe<Array<MenuEntryLabel>>;
 };
 
 
@@ -221,6 +275,11 @@ export type QueryGetAllMenuEntryLabelsArgs = {
 };
 
 
+export type QueryGetAllOrdersArgs = {
+  page?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type QueryGetClientByIdArgs = {
   id: Scalars['Int']['input'];
 };
@@ -231,8 +290,18 @@ export type QueryGetMenuEntryByIdArgs = {
 };
 
 
+export type QueryGetOrderByIdArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
 export type QuerySearchClientsArgs = {
   search: Scalars['String']['input'];
+};
+
+
+export type QuerySearchMenuEntryLabelsArgs = {
+  searchTerm: Scalars['String']['input'];
 };
 
 export type QueryGetClientByIdResult = BaseError | LengthError | QueryGetClientByIdSuccess | RecordNotFoundError;
@@ -247,6 +316,13 @@ export type QueryGetMenuEntryByIdResult = BaseError | LengthError | QueryGetMenu
 export type QueryGetMenuEntryByIdSuccess = {
   __typename?: 'QueryGetMenuEntryByIdSuccess';
   data: MenuEntry;
+};
+
+export type QueryGetOrderByIdResult = BaseError | LengthError | QueryGetOrderByIdSuccess | RecordNotFoundError;
+
+export type QueryGetOrderByIdSuccess = {
+  __typename?: 'QueryGetOrderByIdSuccess';
+  data: Order;
 };
 
 export type RecordNotFoundError = Error & {

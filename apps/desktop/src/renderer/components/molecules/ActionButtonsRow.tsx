@@ -7,7 +7,7 @@ type BottomButtonsRowProps = {
   children?: React.ReactNode
 }
 
-export const BottomButtonsRow = (props: BottomButtonsRowProps) => {
+export const ActionButtonsRow = (props: BottomButtonsRowProps) => {
   return (
     <div className="flex justify-between flex-grow-0 flex-shrink-0 h-[35px] pb-2">
       <div className="flex gap-1">

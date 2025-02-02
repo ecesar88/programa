@@ -1,100 +1,88 @@
-import { Button, FormGroup } from '@blueprintjs/core'
-import { Input, InputError, ModalTitle } from '@renderer/components'
-import { OverlayMode } from '@renderer/constants/enums'
-import { rowDataFocusedAtom } from '@renderer/store/selectedRow'
+import { Button } from '@blueprintjs/core'
+import { queryKeys } from '@renderer/constants'
+import { useFragment } from '@renderer/queries/graphql/codegen'
+import { MenuEntry_FragmentFragmentDoc } from '@renderer/queries/graphql/codegen/graphql'
+import { get } from '@renderer/queries/operations/menu'
+import { useQuery } from '@tanstack/react-query'
 import { useAtomValue } from 'jotai'
-import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
+import { ProductCard } from '../Menu/components/ProductCard'
+import { OrderItem } from './components/OrderItem'
+import { orderItemsAtom } from './store'
 
 type CreateOrEditProps = {
-  onSave?: () => void
-  onCancel?: () => void
-  overlayMode: OverlayMode | null
+  isLoading?: boolean
+  onBackward?: () => void
+  // overlayMode: OverlayMode | null
 }
 
-export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => {
+export const CreateOrEdit = (props: CreateOrEditProps): React.ReactNode => {
   const {
     register,
     reset,
     formState: { errors }
   } = useFormContext()
 
-  const selectedRow = useAtomValue(rowDataFocusedAtom)
-
-  useEffect(() => {
-    const rowHasData = Object.values(selectedRow)?.length > 0
-
-    if (props.overlayMode === OverlayMode.EDIT && rowHasData) {
-      reset(selectedRow)
-    } else if (props.overlayMode === OverlayMode.NEW && rowHasData) {
-      reset()
+  const menuEntriesQuery = useQuery({
+    queryKey: queryKeys['menu']['getAll'],
+    queryFn: get,
+    meta: {
+      errorMessage: 'Erro ao obter o cardápio'
     }
+  })
 
-    return () => {
-      reset({})
-    }
-  }, [selectedRow, props.overlayMode])
-
-  if (!props.overlayMode) return null
+  const orderItems = useAtomValue(orderItemsAtom)
 
   return (
-    <div className="p-5 bg-white h-[200px] w-[800px] rounded flex flex-col gap-1 justify-between">
-      <ModalTitle title={props.overlayMode === OverlayMode.NEW ? 'Novo Pedido' : 'Editar Pedido'} />
+    <div className="flex flex-col gap-1 justify-between max-h-full">
+      {/* <ModalTitle title={props.overlayMode === OverlayMode.NEW ? 'Novo Pedido' : 'Editar Pedido'} /> */}
 
-      <form id="create-form" className="w-full h-full">
-        <div className="flex w-full gap-4">
-          <FormGroup
-            style={{ width: '100%', height: '60px' }}
-            label="Nome:"
-            labelInfo="(obrigatório)"
-          >
-            <Input
-              placeholder="Endereço"
-              fill
-              error={errors?.['address']?.message?.toString() as unknown as boolean}
-              {...register('address')}
-            />
-            <InputError errorMessage={errors?.['address']?.message?.toString()} />
-          </FormGroup>
-
-          <FormGroup style={{ width: '100%', height: '60px' }} label="Telefone:">
-            <Input
-              placeholder="Observações"
-              fill
-              error={errors?.['observations']?.message?.toString() as unknown as boolean}
-              {...register('observations')}
-            />
-            <InputError errorMessage={errors?.['phone']?.message?.toString()} />
-          </FormGroup>
-        </div>
-      </form>
-
-      <div className="flex flex-row gap-3">
+      <div>
         <Button
-          fill
-          intent="none"
-          icon="disable"
+          icon={'arrow-left'}
+          outlined
+          intent={'none'}
           onClick={() => {
-            props?.onCancel?.()
+            props.onBackward?.()
           }}
         >
-          Cancelar
+          Back
         </Button>
+      </div>
 
-        <Button
-          icon="floppy-disk"
-          fill
-          intent="warning"
-          form="create-form"
-          type="submit"
-          onClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-            e.preventDefault()
+      <div className="flex flex-row gap-4 border-t border-t-lightGray1 mt-3 max-h-full overflow-hidden">
+        <div className="flex flex-col justify-start flex-grow flex-[4]">
+          {orderItems.map((orderItem) => (
+            <OrderItem key={orderItem.id} {...orderItem} />
+          ))}
+        </div>
 
-            props?.onSave?.()
-          }}
-        >
-          Salvar
-        </Button>
+        <div className="flex flex-col gap-2 max-h-full overflow-hidden flex-[1]">
+          <div>search ?</div>
+
+          <div className="flex flex-col">
+            {menuEntriesQuery.data?.getAllMenuEntries?.length ? (
+              menuEntriesQuery.data?.getAllMenuEntries?.map((menuEntryFragment, idx, arr) => {
+                const menuEntry = useFragment(MenuEntry_FragmentFragmentDoc, menuEntryFragment)
+
+                return (
+                  <ProductCard
+                    key={menuEntry.id}
+                    idx={idx}
+                    arrayLength={arr.length}
+                    menuEntry={menuEntry}
+                    onClick={() => {
+                      // props.openOverlay(OverlayMode.EDIT)
+                      // setSelectedRowAtom({ data: menuEntry })
+                    }}
+                  />
+                )
+              })
+            ) : (
+              <>no data</>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   )

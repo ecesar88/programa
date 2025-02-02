@@ -18,7 +18,8 @@ export default function DishTemplateRoundIcon(props: SVGProps<SVGSVGElement>) {
         imageRendering: 'auto',
         fillRule: 'evenodd',
         clipRule: 'evenodd',
-        opacity: 0.3
+        opacity: 0.3,
+        ...props.style
       }}
       viewBox="0 0 2195.7 2195.7"
       xmlnsXlink="http://www.w3.org/1999/xlink"

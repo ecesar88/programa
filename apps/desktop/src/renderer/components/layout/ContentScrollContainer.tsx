@@ -12,7 +12,7 @@ export const ContentScrollContainer = (props: { children: React.ReactNode }) => 
   return (
     <div
       id="content-scroll-container"
-      style={{ height: '100%', maxHeight: `calc(100% - ${dataHeaderHeight}px` }}
+      style={{ height: '100%', maxHeight: `calc(100% - ${dataHeaderHeight}px`, overflow: 'hidden' }}
     >
       {props.children}
     </div>

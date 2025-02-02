@@ -1,7 +1,7 @@
 import { Button, Colors, Dialog, DialogBody } from '@blueprintjs/core'
 import { faker } from '@faker-js/faker'
 // import { Order } from '@prisma/client'
-import { BottomButtonsRow, ScreenMenuProps } from '@renderer/components/molecules'
+import { ActionButtonsRow, ScreenMenuProps } from '@renderer/components/molecules'
 import { OverlayMode } from '@renderer/constants/enums'
 import { cn } from '@renderer/utils'
 // import { CreateOrderResolver } from '@repo/shared'
@@ -10,7 +10,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { FaCheckCircle } from 'react-icons/fa'
 import { MdDeliveryDining } from 'react-icons/md'
 import { PiCookingPotBold, PiCookingPotFill } from 'react-icons/pi'
-import { CreateOrEditModal } from './CreateOrEdit'
+import { CreateOrEdit } from './CreateOrEdit'
 import { OrderCard } from './components/OrderCard'
 
 const OrderTitle = ({ title }: { title: string }): React.ReactNode => {
@@ -33,7 +33,7 @@ const OrderColumn = (props: OrderColumnProps): React.ReactNode => {
   return (
     <div
       id="order-column"
-      className="flex flex-col items-center justify-start w-full h-full rounded-lg bg-lightGray4"
+      className="flex flex-col items-center justify-start w-full h-full rounded-lg bg-lightGray4 max-h-full overflow-hidden"
     >
       <div className="flex items-center justify-between gap-2 px-4 pt-4 pb-2">
         {props.icon ?? null}
@@ -161,7 +161,7 @@ export const Read = (props: ReadOrdersProps): React.ReactNode => {
   return (
     <FormProvider {...form}>
       <div className="flex flex-col w-full h-full gap-4">
-        <div className="flex justify-between w-full h-full gap-4">
+        <div className="flex justify-between w-full h-full gap-4 overflow-hidden">
           {categoriasDePedido.map((categoria, idx) => (
             <React.Fragment key={idx}>
               <OrderColumn
@@ -188,7 +188,7 @@ export const Read = (props: ReadOrdersProps): React.ReactNode => {
         </div>
 
         <div className="w-full">
-          <BottomButtonsRow
+          <ActionButtonsRow
             onNewButtonClick={props.onCreateOrEdit}
             // actions={props.actions}
             // onOpenOverlay={() => {

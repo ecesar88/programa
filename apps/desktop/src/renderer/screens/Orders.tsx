@@ -1,15 +1,11 @@
 import { DataHeader, Loading } from '@renderer/components'
 import { ContentScrollContainer } from '@renderer/components/layout'
 import { Read } from '@renderer/components/templates/Orders'
-import { queryKeys } from '@renderer/constants'
-import { useCreateOrEditOverlay, useHandleModalState } from '@renderer/hooks'
-import { handleResponseStatus, successToast } from '@renderer/utils'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { CreateOrEdit } from '@renderer/components/templates/Orders/CreateOrEdit'
 import { useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { match } from 'ts-pattern'
-import { oboolean } from 'zod'
 
 export const Orders = () => {
   const { t } = useTranslation()
@@ -45,6 +41,7 @@ export const Orders = () => {
   // })
 
   // const form = useForm<CreateMenuEntryMutationVariables['data']>({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const form = useForm<any>({
     // resolver: zodResolver(MenuEntryCreateOrUpdateInputSchema),
     defaultValues: {}
@@ -169,26 +166,6 @@ export const Orders = () => {
 
   const [isEditModeActive, setIsEditModeActive] = useState(false)
 
-  // const renderReadOrCreateOrUpdate = (isEditModeActive: boolean) => {
-  //   switch (isEditModeActive) {
-  //     case true: {
-  //       return <>edit</>
-  //     }
-  //     default: {
-  //       return match(isLoading as boolean)
-  //         .with(true, () => <Loading />)
-  //         .otherwise(() => (
-  //           <Read
-  //             onCreateOrEdit={() => setIsEditModeActive(true)}
-  //             // actions={actions}
-  //             // openOverlay={openMenuEntryModal}
-  //             // menuEntries={(data?.getAllMenuEntries as MenuEntry[]) ?? []}
-  //           />
-  //         ))
-  //     }
-  //   }
-  // }
-
   const screenStatus = useMemo((): { status: 'edit' | 'loading' | 'read' } => {
     if (isEditModeActive) return { status: 'edit' }
     if (isLoading) return { status: 'loading' }
@@ -198,7 +175,7 @@ export const Orders = () => {
 
   return (
     <FormProvider {...form}>
-      <div className="flex flex-col gap-2 h-full relative">
+      <div className="flex flex-col gap-2 h-full">
         <DataHeader title={t('screens.menu.title')} />
 
         {/* <SuspenseLoading isLoading={isLoadingAtomValue} /> */}
@@ -206,10 +183,13 @@ export const Orders = () => {
         <ContentScrollContainer>
           {match(screenStatus)
             .with({ status: 'loading' }, () => <Loading />)
-            .with({ status: 'edit' }, () => <>editando</>)
-            .otherwise(() => (
+            .with({ status: 'edit' }, () => (
+              <CreateOrEdit onBackward={() => setIsEditModeActive(false)} />
+            ))
+            .with({ status: 'read' }, () => (
               <Read onCreateOrEdit={() => setIsEditModeActive(true)} />
-            ))}
+            ))
+            .exhaustive()}
         </ContentScrollContainer>
       </div>
 
