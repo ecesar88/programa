@@ -42,10 +42,10 @@ export const OrderItem = (props: Omit<MenuEntry, 'id' | '__typename'>) => {
   }, [isMouseHolding])
 
   return (
-    <div className="flex flex-col bg-white border-l-forest2 border-l-[6px] py-1 pr-2 hover:bg-lightGray4">
+    <div className="flex flex-col bg-white bg-opacity-10 border-l-forest2 border-l-[6px] py-1 pr-2 hover:bg-lightGray4">
       {/* Order */}
       <div className="flex gap-2 justify-between pl-2 py-0.5">
-        <div className="flex-[8] flex gap-3 items-center">
+        <div className="flex gap-3 items-center flex-shrink">
           <div className="flex-[2] min-w-[46px] max-w-[46px] min-h-[46px] max-h-[46px] border border-lightGray1 rounded-lg">
             <div className="transition-all flex items-center justify-center">
               <DishTemplateRoundIcon style={{ opacity: 1 }} />
@@ -59,7 +59,7 @@ export const OrderItem = (props: Omit<MenuEntry, 'id' | '__typename'>) => {
           </div>
         </div>
 
-        <div className="flex-[2] flex flex-col">
+        <div className="flex-[3] flex flex-col flex-shrink-0">
           <div>
             <ButtonGroup className="flex py-0.5 items-center rounded-lg justify-end">
               <Button
@@ -92,7 +92,7 @@ export const OrderItem = (props: Omit<MenuEntry, 'id' | '__typename'>) => {
             </ButtonGroup>
           </div>
 
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col items-end">
             <div>
               <span className="font-bold text-forest4 text-xs">R$ &nbsp;&nbsp;98,00</span>
             </div>

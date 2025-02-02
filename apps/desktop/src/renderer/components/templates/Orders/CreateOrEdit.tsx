@@ -5,9 +5,9 @@ import { MenuEntry_FragmentFragmentDoc } from '@renderer/queries/graphql/codegen
 import { get } from '@renderer/queries/operations/menu'
 import { useQuery } from '@tanstack/react-query'
 import { useAtomValue } from 'jotai'
-import { useFormContext } from 'react-hook-form'
 import { ProductCard } from '../Menu/components/ProductCard'
-import { OrderItem } from './components/OrderItem'
+import { ActionButtonsAndTotal } from './components/ActionButtonsAndTotal'
+import { OrderItemsListing } from './components/OrderItemsListing'
 import { orderItemsAtom } from './store'
 
 type CreateOrEditProps = {
@@ -17,11 +17,11 @@ type CreateOrEditProps = {
 }
 
 export const CreateOrEdit = (props: CreateOrEditProps): React.ReactNode => {
-  const {
-    register,
-    reset,
-    formState: { errors }
-  } = useFormContext()
+  // const {
+  //   register,
+  //   reset,
+  //   formState: { errors }
+  // } = useFormContext()
 
   const menuEntriesQuery = useQuery({
     queryKey: queryKeys['menu']['getAll'],
@@ -35,8 +35,6 @@ export const CreateOrEdit = (props: CreateOrEditProps): React.ReactNode => {
 
   return (
     <div className="flex flex-col gap-1 justify-between max-h-full">
-      {/* <ModalTitle title={props.overlayMode === OverlayMode.NEW ? 'Novo Pedido' : 'Editar Pedido'} /> */}
-
       <div>
         <Button
           icon={'arrow-left'}
@@ -51,14 +49,19 @@ export const CreateOrEdit = (props: CreateOrEditProps): React.ReactNode => {
       </div>
 
       <div className="flex flex-row gap-4 border-t border-t-lightGray1 mt-3 max-h-full overflow-hidden">
-        <div className="flex flex-col justify-start flex-grow flex-[4]">
-          {orderItems.map((orderItem) => (
-            <OrderItem key={orderItem.id} {...orderItem} />
-          ))}
+        <div className="flex flex-col justify-between flex-[4]">
+          <OrderItemsListing orderItems={orderItems} />
+          <ActionButtonsAndTotal />
         </div>
 
-        <div className="flex flex-col gap-2 max-h-full overflow-hidden flex-[1]">
-          <div>search ?</div>
+        <div className="flex flex-col gap-2 max-h-full overflow-hidden flex-[6] pt-2">
+          <div className="pt-2">
+            <input
+              type="text"
+              placeholder="Search"
+              className="border border-gray3 w-full p-1 rounded-md"
+            />
+          </div>
 
           <div className="flex flex-col">
             {menuEntriesQuery.data?.getAllMenuEntries?.length ? (
@@ -71,10 +74,7 @@ export const CreateOrEdit = (props: CreateOrEditProps): React.ReactNode => {
                     idx={idx}
                     arrayLength={arr.length}
                     menuEntry={menuEntry}
-                    onClick={() => {
-                      // props.openOverlay(OverlayMode.EDIT)
-                      // setSelectedRowAtom({ data: menuEntry })
-                    }}
+                    onClick={() => {}}
                   />
                 )
               })

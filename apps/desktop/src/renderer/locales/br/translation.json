@@ -3,6 +3,9 @@
     "screens": {
       "menu": {
         "title": "CARDÁPIO"
+      },
+      "orders": {
+        "title": "PEDIDOS"
       }
     }
   }

@@ -176,7 +176,7 @@ export const Orders = () => {
   return (
     <FormProvider {...form}>
       <div className="flex flex-col gap-2 h-full">
-        <DataHeader title={t('screens.menu.title')} />
+        <DataHeader title={t('screens.orders.title')} />
 
         {/* <SuspenseLoading isLoading={isLoadingAtomValue} /> */}
 
