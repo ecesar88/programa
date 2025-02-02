@@ -1,7 +1,7 @@
 import { Button, ButtonGroup } from '@blueprintjs/core'
 import { DishTemplateRoundIcon } from '@renderer/assets/icons'
 import { MenuEntry } from '@renderer/queries/graphql/codegen/graphql'
-import { useAtomValue } from 'jotai'
+import { useSetAtom } from 'jotai'
 import { useEffect, useState } from 'react'
 import { FaMinus, FaPlus } from 'react-icons/fa'
 import { orderItemsAtom } from '../store'
@@ -12,7 +12,7 @@ const MOUSEDOWN_DELAY = 300
 // interface OrderItemProps extends MenuEntry {}
 
 export const OrderItem = (props: Omit<MenuEntry, 'id' | '__typename'>) => {
-  const orderItems = useAtomValue(orderItemsAtom)
+  const orderItems = useSetAtom(orderItemsAtom)
 
   const [isMouseHolding, setIsMouseHolding] = useState(false)
   const [qty, setQty] = useState<number>(0)
