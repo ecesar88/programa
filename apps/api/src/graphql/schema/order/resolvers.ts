@@ -29,7 +29,13 @@ export const queryAll: Resolver = async (_parent, args, ctx, _info) => {
       },
       include: prismaDefaultOrderIncludes
     })
-  } catch (_error) {
+  } catch (error) {
+    logger({
+      level: LOG_TYPE.ERROR,
+      message: 'Error fetchying all orders',
+      object: colorizeAsJSON(JSON.parse(String(error)))
+    })
+
     throw new Error('Error fetching all orders')
   }
 }
@@ -51,8 +57,14 @@ export const queryOne: Resolver<Id> = async (_parent, args, ctx, _info) => {
         id
       }
     })
-  } catch (_error) {
-    throw new Error('Prisma error')
+  } catch (error) {
+    logger({
+      level: LOG_TYPE.ERROR,
+      message: `Error fetching order with id ${id}`,
+      object: colorizeAsJSON(JSON.parse(String(error)))
+    })
+
+    throw new Error(`Error fetching order with id ${id}`)
   }
 
   if (!order) {
@@ -81,7 +93,13 @@ export const create: Resolver<{
       },
       include: prismaDefaultOrderIncludes
     })
-  } catch (_error) {
+  } catch (error) {
+    logger({
+      level: LOG_TYPE.ERROR,
+      message: 'Error creating the order',
+      object: colorizeAsJSON(JSON.parse(String(error)))
+    })
+
     throw new Error('Error creating the order')
   }
 }
