@@ -25,7 +25,7 @@ const prismaDefaultMenuEntryIncludes: Readonly<Prisma.MenuEntryInclude> = {
 export const queryAll: Resolver = async (_parent, args, ctx, _info) => {
   logger({
     level: LOG_TYPE.INFO,
-    message: `Fetching all menu entries`,
+    message: `Fetching all MenuEntries`,
     object: colorizeAsJSON(args)
   })
 
@@ -36,8 +36,14 @@ export const queryAll: Resolver = async (_parent, args, ctx, _info) => {
       },
       include: prismaDefaultMenuEntryIncludes
     })
-  } catch (_error) {
-    throw new Error('Error fetching all menu entries')
+  } catch (error) {
+    logger({
+      level: LOG_TYPE.ERROR,
+      message: 'Error fetching all MenuEntries',
+      object: colorizeAsJSON(JSON.parse(String(error)))
+    })
+
+    throw new Error('Error fetching all MenuEntries')
   }
 }
 
@@ -46,7 +52,7 @@ export const queryOne: Resolver<Id> = async (_parent, args, ctx, _info) => {
 
   logger({
     level: LOG_TYPE.INFO,
-    message: `Fetching menu entry with id '${id}'`,
+    message: `Fetching MenuEntry with id '${id}'`,
     object: colorizeAsJSON(args)
   })
 
@@ -58,12 +64,18 @@ export const queryOne: Resolver<Id> = async (_parent, args, ctx, _info) => {
         id
       }
     })
-  } catch (_error) {
-    throw new Error('Prisma error')
+  } catch (error) {
+    logger({
+      level: LOG_TYPE.ERROR,
+      message: `Error fetching MenuEntry with id ${id}`,
+      object: colorizeAsJSON(JSON.parse(String(error)))
+    })
+
+    throw new Error(`Error fetching MenuEntry with id ${id}`)
   }
 
   if (!client) {
-    throw new RecordNotFoundError(`Menu entry with id ${id}`)
+    throw new RecordNotFoundError(`Menu MenuEntry id ${id}`)
   }
 
   return client
@@ -76,7 +88,7 @@ export const create: Resolver<{
 
   logger({
     level: LOG_TYPE.INFO,
-    message: 'Creating new menu entry with data:',
+    message: 'Creating new MenuEntry with data:',
     object: colorizeAsJSON(args)
   })
 
@@ -119,8 +131,14 @@ export const create: Resolver<{
       },
       include: prismaDefaultMenuEntryIncludes
     })
-  } catch (_error) {
-    throw new Error('Error creating the menu entry')
+  } catch (error) {
+    logger({
+      level: LOG_TYPE.ERROR,
+      message: 'Error creating the MenuEntry',
+      object: colorizeAsJSON(JSON.parse(String(error)))
+    })
+
+    throw new Error('Error creating the MenuEntry')
   }
 }
 
@@ -204,7 +222,13 @@ export const update: Resolver<UpdateMenuEntryInput> = async (_parent, args, ctx,
     })
 
     return updatedMenuEntry
-  } catch (_error) {
+  } catch (error) {
+    logger({
+      level: LOG_TYPE.ERROR,
+      message: 'Error updating MenuEntry',
+      object: colorizeAsJSON(JSON.parse(String(error)))
+    })
+
     throw new Error(`Error updating MenuEntry with id ${id}`)
   }
 }
@@ -231,7 +255,13 @@ export const remove: Resolver<Id> = async (_parent, args, ctx, _info) => {
       },
       include: prismaDefaultMenuEntryIncludes
     })
-  } catch (_error) {
+  } catch (error) {
+    logger({
+      level: LOG_TYPE.ERROR,
+      message: `Error deleting menu entry with id: ${id}`,
+      object: colorizeAsJSON(JSON.parse(String(error)))
+    })
+
     throw new Error(`Error deleting menu entry with id: ${id}`)
   }
 }
@@ -250,8 +280,14 @@ export const queryAllMenuLabels: Resolver = async (_parent, args, ctx, _info) =>
         id: 'desc'
       }
     })
-  } catch (_error) {
-    throw new Error('Error fetching all menu entry labels')
+  } catch (error) {
+    logger({
+      level: LOG_TYPE.ERROR,
+      message: 'Error fetching all MenuEntryLabels',
+      object: colorizeAsJSON(JSON.parse(String(error)))
+    })
+
+    throw new Error('Error fetching all MenuEntryLabels')
   }
 }
 
@@ -279,11 +315,11 @@ export const searchMenuEntryLabels: Resolver<{ searchTerm: string }> = async (
   } catch (error) {
     logger({
       level: LOG_TYPE.ERROR,
-      message: 'Error searching for menu entry label',
+      message: 'Error searching for MenuEntryLabel',
       object: colorizeAsJSON(JSON.parse(String(error)))
     })
 
-    throw new Error('Error searching for menu entry labels')
+    throw new Error('Error searching for MenuEntryLabel')
   }
 }
 
@@ -324,11 +360,11 @@ export const createOrUpdateMenuEntryLabel: Resolver<CreateOrUpdateMenuEntryLabel
     } catch (error) {
       logger({
         level: LOG_TYPE.ERROR,
-        message: 'Error updating menu entry label',
+        message: 'Error updating MenuEntryLabel',
         object: colorizeAsJSON(JSON.parse(String(error)))
       })
 
-      throw new Error('Error updating menu entry label')
+      throw new Error('Error updating MenuEntryLabel')
     }
   }
 
@@ -345,11 +381,11 @@ export const createOrUpdateMenuEntryLabel: Resolver<CreateOrUpdateMenuEntryLabel
   } catch (error) {
     logger({
       level: LOG_TYPE.ERROR,
-      message: 'Error creating menu entry label',
+      message: 'Error creating MenuEntryLabel',
       object: colorizeAsJSON(JSON.parse(String(error)))
     })
 
-    throw new Error('Error creating menu entry label')
+    throw new Error('Error creating MenuEntryLabel')
   }
 }
 
@@ -365,7 +401,7 @@ export const deleteMenuEntryLabel: Resolver<Id> = async (_parent, args, ctx, _in
   try {
     logger({
       level: LOG_TYPE.INFO,
-      message: `Deleting menu entry label with id: ${id}`,
+      message: `Deleting MenuEntryLabel with id: ${id}`,
       object: colorizeAsJSON(args)
     })
 
@@ -377,7 +413,7 @@ export const deleteMenuEntryLabel: Resolver<Id> = async (_parent, args, ctx, _in
   } catch (error) {
     logger({
       level: LOG_TYPE.ERROR,
-      message: `Error deleting menu entry label with id: ${id}`,
+      message: `Error deleting MenuEntryLabel with id: ${id}`,
       object: colorizeAsJSON(JSON.parse(String(error)))
     })
 
