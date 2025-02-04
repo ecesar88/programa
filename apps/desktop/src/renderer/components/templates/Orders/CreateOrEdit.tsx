@@ -63,7 +63,7 @@ export const CreateOrEdit = (props: CreateOrEditProps): React.ReactNode => {
             />
           </div>
 
-          <div className="flex flex-col">
+          <div className="flex flex-col overflow-auto">
             {menuEntriesQuery.data?.getAllMenuEntries?.length ? (
               menuEntriesQuery.data?.getAllMenuEntries?.map((menuEntryFragment, idx, arr) => {
                 const menuEntry = useFragment(MenuEntry_FragmentFragmentDoc, menuEntryFragment)
