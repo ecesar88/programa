@@ -8,6 +8,7 @@ interface ProductCardProps {
   arrayLength: number
   menuEntry: MenuEntry
   onClick: () => void
+  className?: string
 }
 
 const renderVariantPrice = (variant: MenuEntry['variants']) => {
@@ -36,10 +37,14 @@ export const ProductCard = (props: ProductCardProps) => {
     >
       <div
         onClick={() => props.onClick()}
-        className={cn('flex-col gap-2 [&_*]:!cursor-pointer !cursor-pointer', {
-          'bg-lightGray5': props.idx % 2 === 0,
-          'bg-lightGray4': props.idx % 2 !== 0
-        })}
+        className={cn(
+          'flex-col gap-2 [&_*]:!cursor-pointer !cursor-pointer',
+          {
+            'bg-lightGray5': props.idx % 2 === 0,
+            'bg-lightGray4': props.idx % 2 !== 0
+          },
+          props.className
+        )}
       >
         <div
           className={cn('flex flex-row px-4 py-2 justify-between', {

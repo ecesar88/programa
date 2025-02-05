@@ -1,46 +1,16 @@
 import { Button, ButtonGroup } from '@blueprintjs/core'
 import { DishTemplateRoundIcon } from '@renderer/assets/icons'
-import { MenuEntry } from '@renderer/queries/graphql/codegen/graphql'
-import { useSetAtom } from 'jotai'
-import { useEffect, useState } from 'react'
-import { FaMinus, FaPlus } from 'react-icons/fa'
-import { orderItemsAtom } from '../store'
+import { OrderEntry } from '@renderer/queries/graphql/codegen/graphql'
+import { FaMinus, FaPlus, FaTrashAlt } from 'react-icons/fa'
 
-let timer: NodeJS.Timeout
-const MOUSEDOWN_DELAY = 300
+type OrderItemProps = {
+  orderItem: Omit<OrderEntry, '__typename'>
+  onDecreaseQuantity: (id?: number) => void
+  onRemoveItem: (id?: number) => void
+  onIncreaseQuantity: (id?: number) => void
+}
 
-// interface OrderItemProps extends MenuEntry {}
-
-export const OrderItem = (props: Omit<MenuEntry, 'id' | '__typename'>) => {
-  const orderItems = useSetAtom(orderItemsAtom)
-
-  const [isMouseHolding, setIsMouseHolding] = useState(false)
-  const [qty, setQty] = useState<number>(0)
-
-  const stopIncrementingOrDecrementing = () => {
-    clearInterval(timer)
-  }
-
-  const decreaseAmount = () => {
-    timer = setInterval(() => setQty((prev) => (prev <= 0 ? 0 : prev - 1)), MOUSEDOWN_DELAY)
-  }
-
-  const increaseAmount = () => {
-    timer = setInterval(() => {
-      setQty((prev) => (prev <= 0 ? 0 : prev + 1))
-    }, MOUSEDOWN_DELAY)
-  }
-
-  const changeIsMouseHolding = (isMouseHolding: boolean) => setIsMouseHolding(isMouseHolding)
-
-  useEffect(() => {
-    if (isMouseHolding) {
-      increaseAmount()
-    } else {
-      decreaseAmount()
-    }
-  }, [isMouseHolding])
-
+export const OrderItem = (props: OrderItemProps) => {
   return (
     <div className="flex flex-col bg-white bg-opacity-10 border-l-forest2 border-l-[6px] py-1 pr-2 hover:bg-lightGray4">
       {/* Order */}
@@ -52,10 +22,14 @@ export const OrderItem = (props: Omit<MenuEntry, 'id' | '__typename'>) => {
             </div>
           </div>
 
-          <div className="flex-[8]">
-            <p className="font-bold">
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-            </p>
+          <div className="flex-[8] flex flex-col gap-1">
+            <div>
+              <p className="font-bold">{props.orderItem.menuEntry?.name}</p>
+            </div>
+
+            <div>
+              <p className="text-sm">{props.orderItem.menuEntry?.description}</p>
+            </div>
           </div>
         </div>
 
@@ -63,7 +37,21 @@ export const OrderItem = (props: Omit<MenuEntry, 'id' | '__typename'>) => {
           <div>
             <ButtonGroup className="flex py-0.5 items-center rounded-lg justify-end">
               <Button
-                icon={<FaMinus className="text-red3" />}
+                icon={
+                  (props?.orderItem.quantity ?? 0) <= 1 ? (
+                    <FaTrashAlt className="text-red3" />
+                  ) : (
+                    <FaMinus className="text-red3" />
+                  )
+                }
+                onClick={() => {
+                  if ((props.orderItem.quantity ?? 0) <= 1) {
+                    props.onRemoveItem(props?.orderItem?.id as number)
+                    return
+                  }
+
+                  props.onDecreaseQuantity(props?.orderItem?.id as number)
+                }}
                 intent="none"
                 outlined
                 small
@@ -78,7 +66,7 @@ export const OrderItem = (props: Omit<MenuEntry, 'id' | '__typename'>) => {
                 small
                 disabled
               >
-                {qty}
+                {props.orderItem.quantity ?? 0}
               </Button>
 
               <Button
@@ -86,22 +74,25 @@ export const OrderItem = (props: Omit<MenuEntry, 'id' | '__typename'>) => {
                 intent="none"
                 outlined
                 small
-                onMouseDown={() => changeIsMouseHolding(true)}
-                onMouseUp={() => changeIsMouseHolding(false)}
+                onClick={() => props.onIncreaseQuantity(props?.orderItem?.id as number)}
               />
             </ButtonGroup>
           </div>
 
           <div className="flex flex-col items-end">
             <div>
-              <span className="font-bold text-forest4 text-xs">R$ &nbsp;&nbsp;98,00</span>
+              <span className="font-bold text-forest4 text-xs">
+                R$ {props.orderItem.menuEntry?.variants?.[0]?.price}
+              </span>
             </div>
 
-            <div>
-              <span className="font-bold text-xs opacity-85 line-through">R$ 108,00</span>
-            </div>
+            {/* Discount ? */}
+            {/* <div>
+              <span className="font-bold text-xs opacity-85 line-through">
+                R$ {props.menuEntry?.variants?.[0]?.price}
+              </span>
+            </div> */}
           </div>
-          {/* total */}
         </div>
       </div>
     </div>

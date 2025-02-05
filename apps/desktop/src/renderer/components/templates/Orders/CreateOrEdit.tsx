@@ -1,14 +1,22 @@
 import { Button } from '@blueprintjs/core'
 import { queryKeys } from '@renderer/constants'
 import { useFragment } from '@renderer/queries/graphql/codegen'
-import { MenuEntry_FragmentFragmentDoc } from '@renderer/queries/graphql/codegen/graphql'
+import {
+  MenuEntry_FragmentFragmentDoc,
+  OrderEntry
+} from '@renderer/queries/graphql/codegen/graphql'
 import { get } from '@renderer/queries/operations/menu'
 import { useQuery } from '@tanstack/react-query'
-import { useAtomValue } from 'jotai'
+import { useAtom, useAtomValue } from 'jotai'
 import { ProductCard } from '../Menu/components/ProductCard'
 import { ActionButtonsAndTotal } from './components/ActionButtonsAndTotal'
 import { OrderItemsListing } from './components/OrderItemsListing'
 import { orderItemsAtom } from './store'
+import { useMemo } from 'react'
+import { cn } from '@renderer/utils'
+
+const orderContainsMenuEntry = (orderItems: number[], menuEntryId: number) =>
+  orderItems.includes(menuEntryId)
 
 type CreateOrEditProps = {
   isLoading?: boolean
@@ -31,27 +39,38 @@ export const CreateOrEdit = (props: CreateOrEditProps): React.ReactNode => {
     }
   })
 
-  const orderItems = useAtomValue(orderItemsAtom)
+  const [orderItems, setOrderItems] = useAtom(orderItemsAtom)
+
+  const totalOrderPrice = useMemo(
+    () => orderItems.reduce((acc, curr) => acc + (curr.menuEntry?.variants?.[0].price ?? 0), 0),
+    [JSON.stringify(orderItems)]
+  )
 
   return (
     <div className="flex flex-col gap-1 justify-between max-h-full">
-      <div>
-        <Button
-          icon={'arrow-left'}
-          outlined
-          intent={'none'}
-          onClick={() => {
-            props.onBackward?.()
-          }}
-        >
-          Back
-        </Button>
+      <div className="flex gap-2 items-center">
+        <div>
+          <Button
+            icon={'arrow-left'}
+            outlined
+            intent={'none'}
+            onClick={() => {
+              props.onBackward?.()
+            }}
+          >
+            Back
+          </Button>
+        </div>
+
+        <div>
+          <p>NOVO PEDIDO</p>
+        </div>
       </div>
 
       <div className="flex flex-row gap-4 border-t border-t-lightGray1 mt-3 max-h-full overflow-hidden">
         <div className="flex flex-col justify-between flex-[4]">
           <OrderItemsListing orderItems={orderItems} />
-          <ActionButtonsAndTotal />
+          <ActionButtonsAndTotal totalPrice={totalOrderPrice} />
         </div>
 
         <div className="flex flex-col gap-2 max-h-full overflow-hidden flex-[6] pt-2">
@@ -68,13 +87,28 @@ export const CreateOrEdit = (props: CreateOrEditProps): React.ReactNode => {
               menuEntriesQuery.data?.getAllMenuEntries?.map((menuEntryFragment, idx, arr) => {
                 const menuEntry = useFragment(MenuEntry_FragmentFragmentDoc, menuEntryFragment)
 
+                const contains = orderContainsMenuEntry(
+                  orderItems.map((orderItem) => orderItem.id) as number[],
+                  menuEntry.id as number
+                )
+
                 return (
                   <ProductCard
                     key={menuEntry.id}
                     idx={idx}
                     arrayLength={arr.length}
                     menuEntry={menuEntry}
-                    onClick={() => {}}
+                    className={cn({
+                      '!text-gray4 cursor-grab': contains
+                    })}
+                    onClick={() => {
+                      if (contains) return
+
+                      setOrderItems((prev) => [
+                        ...prev,
+                        { id: menuEntry.id, menuEntry, quantity: 1 }
+                      ])
+                    }}
                   />
                 )
               })

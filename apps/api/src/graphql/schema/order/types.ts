@@ -8,9 +8,14 @@ type TypeOrder = Prisma.OrderGetPayload<{
   include: {
     items: {
       include: {
-        variants: true
-        labels: true
-        categories: true
+        menuEntry: {
+          include: {
+            variants: true
+            categories: true
+            labels: true
+          }
+        }
+        observations: true
       }
     }
     bill: true
@@ -19,18 +24,44 @@ type TypeOrder = Prisma.OrderGetPayload<{
 }>
 
 type TypeOrderObservation = TypeOrder['observations'][number]
+type TypeOrderEntryObservation = TypeOrder['items'][number]['observations'][number]
+type TypeOrderEntry = TypeOrder['items'][number]
 type TypeOrderBill = TypeOrder['bill'][number]
 
 export type TypeOrderInput = Omit<TypeOrder, 'id'>
 
 /* --- Object Definitions --- */
 
-export const OrderObservationRef = builder.objectRef<TypeOrderObservation>('OrderObservation')
-export const OrderObservationObject = OrderObservationRef.implement({
-  description: 'The order observation. Example: "No pepper on pizza"',
+export const OrderEntryObservationRef =
+  builder.objectRef<TypeOrderEntryObservation>('OrderEntryObservation')
+
+export const OrderEntryObservationObject = OrderEntryObservationRef.implement({
+  description: 'The order entry observation. Example: "No pepper on pizza"',
   fields: (t) => ({
     id: t.exposeInt('id'),
     content: t.exposeString('content')
+  })
+})
+
+export const OrderObservationRef = builder.objectRef<TypeOrderObservation>('OrderObservation')
+export const OrderObservationObject = OrderObservationRef.implement({
+  description: 'The order observation. Example: "Payment will be in 24x."',
+  fields: (t) => ({
+    id: t.exposeInt('id'),
+    content: t.exposeString('content')
+  })
+})
+
+export const OrderEntryRef = builder.objectRef<TypeOrderEntry>('OrderEntry')
+export const OrderEntryObject = OrderEntryRef.implement({
+  description: 'The order entry. Example: "Pizza 4 cheese"',
+  fields: (t) => ({
+    id: t.exposeInt('id'),
+    quantity: t.exposeInt('quantity'),
+    menuEntry: t.field({
+      type: MenuEntryObject,
+      resolve: (t) => t.menuEntry
+    })
   })
 })
 
@@ -54,7 +85,7 @@ export const OrderObject = OrderRef.implement({
     splitOrderPriceBy: t.exposeFloat('splitOrderPriceBy'),
     totalPrice: t.exposeFloat('totalPrice'),
     items: t.field({
-      type: [MenuEntryObject],
+      type: [OrderEntryObject],
       resolve: (t) => t.items
     }),
     observations: t.field({

@@ -137,7 +137,7 @@ type Order {
   bill: [OrderBill!]
   dateTime: DateTime
   id: Int
-  items: [MenuEntry!]
+  items: [OrderEntry!]
   observations: [OrderObservation!]
   splitOrderPriceBy: Float
   totalPrice: Float
@@ -155,6 +155,23 @@ input OrderBillInput {
   price: Float
 }
 
+"""
+The order entry. Example: "Pizza 4 cheese"
+"""
+type OrderEntry {
+  id: Int
+  menuEntry: MenuEntry
+  quantity: Int
+}
+
+"""
+The order entry observation. Example: "No pepper on pizza"
+"""
+type OrderEntryObservation {
+  content: String
+  id: Int
+}
+
 """Input to create a new Order"""
 input OrderInput {
   address: String!
@@ -165,7 +182,7 @@ input OrderInput {
 }
 
 """
-The order observation. Example: "No pepper on pizza"
+The order observation. Example: "Payment will be in 24x."
 """
 type OrderObservation {
   content: String

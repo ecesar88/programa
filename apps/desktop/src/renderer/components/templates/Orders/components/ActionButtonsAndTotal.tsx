@@ -2,12 +2,16 @@ import { Button, Colors } from '@blueprintjs/core'
 import { HiDocument, HiMiniDocumentDuplicate } from 'react-icons/hi2'
 import { MdDeliveryDining } from 'react-icons/md'
 
-export const ActionButtonsAndTotal = () => {
+export type ActionButtonsAndTotalProps = {
+  totalPrice: number
+}
+
+export const ActionButtonsAndTotal = (props: ActionButtonsAndTotalProps) => {
   return (
     <div className="flex flex-col gap-1">
       <div className="flex justify-end border-b border-b-lightgray pb-1 mb-1 items-end z-10">
         <p className="text-gray1 text-lg">Total:&nbsp;</p>
-        <p className="text-gray1 font-bold text-3xl">R$ 45,00</p>
+        <p className="text-gray1 font-bold text-3xl">R$ {props.totalPrice.toFixed(2)}</p>
       </div>
 
       <div className="grid grid-cols-2 grid-rows-3 gap-1">

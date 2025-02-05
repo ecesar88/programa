@@ -23,11 +23,29 @@ model Order {
   address           String
   totalPrice        Float
   splitOrderPriceBy Int                @default(1)
-  items             MenuEntry[]
+  items             OrderEntry[]
   bill              OrderBill[]
   observations      OrderObservation[]
   Client            Client?            @relation(fields: [clientId], references: [id])
   clientId          Int?
+  MenuEntry         MenuEntry[]
+}
+
+model OrderEntry {
+  id           Int                     @id @default(autoincrement())
+  quantity     Int
+  menuEntry    MenuEntry               @relation(fields: [menuEntryId], references: [id])
+  observations OrderEntryObservation[]
+  Order        Order?                  @relation(fields: [orderId], references: [id])
+  orderId      Int?
+  menuEntryId  Int
+}
+
+model OrderEntryObservation {
+  id           Int         @id @default(autoincrement())
+  content      String
+  OrderEntry   OrderEntry? @relation(fields: [orderEntryId], references: [id])
+  orderEntryId Int?
 }
 
 model OrderObservation {
@@ -59,10 +77,11 @@ model MenuEntry {
   categories  MenuEntryCategory[]
   // images String?
 
-  Menu    Menu?  @relation(fields: [menuId], references: [id])
-  menuId  Int?
-  Order   Order? @relation(fields: [orderId], references: [id])
-  orderId Int?
+  Menu       Menu?        @relation(fields: [menuId], references: [id])
+  menuId     Int?
+  Order      Order?       @relation(fields: [orderId], references: [id])
+  orderId    Int?
+  OrderEntry OrderEntry[]
 }
 
 model MenuEntryVariant {

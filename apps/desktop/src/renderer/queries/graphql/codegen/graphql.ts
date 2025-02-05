@@ -209,7 +209,7 @@ export type Order = {
   bill?: Maybe<Array<OrderBill>>;
   dateTime?: Maybe<Scalars['DateTime']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
-  items?: Maybe<Array<MenuEntry>>;
+  items?: Maybe<Array<OrderEntry>>;
   observations?: Maybe<Array<OrderObservation>>;
   splitOrderPriceBy?: Maybe<Scalars['Float']['output']>;
   totalPrice?: Maybe<Scalars['Float']['output']>;
@@ -226,6 +226,21 @@ export type OrderBillInput = {
   price?: InputMaybe<Scalars['Float']['input']>;
 };
 
+/** The order entry. Example: "Pizza 4 cheese" */
+export type OrderEntry = {
+  __typename?: 'OrderEntry';
+  id?: Maybe<Scalars['Int']['output']>;
+  menuEntry?: Maybe<MenuEntry>;
+  quantity?: Maybe<Scalars['Int']['output']>;
+};
+
+/** The order entry observation. Example: "No pepper on pizza" */
+export type OrderEntryObservation = {
+  __typename?: 'OrderEntryObservation';
+  content?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+};
+
 /** Input to create a new Order */
 export type OrderInput = {
   address: Scalars['String']['input'];
@@ -235,7 +250,7 @@ export type OrderInput = {
   totalPrice?: InputMaybe<Scalars['Float']['input']>;
 };
 
-/** The order observation. Example: "No pepper on pizza" */
+/** The order observation. Example: "Payment will be in 24x." */
 export type OrderObservation = {
   __typename?: 'OrderObservation';
   content?: Maybe<Scalars['String']['output']>;
