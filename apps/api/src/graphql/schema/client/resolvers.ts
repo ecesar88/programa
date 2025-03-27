@@ -2,7 +2,7 @@ import { Client, Prisma } from '@prisma/client'
 import { colorizeAsJSON, LOG_TYPE, logger } from '../../../utils/logger'
 import { prismaPaginate } from '../../../utils/prismaPaginate'
 import { RecordNotFoundError } from '../_errors/errors'
-import { Id, FindByQuery, PaginationParam, Resolver } from '../sharedTypes'
+import { FindByQuery, Id, PaginationParam, Resolver } from '../sharedTypes'
 import { ClientCreateOrUpdateInput } from './types'
 
 type UpdateClientQueryInput = {
@@ -20,14 +20,12 @@ export const queryAll: Resolver<PaginationParam> = async (_parent, args, ctx, _i
   })
 
   try {
-    const clients = await ctx.prisma.client.findMany({
+    return ctx.prisma.client.findMany({
       ...prismaPaginate(page),
       orderBy: {
         id: 'desc'
       }
     })
-
-    return clients
   } catch (_error) {
     throw new Error('Error fetching all clients')
   }
@@ -42,17 +40,11 @@ export const queryOne: Resolver<Id> = async (_parent, args, ctx, _info) => {
     object: colorizeAsJSON(args)
   })
 
-  let client: Client | null
-
-  try {
-    client = await ctx.prisma.client.findFirst({
-      where: {
-        id
-      }
-    })
-  } catch (_error) {
-    throw new Error('Prisma error')
-  }
+  const client = ctx.prisma.client.findFirst({
+    where: {
+      id
+    }
+  })
 
   if (!client) {
     throw new RecordNotFoundError(`Client with id ${id}`)
@@ -120,25 +112,19 @@ export const create: Resolver<(typeof ClientCreateOrUpdateInput)['$inferInput']>
 export const update: Resolver<UpdateClientQueryInput> = async (_parent, args, ctx, _info) => {
   const { id, data } = args
 
+  const client: Client | null = await ctx.prisma.client.findFirst({ where: { id } })
+
+  if (!client) {
+    throw new RecordNotFoundError('Client')
+  }
+
   logger({
     level: LOG_TYPE.INFO,
     message: `Updating new client with id '${id}' with data: `,
     object: colorizeAsJSON(args)
   })
 
-  const client = await ctx.prisma.client.findFirst({ where: { id } })
-
-  if (!client) {
-    throw new RecordNotFoundError('Client')
-  }
-
   try {
-    logger({
-      level: LOG_TYPE.INFO,
-      message: `Updating new client with id '${id}' with data: `,
-      object: colorizeAsJSON(args)
-    })
-
     return await ctx.prisma.client.update({
       where: {
         id: client.id
@@ -159,7 +145,7 @@ export const remove: Resolver<Id> = async (_parent, args, ctx, _info) => {
     object: colorizeAsJSON(args)
   })
 
-  const clientToRemove = await ctx.prisma.client.findFirst({ where: { id } })
+  const clientToRemove: Client | null = await ctx.prisma.client.findFirst({ where: { id } })
 
   if (!clientToRemove) {
     throw new RecordNotFoundError(`Client with id ${id}`)

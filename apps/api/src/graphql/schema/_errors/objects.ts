@@ -1,3 +1,5 @@
+import { flattenErrors } from '../../../utils/misc'
+import { ZodError } from 'zod'
 import { builder } from '../../builder'
 import { LengthError, RecordNotFoundError } from './errors'
 
@@ -28,5 +30,30 @@ builder.objectType(LengthError, {
   interfaces: [ErrorInterface],
   fields: (t) => ({
     minLength: t.exposeInt('minLength')
+  })
+})
+
+// A type for the individual validation issues
+export const ZodFieldError = builder
+  .objectRef<{
+    message: string
+    path: string[]
+  }>('ZodFieldError')
+  .implement({
+    fields: (t) => ({
+      message: t.exposeString('message'),
+      path: t.exposeStringList('path')
+    })
+  })
+
+// The actual error type
+builder.objectType(ZodError, {
+  name: 'ZodError',
+  interfaces: [ErrorInterface],
+  fields: (t) => ({
+    fieldErrors: t.field({
+      type: [ZodFieldError],
+      resolve: (err) => flattenErrors(err.format(), [])
+    })
   })
 })

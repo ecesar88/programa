@@ -52,7 +52,7 @@ export const queryOne: Resolver<Id> = async (_parent, args, ctx, _info) => {
 
   logger({
     level: LOG_TYPE.INFO,
-    message: `Fetching MenuEntry with id '${id}'`,
+    message: `Fetching menu with id '${id}'`,
     object: colorizeAsJSON(args)
   })
 
@@ -212,7 +212,7 @@ export const update: Resolver<UpdateMenuEntryInput> = async (_parent, args, ctx,
           ...(data?.categories?.length && {
             category: {
               createMany: {
-                data: data.categories.map((lb) => lb)
+                data: data.categories.map((ct) => ct)
               }
             }
           })

@@ -5,10 +5,11 @@ import SimpleObjectsPlugin from '@pothos/plugin-simple-objects'
 import TracingPlugin, { isRootField, wrapResolver } from '@pothos/plugin-tracing'
 import ZodPlugin from '@pothos/plugin-zod'
 import { DateTimeResolver } from 'graphql-scalars'
-import { colorizeAsJSON, LOG_TYPE, logger } from '../utils/logger'
+import { fromError } from 'zod-validation-error'
+import { LOG_TYPE, logger } from '../utils/logger'
 import { Context } from './context'
 import { LengthError, RecordNotFoundError } from './schema/_errors/errors'
-import { fromError } from 'zod-validation-error'
+import { ZodError } from 'zod'
 
 type SchemaType = {
   Scalars: {
@@ -29,31 +30,24 @@ type SchemaType = {
 }
 
 export const builder = new SchemaBuilder<SchemaType>({
-  plugins: [ErrorsPlugin, TracingPlugin, ZodPlugin, SimpleObjectsPlugin],
+  plugins: [ErrorsPlugin, ZodPlugin, TracingPlugin, SimpleObjectsPlugin],
   errors: {
-    defaultTypes: [Error, RecordNotFoundError, LengthError]
+    defaultTypes: [ZodError, Error, RecordNotFoundError, LengthError]
   },
-  zod: {
-    // optionally customize how errors are formatted
-    validationError: (zodError, _args, _context, _info) => {
-      // the default behavior is to just throw the zod error directly
-      const formattedError = fromError(zodError)
+  // zod: {
+  //   // optionally customize how errors are formatted
+  //   validationError: (zodError, _args, _context, _info) => {
+  //     // the default behavior is to just throw the zod error directly
+  //     const formattedError = fromError(zodError)
 
-      logger({
-        level: LOG_TYPE.ERROR,
-        message: `Zod validation error`,
-        object: colorizeAsJSON(formattedError)
-      })
+  //     logger({
+  //       level: LOG_TYPE.ERROR,
+  //       message: `Zod validation error`
+  //     })
 
-      return new Error(
-        JSON.stringify({
-          name: 'ZodError',
-          status: 'error',
-          errorDetails: formattedError // TODO - check
-        })
-      )
-    }
-  },
+  //     throw formattedError
+  //   }
+  // },
   tracing: {
     // Enable tracing for rootFields by default, other fields need to opt in
     default: (config) => isRootField(config),

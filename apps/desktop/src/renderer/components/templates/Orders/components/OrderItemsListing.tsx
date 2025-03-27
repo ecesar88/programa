@@ -29,11 +29,7 @@ export const OrderItemsListing = (props: OrderItemsProps) => {
   }
 
   const handleRemoveItem = (id?: number) => {
-    setOrderItems((prev) => {
-      const filteredItems = prev.filter((orderItem) => orderItem?.id !== id)
-
-      return filteredItems
-    })
+    setOrderItems((prev) => prev.filter((orderItem) => orderItem?.id !== id))
   }
 
   const handleIncreaseQuantity = (id?: number) => {

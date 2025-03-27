@@ -1,4 +1,4 @@
-import { Button, ButtonGroup } from '@blueprintjs/core'
+import { Button, ButtonGroup, ButtonProps } from '@blueprintjs/core'
 import { ROUTES } from '@renderer/constants'
 import { useLocation, useNavigate } from 'react-router'
 import { MdRestaurantMenu } from 'react-icons/md'
@@ -8,9 +8,10 @@ export const SystemMenu = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const isScreenSelected = (route: ROUTES): boolean => {
-    return location.pathname.includes(route)
-  }
+  const isScreenSelected = (route: ROUTES): boolean => location.pathname.includes(route)
+
+  const getIntentForSelected = (route: ROUTES): ButtonProps['intent'] =>
+    isScreenSelected(route) ? 'primary' : 'none'
 
   return (
     <div className="flex flex-col gap-2 p-2 pr-3 bg-lightGray5 mr-3 mt-2 mb-2 ml-2 rounded-md">
@@ -21,7 +22,7 @@ export const SystemMenu = () => {
           <Button
             icon="person"
             alignText="left"
-            intent={isScreenSelected(ROUTES.CLIENTS) ? 'primary' : 'none'}
+            intent={getIntentForSelected(ROUTES.CLIENTS)}
             onClick={() => {
               navigate(ROUTES.CLIENTS)
             }}
@@ -33,7 +34,7 @@ export const SystemMenu = () => {
             // trocar icone
             icon="annotation"
             alignText="left"
-            intent={isScreenSelected(ROUTES.ORDERS) ? 'primary' : 'none'}
+            intent={getIntentForSelected(ROUTES.ORDERS)}
             onClick={() => {
               navigate(ROUTES.ORDERS)
             }}
@@ -53,7 +54,7 @@ export const SystemMenu = () => {
               />
             }
             alignText="left"
-            intent={isScreenSelected(ROUTES.MENU) ? 'primary' : 'none'}
+            intent={getIntentForSelected(ROUTES.MENU)}
             onClick={() => {
               navigate(ROUTES.MENU)
             }}

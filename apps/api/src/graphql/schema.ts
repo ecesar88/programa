@@ -15,6 +15,7 @@ import './schema/menu/types'
 
 import './schema/_errors/errors'
 import './schema/_errors/objects'
+import './schema/_errors/types'
 
 builder.queryType({})
 builder.mutationType({})

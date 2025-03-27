@@ -36,6 +36,7 @@
     "graphql-yoga": "5.7.0",
     "helmet": "7.1.0",
     "json-colorizer": "^3.0.1",
+    "neverthrow": "^8.1.1",
     "node-color-log": "12.0.1",
     "prisma": "6.1.0",
     "reflect-metadata": "0.2.2",

@@ -11,7 +11,7 @@ export function todo(message?: string) {
 
 const cn = (...args: Parameters<typeof clsx>) => twMerge(clsx(args))
 
-// get types from import.meta.env ??
+// TODO: get types from import.meta.env ??
 const parseEnv = (name: string) => {
   const envValue = import.meta.env[name]
 

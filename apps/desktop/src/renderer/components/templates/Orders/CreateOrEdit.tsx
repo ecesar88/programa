@@ -42,7 +42,15 @@ export const CreateOrEdit = (props: CreateOrEditProps): React.ReactNode => {
   const [orderItems, setOrderItems] = useAtom(orderItemsAtom)
 
   const totalOrderPrice = useMemo(
-    () => orderItems.reduce((acc, curr) => acc + (curr.menuEntry?.variants?.[0].price ?? 0), 0),
+    () =>
+      orderItems.reduce((acc, curr) => {
+        const price = curr.menuEntry?.variants?.[0]?.price // Get the price of the first variant
+        const quantity = curr?.quantity ?? 1
+
+        if (!price) return 0
+
+        return acc + price * quantity
+      }, 0),
     [JSON.stringify(orderItems)]
   )
 

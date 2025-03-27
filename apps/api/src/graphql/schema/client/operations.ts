@@ -4,6 +4,7 @@ import { builder } from '../../builder'
 import { RecordNotFoundError } from '../_errors/errors'
 import { create, queryAll, queryOne, remove, search, update } from './resolvers'
 import { Client, ClientCreateOrUpdateInput } from './types'
+import { ZodError } from 'zod'
 
 builder.queryField('getAllClients', (t) =>
   t.field({
@@ -44,6 +45,9 @@ builder.queryField('getClientById', (t) =>
 builder.queryField('searchClients', (t) =>
   t.field({
     type: [Client],
+    errors: {
+      types: [ZodError]
+    },
     args: {
       search: t.arg({
         type: 'String',
@@ -60,6 +64,9 @@ builder.queryField('searchClients', (t) =>
 builder.mutationField('createClient', (t) =>
   t.field({
     type: Client,
+    errors: {
+      types: [ZodError]
+    },
     args: {
       name: t.arg({
         type: 'String',
