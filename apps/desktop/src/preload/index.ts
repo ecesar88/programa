@@ -25,3 +25,7 @@ contextBridge.exposeInMainWorld('darkModeAPI', {
   toggleDark: () => ipcRenderer.invoke('toggle-dark-mode'),
   toggleLight: () => ipcRenderer.invoke('toggle-light-mode')
 })
+
+contextBridge.exposeInMainWorld('notificationAPI', {
+  sendNotification: () => ipcRenderer.invoke('send-notification')
+})

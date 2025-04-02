@@ -8,6 +8,7 @@ type OrderItemProps = {
   onDecreaseQuantity: (id?: number) => void
   onRemoveItem: (id?: number) => void
   onIncreaseQuantity: (id?: number) => void
+  onChangeQuantity: (id?: number, qty?: number) => void
 }
 
 export const OrderItem = (props: OrderItemProps) => {
@@ -34,39 +35,59 @@ export const OrderItem = (props: OrderItemProps) => {
         </div>
 
         <div className="flex-[3] flex flex-col flex-shrink-0">
-          <div>
-            <ButtonGroup className="flex py-0.5 items-center rounded-lg justify-end">
-              <Button
-                icon={
-                  (props?.orderItem.quantity ?? 0) <= 1 ? (
-                    <FaTrashAlt className="text-red3" />
-                  ) : (
-                    <FaMinus className="text-red3" />
-                  )
-                }
-                onClick={() => {
-                  if ((props.orderItem.quantity ?? 0) <= 1) {
-                    props.onRemoveItem(props?.orderItem?.id as number)
-                    return
-                  }
+          <div className="flex py-0.5 items-center rounded-lg justify-end gap-1">
+            <Button
+              icon={<FaTrashAlt className="text-red3" />}
+              onClick={() => {
+                props.onRemoveItem(props?.orderItem?.id as number)
+              }}
+              intent="none"
+              outlined
+              small
+            />
 
+            <ButtonGroup className="flex items-center rounded-lg justify-end">
+              <Button
+                icon={<FaMinus className="text-red3" />}
+                onClick={() => {
                   props.onDecreaseQuantity(props?.orderItem?.id as number)
                 }}
                 intent="none"
                 outlined
                 small
-                // onMouseDown={decreaseAmount}
-                // onMouseUp={stopIncrementingOrDecrementing}
               />
 
               <Button
-                className="font-bold !text-gray1 !px-3 !border-lightgray"
+                className="font-bold !text-gray1 !px-1 !border-lightgray"
                 intent="none"
                 outlined
                 small
                 disabled
               >
-                {props.orderItem.quantity ?? 0}
+                <input
+                  value={props.orderItem.quantity ?? 0}
+                  defaultValue={props.orderItem.quantity ?? 0}
+                  type="number"
+                  className="max-w-[30px] bg-transparent text-center"
+                  min={1}
+                  max={999}
+                  onChange={(evt) => {
+                    const evtValue = evt.target.value
+
+                    let newValue: string = evtValue
+
+                    if (!newValue) newValue = '1'
+                    if (parseInt(evtValue) === 0) newValue = '1'
+                    if (parseInt(evtValue) >= 1000) return
+
+                    const parsedValue = newValue.replace(/[A-Z][a-z]/gi, '')
+
+                    props.onChangeQuantity(
+                      props?.orderItem?.id as number,
+                      parseInt(parsedValue) ?? 1
+                    )
+                  }}
+                />
               </Button>
 
               <Button

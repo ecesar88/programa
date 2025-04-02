@@ -107,7 +107,8 @@ export const CreateOrEdit = (props: CreateOrEditProps): React.ReactNode => {
                     arrayLength={arr.length}
                     menuEntry={menuEntry}
                     className={cn({
-                      '!text-gray4 cursor-grab': contains
+                      // '!text-gray4 cursor-grab': contains
+                      'opacity-20': contains // border gets a little lighter
                     })}
                     onClick={() => {
                       if (contains) return

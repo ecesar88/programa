@@ -12,6 +12,10 @@ export const Home = (): React.ReactNode => {
     window.darkModeAPI.toggleLight()
   }
 
+  const osNotify = () => {
+    window.notificationAPI.sendNotification()
+  }
+
   return (
     <div className="flex h-[100vh] bg-white overflow-y-hidden">
       <SystemMenu />
@@ -19,7 +23,10 @@ export const Home = (): React.ReactNode => {
       <div id={HOME_CONTAINER_ID} className="w-full py-4 pl-0 pr-2">
         {/* <div className="flex flex-col gap-2 pt-12">
           <Button onClick={toggleDarkMode}>Enable Dark Mode 🌙</Button>
+
           <Button onClick={toggleLightMode}>Enable Light Mode ☀️</Button>
+
+          <Button onClick={osNotify}>Notify!</Button>
         </div> */}
 
         <Outlet />

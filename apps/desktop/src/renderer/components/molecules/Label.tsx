@@ -1,10 +1,12 @@
-import { LabelFragmentFragment } from '@renderer/queries/graphql/codegen/graphql'
+import { MenuEntryLabel_FragmentFragment } from '@renderer/queries/graphql/codegen/graphql'
 import { cn, getContrastingTextColor } from '@renderer/utils'
 import { useState } from 'react'
 import tinycolor from 'tinycolor2'
 
 export const Label = (
-  props: Omit<LabelFragmentFragment, '__typename' | '$fragmentName' | 'id'> & { className?: string }
+  props: Omit<MenuEntryLabel_FragmentFragment, '__typename' | '$fragmentName' | 'id'> & {
+    className?: string
+  }
 ) => {
   const [hover, setHover] = useState<boolean>(false)
 

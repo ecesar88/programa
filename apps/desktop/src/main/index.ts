@@ -3,6 +3,7 @@ import { exec } from 'child_process'
 import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import { join } from 'path'
 import icon from '../../resources/icon.png?asset'
+import notifier from 'node-notifier'
 
 function createWindow(): void {
   // Create the browser window.
@@ -92,4 +93,11 @@ ipcMain.handle('toggle-light-mode', () => {
       if (error) console.error('Error enabling light mode:', error)
     }
   )
+})
+
+ipcMain.handle('send-notification', () => {
+  notifier.notify({
+    title: 'Notification IPC',
+    message: 'Hello from Electron!'
+  })
 })

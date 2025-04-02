@@ -9,5 +9,9 @@ declare global {
       toggleDark: () => Promise<void>
       toggleLight: () => Promise<void>
     }
+
+    notificationAPI: {
+      sendNotification: () => Promise<void>
+    }
   }
 }
