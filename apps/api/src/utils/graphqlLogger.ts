@@ -164,7 +164,7 @@ export const gqlLogger = (eventName: EventName, args1: { args: any }) => {
   const logPrefix = '=> '
   const logElementSeparator = ' // '
 
-  nodeColorLog
+  const logger = nodeColorLog
     .append('\n')
     .color('yellow')
     .append(dateString)
@@ -201,5 +201,6 @@ export const gqlLogger = (eventName: EventName, args1: { args: any }) => {
     .color('green')
     .append(`'${ip}'`)
     .reset()
-    .log()
+
+  logger.log()
 }
