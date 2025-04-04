@@ -101,24 +101,38 @@ export const CreateOrEdit = (props: CreateOrEditProps): React.ReactNode => {
                 )
 
                 return (
-                  <ProductCard
-                    key={menuEntry.id}
-                    idx={idx}
-                    arrayLength={arr.length}
-                    menuEntry={menuEntry}
-                    className={cn({
-                      // '!text-gray4 cursor-grab': contains
-                      'opacity-20': contains // border gets a little lighter
-                    })}
-                    onClick={() => {
-                      if (contains) return
+                  <div className="relative w-full h-full rounded-lg hover:outline-2 hover:outline-blue2 outline-none -outline-offset-2 max-h-full group">
+                    {/* // Reduce item opacity if it already exists on the order */}
+                    {contains && (
+                      <div className="group absolute top-0 bottom-0 left-0 right-0 transition-all hover:top-[2px] hover:bottom-[2px] hover:left-[2px] hover:right-[2px]">
+                        <div className="flex justify-center items-center absolute inset-0 px-5">
+                          <div className="text-center z-50 opacity-0 group-hover:opacity-100 transition-all delay-1000 bg-gray1 bg-opacity-50 text-black font-bold m-auto w-full rounded-md">
+                            JÁ NO PEDIDO
+                          </div>
+                        </div>
 
-                      setOrderItems((prev) => [
-                        ...prev,
-                        { id: menuEntry.id, menuEntry, quantity: 1 }
-                      ])
-                    }}
-                  />
+                        <div
+                          style={{ backgroundColor: 'white', opacity: 0.75 }}
+                          className="min-h-full min-w-full w-full h-full z-10 absolute rounded-none group-hover:rounded-md"
+                        ></div>
+                      </div>
+                    )}
+
+                    <ProductCard
+                      key={menuEntry.id}
+                      idx={idx}
+                      arrayLength={arr.length}
+                      menuEntry={menuEntry}
+                      onClick={() => {
+                        if (contains) return
+
+                        setOrderItems((prev) => [
+                          ...prev,
+                          { id: menuEntry.id, menuEntry, quantity: 1 }
+                        ])
+                      }}
+                    />
+                  </div>
                 )
               })
             ) : (
