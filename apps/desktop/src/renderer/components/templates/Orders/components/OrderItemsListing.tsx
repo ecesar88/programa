@@ -68,8 +68,8 @@ export const OrderItemsListing = (props: OrderItemsProps) => {
 
   return (
     <div className="flex flex-col justify-start flex-grow flex-[4] min-w-[40%] z-10 relative overflow-auto gap-1">
-      <div className="absolute left-0 right-0 top-[10%] z-[-1] p-10 overflow-clip">
-        <DishTemplateRoundIcon className="" style={{ opacity: 0.1 }} />
+      <div className="absolute left-0 right-0 top-[10%] z-[-1] overflow-hidden">
+        <DishTemplateRoundIcon className="w-[80%] h-[80%] mx-auto p-10" style={{ opacity: 0.1 }} />
       </div>
 
       {props.orderItems.map((orderItem) => (
