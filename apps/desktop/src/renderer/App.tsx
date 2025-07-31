@@ -23,7 +23,7 @@ const HydrateAtoms = ({ children }): React.ReactNode => {
 }
 
 function App(): JSX.Element {
-  // Electron IPC, not in use this at the moment.
+  // Electron IPC, not in use this at the moment
   // const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
 
   const router = createBrowserRouter(routes)
