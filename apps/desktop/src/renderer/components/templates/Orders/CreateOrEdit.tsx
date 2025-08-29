@@ -2,18 +2,20 @@ import { Button } from '@blueprintjs/core'
 import { queryKeys } from '@renderer/constants'
 import { useFragment } from '@renderer/queries/graphql/codegen'
 import {
+  MenuEntry,
   MenuEntry_FragmentFragmentDoc,
-  OrderEntry
+  MenuEntryVariant_FragmentFragmentDoc
 } from '@renderer/queries/graphql/codegen/graphql'
 import { get } from '@renderer/queries/operations/menu'
 import { useQuery } from '@tanstack/react-query'
-import { useAtom, useAtomValue } from 'jotai'
+import { useAtom } from 'jotai'
+import { useMemo } from 'react'
 import { ProductCard } from '../Menu/components/ProductCard'
 import { ActionButtonsAndTotal } from './components/ActionButtonsAndTotal'
 import { OrderItemsListing } from './components/OrderItemsListing'
-import { orderItemsAtom } from './store'
-import { useMemo } from 'react'
-import { cn } from '@renderer/utils'
+import { OrderEntryStoreItem, orderItemsAtom } from './store'
+import * as O from 'optics-ts'
+import { PiCrownCrossLight } from 'react-icons/pi'
 
 const orderContainsMenuEntry = (orderItems: number[], menuEntryId: number) =>
   orderItems.includes(menuEntryId)
@@ -44,14 +46,14 @@ export const CreateOrEdit = (props: CreateOrEditProps): React.ReactNode => {
   const totalOrderPrice = useMemo(
     () =>
       orderItems.reduce((acc, curr) => {
-        const price = curr.menuEntry?.variants?.[0]?.price // Get the price of the first variant
+        const price = curr.menuEntry.variant.price // Get the price of the first variant
         const quantity = curr?.quantity ?? 1
 
         if (!price) return 0
 
         return acc + price * quantity
       }, 0),
-    [JSON.stringify(orderItems)]
+    [orderItems]
   )
 
   return (
@@ -95,13 +97,26 @@ export const CreateOrEdit = (props: CreateOrEditProps): React.ReactNode => {
               menuEntriesQuery.data?.getAllMenuEntries?.map((menuEntryFragment, idx, arr) => {
                 const menuEntry = useFragment(MenuEntry_FragmentFragmentDoc, menuEntryFragment)
 
-                const contains = orderContainsMenuEntry(
-                  orderItems.map((orderItem) => orderItem.id) as number[],
-                  menuEntry.id as number
+                const contains = orderItems.find((orderItem) =>
+                  menuEntry.variants
+                    ?.flatMap(
+                      (vrFragment) =>
+                        useFragment(MenuEntryVariant_FragmentFragmentDoc, vrFragment).id
+                    )
+                    .includes(orderItem.menuEntry.variant.id)
                 )
 
+                // const contains = menuEntry?.variants?.find((variantFragment) => {
+                //   const variant = useFragment(MenuEntryVariant_FragmentFragmentDoc, variantFragment)
+
+                //   return variant.id === orderItem.menuEntry.variant.id
+                // })
+
                 return (
-                  <div className="relative w-full h-full rounded-lg hover:outline-2 hover:outline-blue2 outline-none -outline-offset-2 max-h-full group">
+                  <div
+                    key={menuEntry.id}
+                    className="relative w-full h-full rounded-lg hover:outline-2 hover:outline-blue2 outline-none -outline-offset-2 max-h-full group"
+                  >
                     {/* // Reduce item opacity if it already exists on the order */}
                     {contains && (
                       <div className="group absolute top-0 bottom-0 left-0 right-0 transition-all hover:top-[2px] hover:bottom-[2px] hover:left-[2px] hover:right-[2px]">
@@ -119,17 +134,42 @@ export const CreateOrEdit = (props: CreateOrEditProps): React.ReactNode => {
                     )}
 
                     <ProductCard
-                      key={menuEntry.id}
                       idx={idx}
                       arrayLength={arr.length}
                       menuEntry={menuEntry}
-                      onClick={() => {
+                      onClick={(variant) => {
                         if (contains) return
 
-                        setOrderItems((prev) => [
-                          ...prev,
-                          { id: menuEntry.id, menuEntry, quantity: 1 }
-                        ])
+                        // console.log('\n\n adicionou')
+
+                        // const removeVariantLens = O.optic<MenuEntry>().prop('variants')
+                        // // const menuEntryWithoutVariantS = O.remove(removeVariantLens)(menuEntry)
+                        // const menuEntryWithoutVariantS = O.modify(removeVariantLens)((me) => {
+                        //   if (!me) return
+
+                        //   const [] = me
+                        //   return m
+                        // })(menuEntry)
+
+                        // console.log('menuEntryWithoutVariantS', menuEntryWithoutVariantS)
+
+                        // ...(menuEntry as OrderEntryStoreItem['menuEntry']),
+                        // variant
+
+                        setOrderItems((prev) => {
+                          const { variants, ...me } = menuEntry
+                          return [
+                            ...prev,
+                            {
+                              id: menuEntry.id as number,
+                              quantity: 1,
+                              menuEntry: {
+                                ...(me as OrderEntryStoreItem['menuEntry']),
+                                variant
+                              }
+                            }
+                          ]
+                        })
                       }}
                     />
                   </div>
