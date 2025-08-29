@@ -1,11 +1,10 @@
 import { DishTemplateRoundIcon } from '@renderer/assets/icons'
-import { OrderEntry } from '@renderer/queries/graphql/codegen/graphql'
 import { useSetAtom } from 'jotai'
-import { orderItemsAtom } from '../store'
+import { OrderEntryStoreItem, orderItemsAtom } from '../store'
 import { OrderItem } from './OrderItem'
 
 type OrderItemsProps = {
-  orderItems: OrderEntry[]
+  orderItems: OrderEntryStoreItem[]
 }
 
 export const OrderItemsListing = (props: OrderItemsProps) => {
@@ -55,7 +54,7 @@ export const OrderItemsListing = (props: OrderItemsProps) => {
         if (orderItem.id === id) {
           return {
             ...orderItem,
-            quantity: qty
+            quantity: qty ?? 1
           }
         }
 
