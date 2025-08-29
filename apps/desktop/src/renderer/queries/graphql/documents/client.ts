@@ -8,11 +8,12 @@ graphql(/* GraphQL */ `
   }
 `)
 
+// Fix error while running graphql-codegen
 export const createClientMutationDocument = graphql(/* GraphQL */ `
   mutation createClient($name: String!, $phone: String) {
-    createClient(name: $name, phone: $phone) {
-      ...clientFragment
-    }
+    # createClient(name: $name, phone: $phone) {
+    #   ...clientFragment
+    # }
   }
 `)
 

@@ -1,7 +1,7 @@
 import { gqlClient } from '@renderer/config/gqlClientConfig'
 import {
-  CreateClientMutationVariables,
-  UpdateClientByIdDocument,
+  // CreateClientMutationVariables,
+  // UpdateClientByIdDocument,
   ClientCreateOrUpdateInput
 } from '../graphql/codegen/graphql'
 import {
@@ -11,37 +11,38 @@ import {
 } from '../graphql/documents/client'
 
 export const get = async () => {
-  try {
-    return await gqlClient.request(getAllClientsQueryDocument, { page: 1 })
-  } catch (error) {
-    console.error(error)
-    return
-  }
+  // try {
+  //   return await gqlClient.request(getAllClientsQueryDocument, { page: 1 })
+  // } catch (error) {
+  //   console.error(error)
+  //   return
+  // }
 }
 
-export const create = async (clientData: CreateClientMutationVariables) => {
-  try {
-    return await gqlClient.request(createClientMutationDocument, clientData)
-  } catch (error) {
-    console.error(error)
-    return
-  }
+// export const create = async (clientData: CreateClientMutationVariables) => {
+export const create = async (clientData: any) => {
+  // try {
+  //   return await gqlClient.request(createClientMutationDocument, clientData)
+  // } catch (error) {
+  //   console.error(error)
+  //   return
+  // }
 }
 
 export const edit = async ({ id, data }: { id: number; data: ClientCreateOrUpdateInput }) => {
-  try {
-    return await gqlClient.request(UpdateClientByIdDocument, { id, data })
-  } catch (error) {
-    console.error(error)
-    return
-  }
+  // try {
+  //   return await gqlClient.request(UpdateClientByIdDocument, { id, data })
+  // } catch (error) {
+  //   console.error(error)
+  //   return
+  // }
 }
 
 export const purge = async (id: number) => {
-  try {
-    return await gqlClient.request(deleteClientByIdMutationDocument, { id })
-  } catch (error) {
-    console.error(error)
-    return
-  }
+  // try {
+  //   return await gqlClient.request(deleteClientByIdMutationDocument, { id })
+  // } catch (error) {
+  //   console.error(error)
+  //   return
+  // }
 }
