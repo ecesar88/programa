@@ -1,5 +1,5 @@
 import { Label } from '@renderer/components/molecules'
-import { MenuEntry } from '@renderer/queries/graphql/codegen/graphql'
+import { MenuEntry, MenuEntryVariant } from '@renderer/queries/graphql/codegen/graphql'
 import { cn } from '@renderer/utils'
 import { Price } from './Price'
 import { Button } from '@blueprintjs/core'
@@ -10,7 +10,7 @@ interface ProductCardProps {
   idx: number
   arrayLength: number
   menuEntry: MenuEntry
-  onClick: () => void
+  onClick: (variant: MenuEntryVariant) => void
   className?: string
 }
 
@@ -50,7 +50,7 @@ const renderVariantPrice = (
 export const ProductCard = (props: ProductCardProps) => {
   const [showVariantSelector, setShowVariantSelector] = useState(false)
 
-  const areThereMoreThanOneSingleVariant = (props?.menuEntry?.variants?.length ?? 0) > 1
+  const areThereMoreThanOneVariant = (props?.menuEntry?.variants?.length ?? 0) > 1
   const areThereAnyLabelsToShow = (props.menuEntry.labels?.length ?? 0) > 1
 
   return (
@@ -60,16 +60,20 @@ export const ProductCard = (props: ProductCardProps) => {
     >
       <div
         onClick={() => {
-          if (areThereMoreThanOneSingleVariant) {
+          if (areThereMoreThanOneVariant) {
             return
           }
 
-          props.onClick()
+          console.log('teste')
+
+          if (!props?.menuEntry?.variants?.[0]) return
+
+          props.onClick(props.menuEntry.variants[0])
         }}
         className={cn(
           'flex-col gap-2',
           {
-            '[&_*]:!cursor-pointer !cursor-pointer': !areThereMoreThanOneSingleVariant,
+            '[&_*]:!cursor-pointer !cursor-pointer': !areThereMoreThanOneVariant,
             'bg-lightGray5': props.idx % 2 === 0,
             'bg-lightGray4': props.idx % 2 !== 0
           },
@@ -112,7 +116,7 @@ export const ProductCard = (props: ProductCardProps) => {
             'h-full pb-2 pr-2': showVariantSelector
           })}
         >
-          {areThereMoreThanOneSingleVariant && (
+          {areThereMoreThanOneVariant && (
             <div className="transition-all pl-4">
               <div
                 className={
@@ -122,7 +126,10 @@ export const ProductCard = (props: ProductCardProps) => {
                 {props.menuEntry.variants?.map((variant, idx) => (
                   <div
                     key={idx}
-                    className="rounded-md border border-gray2 py-1 px-4 flex flex-col items-center bg-gray2 text-white hover:bg-gray1"
+                    className="rounded-md border border-gray2 py-1 px-4 flex flex-col items-center bg-gray2 text-white hover:bg-gray1 [&_*]:!cursor-pointer !cursor-pointer active:bg-cerulean1 transition-all"
+                    onClick={() => {
+                      props.onClick(variant)
+                    }}
                   >
                     <div className="flex flex-row items-center text-xs">{variant.name}</div>
 
