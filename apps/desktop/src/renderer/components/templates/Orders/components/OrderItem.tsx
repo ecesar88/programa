@@ -1,10 +1,10 @@
 import { Button, ButtonGroup } from '@blueprintjs/core'
 import { DishTemplateRoundIcon } from '@renderer/assets/icons'
-import { OrderEntry } from '@renderer/queries/graphql/codegen/graphql'
 import { FaMinus, FaPlus, FaTrashAlt } from 'react-icons/fa'
+import { OrderEntryStoreItem } from '../store'
 
 type OrderItemProps = {
-  orderItem: Omit<OrderEntry, '__typename'>
+  orderItem: OrderEntryStoreItem
   onDecreaseQuantity: (id?: number) => void
   onRemoveItem: (id?: number) => void
   onIncreaseQuantity: (id?: number) => void
@@ -103,7 +103,7 @@ export const OrderItem = (props: OrderItemProps) => {
           <div className="flex flex-col items-end">
             <div>
               <span className="font-bold text-forest4 text-xs">
-                R$ {props.orderItem.menuEntry?.variants?.[0]?.price}
+                R$ {props.orderItem.menuEntry.variant.price}
               </span>
             </div>
 
