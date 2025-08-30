@@ -11,7 +11,7 @@ import {
 } from '../graphql/documents/client'
 
 
-// Is this correct????
+// Is this correct???
 
 export const get = async () => {
   // try {
