@@ -1,14 +1,11 @@
 {
   "name": "@repo/api",
   "private": true,
-  "prisma": {
-    "schema": "src/database/prisma/schema.prisma",
-    "seed": "pnpm ts-node-dev src/seeds/index.ts"
-  },
   "scripts": {
     "dev": "pnpm ts-node-dev --transpile-only --no-notify ./src/server.ts",
     "typecheck": "tsc",
-    "gen-docs": "pnpm spectaql spectaql.yml"
+    "gen-docs": "pnpm spectaql spectaql.yml",
+    "prisma:seed": "pnpm ts-node-dev src/seeds/index.ts"
   },
   "dependencies": {
     "@envelop/core": "5.0.2",
@@ -19,7 +16,7 @@
     "@pothos/plugin-simple-objects": "4.1.0",
     "@pothos/plugin-tracing": "1.1.0",
     "@pothos/plugin-zod": "4.1.0",
-    "@prisma/client": "6.1.0",
+    "@prisma/client": "6.15.0",
     "@repo/shared": "workspace:*",
     "body-parser": "2.0.1",
     "cacheable-request": "12.0.1",
@@ -29,7 +26,7 @@
     "express": "5.0.0",
     "express-list-endpoints": "7.1.0",
     "figlet": "1.7.0",
-    "graphql": "16.9.0",
+    "graphql": "^16.9.0",
     "graphql-query-to-json": "2.0.1",
     "graphql-scalars": "1.23.0",
     "graphql-tools": "9.0.1",
@@ -38,10 +35,10 @@
     "json-colorizer": "^3.0.1",
     "neverthrow": "^8.1.1",
     "node-color-log": "12.0.1",
-    "prisma": "6.1.0",
+    "prisma": "6.15.0",
     "reflect-metadata": "0.2.2",
     "spectaql": "3.0.0",
-    "ts-node-dev": "2.0.0",
+    "ts-node-dev": "^2.0.0",
     "ts-pattern": "5.3.1",
     "tsyringe": "4.8.0",
     "zod": "^3.23.8",
