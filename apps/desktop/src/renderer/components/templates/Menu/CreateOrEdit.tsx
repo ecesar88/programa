@@ -16,7 +16,7 @@ import fastDeepEqual from 'fast-deep-equal'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { FaLock, FaLockOpen } from 'react-icons/fa'
-import { debounce } from 'remeda'
+import { funnel } from 'remeda'
 import { LabelPopupContent } from './components/LabelPopupContent'
 import { Variants } from './components/Variants'
 
@@ -86,9 +86,10 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     setImageWidth(width)
   }
 
-  const imageDebouncer = debounce(getImageWidthBasedOnScreenSize, {
-    waitMs: 500,
-    timing: 'trailing'
+  const imageDebouncer = funnel(getImageWidthBasedOnScreenSize, {
+    minGapMs: 500,
+    maxBurstDurationMs: 500,
+    triggerAt: 'end'
   })
 
   useEffect(() => {
