@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "src",
+    "composite": true,
     "noImplicitThis": true,
     "noImplicitAny": true,
     "skipLibCheck": true,
