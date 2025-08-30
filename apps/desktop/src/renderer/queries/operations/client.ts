@@ -10,6 +10,9 @@ import {
   getAllClientsQueryDocument
 } from '../graphql/documents/client'
 
+
+// Is this correct???
+
 export const get = async () => {
   // try {
   //   return await gqlClient.request(getAllClientsQueryDocument, { page: 1 })
