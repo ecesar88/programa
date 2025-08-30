@@ -22,7 +22,7 @@ const HydrateAtoms = ({ children }): React.ReactNode => {
   return children
 }
 
-function App(): JSX.Element {
+function App(): React.ReactNode {
   // Electron IPC, not in use this at the moment
   // const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
 

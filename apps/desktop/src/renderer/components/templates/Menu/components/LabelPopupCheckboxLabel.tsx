@@ -13,11 +13,11 @@ type LabelPopupCheckboxLabel = {
 export const LabelPopupCheckboxLabel = (props: LabelPopupCheckboxLabel) => {
   return (
     <div className="flex flex-row w-full gap-1">
-      <div className="flex items-center flex-[1]">
+      <div className="flex items-center flex-1">
         <Checkbox className="ml-1 m-0" checked={props.checked} onClick={props.onSelect} />
       </div>
 
-      <div className="w-full flex-[9]" onClick={props.onSelect}>
+      <div className="w-full flex-9" onClick={props.onSelect}>
         <Label
           name={props.labelData.name}
           color={props.labelData.color}
@@ -25,10 +25,10 @@ export const LabelPopupCheckboxLabel = (props: LabelPopupCheckboxLabel) => {
         />
       </div>
 
-      <div className={'h-full flex-[1] flex items-center'}>
+      <div className={'h-full flex-1 flex items-center'}>
         <button
           onClick={props.onEditLabel}
-          className="bg-lightGray5 hover:bg-lightGray3 p-1 flex justify-center items-center rounded-sm h-full group [&_*]:!cursor-pointer !cursor-pointer active:bg-lightGray2"
+          className="bg-lightGray5 hover:bg-lightGray3 p-1 flex justify-center items-center rounded-sm h-full group **:cursor-pointer! cursor-pointer! active:bg-lightGray2"
         >
           <MdEdit className="text-gray4 group-hover:text-gray1" />
         </button>

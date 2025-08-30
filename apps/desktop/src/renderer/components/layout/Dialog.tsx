@@ -17,7 +17,7 @@ export const Dialog = (props: DialogProps) => {
       usePortal={true}
       canEscapeKeyClose={true}
       canOutsideClickClose={false}
-      className={cn('!w-fit !h-fit', props.className)}
+      className={cn('w-fit! h-fit!', props.className)}
     >
       <DialogBody className="p-0">{props.children}</DialogBody>
     </BlueprintDialog>

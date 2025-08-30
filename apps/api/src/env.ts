@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import * as z from 'zod/v4'
 
 export const envVariables = z.object({
   DATABASE_URL: z.string().optional(),

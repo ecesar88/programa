@@ -17,7 +17,7 @@ export const Card = (props: CardProps) => {
   return (
     <div
       className={cn(
-        `group text-white w-full h-full min-h-[40px] rounded shadow-md flex flex-row justify-between p-2 items-center transition-all bg-gray1 overflow-clip [&_*]:!cursor-pointer !cursor-pointer`,
+        `group text-white w-full h-full min-h-[40px] rounded shadow-md flex flex-row justify-between p-2 items-center transition-all bg-gray1 overflow-clip **:cursor-pointer! cursor-pointer!`,
         props.className
       )}
     >

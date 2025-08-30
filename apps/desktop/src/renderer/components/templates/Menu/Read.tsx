@@ -25,7 +25,7 @@ export const Read = (props: {
       {/* Categorias - trocar ícones, usar ícones mais coloridos */}
       <CategoryBar />
 
-      <div className="flex flex-col flex-grow overflow-y-auto">
+      <div className="flex flex-col grow overflow-y-auto">
         {props.menuEntries.map((menuEntry, idx, arr) => (
           <ProductCard
             key={menuEntry.id}

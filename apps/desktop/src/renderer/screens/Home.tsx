@@ -1,33 +1,33 @@
-import { Button } from '@blueprintjs/core'
+// import { Button } from '@blueprintjs/core'
 import { SystemMenu, SystemTime } from '@renderer/components'
 import { HOME_CONTAINER_ID } from '@renderer/constants'
 import { Outlet } from 'react-router'
 
 export const Home = (): React.ReactNode => {
-  const toggleDarkMode = () => {
-    window.darkModeAPI.toggleDark()
-  }
+  // const toggleDarkMode = () => {
+  //   window.darkModeAPI.toggleDark()
+  // }
 
-  const toggleLightMode = () => {
-    window.darkModeAPI.toggleLight()
-  }
+  // const toggleLightMode = () => {
+  //   window.darkModeAPI.toggleLight()
+  // }
 
-  const osNotify = () => {
-    window.notificationAPI.sendNotification()
-  }
+  // const osNotify = () => {
+  //   window.notificationAPI.sendNotification()
+  // }
 
   return (
-    <div className="flex h-[100vh] bg-white overflow-y-hidden">
+    <div className="flex h-screen bg-white overflow-y-hidden">
       <SystemMenu />
 
       <div id={HOME_CONTAINER_ID} className="w-full py-4 pl-0 pr-2">
-        <div className="flex flex-col gap-2 pt-12">
+        {/* <div className="flex flex-col gap-2 pt-12">
           <Button onClick={toggleDarkMode}>Enable Dark Mode 🌙</Button>
 
           <Button onClick={toggleLightMode}>Enable Light Mode ☀️</Button>
 
           <Button onClick={osNotify}>Notify!</Button>
-        </div>
+        </div> */}
 
         <Outlet />
       </div>

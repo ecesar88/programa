@@ -1,5 +1,5 @@
 import { PHONE_REGEX } from '../constants/regex'
-import { z } from 'zod'
+import * as z from 'zod/v4'
 
 export const CreateClientResolver = z
   .object({

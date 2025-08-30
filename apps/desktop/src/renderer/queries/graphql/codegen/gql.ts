@@ -11,8 +11,24 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * 3. It does not support dead code elimination, so it will add unused operations.
  *
  * Therefore it is highly recommended to use the babel or swc plugin for production.
+ * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
-const documents = {
+type Documents = {
+    "\n  fragment MenuEntryVariant_Fragment on MenuEntryVariant {\n    id\n    name\n    description\n    price\n  }\n": typeof types.MenuEntryVariant_FragmentFragmentDoc,
+    "\n  fragment MenuEntryLabel_Fragment on MenuEntryLabel {\n    id\n    name\n    color\n  }\n": typeof types.MenuEntryLabel_FragmentFragmentDoc,
+    "\n  fragment MenuEntry_Fragment on MenuEntry {\n    id\n    name\n    description\n    labels {\n      ...MenuEntryLabel_Fragment\n    }\n    variants {\n      ...MenuEntryVariant_Fragment\n    }\n  }\n": typeof types.MenuEntry_FragmentFragmentDoc,
+    "\n  fragment RecordNotFoundError_Fragment on RecordNotFoundError {\n    __typename\n    message\n  }\n": typeof types.RecordNotFoundError_FragmentFragmentDoc,
+    "\n  fragment BaseError_Fragment on BaseError {\n    __typename\n    message\n  }\n": typeof types.BaseError_FragmentFragmentDoc,
+    "\n  mutation createMenuEntry($data: MenuEntryInput!) {\n    createMenuEntry(data: $data) {\n      ...MenuEntry_Fragment\n    }\n  }\n": typeof types.CreateMenuEntryDocument,
+    "\n  mutation updateMenuEntry($id: Int!, $data: MenuEntryInput!) {\n    updateMenuEntry(id: $id, data: $data) {\n      ... on BaseError {\n        ...BaseError_Fragment\n      }\n\n      ... on RecordNotFoundError {\n        ...RecordNotFoundError_Fragment\n      }\n\n      ... on MutationUpdateMenuEntrySuccess {\n        data {\n          ...MenuEntry_Fragment\n        }\n      }\n    }\n  }\n": typeof types.UpdateMenuEntryDocument,
+    "\n  mutation deleteMenuEntry($id: Int!) {\n    deleteMenuEntry(id: $id) {\n      ... on BaseError {\n        ...BaseError_Fragment\n      }\n\n      ... on RecordNotFoundError {\n        ...RecordNotFoundError_Fragment\n      }\n\n      ... on MutationDeleteMenuEntrySuccess {\n        data {\n          ...MenuEntry_Fragment\n        }\n      }\n    }\n  }\n": typeof types.DeleteMenuEntryDocument,
+    "\n  query getAllMenuEntries($page: Int) {\n    getAllMenuEntries(page: $page) {\n      ...MenuEntry_Fragment\n    }\n  }\n": typeof types.GetAllMenuEntriesDocument,
+    "\n  query getAllMenuEntryLabels($page: Int) {\n    getAllMenuEntryLabels(page: $page) {\n      ...MenuEntryLabel_Fragment\n    }\n  }\n": typeof types.GetAllMenuEntryLabelsDocument,
+    "\n  mutation createOrUpdateMenuEntryLabel($id: Int, $data: MenuEntryLabelInput!) {\n    createOrUpdateMenuEntryLabel(id: $id, data: $data) {\n      ... on BaseError {\n        ...BaseError_Fragment\n      }\n\n      ... on RecordNotFoundError {\n        ...RecordNotFoundError_Fragment\n      }\n\n      ... on MutationCreateOrUpdateMenuEntryLabelSuccess {\n        data {\n          ...MenuEntryLabel_Fragment\n        }\n      }\n    }\n  }\n": typeof types.CreateOrUpdateMenuEntryLabelDocument,
+    "\n  query getMenuEntryById($id: Int!) {\n    getMenuEntryById(id: $id) {\n      ... on BaseError {\n        ...BaseError_Fragment\n      }\n\n      ... on RecordNotFoundError {\n        ...RecordNotFoundError_Fragment\n      }\n\n      ... on QueryGetMenuEntryByIdSuccess {\n        data {\n          ...MenuEntry_Fragment\n        }\n      }\n    }\n  }\n": typeof types.GetMenuEntryByIdDocument,
+    "\n  mutation deleteMenuEntryLabel($id: Int!) {\n    deleteMenuEntryLabel(id: $id) {\n      ... on BaseError {\n        message\n      }\n      ... on RecordNotFoundError {\n        message\n      }\n      ... on MutationDeleteMenuEntryLabelSuccess {\n        data {\n          id\n          name\n          color\n        }\n      }\n    }\n  }\n": typeof types.DeleteMenuEntryLabelDocument,
+};
+const documents: Documents = {
     "\n  fragment MenuEntryVariant_Fragment on MenuEntryVariant {\n    id\n    name\n    description\n    price\n  }\n": types.MenuEntryVariant_FragmentFragmentDoc,
     "\n  fragment MenuEntryLabel_Fragment on MenuEntryLabel {\n    id\n    name\n    color\n  }\n": types.MenuEntryLabel_FragmentFragmentDoc,
     "\n  fragment MenuEntry_Fragment on MenuEntry {\n    id\n    name\n    description\n    labels {\n      ...MenuEntryLabel_Fragment\n    }\n    variants {\n      ...MenuEntryVariant_Fragment\n    }\n  }\n": types.MenuEntry_FragmentFragmentDoc,

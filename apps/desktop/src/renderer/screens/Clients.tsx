@@ -210,6 +210,7 @@ export const Clients = (): React.ReactNode => {
         actions={{
           onCancel: () => {
             closeAlertModal()
+            alert("A")
           },
           onConfirm: () => {
             handleDeleteActionButton()

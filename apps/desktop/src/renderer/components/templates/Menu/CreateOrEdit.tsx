@@ -272,7 +272,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     <>
       <div
         id="create-or-edit-menu-entry-modal"
-        className="flex flex-col p-5 w-full overflow-clip overflow-x-clip overflow-y-clip !max-h-[70vh]"
+        className="flex flex-col p-5 w-full overflow-clip overflow-x-clip overflow-y-clip max-h-[70vh]!"
       >
         <div className="flex flex-row justify-between">
           <div className="flex flex-row items-center gap-4 justify-between w-full relative">
@@ -287,7 +287,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
                       render={({ field: { onChange, value, ref } }) => (
                         // <input value={value} onChange={onChange} ref={ref} />
                         <EditableText
-                          className="[&_*]:!cursor-text"
+                          className="**:cursor-text!"
                           disabled={!isCreateModeActive && !props.editMode.isEditModeActive}
                           onChange={onChange}
                           value={value}
@@ -322,7 +322,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
 
             <animated.div
               style={addLabelButtonAnimationStyle}
-              className="flex flex-row justify-end min-h-[30px] gap-[1rem] absolute right-0"
+              className="flex flex-row justify-end min-h-[30px] gap-4 absolute right-0"
               ref={refs.setReference}
             >
               <div className="flex flex-row gap-1">
@@ -353,7 +353,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
         </div>
 
         <div className="flex flex-row justify-between gap-4">
-          <div className="h-fit rounded flex flex-col gap-1 justify-between flex-[10] w-full items-center">
+          <div className="h-fit rounded flex flex-col gap-1 justify-between flex-10 w-full items-center">
             <div
               className="transition-all pt-2 flex items-center justify-center"
               style={{
@@ -376,7 +376,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
                       render={({ field: { onChange, value, ref } }) => (
                         // <input value={value} onChange={onChange} ref={ref} />
                         <EditableText
-                          className="[&_*]:!cursor-text max-w-[470px] min-h-[85px] text-wrap"
+                          className="**:cursor-text! max-w-[470px] min-h-[85px] text-wrap"
                           disabled={!isCreateModeActive && !props.editMode.isEditModeActive}
                           onChange={onChange}
                           value={value ?? ''}
@@ -397,7 +397,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
             </form>
           </div>
 
-          <div className="flex flex-col gap-2 flex-[8] min-w-[400px]">
+          <div className="flex flex-col gap-2 flex-8 min-w-[400px]">
             <p className="text-lg font-bold pl-2">Variantes</p>
 
             <Variants

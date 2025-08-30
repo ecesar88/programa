@@ -32,7 +32,7 @@ const renderVariantPrice = (
         intent="none"
         small
         outlined
-        className="rounded-md h-fit !py-1 [&_*]:!cursor-pointer !cursor-pointer"
+        className="rounded-md h-fit py-1! **:cursor-pointer! cursor-pointer!"
         icon={
           <FaChevronRight
             className={cn('transition-all', { 'rotate-90': isVariantSelectorOpen })}
@@ -73,7 +73,7 @@ export const ProductCard = (props: ProductCardProps) => {
         className={cn(
           'flex-col gap-2',
           {
-            '[&_*]:!cursor-pointer !cursor-pointer': !areThereMoreThanOneVariant,
+            '**:cursor-pointer! cursor-pointer!': !areThereMoreThanOneVariant,
             'bg-lightGray5': props.idx % 2 === 0,
             'bg-lightGray4': props.idx % 2 !== 0
           },
@@ -112,7 +112,7 @@ export const ProductCard = (props: ProductCardProps) => {
         )}
 
         <div
-          className={cn('h-0 !overflow-clip transition-all', {
+          className={cn('h-0 overflow-clip! transition-all', {
             'h-full pb-2 pr-2': showVariantSelector
           })}
         >
@@ -126,7 +126,7 @@ export const ProductCard = (props: ProductCardProps) => {
                 {props.menuEntry.variants?.map((variant, idx) => (
                   <div
                     key={idx}
-                    className="rounded-md border border-gray2 py-1 px-4 flex flex-col items-center bg-gray2 text-white hover:bg-gray1 [&_*]:!cursor-pointer !cursor-pointer active:bg-cerulean1 transition-all"
+                    className="rounded-md border border-gray2 py-1 px-4 flex flex-col items-center bg-gray2 text-white hover:bg-gray1 **:cursor-pointer! cursor-pointer! active:bg-cerulean1 transition-all"
                     onClick={() => {
                       props.onClick(variant)
                     }}

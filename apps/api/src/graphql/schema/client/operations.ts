@@ -1,5 +1,5 @@
 import { Regex } from '@repo/shared/constants'
-import * as z from 'zod'
+import * as z from 'zod/v4'
 import { builder } from '../../builder'
 import { RecordNotFoundError } from '../_errors/errors'
 import { create, queryAll, queryOne, remove, search, update } from './resolvers'

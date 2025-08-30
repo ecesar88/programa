@@ -16,14 +16,14 @@ export const OrderItem = (props: OrderItemProps) => {
     <div className="flex flex-col bg-white bg-opacity-10 border-l-forest2 border-l-[6px] py-1 pr-2 hover:bg-lightGray4">
       {/* Order */}
       <div className="flex gap-2 justify-between pl-2 py-0.5">
-        <div className="flex gap-3 items-center flex-shrink">
-          <div className="flex-[2] min-w-[46px] max-w-[46px] min-h-[46px] max-h-[46px] border border-lightGray1 rounded-lg">
+        <div className="flex gap-3 items-center shrink">
+          <div className="flex-2 min-w-[46px] max-w-[46px] min-h-[46px] max-h-[46px] border border-lightGray1 rounded-lg">
             <div className="transition-all flex items-center justify-center">
               <DishTemplateRoundIcon style={{ opacity: 1 }} />
             </div>
           </div>
 
-          <div className="flex-[8] flex flex-col gap-1">
+          <div className="flex-8 flex flex-col gap-1">
             <div>
               <p className="font-bold">{props.orderItem.menuEntry?.name}</p>
             </div>
@@ -34,7 +34,7 @@ export const OrderItem = (props: OrderItemProps) => {
           </div>
         </div>
 
-        <div className="flex-[3] flex flex-col flex-shrink-0">
+        <div className="flex-3 flex flex-col shrink-0">
           <div className="flex py-0.5 items-center rounded-lg justify-end gap-1">
             <Button
               icon={<FaTrashAlt className="text-red3" />}
@@ -58,7 +58,7 @@ export const OrderItem = (props: OrderItemProps) => {
               />
 
               <Button
-                className="font-bold !text-gray1 !px-1 !border-lightgray"
+                className="font-bold !text-gray1 px-1! !border-lightgray"
                 intent="none"
                 outlined
                 small

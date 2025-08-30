@@ -78,12 +78,12 @@ export const CreateOrEdit = (props: CreateOrEditProps): React.ReactNode => {
       </div>
 
       <div className="flex flex-row gap-4 border-t border-t-lightGray1 mt-3 max-h-full overflow-hidden">
-        <div className="flex flex-col justify-between flex-[4]">
+        <div className="flex flex-col justify-between flex-4">
           <OrderItemsListing orderItems={orderItems} />
           <ActionButtonsAndTotal totalPrice={totalOrderPrice} />
         </div>
 
-        <div className="flex flex-col gap-2 max-h-full overflow-hidden flex-[6] pt-2">
+        <div className="flex flex-col gap-2 max-h-full overflow-hidden flex-6 pt-2">
           <div className="pt-2">
             <input
               type="text"

@@ -1,6 +1,7 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig, externalizeDepsPlugin, swcPlugin } from 'electron-vite'
 import { resolve } from 'path'
+import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   main: {
@@ -17,6 +18,6 @@ export default defineConfig({
         '@repo/shared/constants': resolve('../../packages/shared/src/constants')
       }
     },
-    plugins: [react()]
+    plugins: [react(), tailwindcss()]
   }
 })

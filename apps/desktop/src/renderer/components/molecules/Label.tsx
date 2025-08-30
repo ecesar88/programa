@@ -24,7 +24,7 @@ export const Label = (
           : `${props.color}`
       }}
       className={cn(
-        'flex justify-center items-center rounded-sm w-fit min-w-[30px] px-2 py-0 [&_*]:!cursor-pointer !cursor-pointer',
+        'flex justify-center items-center rounded-sm w-fit min-w-[30px] px-2 py-0 **:cursor-pointer! cursor-pointer!',
         props.className
       )}
     >

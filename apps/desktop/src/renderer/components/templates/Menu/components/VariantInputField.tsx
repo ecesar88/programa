@@ -24,7 +24,7 @@ export const VariantInputField = (props: VariantInputFieldProps) => {
         'flex flex-row justify-between max-w-[390px] rounded-md bg-lightgray text-black px-2 py-1 hover:bg-gray4 transition-all items-center h-fit overflow-clip group relative hover:scale-[102%]'
       )}
     >
-      <div className={cn('flex flex-col w-full pr-4 transition-all flex-[8]')}>
+      <div className={cn('flex flex-col w-full pr-4 transition-all flex-8')}>
         <div>
           <Controller
             control={control}
@@ -33,7 +33,7 @@ export const VariantInputField = (props: VariantInputFieldProps) => {
             render={({ field: { onChange, value, ref } }) => (
               // <input value={value} onChange={onChange} ref={ref} />
               <EditableText
-                className="font-bold [&_*]:!cursor-text"
+                className="font-bold **:cursor-text!"
                 disabled={!props.isCreateModeActive && !props.isEditModeActive}
                 onChange={onChange}
                 value={value}
@@ -47,7 +47,7 @@ export const VariantInputField = (props: VariantInputFieldProps) => {
           />
         </div>
 
-        <div className="flex-shrink-0 flex-grow-0">
+        <div className="shrink-0 grow-0">
           <Controller
             control={control}
             name={`variants.${props.arrayIndex}.description`}
@@ -55,7 +55,7 @@ export const VariantInputField = (props: VariantInputFieldProps) => {
             render={({ field: { onChange, value, ref } }) => (
               // <input value={value} onChange={onChange} ref={ref} />
               <EditableText
-                className="max-w-[220px] w-max [&_*]:!cursor-text"
+                className="max-w-[220px] w-max **:cursor-text!"
                 disabled={!props.isCreateModeActive && !props.isEditModeActive}
                 onChange={onChange}
                 value={value}
@@ -77,7 +77,7 @@ export const VariantInputField = (props: VariantInputFieldProps) => {
         className={cn(
           'flex flex-row min-w-[70px] justify-between relative transition-all duration-300',
           {
-            'right-[0] group-hover:right-[3rem]': props.isEditModeActive || props.isCreateModeActive
+            'right-[0] group-hover:right-12': props.isEditModeActive || props.isCreateModeActive
           }
         )}
       >
@@ -93,7 +93,7 @@ export const VariantInputField = (props: VariantInputFieldProps) => {
               // <input value={value} onChange={onChange} ref={ref} type="number" />
               <EditableText
                 disabled={!props.isCreateModeActive && !props.isEditModeActive}
-                className="text-end [&_*]:!cursor-text min-w-[60px]"
+                className="text-end **:cursor-text! min-w-[60px]"
                 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat
                 onChange={(event) => onChange(event.replace(/[^\d.-]+/g, ''))}
                 value={value}
@@ -112,7 +112,7 @@ export const VariantInputField = (props: VariantInputFieldProps) => {
 
       <div
         className={cn(
-          'flex items-center gap-2 absolute right-[-3rem] transition-all duration-300',
+          'flex items-center gap-2 absolute -right-12 transition-all duration-300',
           {
             'group-hover:right-[0.8rem]': props.isEditModeActive || props.isCreateModeActive
           }
