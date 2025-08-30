@@ -14,7 +14,7 @@ export const SystemTime = (): React.ReactNode => {
   }, [])
 
   return (
-    <div className="flex gap-3 items-center bg-lightGray4 rounded px-2 py-1">
+    <div className="flex gap-3 items-center bg-light-gray4 rounded px-2 py-1">
       <div className="flex flex-row gap-1 items-center">
         <div>
           <FaCalendarAlt />

@@ -2,8 +2,9 @@
 module.exports = {
   content: ['./renderer/src/**/*.{html,js,ts,tsx,jsx}'],
   plugins: {
-    'postcss-import': {},
-    tailwindcss: {},
-    autoprefixer: {}
+    '@tailwindcss/postcss': {}
+    // 'postcss-import': {},
+    // tailwindcss: {},
+    // autoprefixer: {}
   }
 }

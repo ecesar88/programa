@@ -4,7 +4,7 @@ import { TbMeat } from 'react-icons/tb'
 
 export const CategoryBar = () => {
   return (
-    <div className="flex flex-row grow-0 shrink-0 h-[75px] gap-6 py-2 px-4 bg-lightGray4 rounded-md">
+    <div className="flex flex-row grow-0 shrink-0 h-[75px] gap-6 py-2 px-4 bg-light-gray4 rounded-md">
       <div className="flex flex-col items-center gap-2">
         <div>
           <TbMeat size={28} />

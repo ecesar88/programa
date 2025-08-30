@@ -13,7 +13,7 @@ type OrderItemProps = {
 
 export const OrderItem = (props: OrderItemProps) => {
   return (
-    <div className="flex flex-col bg-white bg-opacity-10 border-l-forest2 border-l-[6px] py-1 pr-2 hover:bg-lightGray4">
+    <div className="flex flex-col bg-white bg-opacity-10 border-l-forest2 border-l-[6px] py-1 pr-2 hover:bg-light-gray4">
       {/* Order */}
       <div className="flex gap-2 justify-between pl-2 py-0.5">
         <div className="flex gap-3 items-center shrink">

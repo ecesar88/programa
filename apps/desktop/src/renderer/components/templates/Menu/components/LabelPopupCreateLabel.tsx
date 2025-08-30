@@ -113,7 +113,7 @@ export const LabelPopupCreateLabel = (props: LabelPopupCreateLabelProps) => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-1 w-full items-center p-4 bg-lightGray4">
+      <div className="flex flex-col gap-1 w-full items-center p-4 bg-light-gray4">
         <Label
           color={labelData?.color ?? ''}
           name={labelData?.name ?? ''}
@@ -157,7 +157,7 @@ export const LabelPopupCreateLabel = (props: LabelPopupCreateLabelProps) => {
           </div>
         </div>
 
-        <div className="border border-t border-lightGray3 mt-0.5 w-[95%]"></div>
+        <div className="border border-t border-light-gray3 mt-0.5 w-[95%]"></div>
 
         <div className="flex flex-row gap-4 w-full pb-2 justify-between">
           <Button

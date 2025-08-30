@@ -24,7 +24,7 @@ export const ScreenMenu = (props: ScreenMenuProps): React.ReactNode => {
   const isLoading = useAtomValue(isLoadingAtom)
 
   return (
-    <div className="p-1 flex justify-start gap-2 border border-lightgray border-solid rounded bg-lightGray5">
+    <div className="p-1 flex justify-start gap-2 border border-lightgray border-solid rounded bg-light-gray5">
       <Button
         icon="plus"
         fill

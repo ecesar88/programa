@@ -30,8 +30,8 @@ const renderVariantPrice = (
       <Button
         onClick={onClickCallback}
         intent="none"
-        small
-        outlined
+        size="small"
+        variant="outlined"
         className="rounded-md h-fit py-1! **:cursor-pointer! cursor-pointer!"
         icon={
           <FaChevronRight
@@ -39,7 +39,7 @@ const renderVariantPrice = (
           />
         }
       >
-        <p>{variants.length} variantes</p>
+        {variants.length} variantes
       </Button>
     )
   }
@@ -56,7 +56,7 @@ export const ProductCard = (props: ProductCardProps) => {
   return (
     <div
       key={props.idx}
-      className="rounded-lg hover:outline-2 hover:outline-blue2 outline-none -outline-offset-2 h-full max-h-full"
+      className="rounded-lg hover:outline-2 hover:outline-blue2 -outline-offset-2 h-full max-h-full"
     >
       <div
         onClick={() => {
@@ -74,8 +74,8 @@ export const ProductCard = (props: ProductCardProps) => {
           'flex-col gap-2',
           {
             '**:cursor-pointer! cursor-pointer!': !areThereMoreThanOneVariant,
-            'bg-lightGray5': props.idx % 2 === 0,
-            'bg-lightGray4': props.idx % 2 !== 0
+            'bg-light-gray5': props.idx % 2 === 0,
+            'bg-light-gray4': props.idx % 2 !== 0
           },
           props.className
         )}
@@ -120,7 +120,7 @@ export const ProductCard = (props: ProductCardProps) => {
             <div className="transition-all pl-4">
               <div
                 className={
-                  'flex flex-row justify-start gap-3 rounded-lg bg-transparent p-2 bg-lightGray1'
+                  'flex flex-row justify-start gap-3 rounded-lg bg-transparent p-2 bg-light-gray1'
                 }
               >
                 {props.menuEntry.variants?.map((variant, idx) => (

@@ -107,7 +107,7 @@ export const LabelPopupSelectLabel = () => {
           )}
       </div>
 
-      <div className="border border-t border-lightGray3 mt-0.5 w-full"></div>
+      <div className="border border-t border-light-gray3 mt-0.5 w-full"></div>
 
       <div className="flex flex-col gap-2 w-full">
         <Button

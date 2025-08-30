@@ -33,7 +33,7 @@ const OrderColumn = (props: OrderColumnProps): React.ReactNode => {
   return (
     <div
       id="order-column"
-      className="flex flex-col items-center justify-start w-full h-full rounded-lg bg-lightGray4 max-h-full overflow-hidden"
+      className="flex flex-col items-center justify-start w-full h-full rounded-lg bg-light-gray4 max-h-full overflow-hidden"
     >
       <div className="flex items-center justify-between gap-2 px-4 pt-4 pb-2">
         {props.icon ?? null}

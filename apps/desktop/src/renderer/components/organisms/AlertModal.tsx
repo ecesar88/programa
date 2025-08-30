@@ -22,7 +22,7 @@ export const AlertModal = (props: AlertModalProps): React.ReactNode => {
       confirmButtonText={props.confirmButtonText}
       icon={props.icon}
       intent={props.intent}
-      isOpen={props.isOpen}
+      isOpen={props.isOpen ?? false}
       loading={props.isLoading}
       onCancel={props.actions?.onCancel}
       onConfirm={props.actions?.onConfirm}

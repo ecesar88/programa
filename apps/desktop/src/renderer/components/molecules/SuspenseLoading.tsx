@@ -14,7 +14,7 @@ export const SuspenseLoading = (props: { isLoading: boolean }) => {
   // }, [props.isLoading])
 
   return props.isLoading ? (
-    <div className="bg-lightGray5 bg-opacity-80 absolute z-50 inset-0 rounded-md">
+    <div className="bg-light-gray5 bg-opacity-80 absolute z-50 inset-0 rounded-md">
       <Loading />
     </div>
   ) : null

@@ -19,7 +19,7 @@ export const Dialog = (props: DialogProps) => {
       canOutsideClickClose={false}
       className={cn('w-fit! h-fit!', props.className)}
     >
-      <DialogBody className="p-0">{props.children}</DialogBody>
+      <DialogBody className="p-0!">{props.children}</DialogBody>
     </BlueprintDialog>
   )
 }

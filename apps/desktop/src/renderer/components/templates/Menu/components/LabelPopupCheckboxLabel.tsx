@@ -28,7 +28,7 @@ export const LabelPopupCheckboxLabel = (props: LabelPopupCheckboxLabel) => {
       <div className={'h-full flex-1 flex items-center'}>
         <button
           onClick={props.onEditLabel}
-          className="bg-lightGray5 hover:bg-lightGray3 p-1 flex justify-center items-center rounded-sm h-full group **:cursor-pointer! cursor-pointer! active:bg-lightGray2"
+          className="bg-light-gray5 hover:bg-light-gray3 p-1 flex justify-center items-center rounded-sm h-full group **:cursor-pointer! cursor-pointer! active:bg-light-gray2"
         >
           <MdEdit className="text-gray4 group-hover:text-gray1" />
         </button>

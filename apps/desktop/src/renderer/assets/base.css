@@ -1,15 +1,7 @@
-@import '@blueprintjs/table/lib/css/table.css' layer(base);
+@import '@blueprintjs/table/lib/css/table.css';
 
 @import 'tailwindcss';
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  -webkit-user-select: none; /* Safari */
-  user-select: none; /* Standard syntax */
-  cursor: default !important;
-}
+@config "../../../tailwind.config.cjs";
 
 button {
   outline: none !important;
@@ -25,4 +17,24 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type='number'] {
   -moz-appearance: textfield;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  * {
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+    -webkit-user-select: none; /* Safari */
+    user-select: none; /* Standard syntax */
+    cursor: default !important;
+  }
 }

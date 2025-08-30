@@ -50,12 +50,12 @@ export const Table = <T extends object>(props: TableProps<T>): React.ReactNode =
       </div>
 
       {tableTitle ? (
-        <div className="flex items-center justify-between rounded-t border border-b-0 border-lightGray2 bg-lightGray5">
+        <div className="flex items-center justify-between rounded-t border border-b-0 border-light-gray2 bg-light-gray5">
           {tableTitle}
         </div>
       ) : null}
 
-      <table className="border-spacing-0 border border-lightGray2 border-b-0 w-full">
+      <table className="border-spacing-0 border border-light-gray2 border-b-0 w-full">
         <thead className="bg-lightGray5">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr
@@ -70,7 +70,7 @@ export const Table = <T extends object>(props: TableProps<T>): React.ReactNode =
                 return (
                   <th
                     key={header.id}
-                    className="border-t-0 border border-b-0 border-lightGray2 px-4 py-2 font-normal text-left text-[16px] last:border-r-0 first:border-l-0"
+                    className="border-t-0 border border-b-0 border-light-gray2 px-4 py-2 font-normal text-left text-[16px] last:border-r-0 first:border-l-0"
                     {...{
                       colSpan: header.colSpan,
                       style: {
@@ -88,7 +88,7 @@ export const Table = <T extends object>(props: TableProps<T>): React.ReactNode =
               {(() => {
                 return (
                   <th
-                    className="border-t-0 border border-b-0 border-lightGray2 px-4 py-2 font-normal text-left text-[16px] last:border-r-0 first:border-l-0"
+                    className="border-t-0 border border-b-0 border-light-gray2 px-4 py-2 font-normal text-left text-[16px] last:border-r-0 first:border-l-0"
                     style={{ width: '100%' }}
                   ></th>
                 )
@@ -120,7 +120,7 @@ export const Table = <T extends object>(props: TableProps<T>): React.ReactNode =
                     <td
                       key={cell.id}
                       className={cn(
-                        'border border-lightGray2 px-4 py-0 bg-white text-left transition-all',
+                        'border border-light-gray2 px-4 py-0 bg-white text-left transition-all',
                         {
                           'bg-cerulean5 bg-opacity-20': rowMetaData === parseInt(row.id)
                         }
@@ -140,7 +140,7 @@ export const Table = <T extends object>(props: TableProps<T>): React.ReactNode =
                 {(() => {
                   return (
                     <td
-                      className="border border-lightGray2 px-4 py-0 bg-lightGray5 text-left"
+                      className="border border-light-gray2 px-4 py-0 bg-light-gray5 text-left"
                       style={{ width: '100%' }}
                     ></td>
                   )

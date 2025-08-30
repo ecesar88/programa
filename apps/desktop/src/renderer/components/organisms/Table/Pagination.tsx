@@ -76,7 +76,7 @@ export const Pagination = (props: PaginationProps) => {
   }
 
   return (
-    <div className="relative flex px-2 py-2 border border-t-0 rounded-b bg-lightGray5 border-lightGray2">
+    <div className="relative flex px-2 py-2 border border-t-0 rounded-b bg-light-gray5 border-light-gray2">
       <div className="flex justify-start gap-3 rounded w-fit">
         <ButtonGroup>
           <Button

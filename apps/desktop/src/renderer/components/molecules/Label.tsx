@@ -28,7 +28,7 @@ export const Label = (
         props.className
       )}
     >
-      <p style={{ color: textColor }} className="text-xs">
+      <p style={{ color: textColor }} className="text-xs m-0!">
         {props.name}
       </p>
     </div>

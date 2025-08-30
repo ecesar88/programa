@@ -14,7 +14,7 @@ export const SystemMenu = () => {
     isScreenSelected(route) ? 'primary' : 'none'
 
   return (
-    <div className="flex flex-col gap-2 p-2 pr-3 bg-lightGray5 mr-3 mt-2 mb-2 ml-2 rounded-md">
+    <div className="flex flex-col gap-2 p-2 pr-3 bg-light-gray5 mr-3 mt-2 mb-2 ml-2 rounded-md">
       <div className="flex justify-center h-[60px] bg-[red] text-white">LOGO</div>
 
       <div className="h-max flex flex-col">

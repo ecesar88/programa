@@ -163,45 +163,46 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
   const variantNames = formValues?.variants ? formValues?.variants?.map((vf) => vf.name) : []
   const variantPrices = formValues?.variants ? formValues?.variants?.map((vf) => vf.price) : []
 
-  const theresEmptyVariants = useMemo(
-    () => {
-      if (!formValues.variants) return
+  const theresEmptyVariants = false
+  // const theresEmptyVariants = useMemo(
+  //   () => {
+  //     if (!formValues.variants) return
 
-      const emptyVariants = formValues.variants.map((variant) =>
-        Object.entries(variant).some(([key, value]) => {
-          // const nameSchema = z.string().min(3)
-          // const priceSchema = z.string().regex(/[0-9]/g)
+  //     const emptyVariants = formValues.variants.map((variant) =>
+  //       Object.entries(variant).some(([key, value]) => {
+  //         // const nameSchema = z.string().min(3)
+  //         // const priceSchema = z.string().regex(/[0-9]/g)
 
-          // let result: boolean = false
+  //         // let result: boolean = false
 
-          // match(key)
-          //   .with('name', () => {
-          //     const parse = nameSchema.safeParse(value)
-          //     console.log('parse > ', parse)
-          //     result = parse.success
-          //   })
-          //   .with('price', () => {
-          //     const parse = priceSchema.safeParse(value)
-          //     console.log('parse > ', parse)
-          //     result = parse.success
-          //   })
+  //         // match(key)
+  //         //   .with('name', () => {
+  //         //     const parse = nameSchema.safeParse(value)
+  //         //     console.log('parse > ', parse)
+  //         //     result = parse.success
+  //         //   })
+  //         //   .with('price', () => {
+  //         //     const parse = priceSchema.safeParse(value)
+  //         //     console.log('parse > ', parse)
+  //         //     result = parse.success
+  //         //   })
 
-          if (key === 'name' && typeof value === 'string') return (value?.length ?? 0) <= 0
-          else if (key === 'price' && (typeof value === 'object' || typeof value == 'number'))
-            return value === null || value <= 0 || isNaN(value)
+  //         if (key === 'name' && typeof value === 'string') return (value?.length ?? 0) <= 0
+  //         else if (key === 'price' && (typeof value === 'object' || typeof value == 'number'))
+  //           return value === null || value <= 0 || isNaN(value)
 
-          // return result // replace with regex
+  //         // return result // replace with regex
 
-          return false
-        })
-      )
+  //         return false
+  //       })
+  //     )
 
-      return !emptyVariants.every((result) => result === false)
-    },
-    // Watch the form values as they change
-    // TODO - FIX THIS MESS
-    [...variantNames, ...variantPrices]
-  )
+  //     return !emptyVariants.every((result) => result === false)
+  //   },
+  //   // Watch the form values as they change
+  //   // TODO - FIX THIS MESS
+  //   [...variantNames, ...variantPrices]
+  // )
 
   const hasTheUserModifiedAnything = useMemo(
     () => !fastDeepEqual(initialFormValues, formValues),
@@ -272,7 +273,7 @@ export const CreateOrEditModal = (props: CreateOrEditProps): React.ReactNode => 
     <>
       <div
         id="create-or-edit-menu-entry-modal"
-        className="flex flex-col p-5 w-full overflow-clip overflow-x-clip overflow-y-clip max-h-[70vh]!"
+        className="flex flex-col w-full p-4 overflow-clip overflow-x-clip overflow-y-clip max-h-[70vh]!"
       >
         <div className="flex flex-row justify-between">
           <div className="flex flex-row items-center gap-4 justify-between w-full relative">
