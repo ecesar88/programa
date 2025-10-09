@@ -13,7 +13,7 @@ export const Client = ClientRef.implement({
   description: 'A client/customer on the application',
   fields: (t) => ({
     id: t.exposeInt('id', { description: 'The id on the database' }),
-    name: t.exposeString('name'),
+    name: t.exposeString('name', { description: "The customer's name" }),
     phone: t.exposeString('phone', { nullable: true })
   })
 })

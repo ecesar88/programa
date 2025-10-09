@@ -28,7 +28,8 @@ export type Client = {
   __typename?: 'Client';
   /** The id on the database */
   id?: Maybe<Scalars['Int']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
+  /** The customer's name */
+  name?: Maybe<Scalars['Int']['output']>;
   phone?: Maybe<Scalars['String']['output']>;
 };
 

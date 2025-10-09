@@ -6,6 +6,8 @@ type BaseError implements Error {
 type Client {
   """The id on the database"""
   id: Int
+
+  """The customer's name"""
   name: String
   phone: String
 }
