@@ -1,6 +1,6 @@
 // biome-ignore assist/source/organizeImports: Can't sort imports automatically
 import { useEngine, useErrorHandler, useMaskedErrors, usePayloadFormatter } from "@envelop/core";
-import { type IdentifyFn, useRateLimiter } from "@envelop/rate-limiter";
+import { useRateLimiter } from "@envelop/rate-limiter";
 import { renderGraphiQL } from "@graphql-yoga/render-graphiql"; // Not working?
 import cors from "cors";
 import dotenv from "dotenv";
