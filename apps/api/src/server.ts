@@ -1,5 +1,6 @@
 // biome-ignore assist/source/organizeImports: Can't sort imports automatically
 import { useEngine, useErrorHandler, useMaskedErrors, usePayloadFormatter } from "@envelop/core";
+import { type IdentifyFn, useRateLimiter } from "@envelop/rate-limiter";
 import { renderGraphiQL } from "@graphql-yoga/render-graphiql"; // Not working?
 import cors from "cors";
 import dotenv from "dotenv";
@@ -11,6 +12,7 @@ import helmet, { type HelmetOptions } from "helmet";
 import nodeColorLog from "node-color-log";
 import path from "node:path";
 import "reflect-metadata";
+import { useSofa } from "sofa-api";
 import { InfoController } from "./controllers/info";
 import { env } from "./env";
 import { context } from "./graphql/context";
@@ -78,6 +80,10 @@ const PUBLIC_FOLDER_PATH = path.join(process.cwd(), PUBLIC_FOLDER_NAME);
 				// Or `false`y value to keep it as-is.
 				return false;
 			}),
+			useRateLimiter({
+				// @ts-expect-error - 'ctx' is of type 'unknown'.ts(18046)
+				identifyFn: (ctx) => ctx.request.ip,
+			}),
 		],
 	});
 
@@ -85,7 +91,11 @@ const PUBLIC_FOLDER_PATH = path.join(process.cwd(), PUBLIC_FOLDER_NAME);
 	express.use(helmet(helmetOptions));
 	express.use(Express.json());
 	express.use(cors({ origin: "http://localhost:5173" })); // 5173 is the port Electron's renderer runs
+
 	express.use(yoga.graphqlEndpoint, yoga);
+
+	// Automatically convert the GraphQL API to REST with full OpenAPI documentation support/generation
+	express.use("/api", useSofa({ basePath: "/api", schema, openAPI: { endpoint: "/docs" } }));
 
 	express.use(HTTPLoggerMiddleware);
 
