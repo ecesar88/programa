@@ -1,4 +1,4 @@
-import { useEngine } from '@envelop/core'
+import { useEngine, useErrorHandler, useMaskedErrors, usePayloadFormatter } from '@envelop/core'
 import { renderGraphiQL } from '@graphql-yoga/render-graphiql' // Not working?
 import cors from 'cors'
 import dotenv from 'dotenv'
@@ -6,19 +6,19 @@ import Express from 'express'
 import figlet from 'figlet'
 import { execute, parse, specifiedRules, subscribe, validate } from 'graphql'
 import { createYoga, useLogger } from 'graphql-yoga'
-import helmet, { HelmetOptions } from 'helmet'
+import helmet, { type HelmetOptions } from 'helmet'
 import nodeColorLog from 'node-color-log'
 import path from 'node:path'
 import 'reflect-metadata'
 import { InfoController } from './controllers/info'
+import { env } from './env'
 import { context } from './graphql/context'
 import { schema } from './graphql/schema'
 import { HTTPLoggerMiddleware } from './middleware'
+import { ROUTES } from './routes'
 import { gqlLogger } from './utils/graphqlLogger'
 import { LOG_TYPE, logger } from './utils/logger'
-import { parseEnv } from './utils/parseEnv'
 import { printRouteTable } from './utils/printRouteTable'
-import { ROUTES } from './routes'
 
 const helmetOptions: HelmetOptions = {
   contentSecurityPolicy: {
@@ -33,9 +33,9 @@ const helmetOptions: HelmetOptions = {
 
 dotenv.config()
 
-const SERVER_PORT = parseEnv<number>('SERVER_PORT')
-const SERVER_HOSTNAME = parseEnv<string>('SERVER_HOSTNAME')
-const APP_NAME = parseEnv<string>('APP_NAME')
+const SERVER_PORT = env.SERVER_PORT
+const SERVER_HOSTNAME = env.SERVER_HOSTNAME
+const APP_NAME = env.APP_NAME
 
 const PUBLIC_FOLDER_NAME = 'public'
 const PUBLIC_FOLDER_PATH = path.join(process.cwd(), PUBLIC_FOLDER_NAME)
@@ -58,6 +58,24 @@ const PUBLIC_FOLDER_PATH = path.join(process.cwd(), PUBLIC_FOLDER_NAME)
       }),
       useLogger({
         logFn: gqlLogger
+      }),
+      useMaskedErrors(),
+      useErrorHandler((errorHandler) => {
+        // This callback is called once, containing all GraphQLError emitted during execution phase
+        logger({
+          level: LOG_TYPE.ERROR,
+          message: 'Generic error',
+          object: JSON.stringify(
+            { errors: errorHandler.errors, args: errorHandler.context },
+            null,
+            2
+          )
+        })
+      }),
+      usePayloadFormatter((_result, _executionArgs) => {
+        // Return a modified result here,
+        // Or `false`y value to keep it as-is.
+        return false
       })
     ]
   })

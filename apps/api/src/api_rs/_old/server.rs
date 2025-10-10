@@ -62,7 +62,7 @@ impl Query {
                 description: Some("Fresh romaine lettuce with caesar dressing".to_string()),
             },
         ];
-        
+
         Ok(entries.into_iter().find(|entry| entry.id == id))
     }
 }
@@ -119,7 +119,7 @@ async fn main() {
         .with(cors);
 
     println!("🎯 Server listening on http://0.0.0.0:8000");
-    
+
     warp::serve(routes)
         .run(([0, 0, 0, 0], 8000))
         .await;
@@ -139,10 +139,10 @@ mod tests {
     async fn test_query_execution() {
         let schema = schema();
         let context = Context;
-        
+
         let query = "{ getAllMenuEntries { id name description } }";
         let result = juniper::execute_sync(query, None, &schema, &juniper::Variables::new(), &context);
-        
+
         assert!(result.is_ok());
         let (value, errors) = result.unwrap();
         assert!(errors.is_empty());

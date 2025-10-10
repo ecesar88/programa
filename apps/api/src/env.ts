@@ -1,9 +1,13 @@
-import * as z from 'zod/v4'
+import z from 'zod'
 
-export const envVariables = z.object({
-  DATABASE_URL: z.string().optional(),
-  SERVER_PORT: z.string().optional(),
-  SERVER_HOSTNAME: z.string().optional()
+const PORT = 8000
+
+const environmentSchema = z.object({
+  APP_NAME: z.string(),
+  SERVER_PORT: z.coerce.number().default(PORT),
+  SERVER_HOSTNAME: z.string(),
+  DATABASE_URL: z.url(),
+  NODE_ENV: z.enum(['development', 'production']).default('development')
 })
 
-envVariables.parse(process.env)
+export const env = environmentSchema.parse(process.env)
