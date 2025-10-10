@@ -1,12 +1,12 @@
-import { PrismaClient } from '@prisma/client'
-import { PrismaService } from '../../services/prismaService'
+import { PrismaClient } from "@prisma/client";
+import { PrismaService } from "../../services/prismaService";
 
-import { container } from 'tsyringe'
+import { container } from "tsyringe";
 
 export interface Context {
-  prisma: PrismaClient
+	prisma: PrismaClient;
 }
 
 export const context = {
-  prisma: container.resolve(PrismaService)
-}
+	prisma: container.resolve(PrismaService),
+};

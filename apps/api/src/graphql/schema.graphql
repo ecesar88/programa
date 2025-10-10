@@ -1,20 +1,26 @@
 type BaseError implements Error {
-  message: String
+	message: String
 }
 
-"""A client/customer on the application"""
+"""
+A client/customer on the application
+"""
 type Client {
-  """The id on the database"""
-  id: Int
+	"""
+	The id on the database
+	"""
+	id: Int
 
-  """The customer's name"""
-  name: String
-  phone: String
+	"""
+	The customer's name
+	"""
+	name: String
+	phone: String
 }
 
 input ClientCreateOrUpdateInput {
-  name: String!
-  phone: String
+	name: String!
+	phone: String
 }
 
 """
@@ -23,248 +29,312 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 scalar DateTime
 
 interface Error {
-  message: String
+	message: String
 }
 
 type LengthError implements Error {
-  message: String
-  minLength: Int
+	message: String
+	minLength: Int
 }
 
-"""An entry on the menu"""
+"""
+An entry on the menu
+"""
 type MenuEntry {
-  description: String
-  id: Int
-  labels: [MenuEntryLabel!]
-  name: String
-  variants: [MenuEntryVariant!]
+	description: String
+	id: Int
+	labels: [MenuEntryLabel!]
+	name: String
+	variants: [MenuEntryVariant!]
 }
 
 """
 The category of a specific MenuEntry. This can be used to sort products by type, such as drinks, meats, grains, etc
 """
 type MenuEntryCategory {
-  id: Int
-  name: String
+	id: Int
+	name: String
 }
 
 input MenuEntryCategoryInput {
-  name: String
+	name: String
 }
 
-"""Input to create a new MenuEntry"""
+"""
+Input to create a new MenuEntry
+"""
 input MenuEntryInput {
-  categories: [MenuEntryCategoryInput!]
-  description: String
-  labels: [MenuEntryLabelInput!]
-  name: String!
-  variants: [MenuEntryVariantInput!]
+	categories: [MenuEntryCategoryInput!]
+	description: String
+	labels: [MenuEntryLabelInput!]
+	name: String!
+	variants: [MenuEntryVariantInput!]
 }
 
 """
 A label on the MenuEntryObject type. This can be used to categorize MenuEntries with different labels.
 """
 type MenuEntryLabel {
-  color: String
-  id: Int
-  name: String
+	color: String
+	id: Int
+	name: String
 }
 
 input MenuEntryLabelInput {
-  color: String
-  name: String
+	color: String
+	name: String
 }
 
 """
 A variant on the MenuEntry, this can be a different sized or flavored product
 """
 type MenuEntryVariant {
-  description: String
-  id: Int
-  name: String
-  price: Float
+	description: String
+	id: Int
+	name: String
+	price: Float
 }
 
 input MenuEntryVariantInput {
-  description: String
-  name: String
-  price: Float
+	description: String
+	name: String
+	price: Float
 }
 
 type Mutation {
-  createClient(name: String!, phone: String): MutationCreateClientResult
-  createMenuEntry(data: MenuEntryInput!): MenuEntry
-  createOrUpdateMenuEntryLabel(data: MenuEntryLabelInput!, id: Int): MutationCreateOrUpdateMenuEntryLabelResult
-  createOrder(data: OrderInput!): Order
-  deleteClient(id: Int!): MutationDeleteClientResult
-  deleteMenuEntry(id: Int!): MutationDeleteMenuEntryResult
-  deleteMenuEntryLabel(id: Int!): MutationDeleteMenuEntryLabelResult
-  updateClient(data: ClientCreateOrUpdateInput!, id: Int!): Client
-  updateMenuEntry(data: MenuEntryInput!, id: Int!): MutationUpdateMenuEntryResult
+	createClient(name: String!, phone: String): MutationCreateClientResult
+	createMenuEntry(data: MenuEntryInput!): MenuEntry
+	createOrUpdateMenuEntryLabel(
+		data: MenuEntryLabelInput!
+		id: Int
+	): MutationCreateOrUpdateMenuEntryLabelResult
+	createOrder(data: OrderInput!): Order
+	deleteClient(id: Int!): MutationDeleteClientResult
+	deleteMenuEntry(id: Int!): MutationDeleteMenuEntryResult
+	deleteMenuEntryLabel(id: Int!): MutationDeleteMenuEntryLabelResult
+	updateClient(data: ClientCreateOrUpdateInput!, id: Int!): Client
+	updateMenuEntry(
+		data: MenuEntryInput!
+		id: Int!
+	): MutationUpdateMenuEntryResult
 }
 
-union MutationCreateClientResult = BaseError | LengthError | MutationCreateClientSuccess | RecordNotFoundError | ZodError
+union MutationCreateClientResult =
+	| BaseError
+	| LengthError
+	| MutationCreateClientSuccess
+	| RecordNotFoundError
+	| ZodError
 
 type MutationCreateClientSuccess {
-  data: Client!
+	data: Client!
 }
 
-union MutationCreateOrUpdateMenuEntryLabelResult = BaseError | LengthError | MutationCreateOrUpdateMenuEntryLabelSuccess | RecordNotFoundError | ZodError
+union MutationCreateOrUpdateMenuEntryLabelResult =
+	| BaseError
+	| LengthError
+	| MutationCreateOrUpdateMenuEntryLabelSuccess
+	| RecordNotFoundError
+	| ZodError
 
 type MutationCreateOrUpdateMenuEntryLabelSuccess {
-  data: MenuEntryLabel!
+	data: MenuEntryLabel!
 }
 
-union MutationDeleteClientResult = BaseError | LengthError | MutationDeleteClientSuccess | RecordNotFoundError | ZodError
+union MutationDeleteClientResult =
+	| BaseError
+	| LengthError
+	| MutationDeleteClientSuccess
+	| RecordNotFoundError
+	| ZodError
 
 type MutationDeleteClientSuccess {
-  data: Client!
+	data: Client!
 }
 
-union MutationDeleteMenuEntryLabelResult = BaseError | LengthError | MutationDeleteMenuEntryLabelSuccess | RecordNotFoundError | ZodError
+union MutationDeleteMenuEntryLabelResult =
+	| BaseError
+	| LengthError
+	| MutationDeleteMenuEntryLabelSuccess
+	| RecordNotFoundError
+	| ZodError
 
 type MutationDeleteMenuEntryLabelSuccess {
-  data: MenuEntryLabel!
+	data: MenuEntryLabel!
 }
 
-union MutationDeleteMenuEntryResult = BaseError | LengthError | MutationDeleteMenuEntrySuccess | RecordNotFoundError | ZodError
+union MutationDeleteMenuEntryResult =
+	| BaseError
+	| LengthError
+	| MutationDeleteMenuEntrySuccess
+	| RecordNotFoundError
+	| ZodError
 
 type MutationDeleteMenuEntrySuccess {
-  data: MenuEntry!
+	data: MenuEntry!
 }
 
-union MutationUpdateMenuEntryResult = BaseError | LengthError | MutationUpdateMenuEntrySuccess | RecordNotFoundError | ZodError
+union MutationUpdateMenuEntryResult =
+	| BaseError
+	| LengthError
+	| MutationUpdateMenuEntrySuccess
+	| RecordNotFoundError
+	| ZodError
 
 type MutationUpdateMenuEntrySuccess {
-  data: MenuEntry!
+	data: MenuEntry!
 }
 
-"""An Order containing one or more MenuEntries"""
+"""
+An Order containing one or more MenuEntries
+"""
 type Order {
-  address: String
-  bill: [OrderBill!]
-  dateTime: DateTime
-  id: Int
-  items: [OrderEntry!]
-  observations: [OrderObservation!]
-  splitOrderPriceBy: Float
-  totalPrice: Float
+	address: String
+	bill: [OrderBill!]
+	dateTime: DateTime
+	id: Int
+	items: [OrderEntry!]
+	observations: [OrderObservation!]
+	splitOrderPriceBy: Float
+	totalPrice: Float
 }
 
 """
 The order bill which contains the price for each bill if the order price was split, or a single total price if it was not.
 """
 type OrderBill {
-  id: Int
-  price: Float
+	id: Int
+	price: Float
 }
 
 input OrderBillInput {
-  price: Float
+	price: Float
 }
 
 """
 The order entry. Example: "Pizza 4 cheese"
 """
 type OrderEntry {
-  id: Int
-  menuEntry: MenuEntry
-  quantity: Int
+	id: Int
+	menuEntry: MenuEntry
+	quantity: Int
 }
 
 """
 The order entry observation. Example: "No pepper on pizza"
 """
 type OrderEntryObservation {
-  content: String
-  id: Int
+	content: String
+	id: Int
 }
 
-"""Input to create a new Order"""
+"""
+Input to create a new Order
+"""
 input OrderInput {
-  address: String!
-  bill: [OrderBillInput!]
-  observations: [OrderObservationInput!]
-  splitOrderPriceBy: Int = 1
-  totalPrice: Float = 0
+	address: String!
+	bill: [OrderBillInput!]
+	observations: [OrderObservationInput!]
+	splitOrderPriceBy: Int = 1
+	totalPrice: Float = 0
 }
 
 """
 The order observation. Example: "Payment will be in 24x."
 """
 type OrderObservation {
-  content: String
-  id: Int
+	content: String
+	id: Int
 }
 
 input OrderObservationInput {
-  content: String
+	content: String
 }
 
 type Query {
-  getAllClients(page: Int = 1): [Client!]
-  getAllMenuEntries(page: Int = 1): [MenuEntry!]
-  getAllMenuEntryLabels(page: Int = 1): [MenuEntryLabel!]
-  getAllOrders(page: Int = 1): [Order!]
-  getClientById(id: Int!): QueryGetClientByIdResult
-  getMenuEntryById(id: Int!): QueryGetMenuEntryByIdResult
-  getOrderById(id: Int!): QueryGetOrderByIdResult
-  searchClients(search: String!): QuerySearchClientsResult
-  searchMenuEntryLabels(searchTerm: String!): [MenuEntryLabel!]
+	getAllClients(page: Int = 1): [Client!]
+	getAllMenuEntries(page: Int = 1): [MenuEntry!]
+	getAllMenuEntryLabels(page: Int = 1): [MenuEntryLabel!]
+	getAllOrders(page: Int = 1): [Order!]
+	getClientById(id: Int!): QueryGetClientByIdResult
+	getMenuEntryById(id: Int!): QueryGetMenuEntryByIdResult
+	getOrderById(id: Int!): QueryGetOrderByIdResult
+	searchClients(search: String!): QuerySearchClientsResult
+	searchMenuEntryLabels(searchTerm: String!): [MenuEntryLabel!]
 }
 
-union QueryGetClientByIdResult = BaseError | LengthError | QueryGetClientByIdSuccess | RecordNotFoundError | ZodError
+union QueryGetClientByIdResult =
+	| BaseError
+	| LengthError
+	| QueryGetClientByIdSuccess
+	| RecordNotFoundError
+	| ZodError
 
 type QueryGetClientByIdSuccess {
-  data: Client!
+	data: Client!
 }
 
-union QueryGetMenuEntryByIdResult = BaseError | LengthError | QueryGetMenuEntryByIdSuccess | RecordNotFoundError | ZodError
+union QueryGetMenuEntryByIdResult =
+	| BaseError
+	| LengthError
+	| QueryGetMenuEntryByIdSuccess
+	| RecordNotFoundError
+	| ZodError
 
 type QueryGetMenuEntryByIdSuccess {
-  data: MenuEntry!
+	data: MenuEntry!
 }
 
-union QueryGetOrderByIdResult = BaseError | LengthError | QueryGetOrderByIdSuccess | RecordNotFoundError | ZodError
+union QueryGetOrderByIdResult =
+	| BaseError
+	| LengthError
+	| QueryGetOrderByIdSuccess
+	| RecordNotFoundError
+	| ZodError
 
 type QueryGetOrderByIdSuccess {
-  data: Order!
+	data: Order!
 }
 
-union QuerySearchClientsResult = BaseError | LengthError | QuerySearchClientsSuccess | RecordNotFoundError | ZodError
+union QuerySearchClientsResult =
+	| BaseError
+	| LengthError
+	| QuerySearchClientsSuccess
+	| RecordNotFoundError
+	| ZodError
 
 type QuerySearchClientsSuccess {
-  data: [Client!]!
+	data: [Client!]!
 }
 
 type RecordNotFoundError implements Error {
-  message: String
+	message: String
 }
 
 type ZodError implements Error {
-  fieldErrors: [ZodFieldError!]
-  message: String
+	fieldErrors: [ZodFieldError!]
+	message: String
 }
 
 type ZodFieldError {
-  message: String
-  path: [String!]
+	message: String
+	path: [String!]
 }
 
 """
 A validation error from Zod that is thrown whenever the data does not satisfy the schema
 """
 type ZodValidationError {
-  details: [ZodValidationErrorDetail!]
-  name: String
+	details: [ZodValidationErrorDetail!]
+	name: String
 }
 
 """
 An error detail from Zod that shows the details of the validations that failed
 """
 type ZodValidationErrorDetail {
-  code: String
-  message: String
-  path: [String!]
-  validation: String
+	code: String
+	message: String
+	path: [String!]
+	validation: String
 }

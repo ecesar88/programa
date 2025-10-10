@@ -1,8 +1,8 @@
-import { Menu, Prisma } from '@prisma/client'
-import { colorizeAsJSON, LOG_TYPE, logger } from '../../../utils/logger'
-import { RecordNotFoundError } from '../_errors/errors'
-import { Id, Resolver } from '../sharedTypes'
-import { OrderCreateOrUpdateInput } from './types'
+import { Menu, Prisma } from "@prisma/client";
+import { colorizeAsJSON, LOG_TYPE, logger } from "../../../utils/logger";
+import { RecordNotFoundError } from "../_errors/errors";
+import { Id, Resolver } from "../sharedTypes";
+import { OrderCreateOrUpdateInput } from "./types";
 
 // type UpdateMenuEntryInput = {
 //   id: number
@@ -10,99 +10,99 @@ import { OrderCreateOrUpdateInput } from './types'
 // }
 
 const prismaDefaultOrderIncludes: Readonly<Prisma.OrderInclude> = {
-  bill: true,
-  items: true,
-  observations: true
-}
+	bill: true,
+	items: true,
+	observations: true,
+};
 
 export const queryAll: Resolver = async (_parent, args, ctx, _info) => {
-  logger({
-    level: LOG_TYPE.INFO,
-    message: `Fetching all orders`,
-    object: colorizeAsJSON(args)
-  })
+	logger({
+		level: LOG_TYPE.INFO,
+		message: `Fetching all orders`,
+		object: colorizeAsJSON(args),
+	});
 
-  try {
-    return await ctx.prisma.order.findMany({
-      orderBy: {
-        id: 'desc'
-      },
-      include: prismaDefaultOrderIncludes
-    })
-  } catch (error) {
-    logger({
-      level: LOG_TYPE.ERROR,
-      message: 'Error fetchying all orders',
-      object: colorizeAsJSON(JSON.parse(String(error)))
-    })
+	try {
+		return await ctx.prisma.order.findMany({
+			orderBy: {
+				id: "desc",
+			},
+			include: prismaDefaultOrderIncludes,
+		});
+	} catch (error) {
+		logger({
+			level: LOG_TYPE.ERROR,
+			message: "Error fetchying all orders",
+			object: colorizeAsJSON(JSON.parse(String(error))),
+		});
 
-    throw new Error('Error fetching all orders')
-  }
-}
+		throw new Error("Error fetching all orders");
+	}
+};
 
 export const queryOne: Resolver<Id> = async (_parent, args, ctx, _info) => {
-  const { id } = args
+	const { id } = args;
 
-  logger({
-    level: LOG_TYPE.INFO,
-    message: `Fetching order with id '${id}'`,
-    object: colorizeAsJSON(args)
-  })
+	logger({
+		level: LOG_TYPE.INFO,
+		message: `Fetching order with id '${id}'`,
+		object: colorizeAsJSON(args),
+	});
 
-  let order: Menu | null
+	let order: Menu | null;
 
-  try {
-    order = await ctx.prisma.order.findFirst({
-      where: {
-        id
-      }
-    })
-  } catch (error) {
-    logger({
-      level: LOG_TYPE.ERROR,
-      message: `Error fetching order with id ${id}`,
-      object: colorizeAsJSON(JSON.parse(String(error)))
-    })
+	try {
+		order = await ctx.prisma.order.findFirst({
+			where: {
+				id,
+			},
+		});
+	} catch (error) {
+		logger({
+			level: LOG_TYPE.ERROR,
+			message: `Error fetching order with id ${id}`,
+			object: colorizeAsJSON(JSON.parse(String(error))),
+		});
 
-    throw new Error(`Error fetching order with id ${id}`)
-  }
+		throw new Error(`Error fetching order with id ${id}`);
+	}
 
-  if (!order) {
-    throw new RecordNotFoundError(`Order with id ${id}`)
-  }
+	if (!order) {
+		throw new RecordNotFoundError(`Order with id ${id}`);
+	}
 
-  return order
-}
+	return order;
+};
 
 export const create: Resolver<{
-  data: (typeof OrderCreateOrUpdateInput)['$inferInput']
+	data: (typeof OrderCreateOrUpdateInput)["$inferInput"];
 }> = async (_parent, args, ctx, _info) => {
-  const data = args.data
+	const data = args.data;
 
-  logger({
-    level: LOG_TYPE.INFO,
-    message: 'Creating new order with data:',
-    object: colorizeAsJSON(args)
-  })
+	logger({
+		level: LOG_TYPE.INFO,
+		message: "Creating new order with data:",
+		object: colorizeAsJSON(args),
+	});
 
-  try {
-    return await ctx.prisma.order.create({
-      data: {
-        address: data.address,
-        totalPrice: data.totalPrice as number
-      },
-      include: prismaDefaultOrderIncludes
-    })
-  } catch (error) {
-    logger({
-      level: LOG_TYPE.ERROR,
-      message: 'Error creating the order',
-      object: colorizeAsJSON(JSON.parse(String(error)))
-    })
+	try {
+		return await ctx.prisma.order.create({
+			data: {
+				address: data.address,
+				totalPrice: data.totalPrice as number,
+			},
+			include: prismaDefaultOrderIncludes,
+		});
+	} catch (error) {
+		logger({
+			level: LOG_TYPE.ERROR,
+			message: "Error creating the order",
+			object: colorizeAsJSON(JSON.parse(String(error))),
+		});
 
-    throw new Error('Error creating the order')
-  }
-}
+		throw new Error("Error creating the order");
+	}
+};
 
 // export const update: Resolver<UpdateMenuEntryInput> = async (_parent, args, ctx, _info) => {
 //   const { id, data } = args

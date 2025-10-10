@@ -3,26 +3,30 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 // Intercepts the response from a metho annotated with @Get, @Post, @Delete, @Put or @Patch
-import { attachMiddleware } from '@decorators/express'
-import { NextFunction, Request, Response } from 'express'
+import { attachMiddleware } from "@decorators/express";
+import { NextFunction, Request, Response } from "express";
 
 export function ResponseInterceptor<T = {}>(interceptor: (body: T) => any) {
-  return function (target: any, propertyKey: string, _descriptor: PropertyDescriptor) {
-    return attachMiddleware(
-      target,
-      propertyKey,
-      function (_req: Request, res: Response, next: NextFunction) {
-        const originalJson = res.json
+	return function (
+		target: any,
+		propertyKey: string,
+		_descriptor: PropertyDescriptor,
+	) {
+		return attachMiddleware(
+			target,
+			propertyKey,
+			function (_req: Request, res: Response, next: NextFunction) {
+				const originalJson = res.json;
 
-        res.json = function (body) {
-          const newBody = interceptor(body)
+				res.json = function (body) {
+					const newBody = interceptor(body);
 
-          originalJson.call(this, newBody)
-          return newBody
-        }
+					originalJson.call(this, newBody);
+					return newBody;
+				};
 
-        next()
-      }
-    )
-  }
+				next();
+			},
+		);
+	};
 }
