@@ -7,11 +7,7 @@ import { attachMiddleware } from "@decorators/express";
 import { NextFunction, Request, Response } from "express";
 
 export function ResponseInterceptor<T = {}>(interceptor: (body: T) => any) {
-	return function (
-		target: any,
-		propertyKey: string,
-		_descriptor: PropertyDescriptor,
-	) {
+	return function (target: any, propertyKey: string, _descriptor: PropertyDescriptor) {
 		return attachMiddleware(
 			target,
 			propertyKey,

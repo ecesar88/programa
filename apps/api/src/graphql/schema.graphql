@@ -113,10 +113,7 @@ type Mutation {
 	deleteMenuEntry(id: Int!): MutationDeleteMenuEntryResult
 	deleteMenuEntryLabel(id: Int!): MutationDeleteMenuEntryLabelResult
 	updateClient(data: ClientCreateOrUpdateInput!, id: Int!): Client
-	updateMenuEntry(
-		data: MenuEntryInput!
-		id: Int!
-	): MutationUpdateMenuEntryResult
+	updateMenuEntry(data: MenuEntryInput!, id: Int!): MutationUpdateMenuEntryResult
 }
 
 union MutationCreateClientResult =

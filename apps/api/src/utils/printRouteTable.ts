@@ -26,10 +26,7 @@ export const printRouteTable = (express: Express) => {
 		],
 	});
 
-	table.addRow(
-		{ path: ROUTES.GRAPHQL_ROOT, methods: "POST" },
-		{ color: "blue", separator: true },
-	);
+	table.addRow({ path: ROUTES.GRAPHQL_ROOT, methods: "POST" }, { color: "blue", separator: true });
 	table.addRow(
 		{ path: `${ROUTES.INFO_ROOT}${ROUTES.INFO_DOCS}`, methods: "GET" },
 		{ color: "yellow", separator: true },

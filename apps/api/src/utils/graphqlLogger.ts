@@ -1,9 +1,7 @@
 import nodeColorLog from "node-color-log";
-import { GQLDefinitions } from "./types/graphqlDocument";
+import type { GQLDefinitions } from "./types/graphqlDocument";
 
-const getAnonymousOperationMetaData = (
-	listOfOperations: GQLDefinitions,
-): OperationMetaData => {
+const getAnonymousOperationMetaData = (listOfOperations: GQLDefinitions): OperationMetaData => {
 	const operationMetaData = listOfOperations[0].selectionSet.selections[0];
 
 	const operationType = "mutation";
@@ -20,6 +18,7 @@ const getNamedOperationMetaData = (
 	listOfOperations: GQLDefinitions,
 	operationNameFromRequest: string,
 ): OperationMetaData => {
+	// biome-ignore lint/style/noNonNullAssertion: This should always be true
 	const operationToBeRun = listOfOperations.find(
 		(def) => def?.name?.value === operationNameFromRequest,
 	)!;
@@ -28,8 +27,7 @@ const getNamedOperationMetaData = (
 	const typeOfTheOperationToBeRun: OperationType = operationToBeRun.operation;
 
 	// Get the name of the resolver to be run
-	const rootFieldResolverOperationName =
-		operationToBeRun.selectionSet.selections[0].name.value;
+	const rootFieldResolverOperationName = operationToBeRun.selectionSet.selections[0].name.value;
 
 	return {
 		operationType: typeOfTheOperationToBeRun,
@@ -67,19 +65,13 @@ const getNamedOperationMetaData = (
  * We need to know that because, to log an anonymous operation requires fetching data (such as
  * the resolver name and arguments passed) from completelly different fields within the GraphQL AST.
  */
-const isOperationNamedOrAnonymous = (
-	operationNameFromRequest?: string | null,
-) => {
+const isOperationNamedOrAnonymous = (operationNameFromRequest?: string | null) => {
 	// If the operation name was not found then it's an anonymous operation
 	if (!operationNameFromRequest) return "anonymous";
 	return "named";
 };
 
-type EventName =
-	| "execute-start"
-	| "execute-end"
-	| "subscribe-start"
-	| "subscribe-end";
+type EventName = "execute-start" | "execute-end" | "subscribe-start" | "subscribe-end";
 type OperationType = "query" | "mutation" | "subscription";
 
 type OperationMetaData = {
@@ -89,6 +81,7 @@ type OperationMetaData = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: Can't know what the args' type is
 export const gqlLogger = (eventName: EventName, args1: { args: any }) => {
 	// Event could be `execute-start` / `execute-end` / `subscribe-start` / `subscribe-end`
 	// `args` will include the arguments passed to execute/subscribe (in case of "start" event) and additional result in case of "end" event.
@@ -165,10 +158,7 @@ export const gqlLogger = (eventName: EventName, args1: { args: any }) => {
 	}
 
 	if (isOperationNamedOrAnonymous(operationNameFromRequest) === "named") {
-		operationMetaData = getNamedOperationMetaData(
-			allOperationsReceived,
-			operationNameFromRequest,
-		);
+		operationMetaData = getNamedOperationMetaData(allOperationsReceived, operationNameFromRequest);
 	}
 
 	const dateString = `[${new Date().toISOString()}]`;

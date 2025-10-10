@@ -18,24 +18,14 @@ function wrapWithInterceptor(
 export function ClassResponseInterceptor(intercept: (res: any) => any) {
 	return (target: Function) => {
 		const methodNames = Object.getOwnPropertyNames(target.prototype).filter(
-			(method) =>
-				method !== "constructor" &&
-				typeof target.prototype[method] === "function",
+			(method) => method !== "constructor" && typeof target.prototype[method] === "function",
 		);
 
 		for (const methodName of methodNames) {
-			const descriptor = Object.getOwnPropertyDescriptor(
-				target.prototype,
-				methodName,
-			);
+			const descriptor = Object.getOwnPropertyDescriptor(target.prototype, methodName);
 
 			if (descriptor) {
-				wrapWithInterceptor(
-					target.prototype,
-					methodName,
-					descriptor,
-					intercept,
-				);
+				wrapWithInterceptor(target.prototype, methodName, descriptor, intercept);
 				Object.defineProperty(target.prototype, methodName, descriptor);
 			}
 		}

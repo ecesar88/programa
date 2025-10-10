@@ -2,11 +2,7 @@ import { HttpStatusCode } from "@repo/shared/constants";
 import { NextFunction, Request, Response } from "express";
 import nodeColorLog from "node-color-log";
 
-export function HTTPLoggerMiddleware(
-	req: Request,
-	res: Response,
-	next: NextFunction,
-) {
+export function HTTPLoggerMiddleware(req: Request, res: Response, next: NextFunction) {
 	// Do not log GraphQl queries, they will be handled by the useLogger envelop plugin
 	if (req.path.includes("graphql")) {
 		next();
@@ -27,9 +23,7 @@ export function HTTPLoggerMiddleware(
 		const ENDPOINT = req.originalUrl;
 		const CLIENT_IP = req.ip;
 
-		const getAppropriateColorBasedOnResponseCode = (
-			responseCode: HttpStatusCode,
-		) => {
+		const getAppropriateColorBasedOnResponseCode = (responseCode: HttpStatusCode) => {
 			switch (responseCode) {
 				case HttpStatusCode.OK: {
 					return baseLogger.bgColor("green").color("black");

@@ -10,12 +10,7 @@ type UpdateClientQueryInput = {
 	data: (typeof ClientCreateOrUpdateInput)["$inferInput"];
 };
 
-export const queryAll: Resolver<PaginationParam> = async (
-	_parent,
-	args,
-	ctx,
-	_info,
-) => {
+export const queryAll: Resolver<PaginationParam> = async (_parent, args, ctx, _info) => {
 	const { page } = args;
 
 	logger({
@@ -58,12 +53,7 @@ export const queryOne: Resolver<Id> = async (_parent, args, ctx, _info) => {
 	return client;
 };
 
-export const search: Resolver<FindByQuery> = async (
-	_parent,
-	args,
-	ctx,
-	_info,
-) => {
+export const search: Resolver<FindByQuery> = async (_parent, args, ctx, _info) => {
 	const { search: searchTerm } = args;
 
 	logger({
@@ -93,9 +83,12 @@ export const search: Resolver<FindByQuery> = async (
 	return clients;
 };
 
-export const create: Resolver<
-	(typeof ClientCreateOrUpdateInput)["$inferInput"]
-> = async (_parent, args, ctx, _info) => {
+export const create: Resolver<(typeof ClientCreateOrUpdateInput)["$inferInput"]> = async (
+	_parent,
+	args,
+	ctx,
+	_info,
+) => {
 	const { name, phone } = args as Partial<Prisma.ClientCreateInput>;
 
 	logger({
@@ -116,12 +109,7 @@ export const create: Resolver<
 	}
 };
 
-export const update: Resolver<UpdateClientQueryInput> = async (
-	_parent,
-	args,
-	ctx,
-	_info,
-) => {
+export const update: Resolver<UpdateClientQueryInput> = async (_parent, args, ctx, _info) => {
 	const { id, data } = args;
 
 	const client: Client | null = await ctx.prisma.client.findFirst({

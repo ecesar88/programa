@@ -24,8 +24,7 @@ type TypeOrder = Prisma.OrderGetPayload<{
 }>;
 
 type TypeOrderObservation = TypeOrder["observations"][number];
-type TypeOrderEntryObservation =
-	TypeOrder["items"][number]["observations"][number];
+type TypeOrderEntryObservation = TypeOrder["items"][number]["observations"][number];
 type TypeOrderEntry = TypeOrder["items"][number];
 type TypeOrderBill = TypeOrder["bill"][number];
 
@@ -44,8 +43,7 @@ export const OrderEntryObservationObject = OrderEntryObservationRef.implement({
 	}),
 });
 
-export const OrderObservationRef =
-	builder.objectRef<TypeOrderObservation>("OrderObservation");
+export const OrderObservationRef = builder.objectRef<TypeOrderObservation>("OrderObservation");
 export const OrderObservationObject = OrderObservationRef.implement({
 	description: 'The order observation. Example: "Payment will be in 24x."',
 	fields: (t) => ({
@@ -103,14 +101,11 @@ export const OrderObject = OrderRef.implement({
 
 /* --- Input Definitions --- */
 
-export const OrderObservationInput = builder.inputType(
-	"OrderObservationInput",
-	{
-		fields: (t) => ({
-			content: t.string(),
-		}),
-	},
-);
+export const OrderObservationInput = builder.inputType("OrderObservationInput", {
+	fields: (t) => ({
+		content: t.string(),
+	}),
+});
 
 export const OrderBillInput = builder.inputType("OrderBillInput", {
 	fields: (t) => ({

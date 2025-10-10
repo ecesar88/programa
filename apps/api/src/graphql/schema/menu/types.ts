@@ -20,8 +20,7 @@ export type TypeMenuEntryInput = Omit<TypeMenuEntry, "id">;
 
 /* --- Object Definitions --- */
 
-const MenuEntryLabelRef =
-	builder.objectRef<TypeMenuEntryLabel>("MenuEntryLabel");
+const MenuEntryLabelRef = builder.objectRef<TypeMenuEntryLabel>("MenuEntryLabel");
 export const MenuEntryLabelObject = MenuEntryLabelRef.implement({
 	description:
 		"A label on the MenuEntryObject type. This can be used to categorize MenuEntries with different labels.",
@@ -32,8 +31,7 @@ export const MenuEntryLabelObject = MenuEntryLabelRef.implement({
 	}),
 });
 
-export const MenuEntryCategoryRef =
-	builder.objectRef<TypeMenuEntryCategory>("MenuEntryCategory");
+export const MenuEntryCategoryRef = builder.objectRef<TypeMenuEntryCategory>("MenuEntryCategory");
 export const MenuEntryCategoryObject = MenuEntryCategoryRef.implement({
 	description:
 		"The category of a specific MenuEntry. This can be used to sort products by type, such as drinks, meats, grains, etc",
@@ -43,11 +41,9 @@ export const MenuEntryCategoryObject = MenuEntryCategoryRef.implement({
 	}),
 });
 
-export const MenuEntryVariantRef =
-	builder.objectRef<TypeMenuEntryVariant>("MenuEntryVariant");
+export const MenuEntryVariantRef = builder.objectRef<TypeMenuEntryVariant>("MenuEntryVariant");
 export const MenuEntryVariantObject = MenuEntryVariantRef.implement({
-	description:
-		"A variant on the MenuEntry, this can be a different sized or flavored product",
+	description: "A variant on the MenuEntry, this can be a different sized or flavored product",
 	fields: (t) => ({
 		id: t.exposeInt("id"),
 		name: t.exposeString("name"),
@@ -73,16 +69,13 @@ export const MenuEntryObject = MenuEntryRef.implement({
 
 /* --- Input Definitions --- */
 
-export const MenuEntryVariantInput = builder.inputType(
-	"MenuEntryVariantInput",
-	{
-		fields: (t) => ({
-			name: t.string(),
-			description: t.string(),
-			price: t.float(),
-		}),
-	},
-);
+export const MenuEntryVariantInput = builder.inputType("MenuEntryVariantInput", {
+	fields: (t) => ({
+		name: t.string(),
+		description: t.string(),
+		price: t.float(),
+	}),
+});
 
 export const MenuEntryLabelInput = builder.inputType("MenuEntryLabelInput", {
 	fields: (t) => ({
@@ -92,34 +85,28 @@ export const MenuEntryLabelInput = builder.inputType("MenuEntryLabelInput", {
 	}),
 });
 
-export const MenuEntryCategoryInput = builder.inputType(
-	"MenuEntryCategoryInput",
-	{
-		fields: (t) => ({
-			name: t.string(),
-		}),
-	},
-);
+export const MenuEntryCategoryInput = builder.inputType("MenuEntryCategoryInput", {
+	fields: (t) => ({
+		name: t.string(),
+	}),
+});
 
-export const MenuEntryCreateOrUpdateInput = builder.inputType(
-	"MenuEntryInput",
-	{
-		description: "Input to create a new MenuEntry",
-		fields: (t) => ({
-			name: t.string({ required: true }),
-			description: t.string({ required: false }),
-			variants: t.field({
-				required: false,
-				type: [MenuEntryVariantInput],
-			}),
-			labels: t.field({
-				required: false,
-				type: [MenuEntryLabelInput],
-			}),
-			categories: t.field({
-				required: false,
-				type: [MenuEntryCategoryInput],
-			}),
+export const MenuEntryCreateOrUpdateInput = builder.inputType("MenuEntryInput", {
+	description: "Input to create a new MenuEntry",
+	fields: (t) => ({
+		name: t.string({ required: true }),
+		description: t.string({ required: false }),
+		variants: t.field({
+			required: false,
+			type: [MenuEntryVariantInput],
 		}),
-	},
-);
+		labels: t.field({
+			required: false,
+			type: [MenuEntryLabelInput],
+		}),
+		categories: t.field({
+			required: false,
+			type: [MenuEntryCategoryInput],
+		}),
+	}),
+});

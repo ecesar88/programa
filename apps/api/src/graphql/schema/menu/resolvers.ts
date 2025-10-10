@@ -142,12 +142,7 @@ export const create: Resolver<{
 	}
 };
 
-export const update: Resolver<UpdateMenuEntryInput> = async (
-	_parent,
-	args,
-	ctx,
-	_info,
-) => {
+export const update: Resolver<UpdateMenuEntryInput> = async (_parent, args, ctx, _info) => {
 	const { id, data } = args;
 
 	logger({
@@ -274,12 +269,7 @@ export const remove: Resolver<Id> = async (_parent, args, ctx, _info) => {
 };
 
 //**************************************** MENU ENTRY LABEL ****************************************** */
-export const queryAllMenuLabels: Resolver = async (
-	_parent,
-	args,
-	ctx,
-	_info,
-) => {
+export const queryAllMenuLabels: Resolver = async (_parent, args, ctx, _info) => {
 	logger({
 		level: LOG_TYPE.INFO,
 		message: `Fetching all menu entry labels`,
@@ -340,9 +330,12 @@ type CreateOrUpdateMenuEntryLabelArgs = {
 	data: (typeof MenuEntryLabelInput)["$inferInput"];
 };
 
-export const createOrUpdateMenuEntryLabel: Resolver<
-	CreateOrUpdateMenuEntryLabelArgs
-> = async (_parent, args, ctx, _info) => {
+export const createOrUpdateMenuEntryLabel: Resolver<CreateOrUpdateMenuEntryLabelArgs> = async (
+	_parent,
+	args,
+	ctx,
+	_info,
+) => {
 	const { id, data } = args;
 
 	let menuEntryLabelToUpdate: MenuEntryLabel | null;
@@ -400,12 +393,7 @@ export const createOrUpdateMenuEntryLabel: Resolver<
 	}
 };
 
-export const deleteMenuEntryLabel: Resolver<Id> = async (
-	_parent,
-	args,
-	ctx,
-	_info,
-) => {
+export const deleteMenuEntryLabel: Resolver<Id> = async (_parent, args, ctx, _info) => {
 	const { id } = args;
 
 	const menuEntryLabelToRemove = await ctx.prisma.menuEntryLabel.findFirst({

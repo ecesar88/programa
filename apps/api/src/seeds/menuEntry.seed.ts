@@ -21,13 +21,11 @@ export const createMenuEntries = async (prisma: PrismaClient) => {
 				description: faker.lorem.words(8),
 				variants: {
 					createMany: {
-						data: Array.from({ length: getRandomInteger(1, 4) }).map(
-							(_, idx) => ({
-								name: `Variant no ${idx}`,
-								description: faker.lorem.words(5),
-								price: +(Math.random() * 250).toFixed(2),
-							}),
-						),
+						data: Array.from({ length: getRandomInteger(1, 4) }).map((_, idx) => ({
+							name: `Variant no ${idx}`,
+							description: faker.lorem.words(5),
+							price: +(Math.random() * 250).toFixed(2),
+						})),
 					},
 				},
 				...(shouldCreateLabel() && {

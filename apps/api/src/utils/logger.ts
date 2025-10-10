@@ -114,13 +114,7 @@ export const logger = ({
 			infoLogger(message);
 
 			if (object && Object.values(object)?.length) {
-				nodeColorLog
-					.reset()
-					.bold()
-					.color("cyan")
-					.append("[PARAMS] => ")
-					.reset()
-					.log(`${object}`);
+				nodeColorLog.reset().bold().color("cyan").append("[PARAMS] => ").reset().log(`${object}`);
 			}
 
 			break;

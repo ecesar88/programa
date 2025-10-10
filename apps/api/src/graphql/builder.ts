@@ -2,10 +2,7 @@
 import SchemaBuilder from "@pothos/core";
 import ErrorsPlugin from "@pothos/plugin-errors";
 import SimpleObjectsPlugin from "@pothos/plugin-simple-objects";
-import TracingPlugin, {
-	isRootField,
-	wrapResolver,
-} from "@pothos/plugin-tracing";
+import TracingPlugin, { isRootField, wrapResolver } from "@pothos/plugin-tracing";
 import ZodPlugin from "@pothos/plugin-zod";
 import { DateTimeResolver } from "graphql-scalars";
 import { fromError } from "zod-validation-error";

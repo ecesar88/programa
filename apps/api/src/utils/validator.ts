@@ -71,9 +71,7 @@ export function ZodParamValidator<T extends ZodRawShape>(schema: ZodObject<T>) {
 export function ZodIdValidator(idField = "id") {
 	return (req: Request, res: Response, next: NextFunction) => {
 		try {
-			req.params[idField] = z
-				.number({ coerce: true })
-				.parse(req.params[idField]) as any;
+			req.params[idField] = z.number({ coerce: true }).parse(req.params[idField]) as any;
 			next();
 		} catch (err) {
 			let message = "Query Format Error";

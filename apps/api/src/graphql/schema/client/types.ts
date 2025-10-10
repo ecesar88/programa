@@ -20,12 +20,9 @@ export const Client = ClientRef.implement({
 
 /* --- Inputs Definitions --- */
 
-export const ClientCreateOrUpdateInput = builder.inputType(
-	"ClientCreateOrUpdateInput",
-	{
-		fields: (t) => ({
-			name: t.string({ required: true }),
-			phone: t.string(),
-		}),
-	},
-);
+export const ClientCreateOrUpdateInput = builder.inputType("ClientCreateOrUpdateInput", {
+	fields: (t) => ({
+		name: t.string({ required: true }),
+		phone: t.string(),
+	}),
+});

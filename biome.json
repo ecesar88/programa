@@ -15,7 +15,8 @@
   "formatter": {
     "enabled": true,
     "indentStyle": "tab",
-    "useEditorconfig": true
+    "useEditorconfig": true,
+    "lineWidth": 100
   },
   "linter": {
     "enabled": true,
@@ -25,7 +26,9 @@
   },
   "javascript": {
     "formatter": {
-      "quoteStyle": "double"
+      "quoteStyle": "double",
+      "lineWidth": 100,
+      "semicolons": "always"
     }
   },
   "assist": {

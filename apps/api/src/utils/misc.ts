@@ -1,7 +1,6 @@
 import { ZodFormattedError } from "zod";
 
-export const capitalize = (str?: string) =>
-	`${str?.split("")[0].toUpperCase()}${str?.slice(1)}`;
+export const capitalize = (str?: string) => `${str?.split("")[0].toUpperCase()}${str?.slice(1)}`;
 
 export const fixJson = (badJSON: string) => {
 	return (
@@ -44,10 +43,10 @@ export function flattenErrors(
 	Object.keys(error).forEach((key) => {
 		if (key !== "_errors") {
 			errors.push(
-				...flattenErrors(
-					(error as Record<string, unknown>)[key] as ZodFormattedError<unknown>,
-					[...path, key],
-				),
+				...flattenErrors((error as Record<string, unknown>)[key] as ZodFormattedError<unknown>, [
+					...path,
+					key,
+				]),
 			);
 		}
 	});

@@ -1,10 +1,5 @@
 // biome-ignore assist/source/organizeImports: Can't sort imports automatically
-import {
-	useEngine,
-	useErrorHandler,
-	useMaskedErrors,
-	usePayloadFormatter,
-} from "@envelop/core";
+import { useEngine, useErrorHandler, useMaskedErrors, usePayloadFormatter } from "@envelop/core";
 import { renderGraphiQL } from "@graphql-yoga/render-graphiql"; // Not working?
 import cors from "cors";
 import dotenv from "dotenv";
@@ -86,10 +81,7 @@ const PUBLIC_FOLDER_PATH = path.join(process.cwd(), PUBLIC_FOLDER_NAME);
 		],
 	});
 
-	express.use(
-		`${ROUTES.INFO_ROOT}${ROUTES.INFO_DOCS}`,
-		Express.static(PUBLIC_FOLDER_PATH),
-	);
+	express.use(`${ROUTES.INFO_ROOT}${ROUTES.INFO_DOCS}`, Express.static(PUBLIC_FOLDER_PATH));
 	express.use(helmet(helmetOptions));
 	express.use(Express.json());
 	express.use(cors({ origin: "http://localhost:5173" })); // 5173 is the port Electron's renderer runs
@@ -98,10 +90,7 @@ const PUBLIC_FOLDER_PATH = path.join(process.cwd(), PUBLIC_FOLDER_NAME);
 	express.use(HTTPLoggerMiddleware);
 
 	// Register InfoController
-	express.get(
-		`${ROUTES.INFO_ROOT}${ROUTES.INFO_HEALTHCHECK}`,
-		InfoController.get,
-	);
+	express.get(`${ROUTES.INFO_ROOT}${ROUTES.INFO_HEALTHCHECK}`, InfoController.get);
 
 	express.listen(SERVER_PORT, SERVER_HOSTNAME, () => {
 		figlet(
