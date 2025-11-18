@@ -1,0 +1,292 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Client {
+  id     Int     @id @default(autoincrement())
+  name   String
+  phone  String?
+  orders Order[]
+}
+
+model Order {
+  id                Int                @id @default(autoincrement())
+  dateTime          DateTime           @default(now())
+  address           String
+  totalPrice        Float
+  splitOrderPriceBy Int                @default(1)
+  items             OrderEntry[]
+  bill              OrderBill[]
+  observations      OrderObservation[]
+  Client            Client?            @relation(fields: [clientId], references: [id])
+  clientId          Int?
+  MenuEntry         MenuEntry[]
+}
+
+model OrderEntry {
+  id           Int                     @id @default(autoincrement())
+  quantity     Int
+  menuEntry    MenuEntry               @relation(fields: [menuEntryId], references: [id])
+  observations OrderEntryObservation[]
+  Order        Order?                  @relation(fields: [orderId], references: [id])
+  orderId      Int?
+  menuEntryId  Int
+}
+
+model OrderEntryObservation {
+  id           Int         @id @default(autoincrement())
+  content      String
+  OrderEntry   OrderEntry? @relation(fields: [orderEntryId], references: [id])
+  orderEntryId Int?
+}
+
+model OrderObservation {
+  id      Int    @id @default(autoincrement())
+  content String
+  Order   Order? @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId Int?
+}
+
+model OrderBill {
+  id      Int    @id @default(autoincrement())
+  price   Float
+  Order   Order? @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId Int?
+}
+
+model Menu {
+  id         Int                 @id @default(autoincrement())
+  items      MenuEntry[]
+  categories MenuEntryCategory[]
+}
+
+model MenuEntry {
+  id          Int                 @id @default(autoincrement())
+  name        String
+  description String?
+  variants    MenuEntryVariant[]
+  labels      MenuEntryLabel[]
+  categories  MenuEntryCategory[]
+  // images String?
+
+  Menu       Menu?        @relation(fields: [menuId], references: [id])
+  menuId     Int?
+  Order      Order?       @relation(fields: [orderId], references: [id])
+  orderId    Int?
+  OrderEntry OrderEntry[]
+}
+
+model MenuEntryVariant {
+  id          Int     @id @default(autoincrement())
+  price       Float?
+  name        String?
+  description String?
+
+  MenuEntry   MenuEntry? @relation(fields: [menuEntryId], references: [id])
+  menuEntryId Int?
+}
+
+model MenuEntryCategory {
+  id   Int     @id @default(autoincrement())
+  name String?
+
+  Menu   Menu? @relation(fields: [menuId], references: [id])
+  menuId Int?  @unique
+
+  MenuEntry   MenuEntry? @relation(fields: [menuEntryId], references: [id])
+  menuEntryId Int?
+}
+
+model MenuEntryLabel {
+  id    Int     @id @default(autoincrement())
+  name  String?
+  color String?
+
+  MenuEntry   MenuEntry? @relation(fields: [menuEntryId], references: [id])
+  menuEntryId Int?
+
+  @@map("MenuEntryLabel")
+}
+
+enum Role {
+  DEVELOPER // Is allowed everything, for development and testing only
+  SUPER_ADMIN // Owner of the system/company, should have access to everything, except developer work
+  MANAGER // Manager on a specific company in a network of companies, should not be able to read/write data to/from other companies on the same network
+  USER // A simple user
+}
+
+enum Document {
+  CPF
+  CNPJ
+}
+
+model User {
+  id        String     @id @default(uuid())
+  name      String
+  username  String     @unique
+  email     String     @unique
+  password  String
+  role      Role       @default(USER)
+  phone     String
+  createdAt DateTime   @default(now())
+  updateAt  DateTime   @updatedAt
+  employees Employee[]
+}
+
+model Address {
+  id           String     @id @default(uuid())
+  name         String
+  street       String
+  number       String
+  neighborhood String
+  complement   String?
+  zipCode      String
+  city         String
+  state        String
+  Customer     Customer?  @relation(fields: [customerId], references: [id])
+  customerId   String?
+  Supplier     Supplier[]
+  Contact      Contact?   @relation(fields: [contactId], references: [id])
+  contactId    String?
+}
+
+model Product {
+  id        String     @unique @default(uuid())
+  productNo Int        @unique
+  sku       String     @unique
+  name      String
+  suppliers Supplier[]
+  // locatedAt    Storage[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  // ProductStock ProductStock[]
+  stock     Stock?     @relation(fields: [stockId], references: [id])
+  stockId   String?
+}
+
+// model ProductStock {
+//   id              String  @unique @default(uuid())
+//   price           Float
+//   barcode         String
+//   product         Product @relation(fields: [productId], references: [id])
+//   amountAvailable Int
+//   productId       String
+// }
+
+// model Storage {
+//   id        String   @id @default(uuid())
+//   Product   Product? @relation(fields: [productId], references: [id])
+//   productId String?
+// }
+
+model Contact {
+  id            String        @id @default(uuid())
+  email         Email[]
+  phone         Phone[]
+  address       Address[]
+  Customer      Customer[]
+  Supplier      Supplier?
+  storeBranches StoreBranch[]
+  employees     Employee[]
+}
+
+model Phone {
+  id        String   @id @default(uuid())
+  name      String
+  value     String
+  Contact   Contact? @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  contactId String?
+}
+
+model Email {
+  id        String   @id @default(uuid())
+  name      String
+  value     String
+  Contact   Contact? @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  contactId String?
+}
+
+model Supplier {
+  id        String   @id @default(uuid())
+  cnpj      String   @unique
+  name      String
+  contact   Contact  @relation(fields: [contactId], references: [id])
+  Product   Product? @relation(fields: [productId], references: [id])
+  productId String?
+  addressId String
+  Address   Address  @relation(fields: [addressId], references: [id])
+  contactId String   @unique
+}
+
+model Customer {
+  id                 String    @id @default(uuid())
+  customerType       Document  @default(CPF)
+  document           String?
+  contact            Contact   @relation(fields: [contactId], references: [id])
+  inscricaoEstadual  String?
+  inscricaoMunicipal String?
+  name               String
+  address            Address[]
+  contactId          String
+}
+
+model Car {
+  id           String @id @default(uuid())
+  make         String @unique
+  model        String @unique
+  year         Int
+  licensePlate String
+  color        String
+}
+
+model Employee {
+  id           String      @id @default(uuid())
+  name         String
+  surname      String
+  cpf          String
+  systemUser   User?       @relation(fields: [userId], references: [id])
+  contact      Contact     @relation(fields: [contactId], references: [id])
+  workLocation StoreBranch @relation(fields: [storeBranchId], references: [id])
+  entryDate    DateTime
+  position     String
+
+  userId        String?
+  contactId     String
+  storeBranchId String
+}
+
+model Store {
+  id       String        @id @default(uuid())
+  name     String
+  branches StoreBranch[]
+}
+
+model StoreBranch {
+  id        String     @id @default(uuid())
+  name      String
+  cpnj      String     @unique
+  isMatrix  Boolean    @default(false)
+  employees Employee[]
+  stock     Stock?
+  contact   Contact    @relation(fields: [contactId], references: [id])
+  store     Store?     @relation(fields: [storeId], references: [id])
+
+  contactId String
+  storeId   String?
+}
+
+model Stock {
+  id          String      @id @default(uuid())
+  storeBranch StoreBranch @relation(fields: [storeBranchId], references: [id])
+  products    Product[]
+
+  storeBranchId String @unique
+}

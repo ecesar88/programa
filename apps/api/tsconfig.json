@@ -1,24 +1,40 @@
 {
-	"compilerOptions": {
-		"outDir": "dist",
-		"composite": true,
-		"noImplicitThis": true,
-		"noImplicitAny": true,
-		"skipLibCheck": true,
-		"target": "ES6",
-		"module": "NodeNext",
-		"moduleResolution": "NodeNext",
+  "compilerOptions": {
+    "outDir": "dist",
+    "composite": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "target": "ES6",
+    // "module": "es2022",
+    "moduleResolution": "node",
+    // "resolveJsonModule": true,
+    // "esModuleInterop": true,
+    // "isolatedModules": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "baseUrl": ".",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    
+		// Treat files as modules even if it doesn't use import/export
+		"moduleDetection": "force",
+
+		// Ignore module structure
+		"module": "Preserve",
+
+		// Allow JSON modules to be imported
 		"resolveJsonModule": true,
-		"resolvePackageJsonExports": true,
-		"resolvePackageJsonImports": true,
+
+		// Allow JS files to be imported from TS and vice versa
+		"allowJs": true,
+
+		// Use correct ESM import behavior
 		"esModuleInterop": true,
+
+		// Disallow features that require cross-file awareness
 		"isolatedModules": true,
-		"strict": true,
-		"strictNullChecks": true,
-		"baseUrl": ".",
-		"emitDecoratorMetadata": true,
-		"experimentalDecorators": true
-	},
-	"include": ["src/**/*", "./"],
-	"exclude": ["node_modules", "dist"]
+  },
+  "include": ["src/**/*", "./"],
+  "exclude": ["node_modules", "dist"]
 }

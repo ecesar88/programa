@@ -14,7 +14,7 @@ extensions:
   graphqlScalarExamples: true
 
 info:
-  title: KitchenManager GraphQL API
+  title: GraphQL API
   description: Welcome to the party!
   termsOfService: https://www.example.com/terms
   contact:

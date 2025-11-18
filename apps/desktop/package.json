@@ -1,5 +1,5 @@
 {
-  "name": "@repo/desktop",
+  "name": "kitchen_manager_desktop",
   "version": "1.0.0",
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
@@ -32,7 +32,6 @@
     "@graphql-typed-document-node/core": "^3.2.0",
     "@hookform/resolvers": "^5.2.1",
     "@react-spring/web": "^10.0.1",
-    "@repo/shared": "workspace:*",
     "@swc/core": "^1.13.5",
     "@tailwindcss/postcss": "^4.1.12",
     "@tailwindcss/vite": "^4.1.12",

@@ -1,0 +1,465 @@
+"""Address"""
+type Address {
+  city: String
+  complement: String
+  id: String
+  name: String
+  neighborhood: String
+  number: String
+  state: String
+  street: String
+  zipCode: String
+}
+
+input AddressCreateInput {
+  city: String
+  complement: String
+  name: String
+  neighborhood: String
+  number: String
+  state: String
+  street: String
+  zipCode: String
+}
+
+input AddressUpdateInput {
+  data: AddressCreateInput
+  id: String
+}
+
+input AuthCreateInput {
+  email: String
+  password: String
+}
+
+type AuthError implements Error {
+  message: String
+}
+
+"""Infos of the Tokens generated after authentication"""
+type AuthRef {
+  refreshToken: String
+  token: String
+}
+
+input AuthRefreshTokenInput {
+  refreshToken: String
+}
+
+type BaseError implements Error {
+  message: String
+}
+
+type BusinessError implements Error {
+  errors: [BusinessValidationError!]
+  isValid: Boolean
+  message: String
+}
+
+type BusinessValidationError {
+  failMessage: String
+  name: String
+}
+
+"""A simple car"""
+type Car {
+  color: String
+
+  """The id of the car"""
+  id: String
+  licensePlate: String
+  make: String
+  model: String
+  year: Int
+}
+
+input CarCreateInput {
+  color: String
+  licensePlate: String
+
+  """The make of the car"""
+  make: String
+  model: String
+  year: Int
+}
+
+"""A client/customer on the application"""
+type Client {
+  """The id on the database"""
+  id: Int
+
+  """The customer's name"""
+  name: String
+  phone: String
+}
+
+input ClientCreateOrUpdateInput {
+  name: String!
+  phone: String
+}
+
+"""Contact entry"""
+type Contact {
+  address: [Address!]
+  email: [Email!]
+  id: String
+  phone: [Phone!]
+}
+
+input ContactCreateInput {
+  address: [AddressCreateInput!]
+  email: [EmailCreateInput!]
+  phone: [PhoneCreateInput!]
+}
+
+input ContactUpdateInput {
+  data: ContactCreateInput
+  id: String
+}
+
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar DateTime
+
+"""email"""
+type Email {
+  id: String
+  name: String
+  value: String
+}
+
+input EmailCreateInput {
+  name: String
+  value: String
+}
+
+input EmailUpdateInput {
+  data: EmailCreateInput
+  id: String
+}
+
+interface Error {
+  message: String
+}
+
+"""API HealthCheck"""
+type HealthCheck {
+  status: String
+}
+
+type InputValidationError implements Error {
+  issues: [InputValidationIssue!]
+  message: String
+}
+
+type InputValidationIssue {
+  message: String
+  path: [String!]
+}
+
+"""Authenticated user information"""
+type MeAuthRef {
+  email: String
+  id: ID
+  name: String
+}
+
+"""An entry on the menu"""
+type MenuEntry {
+  description: String
+  id: Int
+  labels: [MenuEntryLabel!]
+  name: String
+  variants: [MenuEntryVariant!]
+}
+
+"""
+The category of a specific MenuEntry. This can be used to sort products by type, such as drinks, meats, grains, etc
+"""
+type MenuEntryCategory {
+  id: Int
+  name: String
+}
+
+input MenuEntryCategoryInput {
+  name: String
+}
+
+"""Input to create a new MenuEntry"""
+input MenuEntryInput {
+  categories: [MenuEntryCategoryInput!]
+  description: String
+  labels: [MenuEntryLabelInput!]
+  name: String!
+  variants: [MenuEntryVariantInput!]
+}
+
+"""
+A label on the MenuEntryObject type. This can be used to categorize MenuEntries with different labels.
+"""
+type MenuEntryLabel {
+  color: String
+  id: Int
+  name: String
+}
+
+input MenuEntryLabelInput {
+  color: String
+  name: String
+}
+
+"""
+A variant on the MenuEntry, this can be a different sized or flavored product
+"""
+type MenuEntryVariant {
+  description: String
+  id: Int
+  name: String
+  price: Float
+}
+
+input MenuEntryVariantInput {
+  description: String
+  name: String
+  price: Float
+}
+
+type Mutation {
+  """Create a new address"""
+  createAddress(data: AddressCreateInput!): MutationCreateAddressResult
+
+  """Create a new car"""
+  createCar(data: CarCreateInput!): MutationCreateCarResult
+  createClient(name: String!, phone: String): Client
+
+  """Create a new contact"""
+  createContact(data: ContactCreateInput!): MutationCreateContactResult
+  createMenuEntry(data: MenuEntryInput!): MenuEntry
+  createOrUpdateMenuEntryLabel(data: MenuEntryLabelInput!, id: Int): MenuEntryLabel
+  createOrder(data: OrderInput!): Order
+
+  """Creates a new user"""
+  createUser(data: UserCreateInput!): MutationCreateUserResult
+
+  """Delete an address from the system"""
+  deleteAddress(id: String!): Address
+  deleteClient(id: Int!): Client
+
+  """Delete a contact"""
+  deleteContact(id: String!): MutationDeleteContactResult
+  deleteMenuEntry(id: Int!): MenuEntry
+  deleteMenuEntryLabel(id: Int!): MenuEntryLabel
+
+  """Delete a user"""
+  deleteUser(id: String!): User
+  login(data: AuthCreateInput!): AuthRef
+  refreshToken(data: AuthRefreshTokenInput!): AuthRef
+
+  """Updates a specific address by id."""
+  updateAddress(input: AddressUpdateInput!): MutationUpdateAddressResult
+  updateClient(data: ClientCreateOrUpdateInput!, id: Int!): Client
+
+  """Updates a contact by id."""
+  updateContact(input: ContactUpdateInput!): MutationUpdateContactResult
+  updateMenuEntry(data: MenuEntryInput!, id: Int!): MenuEntry
+
+  """Update a specific user by id."""
+  updateUser(input: UserUpdateInput!): User
+}
+
+union MutationCreateAddressResult = InputValidationError | MutationCreateAddressSuccess
+
+type MutationCreateAddressSuccess {
+  data: Address!
+}
+
+union MutationCreateCarResult = BusinessError | InputValidationError | MutationCreateCarSuccess
+
+type MutationCreateCarSuccess {
+  data: Car!
+}
+
+union MutationCreateContactResult = InputValidationError | MutationCreateContactSuccess
+
+type MutationCreateContactSuccess {
+  data: Contact!
+}
+
+union MutationCreateUserResult = InputValidationError | MutationCreateUserSuccess
+
+type MutationCreateUserSuccess {
+  data: User!
+}
+
+union MutationDeleteContactResult = MutationDeleteContactSuccess | RecordNotFoundError
+
+type MutationDeleteContactSuccess {
+  data: Contact!
+}
+
+union MutationUpdateAddressResult = InputValidationError | MutationUpdateAddressSuccess
+
+type MutationUpdateAddressSuccess {
+  data: Address!
+}
+
+union MutationUpdateContactResult = InputValidationError | MutationUpdateContactSuccess | RecordNotFoundError
+
+type MutationUpdateContactSuccess {
+  data: Phone!
+}
+
+"""An Order containing one or more MenuEntries"""
+type Order {
+  address: String
+  bill: [OrderBill!]
+  dateTime: DateTime
+  id: Int
+  items: [OrderEntry!]
+  observations: [OrderObservation!]
+  splitOrderPriceBy: Float
+  totalPrice: Float
+}
+
+"""
+The order bill which contains the price for each bill if the order price was split, or a single total price if it was not.
+"""
+type OrderBill {
+  id: Int
+  price: Float
+}
+
+input OrderBillInput {
+  price: Float
+}
+
+"""
+The order entry. Example: "Pizza 4 cheese"
+"""
+type OrderEntry {
+  id: Int
+  menuEntry: MenuEntry
+  quantity: Int
+}
+
+"""
+The order entry observation. Example: "No pepper on pizza"
+"""
+type OrderEntryObservation {
+  content: String
+  id: Int
+}
+
+"""Input to create a new Order"""
+input OrderInput {
+  address: String!
+  bill: [OrderBillInput!]
+  observations: [OrderObservationInput!]
+  splitOrderPriceBy: Int = 1
+  totalPrice: Float = 0
+}
+
+"""
+The order observation. Example: "Payment will be in 24x."
+"""
+type OrderObservation {
+  content: String
+  id: Int
+}
+
+input OrderObservationInput {
+  content: String
+}
+
+"""Phone Number"""
+type Phone {
+  id: String
+  name: String
+  value: String
+}
+
+input PhoneCreateInput {
+  name: String
+  value: String
+}
+
+input PhoneUpdateInput {
+  data: PhoneCreateInput
+  id: String
+}
+
+type Query {
+  """Get an address by id"""
+  address(id: String!): [Address!]
+
+  """Get a contact by id"""
+  contact(id: String!): QueryContactResult
+  getAllCars: QueryGetAllCarsResult
+  getAllClients(page: Int = 1): [Client!]
+  getAllMenuEntries(page: Int = 1): [MenuEntry!]
+  getAllMenuEntryLabels(page: Int = 1): [MenuEntryLabel!]
+  getAllOrders(page: Int = 1): [Order!]
+  getClientById(id: Int!): Client
+  getMenuEntryById(id: Int!): MenuEntry
+  getOrderById(id: Int!): Order
+  healthCheck: HealthCheck
+  me: MeAuthRef
+  searchClients(search: String!): [Client!]
+  searchMenuEntryLabels(searchTerm: String!): [MenuEntryLabel!]
+
+  """Get a user by id"""
+  user(id: String!): User
+
+  """List all users"""
+  users: [User!]
+}
+
+union QueryContactResult = QueryContactSuccess | RecordNotFoundError
+
+type QueryContactSuccess {
+  data: [Phone!]!
+}
+
+union QueryGetAllCarsResult = QueryGetAllCarsSuccess | RecordNotFoundError
+
+type QueryGetAllCarsSuccess {
+  data: [Car!]!
+}
+
+type RecordNotFoundError implements Error {
+  message: String
+}
+
+"""An User"""
+type User {
+  createdAt: DateTime
+  email: String
+  id: String
+  name: String
+  phone: String
+  updatedAt: DateTime
+  username: String
+}
+
+input UserCreateInput {
+  email: String
+  name: String
+  password: String
+  phone: String
+  username: String
+}
+
+input UserEmailInput {
+  email: String
+}
+
+input UserIdAndPasswordInput {
+  id: String
+  password: String
+}
+
+input UserUpdateInput {
+  data: UserCreateInput
+  id: String
+}

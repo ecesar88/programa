@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  # PostgreSQL database service using Alpine Linux
+  postgres:
+    image: postgres:16-alpine
+    container_name: kitchen_manager-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-kitchen_manager-db}
+      POSTGRES_USER: ${POSTGRES_USER:-kitchen_manager_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-kitchen_manager_password}
+      POSTGRES_INITDB_ARGS: '--encoding=UTF-8 --lc-collate=C --lc-ctype=C'
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - kitchen_manager-network
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'pg_isready -U ${POSTGRES_USER:-kitchen_manager_user} -d ${POSTGRES_DB:-kitchen_manager_db}'
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # API application service
+  kitchen_manager:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kitchen_manager-app
+    restart: unless-stopped
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-kitchen_manager_user}:${POSTGRES_PASSWORD:-kitchen_manager_password}@postgres:5432/${POSTGRES_DB:-kitchen_manager_db}?schema=public
+    ports:
+      - '3001:3001'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - kitchen_manager-network
+    volumes:
+      - ./src:./src
+      - ./prisma.config.ts:/app/prisma.config.ts
+    command: >
+      sh -c "
+        echo 'Waiting for database to be ready...' &&
+        pnpm prisma migrate deploy &&
+        pnpm prisma db seed &&
+        pnpm dev
+      "
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  kitchen_manager-network:
+    driver: bridge

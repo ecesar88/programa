@@ -1,10 +1,10 @@
 import { RouteObject } from 'react-router'
 
 import { ROUTES } from './constants'
-import { Clients } from './screens/Clients'
-import { Home } from './screens/Home'
-import { Orders } from './screens/Orders'
-import { Menu as MenuScreen } from './screens/Menu'
+import { Clients } from './pages/Clients'
+import { Home } from './pages/Home'
+import { Orders } from './pages/Orders'
+import { Menu as MenuScreen } from './pages/Menu'
 
 export const routes: RouteObject[] = [
   {

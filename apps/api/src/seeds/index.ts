@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { createClients } from "./client.seed";
-import { createMenuEntries } from "./menuEntry.seed";
+import { createClients } from "./client";
+import { createMenuEntries } from "./menuEntry";
 
 async function main(): Promise<void> {
 	const prisma = new PrismaClient();
