@@ -4,7 +4,7 @@ import type { Id, Resolver } from 'src/utils/types/shared'
 import { RecordNotFoundError } from '../_errors/errors'
 import type { ContactCreateInput, ContactUpdateInput } from './types'
 
-const table = 'Contact'
+const namespace = 'Contact'
 
 const defaultIncludes: Prisma.ContactInclude = {
   address: true,
@@ -17,7 +17,7 @@ export const create: Resolver<{
 }> = async (_parent, args, ctx, _info) => {
   const { address, email, phone } = args.data
 
-  logInfo({ operation: OPERATION_TYPE.CREATE, table, args })
+  logInfo({ operation: OPERATION_TYPE.CREATE, namespace, args })
 
   const insertDataClause: Prisma.ContactCreateArgs['data'] = {}
 
@@ -54,7 +54,7 @@ export const create: Resolver<{
 export const queryOne: Resolver<Id> = async (_parent, args, ctx, _info) => {
   const { id } = args
 
-  logInfo({ operation: OPERATION_TYPE.READ, table, id })
+  logInfo({ operation: OPERATION_TYPE.READ, namespace, id })
 
   const record = await ctx.prisma.contact.findFirst({
     where: {
@@ -63,7 +63,7 @@ export const queryOne: Resolver<Id> = async (_parent, args, ctx, _info) => {
   })
 
   if (!record) {
-    throw new RecordNotFoundError(table)
+    throw new RecordNotFoundError(namespace)
   }
 
   return await ctx.prisma.contact.findFirst({
@@ -84,7 +84,7 @@ export const update: Resolver<{
   const { address, phone, email } = args.input.data ?? {}
   const { id } = args.input
 
-  logInfo({ operation: OPERATION_TYPE.UPDATE, table, args })
+  logInfo({ operation: OPERATION_TYPE.UPDATE, namespace, args })
 
   const record = await ctx.prisma.contact.findFirst({
     where: {
@@ -93,7 +93,7 @@ export const update: Resolver<{
   })
 
   if (!record) {
-    throw new RecordNotFoundError(table)
+    throw new RecordNotFoundError(namespace)
   }
 
   const updateDataClause: Prisma.ContactUpdateArgs['data'] = {}
@@ -137,7 +137,7 @@ export const update: Resolver<{
 export const remove: Resolver<Id> = async (_parent, args, ctx, _info) => {
   const { id } = args
 
-  logInfo({ operation: OPERATION_TYPE.DELETE, table, args, id })
+  logInfo({ operation: OPERATION_TYPE.DELETE, namespace, args, id })
 
   const record = await ctx.prisma.contact.findFirst({
     where: {
@@ -146,7 +146,7 @@ export const remove: Resolver<Id> = async (_parent, args, ctx, _info) => {
   })
 
   if (!record) {
-    throw new RecordNotFoundError(table)
+    throw new RecordNotFoundError(namespace)
   }
 
   return await ctx.prisma.contact.delete({

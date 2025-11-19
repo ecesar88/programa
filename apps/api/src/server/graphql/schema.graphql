@@ -27,6 +27,12 @@ input AddressUpdateInput {
   id: String
 }
 
+"""Tokens generated on authentication"""
+type Auth {
+  refreshToken: String
+  token: String
+}
+
 input AuthCreateInput {
   email: String
   password: String
@@ -34,12 +40,6 @@ input AuthCreateInput {
 
 type AuthError implements Error {
   message: String
-}
-
-"""Infos of the Tokens generated after authentication"""
-type AuthRef {
-  refreshToken: String
-  token: String
 }
 
 input AuthRefreshTokenInput {
@@ -159,7 +159,7 @@ type InputValidationIssue {
 }
 
 """Authenticated user information"""
-type MeAuthRef {
+type MeAuth {
   email: String
   id: ID
   name: String
@@ -253,8 +253,8 @@ type Mutation {
 
   """Delete a user"""
   deleteUser(id: String!): User
-  login(data: AuthCreateInput!): AuthRef
-  refreshToken(data: AuthRefreshTokenInput!): AuthRef
+  login(data: AuthCreateInput!): Auth
+  refreshToken(data: AuthRefreshTokenInput!): Auth
 
   """Updates a specific address by id."""
   updateAddress(input: AddressUpdateInput!): MutationUpdateAddressResult
@@ -404,7 +404,7 @@ type Query {
   getMenuEntryById(id: Int!): MenuEntry
   getOrderById(id: Int!): Order
   healthCheck: HealthCheck
-  me: MeAuthRef
+  me: MeAuth
   searchClients(search: String!): [Client!]
   searchMenuEntryLabels(searchTerm: String!): [MenuEntryLabel!]
 

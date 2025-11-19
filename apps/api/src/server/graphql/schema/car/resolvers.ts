@@ -5,10 +5,10 @@ import { logInfo, OPERATION_TYPE } from '../../../../utils/logger'
 import { carBusinessService } from './service'
 import type { CarCreateInput } from './types'
 
-const table = 'Car'
+const namespace = 'Car'
 
 export const queryAll: Resolver = (_parent, _args, ctx, _info) => {
-  logInfo({ operation: OPERATION_TYPE.READ, table })
+  logInfo({ operation: OPERATION_TYPE.READ, namespace })
 
   return ctx.prisma.car.findMany({
     orderBy: {
@@ -24,7 +24,7 @@ export const create: Resolver<{
 
   unwrapOrThrow(await carBusinessService.validate(args.data))
 
-  logInfo({ operation: OPERATION_TYPE.CREATE, table, args })
+  logInfo({ operation: OPERATION_TYPE.CREATE, namespace, args })
 
   return await ctx.prisma.car.create({
     data: data as Prisma.CarCreateInput

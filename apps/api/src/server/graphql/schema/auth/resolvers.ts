@@ -6,7 +6,7 @@ import { AuthError } from '../_errors/errors'
 import { me, validatePassword } from './service'
 import type { AuthCreateInput, AuthRefreshTokenInput } from './types'
 
-const table = 'Auth'
+const namespace = 'Auth'
 
 export const login: Resolver<{
   data: (typeof AuthCreateInput)['$inferInput']
@@ -51,7 +51,7 @@ export const authRefresh: Resolver<{
 }> = (_parent, args, _ctx, _info) => {
   const { data } = args
 
-  logInfo({ operation: OPERATION_TYPE.CREATE, table })
+  logInfo({ operation: OPERATION_TYPE.CREATE, namespace })
 
   const payload = jwt.verify(data.refreshToken!, Buffer.from(env.SECRET_KEY, 'base64'), {
     algorithms: ['RS256']
@@ -61,7 +61,7 @@ export const authRefresh: Resolver<{
   if (isTokenInvalid) {
     logError({
       operation: OPERATION_TYPE.CREATE,
-      table,
+      namespace,
       error: 'Invalid refresh token'
     })
 
@@ -84,7 +84,7 @@ export const authRefresh: Resolver<{
 }
 
 export const meAuth: Resolver = async (_parent, _args, ctx, _info) => {
-  logInfo({ operation: OPERATION_TYPE.READ, table })
+  logInfo({ operation: OPERATION_TYPE.READ, namespace })
 
   if (!ctx.user) throw Error('User not found')
 
@@ -93,7 +93,7 @@ export const meAuth: Resolver = async (_parent, _args, ctx, _info) => {
   if (!user) {
     logError({
       operation: OPERATION_TYPE.READ,
-      table,
+      namespace,
       error: 'User not found'
     })
 

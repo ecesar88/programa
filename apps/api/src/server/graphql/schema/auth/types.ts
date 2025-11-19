@@ -16,11 +16,11 @@ export type TypeMeAuth = {
 
 /* --- Object Definitions --- */
 
-const AuthRef = builder.objectRef<TypeAuth>('AuthRef')
-const MeAuthRef = builder.objectRef<TypeMeAuth>('MeAuthRef')
+const AuthRef = builder.objectRef<TypeAuth>('Auth')
+const MeAuthRef = builder.objectRef<TypeMeAuth>('MeAuth')
 
 export const Auth = AuthRef.implement({
-  description: 'Infos of the Tokens generated after authentication',
+  description: 'Tokens generated on authentication',
   fields: (t) => ({
     token: t.exposeString('token'),
     refreshToken: t.exposeString('refreshToken')

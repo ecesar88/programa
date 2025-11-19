@@ -133,16 +133,16 @@ export enum OPERATION_TYPE {
 
 export function logInfo({
   operation,
-  table,
+  namespace,
   args,
   id
 }: {
   operation?: OPERATION_TYPE | string
-  table?: string
+  namespace?: string
   id?: string
   args?: Record<string, unknown>
 }) {
-  const msg = `${operation ? ` ${operation}` : ''}${table ? ` ${table}` : ''}`
+  const msg = `${operation ? ` ${operation}` : ''}${namespace ? ` ${namespace}` : ''}`
 
   if (id) operation += ` with the id: ${id}.`
 
@@ -159,16 +159,16 @@ export function logInfo({
 
 export function logError({
   operation,
-  table,
+  namespace,
   error,
   id
 }: {
   operation?: OPERATION_TYPE | string
-  table?: string
+  namespace?: string
   error: Error | unknown
   id?: string
 }) {
-  const msg = `Error in${operation ? ` ${operation}` : ''}${table ? ` ${table}` : ''}`
+  const msg = `Error in${operation ? ` ${operation}` : ''}${namespace ? ` ${namespace}` : ''}`
 
   if (id) operation += ` with the id: ${id}.`
 

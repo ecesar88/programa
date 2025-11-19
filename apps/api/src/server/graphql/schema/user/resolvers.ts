@@ -5,19 +5,19 @@ import type { Id, Resolver } from 'src/utils/types/shared'
 import { RecordNotFoundError } from '../_errors/errors'
 import type { UserCreateInput, UserUpdateInput } from './types'
 
-const table = 'User'
+const namespace = 'User'
 
 const PASSWORD_SALT_ROUNDS = 10
 
 export const getAll: Resolver = (_parent, _args, ctx, _info) => {
-  logInfo({ operation: OPERATION_TYPE.READ, table })
+  logInfo({ operation: OPERATION_TYPE.READ, namespace })
 
   return ctx.prisma.user.findMany()
 }
 
 export const getById: Resolver<Id> = (_parent, args, ctx, _info) => {
   const { id } = args
-  logInfo({ operation: OPERATION_TYPE.READ, table, id })
+  logInfo({ operation: OPERATION_TYPE.READ, namespace, id })
 
   return ctx.prisma.user.findFirst({
     where: {
@@ -29,7 +29,7 @@ export const getById: Resolver<Id> = (_parent, args, ctx, _info) => {
 export const create: Resolver<{
   data: (typeof UserCreateInput)['$inferInput']
 }> = (_parent, args, ctx, _info) => {
-  logInfo({ operation: OPERATION_TYPE.CREATE, table: table })
+  logInfo({ operation: OPERATION_TYPE.CREATE, namespace })
 
   const passwordHash = bcrypt.hashSync(args.data.password as string, PASSWORD_SALT_ROUNDS)
 
@@ -46,7 +46,7 @@ export const update: Resolver<{
 }> = async (_parent, args, ctx, _info) => {
   const { id } = args.input
 
-  logInfo({ operation: OPERATION_TYPE.UPDATE, table, args })
+  logInfo({ operation: OPERATION_TYPE.UPDATE, namespace, args })
 
   const record = await ctx.prisma.user.findFirst({
     where: {
@@ -55,7 +55,7 @@ export const update: Resolver<{
   })
 
   if (!record) {
-    throw new RecordNotFoundError(table)
+    throw new RecordNotFoundError(namespace)
   }
 
   return ctx.prisma.user.update({
@@ -69,7 +69,7 @@ export const update: Resolver<{
 export const remove: Resolver<Id> = async (_parent, args, ctx, _info) => {
   const { id } = args
 
-  logInfo({ operation: OPERATION_TYPE.DELETE, table, args, id })
+  logInfo({ operation: OPERATION_TYPE.DELETE, namespace, args, id })
 
   const record = await ctx.prisma.user.findFirst({
     where: {
@@ -77,7 +77,7 @@ export const remove: Resolver<Id> = async (_parent, args, ctx, _info) => {
     }
   })
 
-  if (!record) throw new RecordNotFoundError(table)
+  if (!record) throw new RecordNotFoundError(namespace)
 
   return ctx.prisma.user.delete({
     where: {

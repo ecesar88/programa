@@ -15,7 +15,7 @@ async function authenticateUser(authHeader: string | null): Promise<User | null>
 
   const token = authHeader.substring(REMOVE_BEARER) // Remove "Bearer " prefix
 
-  const payload = jwt.verify(token, Buffer.from(env.AUTH_PUBLIC_KEY, 'base64'), {
+  const payload = jwt.verify(token, Buffer.from(env.SECRET_KEY, 'base64'), {
     algorithms: ['RS256']
   }) as string | jwt.JwtPayload
 
