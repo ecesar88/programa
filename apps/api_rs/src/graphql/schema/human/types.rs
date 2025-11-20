@@ -5,7 +5,6 @@ use juniper::{GraphQLEnum, GraphQLInputObject, GraphQLObject};
 pub struct Human {
     id: String,
     name: String,
-    appears_in: Vec<Episode>,
     home_planet: String,
 }
 
@@ -18,9 +17,8 @@ pub enum Episode {
 
 // There is also a custom derive for mapping GraphQL input objects.
 #[derive(GraphQLInputObject)]
-#[graphql(description = "A humanoid creature in the Star Wars universe")]
-pub struct NewHuman {
+#[graphql(description = "Input to create a human object")]
+pub struct HumanCreateInput {
     name: String,
-    appears_in: Vec<Episode>,
     home_planet: String,
 }
