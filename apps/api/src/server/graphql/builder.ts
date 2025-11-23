@@ -10,6 +10,7 @@ import type { Context } from './context'
 import { AuthError } from './schema/_errors/errors'
 
 type SchemaType = {
+  DefaultInputFieldRequiredness: true
   Scalars: {
     ID: {
       Output: number | string
@@ -32,8 +33,8 @@ type SchemaType = {
 }
 
 export const builder = new SchemaBuilder<SchemaType>({
-  // plugins: [ValidationPlugin, ErrorsPlugin, ScopeAuthPlugin],
   plugins: [ScopeAuthPlugin, ErrorsPlugin, ValidationPlugin],
+  defaultInputFieldRequiredness: true, // Make all fields required by default
   errors: {
     unsafelyHandleInputErrors: true
   },

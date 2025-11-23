@@ -1,5 +1,7 @@
-import { type ColorTheme, color, colorize } from 'json-colorizer'
+import { color, colorize, type ColorTheme } from 'json-colorizer'
 import nodeColorLog from 'node-color-log'
+import stripAnsi from 'strip-ansi'
+import winston from 'winston'
 
 export const jsonColors: ColorTheme = {
   Whitespace: color.gray,
@@ -19,11 +21,94 @@ export const colorizeAsJSON = (
 ) => colorize(json, { indent: 2, colors: jsonColors })
 
 export enum LOG_LEVEL {
-  ERROR,
-  WARN,
-  INFO
+  ERROR = 'ERROR',
+  WARN = 'WARN',
+  INFO = 'INFO'
 }
 
+/**
+ * -----------------------------------
+ * WINSTON LOGGER SETUP
+ * -----------------------------------
+ */
+export const fileLogger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.printf(({ level, message, timestamp }) => {
+      return `[${timestamp}] :: [${level.toUpperCase()}] => ${message}`
+    })
+  ),
+  transports: [
+    new winston.transports.File({
+      filename: './logs/app.log',
+      level: 'info',
+      maxsize: 5_000_000,
+      maxFiles: 1
+    })
+  ]
+})
+
+/**
+ * ------------------------------------------------------
+ * Helper: Console logging (your original nodeColorLog)
+ * ------------------------------------------------------
+ */
+
+const ERROR_LABEL = 'Error'
+const PARAMS_LABEL = 'Params: '
+const LABEL_PREFIX = '#############'
+
+const consoleLog = (level: LOG_LEVEL, message: string, obj?: any) => {
+  const dateString = `[${new Date().toISOString()}]`
+  const separator = ' :: '
+  const prefix = '=> '
+
+  const colorByLevel: Record<LOG_LEVEL, Parameters<typeof nodeColorLog.color>[0]> = {
+    ERROR: 'red',
+    WARN: 'yellow',
+    INFO: 'cyan'
+  }
+
+  // --- main line ---
+  nodeColorLog
+    .color('yellow')
+    .append(dateString)
+    .reset()
+    .append(separator)
+    .color(colorByLevel[level])
+    .append(`[${level}] ${prefix}`)
+    .reset()
+    .log(message)
+
+  // --- extra object ---
+  if (obj) {
+    const label =
+      level === LOG_LEVEL.ERROR
+        ? ERROR_LABEL
+        : level === LOG_LEVEL.WARN
+          ? ' ' + PARAMS_LABEL
+          : ' ' + PARAMS_LABEL
+
+    nodeColorLog
+      .reset()
+      .color(level === LOG_LEVEL.ERROR ? 'red' : 'yellow')
+      .bold()
+      .append(LABEL_PREFIX)
+      .reset()
+      .bold()
+      .color('cyan')
+      .append(`${label}: `)
+      .reset()
+      .log(typeof obj === 'string' ? obj : JSON.stringify(obj, null, 2))
+  }
+}
+
+/**
+ * ------------------------------------------------------
+ * LOGGER (calls console + winston file logger)
+ * ------------------------------------------------------
+ */
 export const logger = ({
   level,
   message,
@@ -31,96 +116,22 @@ export const logger = ({
 }: {
   level: LOG_LEVEL
   message: string
-  object?: string
+  object?: any
 }) => {
-  const dateString = `[${new Date().toISOString()}]`
-  const separator = ' :: '
-  const logPrefix = '=> '
+  // Console (color)
+  consoleLog(level, message, object)
 
-  const errorLogger = (message: string) =>
-    nodeColorLog
-      .color('yellow')
-      .append(dateString)
-      .reset()
-      .append(separator)
-      .color('red')
-      .append(`[ERROR] ${logPrefix}`)
-      .reset()
-      .log(message)
+  // File (no color)
+  const plainMessage =
+    message +
+    (object
+      ? `\n${LABEL_PREFIX} ${PARAMS_LABEL} ${typeof object === 'string' ? object : JSON.stringify(object, null, 2)}`
+      : '')
 
-  const warnLogger = (message: string) =>
-    nodeColorLog
-      .color('yellow')
-      .append(dateString)
-      .reset()
-      .append(separator)
-      .color('yellow')
-      .append(`[WARN] ${logPrefix}`)
-      .reset()
-      .log(message)
-
-  const infoLogger = (message: string) =>
-    nodeColorLog
-      .color('yellow')
-      .append(dateString)
-      .reset()
-      .append(separator)
-      .color('cyan')
-      .append(`[INFO] ${logPrefix}`)
-      .reset()
-      .log(message)
-
-  switch (level) {
-    case LOG_LEVEL.ERROR: {
-      errorLogger(message)
-
-      if (object && Object.values(object)?.length) {
-        nodeColorLog
-          .reset()
-          .color('red')
-          .bold()
-          .append('############# ')
-          .reset()
-          .bold()
-          .color('cyan')
-          .append('Error: ')
-          .reset()
-          .log(`${object}`)
-      }
-
-      break
-    }
-
-    case LOG_LEVEL.WARN: {
-      warnLogger(message)
-
-      if (object && Object.values(object)?.length) {
-        nodeColorLog
-          .reset()
-          .color('yellow')
-          .bold()
-          .append('############# ')
-          .reset()
-          .bold()
-          .color('cyan')
-          .append('Params: ')
-          .reset()
-          .log(`${object}`)
-      }
-
-      break
-    }
-
-    case LOG_LEVEL.INFO: {
-      infoLogger(message)
-
-      if (object && Object.values(object)?.length) {
-        nodeColorLog.reset().bold().color('cyan').append('[PARAMS] => ').reset().log(`${object}`)
-      }
-
-      break
-    }
-  }
+  fileLogger.log({
+    level: level.toLowerCase(),
+    message: stripAnsi(plainMessage) // ensure no ANSI escapes
+  })
 }
 
 export enum OPERATION_TYPE {

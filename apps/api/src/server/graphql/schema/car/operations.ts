@@ -11,7 +11,8 @@ builder.queryField('getAllCars', (t) =>
     errors: {
       types: [RecordNotFoundError]
     },
-    resolve: authenticateResolver(queryAll)
+    resolve: queryAll
+    // resolve: authenticateResolver(queryAll)
   })
 )
 

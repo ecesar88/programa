@@ -102,7 +102,7 @@ export const update: Resolver<{
     updateDataClause.address = {
       updateMany: {
         where: { contactId: id },
-        data: address.map((addr) => addr) as Prisma.AddressUpdateManyArgs[]
+        data: address.map((addr) => addr)
       }
     }
   }
@@ -111,7 +111,7 @@ export const update: Resolver<{
     updateDataClause.email = {
       updateMany: {
         where: { contactId: id },
-        data: email.map((addr) => addr) as Prisma.EmailUpdateManyArgs[]
+        data: email.map((addr) => addr)
       }
     }
   }
@@ -120,7 +120,7 @@ export const update: Resolver<{
     updateDataClause.phone = {
       updateMany: {
         where: { contactId: id },
-        data: phone.map((addr) => addr) as Prisma.PhoneUpdateArgs[]
+        data: phone.map((addr) => addr)
       }
     }
   }

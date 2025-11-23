@@ -14,6 +14,7 @@ export const ErrorInterface = builder.interfaceRef<Error>('Error').implement({
 
 builder.objectType(Error, {
   name: 'BaseError',
+  description: "Base Error",
   interfaces: [ErrorInterface],
   fields: (t) => ({
     message: t.exposeString('message')
@@ -26,6 +27,7 @@ builder.objectType(Error, {
 
 builder.objectType(RecordNotFoundError, {
   name: 'RecordNotFoundError',
+  description: "Record not found error",
   interfaces: [ErrorInterface],
   fields: (t) => ({
     message: t.exposeString('message')
@@ -38,6 +40,7 @@ builder.objectType(RecordNotFoundError, {
 
 builder.objectType(AuthError, {
   name: 'AuthError',
+  description: "Authentication error",
   interfaces: [ErrorInterface],
   fields: (t) => ({
     message: t.exposeString('message')
@@ -58,6 +61,7 @@ const BusinessValidationErrorObj = BusinessValidationErrorRef.implement({
 
 builder.objectType(BusinessError, {
   name: 'BusinessError',
+  description: "Business logic error",
   interfaces: [ErrorInterface],
   fields: (t) => ({
     message: t.exposeString('message'),

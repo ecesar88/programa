@@ -1,6 +1,6 @@
 import { AuthError } from '../server/graphql/schema/_errors/errors'
 import { Role } from '../constants/role'
-import { LOG_LEVEL, logger } from './logger'
+import { colorizeAsJSON, LOG_LEVEL, logger } from './logger'
 import { Resolver } from './types/shared'
 
 export function authenticateResolver<T = object>(
@@ -18,15 +18,11 @@ export function authenticateResolver<T = object>(
       logger({
         level: LOG_LEVEL.WARN,
         message: 'Unauthorized',
-        object: JSON.stringify(
-          {
-            operation: operationType,
-            resolverName,
-            reason: 'USER_NOT_AUTHENTICATED'
-          },
-          null,
-          2
-        )
+        object: colorizeAsJSON({
+          operation: operationType,
+          resolverName,
+          reason: 'USER_NOT_AUTHENTICATED'
+        })
       })
 
       return new AuthError(

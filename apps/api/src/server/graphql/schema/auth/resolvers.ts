@@ -54,7 +54,7 @@ export const authRefresh: Resolver<{
   logInfo({ operation: OPERATION_TYPE.CREATE, namespace })
 
   const payload = jwt.verify(data.refreshToken!, Buffer.from(env.SECRET_KEY, 'base64'), {
-    algorithms: ['RS256']
+    algorithms: ['HS256']
   }) as string | jwt.JwtPayload
 
   const isTokenInvalid = typeof payload === 'string' || !payload.userId
@@ -72,7 +72,7 @@ export const authRefresh: Resolver<{
     { userId: payload.userId, email: payload.email },
     Buffer.from(env.SECRET_KEY, 'base64'),
     {
-      algorithm: 'RS256',
+      algorithm: 'HS256',
       expiresIn: '1h'
     }
   )

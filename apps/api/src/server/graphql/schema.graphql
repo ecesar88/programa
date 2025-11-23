@@ -12,19 +12,19 @@ type Address {
 }
 
 input AddressCreateInput {
-  city: String
-  complement: String
-  name: String
-  neighborhood: String
-  number: String
-  state: String
-  street: String
-  zipCode: String
+  city: String!
+  complement: String!
+  name: String!
+  neighborhood: String!
+  number: String!
+  state: String!
+  street: String!
+  zipCode: String!
 }
 
 input AddressUpdateInput {
-  data: AddressCreateInput
-  id: String
+  data: AddressCreateInput!
+  id: String!
 }
 
 """Tokens generated on authentication"""
@@ -34,22 +34,25 @@ type Auth {
 }
 
 input AuthCreateInput {
-  email: String
-  password: String
+  email: String!
+  password: String!
 }
 
+"""Authentication error"""
 type AuthError implements Error {
   message: String
 }
 
 input AuthRefreshTokenInput {
-  refreshToken: String
+  refreshToken: String!
 }
 
+"""Base Error"""
 type BaseError implements Error {
   message: String
 }
 
+"""Business logic error"""
 type BusinessError implements Error {
   errors: [BusinessValidationError!]
   isValid: Boolean
@@ -74,13 +77,13 @@ type Car {
 }
 
 input CarCreateInput {
-  color: String
-  licensePlate: String
+  color: String!
+  licensePlate: String!
 
   """The make of the car"""
-  make: String
-  model: String
-  year: Int
+  make: String!
+  model: String!
+  year: Int!
 }
 
 """A client/customer on the application"""
@@ -95,7 +98,7 @@ type Client {
 
 input ClientCreateOrUpdateInput {
   name: String!
-  phone: String
+  phone: String!
 }
 
 """Contact entry"""
@@ -113,8 +116,8 @@ input ContactCreateInput {
 }
 
 input ContactUpdateInput {
-  data: ContactCreateInput
-  id: String
+  data: ContactCreateInput!
+  id: String!
 }
 
 """
@@ -130,13 +133,13 @@ type Email {
 }
 
 input EmailCreateInput {
-  name: String
-  value: String
+  name: String!
+  value: String!
 }
 
 input EmailUpdateInput {
-  data: EmailCreateInput
-  id: String
+  data: EmailCreateInput!
+  id: String!
 }
 
 interface Error {
@@ -183,7 +186,7 @@ type MenuEntryCategory {
 }
 
 input MenuEntryCategoryInput {
-  name: String
+  name: String!
 }
 
 """Input to create a new MenuEntry"""
@@ -205,8 +208,8 @@ type MenuEntryLabel {
 }
 
 input MenuEntryLabelInput {
-  color: String
-  name: String
+  color: String!
+  name: String!
 }
 
 """
@@ -220,11 +223,12 @@ type MenuEntryVariant {
 }
 
 input MenuEntryVariantInput {
-  description: String
-  name: String
-  price: Float
+  description: String!
+  name: String!
+  price: Float!
 }
 
+"""Mutation types"""
 type Mutation {
   """Create a new address"""
   createAddress(data: AddressCreateInput!): MutationCreateAddressResult
@@ -331,7 +335,7 @@ type OrderBill {
 }
 
 input OrderBillInput {
-  price: Float
+  price: Float!
 }
 
 """
@@ -354,10 +358,10 @@ type OrderEntryObservation {
 """Input to create a new Order"""
 input OrderInput {
   address: String!
-  bill: [OrderBillInput!]
+  bill: [OrderBillInput!]!
   observations: [OrderObservationInput!]
-  splitOrderPriceBy: Int = 1
-  totalPrice: Float = 0
+  splitOrderPriceBy: Int! = 1
+  totalPrice: Float! = 0
 }
 
 """
@@ -369,7 +373,7 @@ type OrderObservation {
 }
 
 input OrderObservationInput {
-  content: String
+  content: String!
 }
 
 """Phone Number"""
@@ -380,15 +384,16 @@ type Phone {
 }
 
 input PhoneCreateInput {
-  name: String
-  value: String
+  name: String!
+  value: String!
 }
 
 input PhoneUpdateInput {
-  data: PhoneCreateInput
-  id: String
+  data: PhoneCreateInput!
+  id: String!
 }
 
+"""Query types"""
 type Query {
   """Get an address by id"""
   address(id: String!): [Address!]
@@ -396,10 +401,10 @@ type Query {
   """Get a contact by id"""
   contact(id: String!): QueryContactResult
   getAllCars: QueryGetAllCarsResult
-  getAllClients(page: Int = 1): [Client!]
-  getAllMenuEntries(page: Int = 1): [MenuEntry!]
-  getAllMenuEntryLabels(page: Int = 1): [MenuEntryLabel!]
-  getAllOrders(page: Int = 1): [Order!]
+  getAllClients(page: Int! = 1): [Client!]
+  getAllMenuEntries(page: Int! = 1): [MenuEntry!]
+  getAllMenuEntryLabels(page: Int! = 1): [MenuEntryLabel!]
+  getAllOrders(page: Int! = 1): [Order!]
   getClientById(id: Int!): Client
   getMenuEntryById(id: Int!): MenuEntry
   getOrderById(id: Int!): Order
@@ -427,6 +432,7 @@ type QueryGetAllCarsSuccess {
   data: [Car!]!
 }
 
+"""Record not found error"""
 type RecordNotFoundError implements Error {
   message: String
 }
@@ -443,23 +449,23 @@ type User {
 }
 
 input UserCreateInput {
-  email: String
-  name: String
-  password: String
-  phone: String
-  username: String
+  email: String!
+  name: String!
+  password: String!
+  phone: String!
+  username: String!
 }
 
 input UserEmailInput {
-  email: String
+  email: String!
 }
 
 input UserIdAndPasswordInput {
-  id: String
-  password: String
+  id: String!
+  password: String!
 }
 
 input UserUpdateInput {
-  data: UserCreateInput
-  id: String
+  data: UserCreateInput!
+  id: String!
 }
