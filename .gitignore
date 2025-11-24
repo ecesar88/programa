@@ -6,3 +6,6 @@ out
 *.log*
 *db.*
 target
+*.log
+generated
+.env
