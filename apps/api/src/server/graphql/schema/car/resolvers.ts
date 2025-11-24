@@ -1,4 +1,4 @@
-import type { Prisma } from '@prisma/client'
+import type { Prisma } from '../../../../prisma/generated/client'
 import { unwrapOrThrow } from '../../../../utils/functions'
 import type { Resolver } from '../../../../utils/types/shared'
 import { logInfo, OPERATION_TYPE } from '../../../../utils/logger'

@@ -1,4 +1,4 @@
-import { Menu, Prisma } from '@prisma/client'
+import { Menu, Prisma } from '../../../../prisma/generated/client'
 import { colorizeAsJSON, LOG_LEVEL, logger } from '../../../../utils/logger'
 import { RecordNotFoundError } from '../_errors/errors'
 import { OrderCreateOrUpdateInput } from './types'

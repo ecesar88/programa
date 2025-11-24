@@ -1,14 +1,13 @@
 import {
-  Menu,
   MenuEntry,
   MenuEntryCategory,
   MenuEntryLabel,
   MenuEntryVariant,
   Prisma
-} from '@prisma/client'
+} from '../../../../prisma/generated/client'
 import { colorizeAsJSON, LOG_LEVEL, logger } from '../../../../utils/logger'
-import { RecordNotFoundError } from '../_errors/errors'
 import { Id, Resolver } from '../../../../utils/types/shared'
+import { RecordNotFoundError } from '../_errors/errors'
 import type { MenuEntryCreateOrUpdateInput, MenuEntryLabelInput } from './types'
 
 type UpdateMenuEntryInput = {
@@ -141,7 +140,7 @@ export const update: Resolver<UpdateMenuEntryInput> = async (_parent, args, ctx,
       })
     | Record<never, never> = {}
 
-  await ctx.prisma.$transaction(async (tx) => {
+  await ctx.prisma.$transaction(async (tx: typeof ctx.prisma) => {
     // Delete all categories
     await tx.menuEntryCategory.deleteMany({
       where: {

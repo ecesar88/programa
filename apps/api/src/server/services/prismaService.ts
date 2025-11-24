@@ -1,8 +1,10 @@
-import { PrismaClient } from '@prisma/client'
+import { sqliteAdapter } from 'src/config/prisma'
+import { PrismaClient } from '../../prisma/generated/client'
 import { LOG_LEVEL, logger } from '../../utils/logger'
 
 const prisma = new PrismaClient({
-  log: ['query', 'error', 'info', 'warn']
+  log: ['query', 'error', 'info', 'warn'],
+  adapter: sqliteAdapter
 })
 
 /**

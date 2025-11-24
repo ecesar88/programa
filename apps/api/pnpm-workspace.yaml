@@ -1,0 +1,8 @@
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - '@prisma/engines'
+  - '@swc/core'
+  - bcrypt
+  - better-sqlite3
+  - esbuild
+  - prisma

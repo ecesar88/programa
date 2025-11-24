@@ -98,7 +98,7 @@ const consoleLog = (level: LOG_LEVEL, message: string, obj?: any) => {
       .reset()
       .bold()
       .color('cyan')
-      .append(`${label}: `)
+      .append(` ${label}: `)
       .reset()
       .log(typeof obj === 'string' ? obj : JSON.stringify(obj, null, 2))
   }

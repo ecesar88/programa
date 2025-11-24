@@ -1,6 +1,6 @@
-import type { Prisma } from '@prisma/client'
-import { Id, Resolver } from '../../../../utils/types/shared'
+import { Prisma } from '../../../../prisma/generated/client'
 import { logInfo, OPERATION_TYPE } from '../../../../utils/logger'
+import { Id, Resolver } from '../../../../utils/types/shared'
 import { RecordNotFoundError } from '../_errors/errors'
 import type { AddressCreateInput, AddressUpdateInput } from './types'
 

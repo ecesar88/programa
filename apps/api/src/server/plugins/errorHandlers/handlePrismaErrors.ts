@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client'
+import { Prisma } from '../../../prisma/generated/client'
 import type { Response } from 'express'
 import type { GraphQLError } from 'graphql'
 import { HttpStatusCode } from 'src/constants'

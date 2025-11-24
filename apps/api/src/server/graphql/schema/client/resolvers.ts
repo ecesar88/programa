@@ -1,4 +1,4 @@
-import { Client, Prisma } from '@prisma/client'
+import { Client, Prisma } from '../../../../prisma/generated/client'
 import { colorizeAsJSON, LOG_LEVEL, logger } from '../../../../utils/logger'
 import { prismaPaginate } from '../../../../utils/prismaPaginate'
 import { RecordNotFoundError } from '../_errors/errors'
