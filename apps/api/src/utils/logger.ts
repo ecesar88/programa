@@ -22,6 +22,7 @@ export const colorizeAsJSON = (
 
 export enum LOG_LEVEL {
   ERROR = 'ERROR',
+  DEBUG = 'DEBUG',
   WARN = 'WARN',
   INFO = 'INFO'
 }
@@ -67,7 +68,8 @@ const consoleLog = (level: LOG_LEVEL, message: string, obj?: any) => {
   const colorByLevel: Record<LOG_LEVEL, Parameters<typeof nodeColorLog.color>[0]> = {
     ERROR: 'red',
     WARN: 'yellow',
-    INFO: 'cyan'
+    INFO: 'cyan',
+    DEBUG: 'yellow'
   }
 
   // --- main line ---

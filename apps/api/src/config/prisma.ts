@@ -7,10 +7,10 @@ export const sqliteAdapter = new PrismaBetterSqlite3({
   url: env.DATABASE_URL,
   fileMustExist: false,
   verbose: (queryMsg: any) => {
-    const message = `${chalk.bgBlue.white('[PrismaBetterSqlite3]')} ${chalk.blue('prisma:query')}\n${queryMsg}`
+    const message = `${chalk.bgYellow.black('[PrismaBetterSqlite3]')} ${chalk.blue('prisma:query')}\n${queryMsg}`
 
     logger({
-      level: LOG_LEVEL.INFO,
+      level: LOG_LEVEL.DEBUG,
       message
     })
 
