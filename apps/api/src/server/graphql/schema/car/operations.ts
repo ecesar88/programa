@@ -8,9 +8,6 @@ import { authenticateResolver } from '../../../../utils/authenticateResolver'
 builder.queryField('getAllCars', (t) =>
   t.field({
     type: [Car],
-    errors: {
-      types: [RecordNotFoundError]
-    },
     resolve: queryAll
     // resolve: authenticateResolver(queryAll)
   })

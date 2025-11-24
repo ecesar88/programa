@@ -3,7 +3,7 @@ import { PrismaClient } from '../../prisma/generated/client'
 import { LOG_LEVEL, logger } from '../../utils/logger'
 
 const prisma = new PrismaClient({
-  log: ['query', 'error', 'info', 'warn'],
+  log: ['error', 'info', 'warn'],
   adapter: sqliteAdapter
 })
 

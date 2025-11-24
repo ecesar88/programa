@@ -6,12 +6,14 @@ import chalk from 'chalk'
 export const sqliteAdapter = new PrismaBetterSqlite3({
   url: env.DATABASE_URL,
   fileMustExist: false,
-  verbose: (msg: any) => {
+  verbose: (queryMsg: any) => {
+    const message = `${chalk.bgBlue.white('[PrismaBetterSqlite3]')} ${chalk.blue('prisma:query')}\n${queryMsg}`
+
     logger({
       level: LOG_LEVEL.INFO,
-      // message: `${chalk.bgBlueBright('[PrismaBetterSqlite3] prisma:query')} -> ${chalk.blueBright(msg)}`
-      message: `[PrismaBetterSqlite3] prisma:query -> ${msg}`
+      message
     })
-    return msg
+
+    return queryMsg
   }
 })

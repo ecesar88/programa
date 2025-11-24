@@ -400,7 +400,7 @@ type Query {
 
   """Get a contact by id"""
   contact(id: String!): QueryContactResult
-  getAllCars: QueryGetAllCarsResult
+  getAllCars: [Car!]
   getAllClients(page: Int! = 1): [Client!]
   getAllMenuEntries(page: Int! = 1): [MenuEntry!]
   getAllMenuEntryLabels(page: Int! = 1): [MenuEntryLabel!]
@@ -424,12 +424,6 @@ union QueryContactResult = QueryContactSuccess | RecordNotFoundError
 
 type QueryContactSuccess {
   data: [Phone!]!
-}
-
-union QueryGetAllCarsResult = QueryGetAllCarsSuccess | RecordNotFoundError
-
-type QueryGetAllCarsSuccess {
-  data: [Car!]!
 }
 
 """Record not found error"""
