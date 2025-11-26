@@ -3,8 +3,8 @@ use sea_orm::entity::prelude::*;
 
 #[sea_orm::model]
 #[derive(Clone, Debug, PartialEq, Eq, DeriveEntityModel)]
-#[sea_orm(table_name = "human")]
-pub struct Human {
+#[sea_orm(table_name = "hobbit")]
+pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
     pub name: String,
@@ -12,3 +12,4 @@ pub struct Human {
 }
 
 impl ActiveModelBehavior for ActiveModel {}
+

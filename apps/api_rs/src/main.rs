@@ -1,5 +1,6 @@
 extern crate rocket;
 
+mod entity;
 mod graphql;
 
 use std::sync::Arc;
@@ -10,10 +11,11 @@ use rocket::tokio;
 use rocket::{State, response::content::RawHtml, routes};
 use sea_orm::{Database, DatabaseConnection};
 
-use crate::graphql::schema::human::operations::{Mutation, Query};
+use crate::graphql::schema::hobbit::operations::{Mutation, Query};
+use crate::graphql::Context;
 
 struct Schema {
-    root_node: RootNode<Query, Mutation, juniper::EmptySubscription>,
+    root_node: RootNode<Query, Mutation, juniper::EmptySubscription<Context>>,
 }
 
 #[tokio::main]
@@ -23,7 +25,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let db = Database::connect(database_url).await?;
 
     let schema = Schema {
-        root_node: RootNode::new(Query, Mutation, juniper::EmptySubscription::new()),
+        root_node: RootNode::new(Query, Mutation, juniper::EmptySubscription::<Context>::new()),
     };
 
     let db = Arc::new(db);
@@ -54,16 +56,14 @@ fn graphiql() -> RawHtml<String> {
     juniper_rocket::graphiql_source("/graphql", None)
 }
 
-#[rocket::get("/playground")]
-fn playground() -> RawHtml<String> {
-    juniper_rocket::playground_source("/graphql", None)
-}
-
 #[rocket::post("/graphql", data = "<request>")]
 async fn post_graphql(
     db: &State<Arc<DatabaseConnection>>,
     request: juniper_rocket::GraphQLRequest,
     schema: &State<Arc<Schema>>,
 ) -> juniper_rocket::GraphQLResponse {
-    request.execute(&schema.root_node, &()).await
+    let context = Context {
+        db: Arc::clone(db),
+    };
+    request.execute(&schema.root_node, &context).await
 }
